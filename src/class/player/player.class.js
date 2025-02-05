@@ -12,7 +12,11 @@ class Player {
     this.equippedWeapon = {};
     this.x = x;
     this.y = y;
+    this.reviveCooltime = 10;
+    this.maxReviveCooltime = 10;
+    this.reviveInterval = null;
     this.isAlive = true;
+    this.lateUpdate = 0;
   }
 
   changePlayerHp(damage) {
@@ -61,6 +65,29 @@ class Player {
     this.inventory.splice(targetIndex, 1);
     return this.inventory;
   }
+
+  //이 녀석이 플레이어 내부의 interval에서 돌아가도록 한다.
+  //각각의 플레이어마다 interval이 있는 방법과 map에서 관리하는 방법 중에 하나를 고르는 걸 해보자.
+  //이 쪽은 일단 유저가 interval을 관리하는 방식
+  isDead() {
+    this.reviveInterval = setInterval(() => {
+      if (this.isAlive) {
+        clearInterval(this.reviveInterval);
+        return;
+      }
+      else {
+        const now = Date.now() - this.lateUpdate;
+        this.lateUpdate = Date.now();
+        this.reviveCooltime -= now;
+        if (this.reviveCooltime < 0) {
+          this.isAlive = true;
+          clearInterval(this.reviveInterval);
+        }
+      }
+    }, 1000);
+  }
+
+
 
   //유저 동기화는 어떤 방식으로 하지?
   //hp, lv, hunger,inventory,equippedWeapon,isAlive같은 status는 변화가 있을때만 동기화하기
