@@ -1,0 +1,27 @@
+name: Notify Discord on PR Events
+
+on:
+  pull_request:
+    branches:
+      - dev
+    types: [opened, closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord Notification on PR Open
+        if: github.event.action == 'opened'
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          args: '🔔 New PR to **dev**: **${{ github.event.pull_request.title }}** by ${{ github.event.pull_request.user.login }} 🚀'
+
+      - name: Send Discord Notification on PR Merge
+        if: github.event.pull_request.merged == true
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          args: '✅ PR Merged into **dev**: **${{ github.event.pull_request.title }}** by ${{ github.event.pull_request.user.login }} 🎉'
