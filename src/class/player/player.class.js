@@ -12,11 +12,7 @@ class Player {
     this.equippedWeapon = {};
     this.x = x;
     this.y = y;
-    this.reviveCooltime = 10;
-    this.maxReviveCooltime = 10;
-    this.reviveInterval = null;
     this.isAlive = true;
-    this.lateUpdate = 0;
   }
 
   changePlayerHp(damage) {
@@ -70,19 +66,14 @@ class Player {
   //각각의 플레이어마다 interval이 있는 방법과 map에서 관리하는 방법 중에 하나를 고르는 걸 해보자.
   //이 쪽은 일단 유저가 interval을 관리하는 방식
   isDead() {
-    this.reviveInterval = setInterval(() => {
+    this.reviveInterval = setTimeout(() => {
       if (this.isAlive) {
         clearInterval(this.reviveInterval);
         return;
       }
       else {
-        const now = Date.now() - this.lateUpdate;
-        this.lateUpdate = Date.now();
-        this.reviveCooltime -= now;
-        if (this.reviveCooltime < 0) {
-          this.isAlive = true;
-          clearInterval(this.reviveInterval);
-        }
+        this.isAlive = true;
+        clearInterval(this.reviveInterval);
       }
     }, 1000);
   }

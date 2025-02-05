@@ -1,23 +1,16 @@
-class defaultMonster {
+class monster {
     //몬스터는 각각의 인스턴스로 활용될 것이며 이건 
     //이건 추상 클래스로써 접근할 것이니 
     //위치 동기화는 언제 했는가 
     //monsterCode는 몬스터가 어떤 녀석인지 확인하도록 한다.
     //몬스터와 플레이어는 각각 상하좌우를 베이스로 한 8개 방향으로 이동할 수 있도록 한다.
-    constructor(id, level = 0, monsterCode = 0, x = 0, y = 0) {
-        if (new.target === defaultMonster) {
-            throw new Error("추상 클래스 defaultMonster는 생성할 수 없습니다.");
-        }
+    constructor(id, monsterCode = 0, x = 0, y = 0) {
+        
 
-
-        if (id === null) {
-            throw new Error("몬스터의 id 값이 null로 할당되었습니다.");
-        }
         this.id = id;
         this.hp = 0;
         this.attack = 0;
         this.defence = 0;
-        this.level = level;
         this.monsterCode = monsterCode;
         this.priorityPlayer = null;
         this.x = x;
@@ -55,7 +48,6 @@ class defaultMonster {
 
     //생성되었을 때 위치 지정은 이걸로 해주자.
     //내 생각에 x, y는 맵의 중간 지점을 (0,0)이라 했을 때의 값이라 생각함
-    //
     setPositionFromCreating(x, y) {
         this.x = x;
         this.y = y;
@@ -82,9 +74,28 @@ class defaultMonster {
     moveByLatency(latency) {
         const timediff = latency/1000;//레이턴시는 1초를 1000으로 받아온다는 전제
         const speed = 1;
-        const distance = speed * timediff;
 
-        return distance;
+        const lateMove = speed * timediff;
+        const distance = Math.sqrt(Math.pow(this.priorityPlayer.x - this.x, 2) + Math.pow(this.priorityPlayer.y - this.y, 2));
+        const vectorX = (this.priorityPlayer.x - this.x)/distance;//+, -를 구분지어서 할 수 있을 듯
+        const vectorY = (this.priorityPlayer.y - this.y)/distance;
+        switch (this.monsterCode) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                //삼각함수를 통해 방향을 정해보자.
+                this.x += vectorX * lateMove;
+                this.y += vectorY * lateMove;
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                this.x += vectorX * lateMove;
+                this.y += vectorY * lateMove;
+                break;
+        }
     }
 
     //몬스터가 사망했을 때의 데이터
@@ -117,4 +128,4 @@ class defaultMonster {
 
 }
 
-export default defaultMonster;
+export default monster;

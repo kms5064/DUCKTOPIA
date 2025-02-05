@@ -1,5 +1,4 @@
-import { miniMonsterFactory } from "../src/class/monster/factory/miniMonsterFactory.js";
-import { loadGameAssets, getGameAssets } from "../src/init/assests/assets.js"
+import { loadGameAssets, getGameAssets } from "../src/init/assets.js"
 
 const minifactory = new miniMonsterFactory();
 
