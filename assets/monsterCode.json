@@ -1,0 +1,15 @@
+{
+    "name": "item",
+    "version": "1.0.0",
+    "data": [
+      { "monsterCode":  1, "name": "약골오리" },
+      { "monsterCode":  2, "name": "강골오리" },
+      { "monsterCode":  3, "name": "파이어덕" },
+      { "monsterCode":  4, "name": "아이스덕" },
+      { "monsterCode":  5, "name": "썬더덕" },
+      { "monsterCode":  6, "name": "닌자덕" },
+      { "monsterCode":  7, "name": "하이퍼덕" },
+      { "monsterCode":  8, "name": "리얼닌자덕" }
+      
+    ]
+  }
