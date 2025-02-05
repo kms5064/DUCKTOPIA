@@ -5,6 +5,6 @@ CREATE TABLE IF NOT EXISTS users
     email           VARCHAR(255) UNIQUE,
     password        VARCHAR(255),
     is_logged_in    BOOL DEFAULT 0,
-    create_dt       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    update_dt       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    create_dt       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_dt       TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
