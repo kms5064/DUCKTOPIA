@@ -1,10 +1,10 @@
 import { ATK_PER_LV, PLAYER_MAX_HUNGER } from '../../constants/player.js';
 
 class Player {
-  constructor(id, maxHp, atk, x, y,socket) {
+  constructor(id, atk, x, y,user) {
     this.id = id;
-    this.maxHp = maxHp;
-    this.hp = maxHp;
+    this.maxHp = PLAYER_MAX_HP;
+    this.hp = PLAYER_MAX_HP;
     this.hunger = PLAYER_MAX_HUNGER; //허기짐
     this.lv = 1;
     this.atk = atk;
@@ -14,12 +14,17 @@ class Player {
     this.y = y;
     this.isAlive = true; //생존여부
     this.socket = socket;
-    //user:{id,socket}
+    this.user = user;
   }
 
   //체력 변경
   changePlayerHp(damage) {
     this.hp -= damage;
+
+    if(this.hp<=0){
+      this.isAlive = false;
+    }
+
     return this.hp;
   }
 
