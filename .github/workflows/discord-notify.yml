@@ -28,7 +28,6 @@ jobs:
             🚀 **PR Merged into dev!** 🎉
             **Title:** ${{ github.event.pull_request.title }}
             **Author:** ${{ github.event.pull_request.user.login }}
-
             **Description:**  
             ```  
             ${{ github.event.pull_request.body }}  
