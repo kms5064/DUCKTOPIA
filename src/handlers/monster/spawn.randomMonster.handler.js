@@ -17,8 +17,8 @@ export const spawnRandomMonsterHandler = async (socket, sequence, payload) => {
     //랜덤 생산 [2] : 몬스터의 수치를 조정한다.
     //objectBase의 자식 클래스로 할 거니까 몬스터는 별도의 스테이터스 등을 다시 지정 받는다.
     const newMonster = new Monster("hello world", monsterFind.monsterCode, x, y, monsterFind.range, monsterFind.speed);
-    newMonster.getstatus(monsterFind.hp, monsterFind.attack, monsterFind.defence);
-    newMonster.getName(monsterFind.name);
+    newMonster.setstatus(monsterFind.hp, monsterFind.attack, monsterFind.defence);
+    newMonster.setName(monsterFind.name);
 
     //랜덤 생산 [3] : 생성된 몬스터를 해당 세션에 집어 넣는다.
     //socket을 통해 어떤 세션에 넣을지를 찾아 보도록 하자.
