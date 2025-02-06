@@ -29,9 +29,8 @@ const onData = (socket) => (data) => {
         const payloadBuffer = packet.subarray(defaultLength + versionByte + payloadLengthByte, defaultLength + versionByte + payloadLengthByte + payloadByte)
         
         try {
-            const proto = getProtoMessages().GamePacket;
-            const gamePacket = proto.decode(payloadBuffer);
-            const payload = gamePacket[gamePacket.payload];
+            const proto = getProtoMessages();
+            const payload = proto[packetType].decode(payloadBuffer);
             // 핸들러 기입 예정, 맵핑 있으면 편할 듯
         } catch (e){
             console.error(e);
