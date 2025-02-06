@@ -1,4 +1,4 @@
-import { ATK_PER_LV, PLAYER_MAX_HUNGER } from "../../constants/player.js";
+import { ATK_PER_LV, PLAYER_MAX_HUNGER } from '../../constants/player.js';
 
 class Player {
   constructor(id, maxHp, atk, x, y) {
@@ -70,15 +70,12 @@ class Player {
       if (this.isAlive) {
         clearInterval(this.reviveInterval);
         return;
-      }
-      else {
+      } else {
         this.isAlive = true;
         clearInterval(this.reviveInterval);
       }
     }, 1000);
   }
-
-
 
   //유저 동기화는 어떤 방식으로 하지?
   //hp, lv, hunger,inventory,equippedWeapon,isAlive같은 status는 변화가 있을때만 동기화하기
@@ -100,3 +97,5 @@ class Player {
 
   //허기가0이면 데미지를 받는다
 }
+
+export default Player;
