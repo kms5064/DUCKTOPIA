@@ -14,15 +14,15 @@ const gamePrepareReqHandler = (room) => {
     //base좌표 넣기
 
     const payload = {
-      S2CstartGameResponse: {
+        S2CGamePrepareResponse: {
         success,
       },
     };
 
     const message = dataType.create(payload);
-    const S2CstartGameResponse = dataType.encode(message).finish();
+    const S2CGamePrepareResponse = dataType.encode(message).finish();
 
-    const notification = payloadParser(S2CstartGameResponse);
+    const notification = payloadParser(S2CGamePrepareResponse);
 
     game.players.forEach((player) => {
       player.socket.write(notification);
