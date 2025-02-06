@@ -1,17 +1,31 @@
-import env from './env/env.js'
+import {
+  CLIENT_VERSION,
+  DB_HOST,
+  DB_NAME,
+  DB_PASSWORD,
+  DB_PORT,
+  DB_USER,
+  HOST,
+  PORT,
+} from './constants/env.js';
 
 export const config = {
   header: {},
   packetType: {},
-  env: {
-    port: env.PORT,
-    host: env.HOST,
-    clientVersion: env.CLIENT_VERSION,
-    dbName: env.DB_NAME,
-    dbUser: env.DB_USER,
-    dbPassword: env.DB_PASSWORD,
-    dbHost: env.DB_HOST,
-    dbPort: env.DB_PORT,
-    secretKey: env.SECRET_KEY,
-  }
+  server: {
+    host: HOST,
+    port: PORT,
+  },
+  cleint: {
+    version: CLIENT_VERSION,
+  },
+  databases: {
+    USER_DB: {
+      name: DB_NAME,
+      user: DB_USER,
+      password: DB_PASSWORD,
+      host: DB_HOST,
+      port: DB_PORT,
+    },
+  },
 };
