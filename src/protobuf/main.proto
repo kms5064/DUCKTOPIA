@@ -1,0 +1,23 @@
+syntax = 'proto3';
+
+message Position {
+  float x = 1;
+  float y = 2;
+}
+
+message S2CMonsterAwake {
+    uint32 monsterId = 1;
+}
+
+message S2CMonsterMove {
+    uint32 monsterId = 1;
+    float Direct = 2;
+    Position direct = 3;
+    Position position = 4;
+    uint32 speed = 5;
+    int64 timestamp = 6;
+}
+
+message C2SPositionUpdateRequest{
+    Position position = 1;
+}
