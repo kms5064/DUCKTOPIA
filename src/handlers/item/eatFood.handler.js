@@ -1,7 +1,7 @@
 // 식량 아이템 소모 핸들러
 //! 추후에 Player 클래스 대신 gameSession 내에 어떤 것 들고와서 사용해야 함.
 
-import Player from '../../class/player/player.class';
+import Player from '../../classes/player/player.class';
 import { getGameAssets } from '../../init/assets';
 
 const eatFoodHandler = (socket, sequence, payload) => {
