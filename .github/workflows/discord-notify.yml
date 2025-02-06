@@ -32,6 +32,5 @@ jobs:
             **Description:**  
             ```  
             ${{ github.event.pull_request.body }}  
-            ```  
-
+            ``` 
             🔗 [View PR](${{ github.event.pull_request.html_url }})
