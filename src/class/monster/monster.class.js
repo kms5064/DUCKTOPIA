@@ -34,6 +34,7 @@ class monster {
     } else {
       this.hp -= damage - this.defence;
     }
+    return this.hp;
   }
 
   //캐릭터의 우선도를 뒤에서 보도록 할까.
