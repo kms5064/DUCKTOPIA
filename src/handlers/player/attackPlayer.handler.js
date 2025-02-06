@@ -27,12 +27,14 @@ const attackPlayerHandler = (socket, payload) => {
   const player = game.getPlayerById(user.userId);
   // 플레이어 위치 조회
   const { x: playerX, y: playerY } = player.getPlayerPos();
+
   // 몬스터 목록 조회
   const monsterList = game.getMonsterList(gameId);
 
   monsterList.forEach((monster) => {
-    // 몬스터 위치 조회
-    const { x: monsterX, y: monsterY } = monster.getMonsterPos();
+    // 몬스터 정보 조회
+    const { id: monsterId, hp: monsterHp, x: monsterX, y: monsterY } = monster.monsterDataSend();
+
     //대상(몬스터)의 거리 계산
     const distance = calculateDistance(playerX, playerY, monsterX, monsterY);
 
@@ -54,12 +56,15 @@ const attackPlayerHandler = (socket, payload) => {
         console.log(`MONSTER ID: ${monster.getMonsterId()} (${monsterX}, ${monsterY}) ATTACK`);
 
         // 몬스터 HP 차감 처리
-        monster.getDamaged(player.getPlayerAtkDamage());
-        const { id: monsterId, hp: monsterHp } = monster.monsterDataSend();
+        const currHp = monster.getDamaged(player.getPlayerAtkDamage());
+
         let payloadData = {};
         let packetType;
-        if (monsterHp <= 0) {
+        if (currHp <= 0) {
           // 몬스터 사망 broadCast
+          // 몬스터 삭제 처리
+          game.removeMonster(monsterId);
+
           packetType = PACKET_TYPE.DEATH_MONSTER;
           payloadData = {
             monsterId,
@@ -69,7 +74,7 @@ const attackPlayerHandler = (socket, payload) => {
           packetType = PACKET_TYPE.DEATH_MONSTER;
           payloadData = {
             monsterId,
-            monsterHp,
+            monsterHp: currHp,
           };
         }
 
