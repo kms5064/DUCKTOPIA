@@ -1,7 +1,6 @@
 import net from 'net';
 import { loadProtos,getProtoMessages } from './src/init/loadProto.js';
-
-const configVersion = "1.0.0"
+import { config } from './src/config/config.js';
 
 class Client {
     constructor(id, password) {
@@ -21,10 +20,10 @@ class Client {
     onData = async (data) => {
         try {
             this.buffer = Buffer.concat([this.buffer, data]);
-            const packetTypeByte = 2;
-            const versionLengthByte = 1;
+            const packetTypeByte = config.header.packetTypeByte;
+            const versionLengthByte = config.header.versionLengthByte;
             let versionByte = 0;
-            const payloadLengthByte = 4;
+            const payloadLengthByte = config.header.payloadLengthByte;
             let payloadByte = 0;
             const defaultLength = packetTypeByte + versionLengthByte
             
@@ -41,7 +40,7 @@ class Client {
 
                 // 값 추출 및 검증
                 const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
-                if (version !== configVersion) break;
+                if (version !== config.client.version) break;
                 const packetType = packet.readUInt16BE(0);
                 const payloadBuffer = packet.subarray(defaultLength + versionByte + payloadLengthByte, defaultLength + versionByte + payloadLengthByte + payloadByte)
                 
