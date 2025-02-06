@@ -7,9 +7,11 @@ import {
   DB_USER,
   HOST,
   PORT,
-} from '../constants/env.js';
+} from './constants/env.js';
 
-const config = {
+export const config = {
+  header: {},
+  packetType: {},
   server: {
     host: HOST,
     port: PORT,
@@ -27,5 +29,3 @@ const config = {
     },
   },
 };
-
-export default config;
