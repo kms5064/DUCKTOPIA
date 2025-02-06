@@ -1,21 +1,35 @@
+import bcrypt from 'bcrypt';
+import { createUser, findUserByEmail } from '../../db/user/user.db.js';
+import { signUpSchema } from '../../utils/validations/auth.validation.js';
+
+const SALT_OR_ROUNDS = 10;
+
 const signUpHandler = async (socket, payload) => {
-  const { email, password, name } = payload;
+  try {
+    const { email, password, name } = payload;
 
-  // 1. payload 유효성 검사 TODO
+    /** 테스트 데이터 */
+    // const name = 'qwer';
+    // const email = 'asdf@naver.com';
+    // const password = 'asdfasdf';
 
-  // 2. 유저 DB 확인 (TODO DB 함수 만들고 변경)
+    const obj = { name, email, password };
 
-  // 3. 비밀번호 bcrypt로 암호화 (TODO 변겨어엉)
+    // 1. payload 유효성 검사
+    await signUpSchema.validateAsync(obj);
 
-  // 4. 유저 정보 저장 (TODO 크리에이뜨 유절)
+    // 2. 비밀번호 bcrypt로 암호화
+    const hashedPw = await bcrypt.hash(password, SALT_OR_ROUNDS);
 
-  //
-  let user = await findUserByDeviceID(deviceId);
+    // 3. 유저 정보 저장
+    const user = await createUser(name, email, hashedPw);
 
-  // 유저가 이미 존재하는지 확인
-  if (!user) {
-    user = await createUser(deviceId);
-  } else {
-    await updateUserLogin(user.id);
+    // 4. 회원가입 응답 (TODO 결과 보내기?)
+    // ex) createResponse~
+  } catch (error) {
+    // TODO 에러 캐치해서 email or name 중복체크하기
+    // Error code : 'ER_DUP_ENTRY', sqlMessage : "Duplicate entry 'asdf@naver.com' for key 'users.email'"
+    console.log(error.code);
+    console.log(error);
   }
 };
