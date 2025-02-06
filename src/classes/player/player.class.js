@@ -1,4 +1,9 @@
-import { ATK_PER_LV, PLAYER_MAX_HUNGER } from "../../constants/player.js";
+import {
+  ATK_PER_LV,
+  PLAYER_MAX_HUNGER,
+  PLAYER_DEFAULT_RANGE,
+  PLAYER_DEFAULT_ANGLE,
+} from '../../constants/player.js';
 
 class Player {
   constructor(id, maxHp, atk, x, y) {
@@ -13,6 +18,9 @@ class Player {
     this.x = x;
     this.y = y;
     this.isAlive = true;
+
+    this.range = PLAYER_DEFAULT_RANGE;
+    this.angle = PLAYER_DEFAULT_ANGLE;
   }
 
   changePlayerHp(damage) {
@@ -36,8 +44,7 @@ class Player {
   }
   //플레이어 어택은 데미지만 리턴하기
   getPlayerAtkDamage() {
-    damage = atk + lv * ATK_PER_LV + this.equippedWeapon.atk;
-    return damage;
+    return this.atk + this.lv * ATK_PER_LV + this.equippedWeapon.atk;
   }
 
   playerDead() {
@@ -70,15 +77,30 @@ class Player {
       if (this.isAlive) {
         clearInterval(this.reviveInterval);
         return;
-      }
-      else {
+      } else {
         this.isAlive = true;
         clearInterval(this.reviveInterval);
       }
     }, 1000);
   }
 
+  //공격 사거리 변경
+  changeRange(range) {
+    this.range = range;
+  }
 
+  //공격 각도 변경
+  changeAngle(angle) {
+    this.angle = angle;
+  }
+
+  getRange() {
+    return this.range;
+  }
+
+  getAngle() {
+    return this.angle;
+  }
 
   //유저 동기화는 어떤 방식으로 하지?
   //hp, lv, hunger,inventory,equippedWeapon,isAlive같은 status는 변화가 있을때만 동기화하기
@@ -100,3 +122,5 @@ class Player {
 
   //허기가0이면 데미지를 받는다
 }
+
+export default Player;
