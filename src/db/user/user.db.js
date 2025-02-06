@@ -1,5 +1,5 @@
 import pools from '../database.js';
-import { SQL_USER_QUERIES } from './user.queries.js';
+import SQL_USER_QUERIES from './user.queries.js';
 
 export const createUser = async (name, email, password) => {
   await pools.USER_DB.query(SQL_USER_QUERIES.CREATE_USER, [name, email, password]);
@@ -8,10 +8,6 @@ export const createUser = async (name, email, password) => {
 export const findUserByEmail = async (email) => {
   const [rows] = await pools.USER_DB.query(SQL_USER_QUERIES.FIND_USER_BY_EMAIL, [email]);
   return rows[0];
-};
-
-export const updateUserLoginState = async (email, loginState) => {
-  await pools.USER_DB.query(SQL_USER_QUERIES.UPDATE_USER_LOGIN, [loginState, email]);
 };
 
 // TODO 쓸 일이 있을까?
@@ -24,6 +20,6 @@ export const transaction = async (callback) => {
     await pools.USER_DB.rollback();
     throw error;
   } finally {
-    pools.CH5_TEAM.releaseConnection();
+    pools.USER_DB.releaseConnection();
   }
 };
