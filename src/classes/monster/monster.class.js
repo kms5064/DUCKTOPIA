@@ -1,4 +1,5 @@
 import ObjectBase from "../base/objectBase.class.js";
+import { maxItemDropCount } from "../../config/constants/monster.js";
 
 class Monster extends ObjectBase {
     //몬스터는 각각의 인스턴스로 활용될 것이며 이건 
@@ -20,14 +21,7 @@ class Monster extends ObjectBase {
         this.priorityPlayer = null;
         //몬스터가 여러 패턴을 가지고 있을 때 그 패턴들을 이 안에서 쿨타임을 관리한다.
         this.patternInterval = new Map();
-        //범위 내에 들어온 플레이어를 이 안에 집어 넣는다. 
-        this.followingPlayer = new Map();
-        //드랍률을 올린다.
-        //2의 진수 값을 기준으로 하도록 한다.
-        //2의 21 제곱 값
-        //드랍률은 20에서 dropcount를 log로 한 값을 뺄 거니까 
-        this.dropCount = Math.pow(2, 21);
-
+        //드랍 아이템 숫자 확률을 이걸로 정해보자.
     }
 
     //asset을 통해서 받은 데이터를 기반으로 여기에 데이터를 채워 넣는다. 
@@ -57,12 +51,7 @@ class Monster extends ObjectBase {
         }
     }
 
-    //캐릭터의 우선도를 뒤에서 보도록 할까.
-    catchingPlayer(player) {
-        if (!this.followingPlayer.has(player)) {
-            this.followingPlayer.set(player, this.followingPlayer.size);
-        }
-    }
+    
 
     //생성되었을 때 위치 지정은 이걸로 해주자.
     //내 생각에 x, y는 맵의 중간 지점을 (0,0)이라 했을 때의 값이라 생각함
@@ -70,24 +59,41 @@ class Monster extends ObjectBase {
         this.x = x;
         this.y = y;
     }
+   
 
-    //플레이어의 정보를 잃어버릴 때
-    //플레이어의 렌더링 범위에서 벗어났을 때
-    lostPlayer(player) {
-        if (this.followingPlayer.has(player)) {
-            this.followingPlayer.delete(player);
-        }
-    }
-
-    //몬스터의 플레이어 추적을 무력화 시킨다.
-    clearPlayer() {
-        this.followingPlayer.clear();
+    //몬스터의 플레이어 추적을 잃게 만든다.
+    lostPlayer() {
         this.priorityPlayer = null;
+        
     }
 
-    //몬스터가 죽거나 할 때 아이템 드롭률을 제공한다.
-    dropCount() {
-        return this.dropCount;
+
+    //몬스터가 죽거나 할 때 아이템 드롭할 아이템의 숫자를 제공한다.
+    dropItemCount() {
+        const dropCount = 10 - Math.floor(Math.log(Math.ceil(Math.random() * maxItemDropCount))/Math.log(2));
+        
+        switch(dropCount)
+        {
+            case 0:
+            case 1:
+                return 0;
+                break;
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                return 1;
+                break;
+            case 6:
+            case 7:
+            case 8:
+                return 2;
+                break;
+            case 9:
+            case 10:
+                return 3;
+                break;
+        }
     }
 
     //default로 호출될 때는 별다른 기능 없음

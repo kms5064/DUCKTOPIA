@@ -43,7 +43,7 @@ const AttackByPlayerHandler = async (socket, payload) => {
     else
     {
         //동기화 패킷은 계속 보내지고 있을 터이니 그 쪽에서 처리하면 될 테고
-        monsterAttackPayload = {};
+        monsterAttackPayload = {userId : user.id, userHp : user.hp};
         packet = createResponse(PACKET_TYPE.PLAYER_DAMAGED, monsterAttackPayload);
     }
 

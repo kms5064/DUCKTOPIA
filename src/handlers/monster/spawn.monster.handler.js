@@ -14,7 +14,8 @@ export const spawnMonsterHandler = async (socket, payload) => {
     if(monsterCode === 0 || monsterCode >= monsterAsset.data.length)
     {
         const randomindex = Math.floor(Math.random() * monsterTypeLength);
-        newMonster = monsterAsset.data[randomindex];
+        const monsterFind = monsterAsset.data[randomindex];
+        newMonster = new Monster("hello world", monsterFind.monsterCode, x, y, monsterFind.range, monsterFind.speed);
     }
     else
     {

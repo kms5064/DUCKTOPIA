@@ -17,8 +17,7 @@ const discoveredMonsterHandler = async (socket, payload) => {
 
     const packet = createResponse(PACKET_TYPE.MONSTER_DISCOVERED, discoverPayload);
 
+    //몬스터가 탐색이나 생성 등은 game 쪽에서 broadcast를 하는 게 더 나을 듯 하다.
+    //유저들이 어떤 몬스터가 어떤 유저를 쫒고 있는지 알아야 하니까
     game.broadcast(packet);
-
-
-
 }
