@@ -1,5 +1,5 @@
 import net from 'net';
-import { loadProtos,getProtoMessages } from './src/init/load.proto.js';
+import { loadProtos,getProtoMessages } from './src/init/loadProto.js';
 
 const configVersion = "1.0.0"
 
