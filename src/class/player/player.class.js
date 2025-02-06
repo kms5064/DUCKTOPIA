@@ -85,12 +85,12 @@ class Player {
   }
 
   //공격 사거리 변경
-  updateRange(range) {
+  changeRange(range) {
     this.range = range;
   }
 
   //공격 각도 변경
-  updateAngle(angle) {
+  changeAngle(angle) {
     this.angle = angle;
   }
 
