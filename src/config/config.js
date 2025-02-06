@@ -1,3 +1,4 @@
+import { version } from 'uuid';
 import {
   CLIENT_VERSION,
   DB_HOST,
@@ -8,15 +9,20 @@ import {
   HOST,
   PORT,
 } from './constants/env.js';
+import { PACKET_TYPE_BYTE, PAYLOAD_LENGTH_BYTE, VERSION_LENGTH_BYTE } from './constants/header.js';
 
 export const config = {
-  header: {},
+  header: {
+    packetTypeByte: PACKET_TYPE_BYTE,
+    versionLengthByte: VERSION_LENGTH_BYTE,
+    payloadLengthByte: PAYLOAD_LENGTH_BYTE
+  },
   packetType: {},
   server: {
     host: HOST,
     port: PORT,
   },
-  cleint: {
+  client: {
     version: CLIENT_VERSION,
   },
   databases: {
