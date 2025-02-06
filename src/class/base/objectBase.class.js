@@ -83,3 +83,5 @@ class ObjectBase {
         return {direct: { x: directX, y: directY }, speed: this.speed, position, timestamp }
     }
 }
+
+export default ObjectBase;
