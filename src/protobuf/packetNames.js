@@ -13,9 +13,9 @@ export const packetNames = [
     'S2CMonsterMoveNotification',
     'C2SPlayerAttackRequest',
     'S2CPlayerAttackNotification',
-    'S2CSpawnMonsterNotification',
+    'S2CMonsterSpawnNotification',
     'S2CMonsterDeathNotification',
-    'S2CMonsterHpNotification',
+    'S2CMonsterHpUpdateNotification',
     'C2SCreateRoomRequest',
     'S2CCreateRoomResponse',
     'C2SGetRoomListRequest',
@@ -33,7 +33,7 @@ export const packetNames = [
     'C2SPositionUpdateRequest',
     'S2CPositionUpdateNotification',
     'S2CUserUpdateNotification',
-    'S2CPlayerDeadNotification',
+    'S2CPlayerDeathNotification',
     'S2CPlayerHpUpdateNotification',
     'GamePacket'
 ]
