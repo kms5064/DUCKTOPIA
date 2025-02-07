@@ -2,7 +2,7 @@ import { config } from "../config/config.js";
 import handlers from "../handlers/index.js";
 import { getProtoMessages } from "../init/loadProtos.js";
 
-const onData = (socket) => (data) => {
+const onData = (socket) => async (data) => {
     console.log('데이터 수신');
 
     socket.buffer = Buffer.concat([socket.buffer, data]);
@@ -40,9 +40,7 @@ const onData = (socket) => (data) => {
         } catch (e){
             console.error(e);
         }
-        
     }
-
 };
 
 export default onData;
