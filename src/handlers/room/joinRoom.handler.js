@@ -45,6 +45,7 @@ const joinRoomHandler = (socket, payload) => {
       joinUser: user.getUserData(), // TODO 유저 데이터 받는 함수 연동
     });
 
+    // 당사자 제외하고 보내기
     broadcast(room.getUsers(), joinRoomNotification); // 브로드캐스트
   } catch (error) {
     console.log(error);
