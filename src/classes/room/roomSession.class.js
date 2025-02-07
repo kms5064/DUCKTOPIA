@@ -4,13 +4,14 @@ import { v4 as uuidv4 } from 'uuid';
 class RoomSession {
   constructor() {
     this.rooms = new Map(); // key : roomId, value : room
+    this.roomIdCounter = 1;
   }
 
   // 방 추가하기
-  addRoom(ownerId, name) {
-    const roomId = uuidv4();
-    const room = new Room(roomId, name, ownerId);
-    this.rooms.set(roomId, room);
+  addRoom(ownerId, name, maxUserNum) {
+   
+    const room = new Room(this.roomIdCounter++, name, ownerId, maxUserNum);
+    this.rooms.set(this.roomIdCounter, room);
     return room;
   }
 
@@ -27,6 +28,12 @@ class RoomSession {
   // 방 전체 조회
   getRooms() {
     return this.rooms.values();
+  }
+
+  getRoomsData() {
+    return {
+      rooms: Array.from(this.rooms.values()).map(room => room.getRoomData())
+    };
   }
 }
 

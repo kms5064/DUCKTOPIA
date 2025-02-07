@@ -1,13 +1,25 @@
 import { MAX_USER_AMOUNT } from '../../config/constants/room.js';
 
 class Room {
-  constructor(id, name, ownerId) {
+  constructor(id, name, ownerId, maxUserNum) {
     this.users = new Map();
     this.id = id; // uuid
     this.name = name; // room name
-    this.state = 'waiting'; // 'waiting', 'running'
+    this.state = 0; // 'waiting', 'running'
     this.game = null;
     this.ownerId = ownerId;
+    this.maxUserNum = maxUserNum;
+  }
+
+  getRoomData() {
+    return {
+      roomId: this.id,
+      ownerId: this.ownerId,
+      name: this.name,
+      maxUserNum: this.maxUserNum,
+      state: this.state,
+      users: Array.from(this.users.values()).map(user => user.getUserData())
+    }
   }
 
   addUser(user) {

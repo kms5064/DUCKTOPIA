@@ -13,13 +13,38 @@
 // }
 
 class User {
-  constructor(socket) {
-    this.id = null; //클라이언트 접속시 id = null, 로그인했을때 id에 email 값 넣을 것임
+  constructor(socket, id, nickname, characterType) {
+    this.id = id; //클라이언트 접속시 id = null, 로그인했을때 id에 email 값 넣을 것임
     this.roomId = null;
     this.socket = socket;
     this.state = null; // 'lobby', 'room', 'playing' 등 현재 상태 체크용
-    this.name = null;
+    this.name = nickname;
+    this.characterType = characterType;
+    this.hp = 100;
+    this.weapon = null;
+    this.atk = 10;
+    this.x = 0;
+    this.y = 0;
   }
+
+  getCharacter() {
+    return {
+      characterType: this.characterType,
+      hp: this.hp,
+      weapon: this.weapon,
+      atk: this.atk,
+    };
+  }
+
+  getUserData() {
+    return {
+      playerId: this.id,
+      nickname: this.name,
+      character: this.getCharacter(),
+    };
+  }
+
+
   // 로그인
   login(userId, name) {
     this.id = userId;

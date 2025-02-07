@@ -2,11 +2,14 @@ import User from './user.class.js';
 
 /* UserSession 클래스 */
 class UserSession {
-  users = new Map();
+  constructor() {
+    this.users = new Map();
+    this.userIdCounter = 1; // ID 자동 증가를 위한 카운터
+  }
 
   /* 세션에 유저 추가시키는 메서드 */
-  addUser(socket) {
-    const newUser = new User(socket);
+  addUser(socket, nickname, characterType) {
+    const newUser = new User(socket, this.userIdCounter++, nickname, characterType);
     this.users.set(socket, newUser);
     console.log(`신규 유저 접속 : ${socket.remoteAddress}:${socket.remotePort}`);
     return newUser;

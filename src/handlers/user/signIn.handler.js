@@ -9,17 +9,19 @@ const signInHandler = async ({ socket, payload }) => {
     const { email, password } = payload;
 
     // 1. 사용자 존재 여부 DB에서 확인
-    const userData = await findUserByEmail(email);
+    //const userData = await findUserByEmail(email);
 
-    if (!userData) {
-      throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
-    }
+    // if (!userData) {
+    //   throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
+    // }
 
-    // 2. 비밀번호 일치 여부 확인
-    if (!(await bcrypt.compare(password, userData.password))) {
-      throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
-    }
-
+    // // 2. 비밀번호 일치 여부 확인
+    // if (!(await bcrypt.compare(password, userData.password))) {
+    //   throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
+    // }
+    
+    userSession.addUser(socket, email, 1);
+    
     // 3. 소켓을 이용해서 유저 찾기
     const user = userSession.getUser(socket);
 
@@ -28,7 +30,7 @@ const signInHandler = async ({ socket, payload }) => {
     }
 
     // 4. 찾은 유저에 로그인 정보 추가
-    user.login(email, userData.name);
+    //user.login(email, userData.name);
 
     // 3. 중복 로그인 유저 세션에서 체크 TODO
     // ex) const dupUser = getUserByEmail;
@@ -38,9 +40,12 @@ const signInHandler = async ({ socket, payload }) => {
     // }
 
     // 5. 패킷 전송
+    
+
+
     const loginResponse = makePacket(PACKET_TYPE.LOGIN_RESPONSE, {
       success: true,
-      name: userData.name,
+      myInfo: user.getUserData(),
     });
 
     socket.write(loginResponse);
