@@ -27,6 +27,15 @@ class User {
     this.y = 0;
   }
 
+  posiup(x,y){
+    this.x = x;
+    this.y = y;
+  }
+
+  getpsi(){
+    return { playerId:this.id, x:this.x, y:this.y}
+  }
+
   getCharacter() {
     return {
       characterType: this.characterType,

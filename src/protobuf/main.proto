@@ -223,6 +223,7 @@ message C2SPositionUpdateRequest {
 message S2CPositionUpdateNotification {
  repeated CharacterPositionData characterPositions = 1;
 }
+
 message S2CUserUpdateNotification {
  repeated UserData users = 1;
 }

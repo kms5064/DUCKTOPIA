@@ -30,6 +30,46 @@ class Room {
 
   }
 
+  joinUserNotification(packet) {
+    const roomUsers = Array.from(this.getUsers());
+
+  roomUsers.forEach(user => {
+    if (user.socket) {
+        user.socket.write(packet);
+    }
+});
+
+  }
+
+  getUsersPositionData() {
+    const roomUsers = Array.from(this.getUsers()); // Iterator → Array
+
+    return roomUsers.map((user, index) => {
+        // 새로운 x, y 값 계산
+        const newX = index * 3;
+        const newY = index * 3;
+
+        // 유저 위치 업데이트
+        user.posiup(newX, newY);
+
+        // 업데이트된 위치 정보 반환
+        return {
+            playerId: user.id,
+            x: user.x, // 업데이트된 값
+            y: user.y  // 업데이트된 값
+        };
+    });
+}
+
+
+getPositionUpdateNotification() {
+  const roomUsers = Array.from(this.getUsers()); // Iterator → Array
+
+  return roomUsers.map(user => user.getpsi()) ;
+}
+
+
+
   getRoomData() {
     return {
       roomId: this.id,
@@ -40,6 +80,13 @@ class Room {
       users: Array.from(this.users.values()).map(user => user.getUserData())
     }
   }
+
+  getUsersData() {
+    const roomUsers = Array.from(this.getUsers()); 
+
+    return roomUsers.map(user => user.getUserData()); // 유저 데이터를 배열로 변환
+}
+
 
   addUser(user) {
     // 방 인원 검사
