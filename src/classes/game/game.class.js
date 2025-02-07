@@ -35,21 +35,25 @@ class Game {
   }
 
   addPlayer(player) {
+  addPlayer(player) {
     this.players.push(player);
     console.log(`addPlayer : ${player}`);
   }
 
   getPlayer(playerId) {
     const player = this.players.find((player) => player.id === playerId);
+    const player = this.players.find((player) => player.id === playerId);
     console.log(`getPlayer : ${player}`);
     return player;
   }
 
   removePlayer(playerId) {
+  removePlayer(playerId) {
     this.players = this.players.filter((player) => player.id !== playerId);
     console.log(`removedPlayerId : ${playerId}`);
   }
 
+  addMonster(monster) {
   addMonster(monster) {
     this.monsters.push(monster);
     console.log(`addMonster : ${monster}`);
@@ -57,14 +61,20 @@ class Game {
 
   getMonster(monsterId) {
     const monster = this.monsters.find((monster) => monster.id === monsterId);
+  getMonster(monsterId) {
+    const monster = this.monsters.find((monster) => monster.id === monsterId);
     console.log(`getMonster : ${monster}`);
     return monster;
   }
 
   removeMonster(monsterId) {
+
+  removeMonster(monsterId) {
     this.monsters = this.monsters.filter((monster) => monster.id !== monsterId);
     console.log(`removedMonsterId : ${monsterId}`);
   }
+
+  addMap(map) {
 
   addMap(map) {
     this.map = map;
@@ -135,4 +145,3 @@ class Game {
 }
 
 export default Game;
-

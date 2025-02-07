@@ -1,44 +1,45 @@
-import { getProtoMessages } from "../init/loadProtos.js";
+import { config } from '../config/config.js';
+import handlers from '../handlers/index.js';
+import { getProtoMessages } from '../init/loadProtos.js';
 
-const onData = (socket) => (data) => {
-    console.log('데이터 수신');
+const onData = (socket) => async (data) => {
+  console.log('데이터 수신');
 
-    socket.buffer = Buffer.concat([socket.buffer, data]);
-    const packetTypeByte = config.header.packetTypeByte;
-    const versionLengthByte = config.header.versionLengthByte;
-    let versionByte = 0;
-    const payloadLengthByte = config.header.payloadLengthByte;
-    let payloadByte = 0;
-    const defaultLength = packetTypeByte + versionLengthByte
-    
-    while (socket.buffer.length >= defaultLength) {
-        // 가변 길이 확인
-        versionByte = socket.buffer.readUInt8(defaultLength);
-        payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
-        // buffer의 길이가 충분한 동안 실행
-        if (socket.buffer.length < defaultLength + versionByte + payloadByte) break
-        // 패킷 분리
-        const packet = socket.buffer.subarray(0, defaultLength + versionByte + payloadByte);
-        // 남은 패킷 buffer 재할당
-        socket.buffer = socket.buffer.subarray(defaultLength + versionByte + payloadByte);
+  socket.buffer = Buffer.concat([socket.buffer, data]);
+  const packetTypeByte = config.header.packetTypeByte;
+  const versionLengthByte = config.header.versionLengthByte;
+  let versionByte = 0;
+  const payloadLengthByte = config.header.payloadLengthByte;
+  let payloadByte = 0;
+  const defaultLength = packetTypeByte + versionLengthByte;
 
-        // 값 추출 및 검증
-        const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
-        if (version !== config.client.version) break;
-        const packetType = packet.readUInt16BE(0);
-        const payloadBuffer = packet.subarray(defaultLength + versionByte + payloadLengthByte, defaultLength + versionByte + payloadLengthByte + payloadByte)
-        
-        try {
-            const proto = getProtoMessages().GamePacket;
-            const gamePacket = proto.decode(payloadBuffer);
-            const payload = gamePacket[gamePacket.payload];
-            // 핸들러 기입 예정, 맵핑 있으면 편할 듯
-        } catch (e){
-            console.error(e);
-        }
-        
+  while (socket.buffer.length >= defaultLength) {
+    // 가변 길이 확인
+    versionByte = socket.buffer.readUInt8(packetTypeByte);
+    payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
+    const headerLength = defaultLength + versionByte + payloadLengthByte;
+    // buffer의 길이가 충분한 동안 실행
+    if (socket.buffer.length < headerLength + payloadByte) continue;
+    const packet = socket.buffer.subarray(0, headerLength + payloadByte);
+    // 남은 패킷 buffer 재할당
+    socket.buffer = socket.buffer.subarray(headerLength + payloadByte);
+
+    // 값 추출 및 버전 검증
+    const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
+    if (version !== config.client.version) continue;
+    const packetType = packet.readUInt16BE(0);
+    const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
+    try {
+      const proto = getProtoMessages().GamePacket;
+      const handler = handlers[packetType];
+      const gamePacket = proto.decode(payloadBuffer);
+      const payload = gamePacket[gamePacket.payload];
+
+      await handler({ socket, payload });
+    } catch (e) {
+      console.error(e);
     }
-
+  }
 };
 
 export default onData;

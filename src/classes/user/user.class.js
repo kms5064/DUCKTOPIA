@@ -23,7 +23,7 @@ class User {
   // 로그인
   login(userId, name) {
     this.id = userId;
-    this.name = name
+    this.name = name;
     this.state = 'lobby';
   }
   // 방 입장
