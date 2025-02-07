@@ -4,7 +4,9 @@ import { v4 as uuidV4 } from "uuid";
 import Monster from "../monster/monster.class.js";
 import { packetNames } from "../../protobuf/packetNames.js";
 
-class roomSession {
+//일단 룸 세션에서 루프를 돌리고 있지만 게임 세션을 돌려야 할 수도 있다.
+//게임이 시작되는 
+class RoomSession {
 
     constructor() {
         this.globalMonsters = new Map();
@@ -48,7 +50,8 @@ class roomSession {
     addGame(game) {
         if (!this.game) {
             this.game = game;
-            this.addMonsterAfterGameStart();
+            this.game.addRandomAllMonsterAfterGameStart();
+            this.game.gameLoopStart();
             this.lastUpdate = Date.now();
             if(this.gameLoop !== null)
             {
@@ -63,7 +66,9 @@ class roomSession {
     //이걸 통해서 gameLoop가 돌아가도록 한다.
     gameLoopStart()
     {
-        //일단 게임이 시작되었을 때 이 루프가 시작되도록 할 거니까 
+        
+        //일단 게임이 시작되었을 때 이 루프가 시작되도록 할 거니까
+        //일단은 서버 측에서 레이턴시를 관리하는데 클라이언트의 레이턴시를 참고하는 방법도 고려해 보자.
         this.gameLoop = setInterval(() => {
             if(!this.game)
             {
@@ -77,8 +82,12 @@ class roomSession {
                 const now = Date.now();
                 const latency = now - this.lastUpdate;
                 this.lastUpdate = Date.now();
+                //업데이트를 보낼 때마다 
+                //몬스터가 플레이어를 발견하는 과정
                 this.monsterDisCovered();
+                //
                 this.monsterMove(latency);
+                //몬스터가 플레이어를 잃는 과정
                 this.monsterLostPlayerCheck();
             }
         }, 60);
@@ -94,47 +103,6 @@ class roomSession {
         return this.playerList.get(socket);
     }
 
-    //몬스터의 루프가 돌아가고 있을 때 이걸 체크해 보도록 하자.
-    monsterMove(latency) {
-        for (const [key, monster] of this.globalMonsters) {
-            if (!monster.hasPriorityPlayer()) {
-                continue;
-            }
-            else {
-                monster.moveByLatency(latency);//S2CMonsterMoveNotification을 보낸다
-
-                const monsterMovePayload = {
-                    monsterId : monster.id,
-                    x : monster.x,
-                    y : monster.y
-                }
-                const packet = createResponse(packetNames[11], monsterMovePayload);
-                this.game.broadcast(packet);
-            }
-        }
-    }
-
-
-    monsterDisCovered() {
-        for (const [key, monster] of this.globalMonsters) {
-            if (!monster.hasPriorityPlayer()) {
-                for (const [key, player] of this.playerList) {
-                    monster.setTargetPlayer(player);
-                }
-            }
-        }
-    }
-
-    monsterLostPlayerCheck()
-    {
-        for (const [key, monster] of this.globalMonsters) {
-            if (monster.hasPriorityPlayer()) {
-                monster.lostPlayer();
-            }
-        }
-    }
-
-
 }
 
-export default roomSession;
+export default RoomSession;

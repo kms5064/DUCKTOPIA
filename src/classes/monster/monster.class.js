@@ -65,6 +65,7 @@ class Monster extends MovableObjectBase {
             this.distanceBetweenPlayer = Math.sqrt(Math.pow(this.x - this.priorityPlayer.x, 2) + Math.pow(this.y - this.priorityPlayer.y, 2));
             if(this.distanceBetweenPlayer < 10)//공격 범위 안에 들어갔다면
             {
+                
                 const packet = createResponse(packetNames)
                 this.priorityPlayer.sendPacket();
             }
@@ -96,6 +97,7 @@ class Monster extends MovableObjectBase {
         {
             this.distanceBetweenPlayer = Infinity;
             this.priorityPlayer = null;
+            //패킷을 
         }
         else
         {
@@ -137,6 +139,7 @@ class Monster extends MovableObjectBase {
     //default로 호출될 때는 별다른 기능 없음
     //x가 -1이면 왼쪽 1이면 오른쪽
     //y가 -1이면 아래쪽 1이면 위쪽
+    //공격 사거리 내에 들어온다면 몬스터의 
     moveByLatency(latency) {
         const timediff = latency / 1000;//레이턴시는 1초를 1000으로 받아온다는 전제
 
@@ -144,6 +147,10 @@ class Monster extends MovableObjectBase {
         const distance = Math.sqrt(Math.pow(this.priorityPlayer.x - this.x, 2) + Math.pow(this.priorityPlayer.y - this.y, 2));
         const vectorX = (this.priorityPlayer.x - this.x) / distance;//+, -를 구분지어서 할 수 있을 듯
         const vectorY = (this.priorityPlayer.y - this.y) / distance;
+        const degree = Math.acos(vectorX);
+
+        //공격할 몬스터 ID, 공격 받는 플레이어 ID 
+
         switch (this.monsterCode) {
             case 1:
             case 2:
@@ -185,6 +192,8 @@ class Monster extends MovableObjectBase {
                 {
                     this.distanceBetweenPlayer = distance;
                     this.priorityPlayer = player;
+                    //패킷을 보내
+
                 }
 
             }
