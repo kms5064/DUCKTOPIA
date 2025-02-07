@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { createUser, findUserByEmail } from '../../db/user/user.db.js';
+import { createUser } from '../../db/user/user.db.js';
 import { signUpSchema } from '../../utils/validations/auth.validation.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
