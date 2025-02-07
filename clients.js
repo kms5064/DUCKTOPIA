@@ -45,26 +45,12 @@ class Client {
 
             try {
                 const proto = getProtoMessages().GamePacket;
-                const handler = handlers[packetType];
                 const gamePacket = proto.decode(payloadBuffer);
                 const payload = gamePacket[gamePacket.payload];
-
-                await handler(socket, payload);
             } catch (e) {
                 console.error(e);
             }
         }
-    }
-
-    parsePacket(packetType, payloadBuffer) {
-        const proto = getProtoMessages();
-        let payload = null;
-        try {
-            payload = proto[packetType].decode(payloadBuffer);
-        }catch(e){
-            console.error(e);
-        }
-        return payload;
     }
 
     makePacket(packetType, payload) {
@@ -72,17 +58,21 @@ class Client {
         let message = null;
         let payloadBuffer = null;
 
+        // payload 생성
         try {
+            packetType
+
             message = proto[packetType].create(payload);
             payloadBuffer = proto[packetType].encode(message).finish();
         } catch (e) {
             console.error(e);
         }
 
+        // header 생성
         const packetTypeBuffer = Buffer.alloc(2);
         packetTypeBuffer.writeUInt16BE(packetType);
 
-        const versionBuffer = Buffer.from(configVersion);
+        const versionBuffer = Buffer.from(config.client.version);
 
         const versionLengthBuffer = Buffer.alloc(1);
         versionLengthBuffer.writeUInt8(versionBuffer.length);
