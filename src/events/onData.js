@@ -20,23 +20,23 @@ const onData = (socket) => async (data) => {
         // buffer의 길이가 충분한 동안 실행
         if (socket.buffer.length < defaultLength + versionByte + payloadByte) continue;
         // 패킷 분리
-        const packet = socket.buffer.subarray(0, defaultLength + versionByte + payloadByte);
+        const headerLength = defaultLength + versionByte + payloadLengthByte 
+        const packet = socket.buffer.subarray(0, headerLength + payloadByte);
         // 남은 패킷 buffer 재할당
-        socket.buffer = socket.buffer.subarray(defaultLength + versionByte + payloadByte);
+        socket.buffer = socket.buffer.subarray(headerLength + payloadByte);
 
         // 값 추출 및 버전 검증
         const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
         if (version !== config.client.version) continue;
         const packetType = packet.readUInt16BE(0);
-        const payloadBuffer = packet.subarray(defaultLength + versionByte + payloadLengthByte, defaultLength + versionByte + payloadLengthByte + payloadByte)
-        
+        const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte)
         try {
             const proto = getProtoMessages().GamePacket;
             const handler = handlers[packetType];
             const gamePacket = proto.decode(payloadBuffer);
             const payload = gamePacket[gamePacket.payload];
 
-            await handler(socket, payload);
+            await handler({socket, payload});
         } catch (e){
             console.error(e);
         }

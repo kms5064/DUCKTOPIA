@@ -1,6 +1,6 @@
 import { findUserByEmail } from '../../db/user/user.db.js';
 
-const signInHandler = async (socket, payload) => {
+const signInHandler = async ({socket, payload}) => {
   try {
     const { email, password } = payload;
 
