@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 class RoomSession {
   constructor() {
-    this.rooms = new Map();
+    this.rooms = new Map(); // key : roomId, value : room
   }
 
   // 방 추가하기
