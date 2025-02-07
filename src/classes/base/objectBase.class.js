@@ -1,4 +1,4 @@
-class ObjectBase {
+class MovableObjectBase {
     constructor(id, x, y, range, speed) {
         // 오브젝트 고유 ID
         this.id = id
@@ -83,5 +83,3 @@ class ObjectBase {
         return {direct: { x: directX, y: directY }, speed: this.speed, position, timestamp }
     }
 }
-
-export default ObjectBase;
