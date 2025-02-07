@@ -1,7 +1,7 @@
-import ObjectBase from "../base/objectBase.class.js";
+import MovableObjectBase from "../base/objectBase.class.js";
 import { maxItemDropCount } from "../../config/constants/monster.js";
 
-class Monster extends ObjectBase {
+class Monster extends MovableObjectBase {
     //몬스터는 각각의 인스턴스로 활용될 것이며 이건 
     //이건 추상 클래스로써 접근할 것이니 
     //위치 동기화는 언제 했는가 

@@ -9,7 +9,7 @@ import {
   HOST,
   PORT,
 } from './constants/env.js';
-import { PACKET_TYPE_BYTE, PAYLOAD_LENGTH_BYTE, VERSION_LENGTH_BYTE } from './constants/header.js';
+import { PACKET_TYPE, PACKET_TYPE_BYTE, PAYLOAD_LENGTH_BYTE, VERSION_LENGTH_BYTE } from './constants/header.js';
 
 
 export const config = {
@@ -18,7 +18,9 @@ export const config = {
     versionLengthByte: VERSION_LENGTH_BYTE,
     payloadLengthByte: PAYLOAD_LENGTH_BYTE
   },
-  packetType: {},
+  packetType: {
+    ...PACKET_TYPE
+  },
   server: {
     host: HOST,
     port: PORT,
