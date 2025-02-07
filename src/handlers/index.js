@@ -1,21 +1,26 @@
-import { config } from "../config/config.js";
-import attackPlayerHandler from "./player/attackPlayer.handler.js";
-import signInHandler from "./user/signIn.handler.js";
-import signUpHandler from "./user/signUp.handler.js";
+import { config } from '../config/config.js';
+import attackPlayerHandler from './player/attackPlayer.handler.js';
+import createRoomHandler from './room/createRoom.handler.js';
+import signInHandler from './user/signIn.handler.js';
+import signUpHandler from './user/signUp.handler.js';
 
 const handlers = {
-    [config.packetType.REGISTER_REQUEST]: {
-        handler: signUpHandler,
-        prototype: 'C2SRegisterRequest',
-    },
-    [config.packetType.LOGIN_REQUEST]: {
-        handler: signInHandler,
-        prototype: 'C2SLoginRequest',
-    },
-    [config.packetType.PLAYER_ATTACK_REQUEST]: {
-        handler: attackPlayerHandler,
-        prototype: 'C2SPlayerAttackRequest',
-    },
-}
+  [config.packetType.REGISTER_REQUEST]: {
+    handler: signUpHandler,
+    prototype: 'C2SRegisterRequest',
+  },
+  [config.packetType.LOGIN_REQUEST]: {
+    handler: signInHandler,
+    prototype: 'C2SLoginRequest',
+  },
+  [config.packetType.PLAYER_ATTACK_REQUEST]: {
+    handler: attackPlayerHandler,
+    prototype: 'C2SPlayerAttackRequest',
+  },
+  [config.packetType.CREATE_ROOM_REQUEST]: {
+    handler: createRoomHandler,
+    prototype: 'C2SCreateRoomRequest',
+  },
+};
 
 export default handlers;
