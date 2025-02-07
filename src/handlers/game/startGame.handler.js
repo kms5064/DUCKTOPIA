@@ -14,7 +14,7 @@ const gamePrepareReqHandler = (room) => {
     //base좌표 넣기
 
     const payload = {
-        S2CGamePrepareResponse: {
+      S2CGamePrepareResponse: {
         success,
       },
     };

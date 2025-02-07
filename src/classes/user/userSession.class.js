@@ -21,7 +21,6 @@ class UserSession {
   getUser(socket) {
     return this.users.get(socket);
   }
-
 }
 
 export default UserSession;

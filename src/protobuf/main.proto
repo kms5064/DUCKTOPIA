@@ -36,14 +36,19 @@ message UserData {
     CharacterData character = 3;
 }
 
+enum PhaseType {
+    NONE_PHASE = 0;
+    DAY = 1;
+    EVENING = 2;
+    END = 3;
+}
+
 message GameStateData {
     // DAY 1, EVENING 2, END 3 (하루 종료시 카드 버리는 턴)
     PhaseType phaseType = 1; 
      // 다음 페이즈 시작 시점(밀리초 타임스탬프)
     uint64 nextPhaseAt = 2;
 }
-
-
 
 // 통신 Payload
 message C2SRegisterRequest
