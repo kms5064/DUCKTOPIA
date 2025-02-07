@@ -2,6 +2,7 @@ import { config } from '../config/config.js';
 import attackPlayerHandler from './player/attackPlayer.handler.js';
 import createRoomHandler from './room/createRoom.handler.js';
 import getRoomListHandler from './room/getRoomList.handler.js';
+import joinRoomHandler from './room/joinRoom.handler.js';
 import signInHandler from './user/signIn.handler.js';
 import signUpHandler from './user/signUp.handler.js';
 
@@ -11,6 +12,7 @@ const handlers = {
   [config.packetType.PLAYER_ATTACK_REQUEST[0]]: attackPlayerHandler,
   [config.packetType.CREATE_ROOM_REQUEST[0]]: createRoomHandler,
   [config.packetType.GET_ROOM_LIST_REQUEST[0]]: getRoomListHandler,
+  [config.packetType.JOIN_ROOM_REQUEST[0]]: joinRoomHandler,
 };
 
 export default handlers;
