@@ -1,4 +1,4 @@
-class ObjectBase {
+class MovableObjectBase {
     constructor(id, x, y, range, speed) {
         // 오브젝트 고유 ID
         this.id = id

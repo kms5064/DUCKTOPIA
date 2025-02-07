@@ -34,8 +34,8 @@ export const loadProtos = async () => {
 
         await Promise.all(protoFiles.map((file) => root.load(file)));
 
-        for (const [type, name] of packetNames) {
-            protoMessages[type] = root.lookupType(name);
+        for (const type of packetNames) {
+            protoMessages[type] = root.lookupType(type);
         }
 
         console.log('Protobuf 파일이 로드되었습니다.');
