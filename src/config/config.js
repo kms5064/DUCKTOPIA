@@ -11,6 +11,7 @@ import {
 } from './constants/env.js';
 import { PACKET_TYPE, PACKET_TYPE_BYTE, PAYLOAD_LENGTH_BYTE, VERSION_LENGTH_BYTE } from './constants/header.js';
 
+
 export const config = {
   header: {
     packetTypeByte: PACKET_TYPE_BYTE,
