@@ -27,6 +27,7 @@ function makePacket([packetType, packetTypeName], payload) {
     payloadLengthBuffer.writeUInt32BE(payloadBuffer.length);
 
     const packet = Buffer.concat([packetTypeBuffer, versionLengthBuffer, versionBuffer, payloadLengthBuffer, payloadBuffer]);
+    return packet
 }
 
 export default makePacket;
