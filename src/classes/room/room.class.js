@@ -1,8 +1,10 @@
 import { MAX_USER_AMOUNT } from '../../config/constants/room.js';
 
 class Room {
-  constructor(ownerId) {
+  constructor(id, name, ownerId) {
     this.users = new Map();
+    this.id = id; // uuid
+    this.name = name; // room name
     this.state = 'waiting'; // 'waiting', 'running'
     this.game = null;
     this.ownerId = ownerId;
@@ -35,3 +37,5 @@ class Room {
     this.game = null;
   }
 }
+
+export default Room;
