@@ -33,6 +33,7 @@ class RoomSession {
     return this.rooms.values();
   }
 
+  // 방 전체 정보 추출 (패킷 전송 용도로 가공)
   getRoomDatas() {
     let roomDatas = [];
     for (const room of this.getRooms()) {
