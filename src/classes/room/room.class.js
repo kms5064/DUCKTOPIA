@@ -33,6 +33,25 @@ class Room {
     return this.users.values();
   }
 
+  getRoomData() {
+    // 패킷 보내는 용도
+    let userDatas = [];
+
+    for (const key of this.users.keys()) {
+      // const userData = getUserData();
+      //userDatas.push(userData);
+    }
+
+    return {
+      roomId: this.roomId,
+      ownerId: this.ownerId,
+      name: this.name,
+      maxUserNum: MAX_USER_AMOUNT,
+      state: this.state,
+      users: userDatas,
+    };
+  }
+
   changeState(state) {
     this.state = state;
   }
