@@ -6,7 +6,7 @@ import { PACKET_TYPE } from '../../config/constants/header.js';
 
 const SALT_OR_ROUNDS = 10;
 
-const signUpHandler = async (socket, payload) => {
+const signUpHandler = async ({socket, payload}) => {
   try {
     const { email, password, name } = payload;
 

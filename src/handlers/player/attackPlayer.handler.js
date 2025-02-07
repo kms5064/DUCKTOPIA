@@ -1,6 +1,6 @@
 import { calculateDistance, calculateAngle } from '../../utils/calculate.js';
 
-const attackPlayerHandler = (socket, payload) => {
+const attackPlayerHandler = ({socket, payload}) => {
   const { x: playerDirX, y: playerDirY } = payload;
 
   // 유저 객체 조회
