@@ -35,6 +35,7 @@ const createRoomHandler = async (socket, payload) => {
     const createRoomResponse = makePacket(PACKET_TYPE.CREATE_ROOM_RESPONSE, {
       success: true,
       roomId: room.id,
+      message: '방이 생성되었습니다!',
     });
 
     socket.write(createRoomResponse);
