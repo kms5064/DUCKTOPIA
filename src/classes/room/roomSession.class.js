@@ -10,8 +10,9 @@ class RoomSession {
   // 방 추가하기
   addRoom(ownerId, name, maxUserNum) {
    
-    const room = new Room(this.roomIdCounter++, name, ownerId, maxUserNum);
+    const room = new Room(this.roomIdCounter, name, ownerId, maxUserNum);
     this.rooms.set(this.roomIdCounter, room);
+    this.roomIdCounter++
     return room;
   }
 
@@ -31,9 +32,7 @@ class RoomSession {
   }
 
   getRoomsData() {
-    return {
-      rooms: Array.from(this.rooms.values()).map(room => room.getRoomData())
-    };
+    return Array.from(this.rooms.values()).map(room => room.getRoomData());
   }
 }
 

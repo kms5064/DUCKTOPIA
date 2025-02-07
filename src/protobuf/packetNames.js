@@ -1,5 +1,5 @@
 export const packetNames = [
-  // 그거 아시나요 이 프로젝트.. gamePacket만 쓴다는 사실
+  // 그거 아시나요 이 프로젝트.. gamePacket만 쓴다는 사실 ㅋㅋ 그걸 이제 알았누
   // 'Position',
   // 'CharacterPositionData',
   // 'User',

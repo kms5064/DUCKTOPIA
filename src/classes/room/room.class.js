@@ -1,4 +1,6 @@
+import { PACKET_TYPE } from '../../config/constants/header.js';
 import { MAX_USER_AMOUNT } from '../../config/constants/room.js';
+import makePacket from '../../utils/packet/makePacket.js';
 
 class Room {
   constructor(id, name, ownerId, maxUserNum) {
@@ -9,6 +11,23 @@ class Room {
     this.game = null;
     this.ownerId = ownerId;
     this.maxUserNum = maxUserNum;
+  }
+
+  joinRoomNotification(id) {
+    const roomUsers = Array.from(this.getUsers());
+
+    const targetUser = roomUsers.find(user => user.id === id);
+
+    const JoinRoomNotification = makePacket(PACKET_TYPE.JOIN_ROOM_NOTIFICATION, {
+      joinUser: targetUser.getUserData(), 
+  });
+
+  roomUsers.forEach(user => {
+    if (user.id !== id && user.socket) {
+        user.socket.write(JoinRoomNotification);
+    }
+});
+
   }
 
   getRoomData() {

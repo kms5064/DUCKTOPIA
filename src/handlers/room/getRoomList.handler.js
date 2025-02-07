@@ -27,12 +27,11 @@ const getRoomListHandler = ({socket, payload}) => {
 
   // 2. 패킷 전송
   const getRoomListResponse = makePacket(PACKET_TYPE.GET_ROOM_LIST_RESPONSE, {
-    success: true,
-    rooms: roomSession.getRoomsData(),
-    message: '방 리스트를 조회했습니다!',
+    rooms: roomSession.getRoomsData()
   });
-
+  
   socket.write(getRoomListResponse);
+
 };
 
 export default getRoomListHandler;

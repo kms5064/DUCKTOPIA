@@ -4,22 +4,15 @@ import { PACKET_TYPE } from '../../config/constants/header.js';
 import { roomNameSchema } from '../../utils/validations/room.validation.js';
 
 // 방 생성 핸들러
-const createRoomHandler = async ({socket, payload}) => {
+const JoinRoomHandler = async ({socket, payload}) => {
   try {
-    const { name, maxUserNum } = payload;
-
-    // 1. 방 이름 유효성 검사
-    await roomNameSchema.validateAsync(name);
+    const { roomId } = payload;
 
     // 2. 유저 찾기
     const user = userSession.getUser(socket);
 
-    if (!user) {
-      throw new Error('유저가 존재하지 않습니다!');
-    }
-
     // 3. 방 만들기
-    const room = roomSession.addRoom(user.id, name, maxUserNum);
+    const room = roomSession.getRoom(roomId);
 
     if (!room) {
       throw new Error('방 생성에 실패했습니다!');
@@ -31,17 +24,21 @@ const createRoomHandler = async ({socket, payload}) => {
     // 5. 유저 방에 추가
     room.addUser(user);
 
+
+
     // 6. 패킷 전송
-    const createRoomResponse = makePacket(PACKET_TYPE.CREATE_ROOM_RESPONSE, {
+    const joinRoomResponse = makePacket(PACKET_TYPE.JOIN_ROOM_RESPONSE, {
       success: true,
       room: room.getRoomData(),
-      message: '방이 생성되었습니다!',
+      message: '방에 참여했습니다!',
     });
+    socket.write(joinRoomResponse);
 
-    socket.write(createRoomResponse);
+    room.joinRoomNotification(user.id);
+
   } catch (error) {
     console.log(error);
   }
 };
 
-export default createRoomHandler;
+export default JoinRoomHandler;
