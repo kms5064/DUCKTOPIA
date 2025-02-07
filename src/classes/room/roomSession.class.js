@@ -23,6 +23,11 @@ class RoomSession {
   getRoom(roomId) {
     return this.rooms.get(roomId);
   }
+
+  // 방 전체 조회
+  getRooms() {
+    return this.rooms.values();
+  }
 }
 
 export default RoomSession;
