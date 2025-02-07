@@ -20,10 +20,12 @@ class Room {
   // 유저 추가
   addUser(user) {
     // 방 인원 검사
-    if (this.users.size >= MAX_USER_AMOUNT) return;
+    if (this.users.size >= MAX_USER_AMOUNT) return false;
 
     // 유저 추가
     this.users.set(user.socket, user);
+
+    return true;
   }
 
   // 유저 삭제
@@ -40,8 +42,8 @@ class Room {
   getRoomData() {
     let userDatas = [];
 
-    for (const key of this.users.keys()) {
-      // const userData = getUserData();
+    for (const user of this.getUsers()) {
+      // const userData = user.getUserData();
       // userDatas.push(userData);
     }
 
