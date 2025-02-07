@@ -43,8 +43,6 @@ message GameStateData {
     uint64 nextPhaseAt = 2;
 }
 
-
-
 // 통신 Payload
 message C2SRegisterRequest
 {

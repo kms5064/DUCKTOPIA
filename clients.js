@@ -34,10 +34,10 @@ class Client {
             // 가변 길이 확인
             versionByte = this.buffer.readUInt8(packetTypeByte);
             payloadByte = this.buffer.readUInt32BE(defaultLength + versionByte);
-            // buffer의 길이가 충분한 동안 실행
-            if (this.buffer.length < defaultLength + versionByte + payloadByte) continue;
-            // 패킷 분리
             const headerLength = defaultLength + versionByte + payloadLengthByte
+            // buffer의 길이가 충분한 동안 실행
+            if (this.buffer.length < headerLength + payloadByte) continue;
+            // 패킷 분리
             const packet = this.buffer.subarray(0, headerLength + payloadByte);
             // 남은 패킷 buffer 재할당
             this.buffer = this.buffer.subarray(headerLength + payloadByte);
@@ -53,7 +53,6 @@ class Client {
                 const payload = gamePacket[gamePacket.payload];
 
                 console.log('패킷 수신', packetType, payload);
-
                 switch (packetType) {
                 }
 
@@ -119,7 +118,6 @@ const registerTest = async (client_count = 1) => {
         })
     );
 }
-
 
 const loginTest = async (client_count = 1) => {
     await Promise.all(
