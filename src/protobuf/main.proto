@@ -135,7 +135,7 @@ message S2CMonsterDeathNotification
 message S2CMonsterHpUpdateNotification
 {
  int32 monsterId = 1;
- int32 hp = 2;
+ int32 damage = 2;
 }
 
 // 몬스터 스폰 (초기)
@@ -283,5 +283,6 @@ message GamePacket {
         C2SLeaveRoomRequest leaveRoomRequest = 32;
         S2CLeaveRoomResponse leaveRoomResponse = 33;
         S2CLeaveRoomNotification leaveRoomNotification = 34;
+        S2CJoinRoomNotification joinRoomNotification = 35;
     }
 }

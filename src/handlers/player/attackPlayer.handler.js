@@ -1,16 +1,18 @@
 import { calculateDistance, calculateAngle } from '../../utils/calculate.js';
+import { PACKET_TYPE } from '../../config/constants/header.js';
+import makePacket from '../../utils/packet/makePacket.js';
+import { userSession } from '../../sessions/session.js';
 
 const attackPlayerHandler = ({ socket, payload }) => {
   const { x: playerDirX, y: playerDirY } = payload;
 
   // 유저 객체 조회
-  const user = getUserBySocket(socket);
+  const user = userSession.getUser(socket);
   if (!user) {
     throw new Error('user does not exist');
   }
 
-  // 게임 ID 조회
-  const gameId = user.getGameId();
+  // TODO : 현재 게임 세션을 찾을 방법이 없음...
   // 게임 객체(세션) 조회
   const game = getGameById(gameId);
   if (!game) {
@@ -18,18 +20,18 @@ const attackPlayerHandler = ({ socket, payload }) => {
   }
 
   // Notification - 다른 플레이어들에게 전달
-  const motionPayload = { userId: user.id };
-  // TODO : PARAM 체크
-  const packet = createResponse(PACKET_TYPE.PLAYER_ATTACK, motionPayload);
+  const motionPayload = { playerId: player.id };
+  const packet = makePacket(PACKET_TYPE.PLAYER_ATTACK_NOTIFICATION, motionPayload);
   game.notification(socket, packet);
 
+  // TODO : 여기도 아직 미구현
   // 플레이어 객체 조회
-  const player = game.getPlayerById(user.userId);
+  const player = game.getPlayer(playerId);
   // 플레이어 위치 조회
   const { x: playerX, y: playerY } = player.getPlayerPos();
 
   // 몬스터 목록 조회
-  const monsterList = game.getMonsterList(gameId);
+  const monsterList = game.getAllMonster();
 
   monsterList.forEach((monster) => {
     // 몬스터 정보 조회
@@ -56,30 +58,21 @@ const attackPlayerHandler = ({ socket, payload }) => {
         console.log(`MONSTER ID: ${monster.getMonsterId()} (${monsterX}, ${monsterY}) ATTACK`);
 
         // 몬스터 HP 차감 처리
-        const currHp = monster.setDamaged(player.getPlayerAtkDamage());
+        const damege = player.getPlayerAtkDamage();
+        const currHp = monster.setDamaged(damege);
 
-        let payloadData = {};
-        let packetType;
         if (currHp <= 0) {
-          // 몬스터 사망 broadCast
-          // 몬스터 삭제 처리
+          // 몬스터 사망 처리
           game.removeMonster(monsterId);
-
-          packetType = PACKET_TYPE.DEATH_MONSTER;
-          payloadData = {
-            monsterId,
-          };
-        } else {
-          // 몬스터 체력 차감 broadCast
-          packetType = PACKET_TYPE.DEATH_MONSTER;
-          payloadData = {
-            monsterId,
-            monsterHp: currHp,
-          };
         }
 
-        const packet = createResponse(packetType, payloadData);
+        // 페이로드
+        const resPayload = {
+          monsterId,
+          damege,
+        };
 
+        const packet = makePacket(PACKET_TYPE.MONSTER_HP_UPDATE_NOTIFICATION, resPayload);
         // broadcast - 모든 플레이어들에게 전달
         game.broadcast(packet);
       } else {
