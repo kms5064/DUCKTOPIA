@@ -283,5 +283,6 @@ message GamePacket {
         C2SLeaveRoomRequest leaveRoomRequest = 32;
         S2CLeaveRoomResponse leaveRoomResponse = 33;
         S2CLeaveRoomNotification leaveRoomNotification = 34;
+        S2CJoinRoomNotification joinRoomNotification = 35;
     }
 }

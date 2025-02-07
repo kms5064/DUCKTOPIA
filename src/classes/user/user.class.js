@@ -47,6 +47,10 @@ class User {
   gameEnd() {
     this.state = 'lobby';
   }
+  //소켓 조회
+  getSocket() {
+    return this.socket;
+  }
 }
 
 export default User;
