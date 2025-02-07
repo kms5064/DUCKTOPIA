@@ -21,7 +21,7 @@ const signInHandler = async (socket, payload) => {
     const user = userSession.getUser(socket);
 
     // 4. 찾은 유저에 로그인 정보 추가
-    user.login(email);
+    user.login(email, user.name);
     
 
     // 3. 중복 로그인 유저 세션에서 체크 TODO

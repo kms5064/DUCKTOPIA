@@ -18,10 +18,12 @@ class User {
     this.roomId = null;
     this.socket = socket;
     this.state = null; // 'lobby', 'room', 'playing' 등 현재 상태 체크용
+    this.name = null;
   }
   // 로그인
-  login(userId) {
+  login(userId, name) {
     this.id = userId;
+    this.name = name
     this.state = 'lobby';
   }
   // 방 입장
