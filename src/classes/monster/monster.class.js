@@ -53,6 +53,7 @@ class Monster extends MovableObjectBase {
     } else {
       this.hp -= damage - this.defence;
     }
+    return this.hp;
   }
 
   calculateBetweenDistance() {
