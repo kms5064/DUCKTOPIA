@@ -12,6 +12,7 @@ const attackPlayerHandler = ({ socket, payload }) => {
     throw new Error('user does not exist');
   }
 
+  // TODO : 현재 게임 세션을 찾을 방법이 없음...
   // 게임 객체(세션) 조회
   const game = getGameById(gameId);
   if (!game) {
@@ -20,10 +21,10 @@ const attackPlayerHandler = ({ socket, payload }) => {
 
   // Notification - 다른 플레이어들에게 전달
   const motionPayload = { playerId: player.id };
-  // TODO : PARAM 체크
   const packet = makePacket(PACKET_TYPE.PLAYER_ATTACK_NOTIFICATION, motionPayload);
   game.notification(socket, packet);
 
+  // TODO : 여기도 아직 미구현
   // 플레이어 객체 조회
   const player = game.getPlayer(playerId);
   // 플레이어 위치 조회
