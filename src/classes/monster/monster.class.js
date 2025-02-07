@@ -1,5 +1,6 @@
 import MovableObjectBase from "../base/objectBase.class.js";
 import { maxItemDropCount } from "../../config/constants/monster.js";
+import { packetNames } from "../../protobuf/packetNames.js";
 
 class Monster extends MovableObjectBase {
     //몬스터는 각각의 인스턴스로 활용될 것이며 이건 
@@ -21,6 +22,7 @@ class Monster extends MovableObjectBase {
         this.priorityPlayer = null;
         //몬스터가 여러 패턴을 가지고 있을 때 그 패턴들을 이 안에서 쿨타임을 관리한다.
         this.patternInterval = new Map();
+        this.distanceBetweenPlayer = Infinity;
         //드랍 아이템 숫자 확률을 이걸로 정해보자.
     }
 
@@ -42,6 +44,11 @@ class Monster extends MovableObjectBase {
         return this.attack;
     }
 
+    getDistance()
+    {
+        return this.distanceBetweenPlayer;
+    }
+
     setDamaged(damage) {
         if (damage - this.defence < 0) {
             this.hp -= 1;
@@ -49,6 +56,25 @@ class Monster extends MovableObjectBase {
         else {
             this.hp -= (damage - this.defence);
         }
+    }
+
+    calculateBetweenDistance()
+    {
+        if(this.priorityPlayer !== null)
+        {
+            this.distanceBetweenPlayer = Math.sqrt(Math.pow(this.x - this.priorityPlayer.x, 2) + Math.pow(this.y - this.priorityPlayer.y, 2));
+            if(this.distanceBetweenPlayer < 10)//공격 범위 안에 들어갔다면
+            {
+                const packet = createResponse(packetNames)
+                this.priorityPlayer.sendPacket();
+            }
+        }
+    }
+
+    //플레이어를 쫒고 있는지 확인한다.
+    hasPriorityPlayer()
+    {
+        return this.priorityPlayer !== null ? true : false;
     }
 
     
@@ -62,8 +88,20 @@ class Monster extends MovableObjectBase {
    
 
     //몬스터의 플레이어 추적을 잃게 만든다.
+    //외부 측에서 타겟 플레이어가 있는지 체크한다.
     lostPlayer() {
-        this.priorityPlayer = null;
+        const distance = Math.sqrt(Math.pow(this.priorityPlayer.x - this.x, 2) + Math.pow(this.priorityPlayer.y - this.y, 2));
+
+        if(distance > this.awakeRange + 10)//인식 범위보다 인식 끊기는 범위가 좀 더 넓어야 할 것이다.
+        {
+            this.distanceBetweenPlayer = Infinity;
+            this.priorityPlayer = null;
+        }
+        else
+        {
+            this.distanceBetweenPlayer = distance;
+        }
+        
         
     }
 
@@ -101,9 +139,8 @@ class Monster extends MovableObjectBase {
     //y가 -1이면 아래쪽 1이면 위쪽
     moveByLatency(latency) {
         const timediff = latency / 1000;//레이턴시는 1초를 1000으로 받아온다는 전제
-        const speed = 1;
 
-        const lateMove = speed * timediff;
+        const lateMove = this.speed * timediff;
         const distance = Math.sqrt(Math.pow(this.priorityPlayer.x - this.x, 2) + Math.pow(this.priorityPlayer.y - this.y, 2));
         const vectorX = (this.priorityPlayer.x - this.x) / distance;//+, -를 구분지어서 할 수 있을 듯
         const vectorY = (this.priorityPlayer.y - this.y) / distance;
@@ -138,13 +175,28 @@ class Monster extends MovableObjectBase {
         }
     }
 
-    monsterClearInterval() {
-
-    }
-
+    //플레이어를 세팅할 때의 조건을 확인한다.
     setTargetPlayer(player) 
     {
-        this.priorityPlayer = player;
+        if(this.priorityPlayer === null)
+            {
+                const distance = Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
+                if(distance <= this.awakeRange)
+                {
+                    this.distanceBetweenPlayer = distance;
+                    this.priorityPlayer = player;
+                }
+
+            }
+            else
+            {
+                if(player === this.priorityPlayer)
+                {
+                    this.calculateBetweenDistance();
+                }
+            }
+        
+        
     }
 
     monsterDataSend() {
