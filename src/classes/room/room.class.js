@@ -17,6 +17,7 @@ class Room {
     this.ownerId = ownerId;
   }
 
+  // 유저 추가
   addUser(user) {
     // 방 인원 검사
     if (this.users.size >= MAX_USER_AMOUNT) return;
@@ -25,16 +26,18 @@ class Room {
     this.users.set(user.socket, user);
   }
 
+  // 유저 삭제
   removeUser(socket) {
     this.users.delete(socket);
   }
 
+  // 유저 조회
   getUsers() {
     return this.users.values();
   }
 
+  // 방 데이터 추출 (패킷 전송 용도로 가공)
   getRoomData() {
-    // 패킷 보내는 용도
     let userDatas = [];
 
     for (const key of this.users.keys()) {
@@ -52,10 +55,12 @@ class Room {
     };
   }
 
+  // 방 상태 변경
   changeState(state) {
     this.state = state;
   }
 
+  // 게임 시작
   startGame() {
     this.changeState(RoomStateType.INGAME);
 
@@ -63,6 +68,7 @@ class Room {
     this.game = new Game();
   }
 
+  // 게임 종료
   endGame() {
     this.changeState(RoomStateType.WAIT);
 
