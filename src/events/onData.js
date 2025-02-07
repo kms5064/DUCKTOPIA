@@ -19,7 +19,7 @@ const onData = (socket) => async (data) => {
         payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
         const headerLength = defaultLength + versionByte + payloadLengthByte
         // buffer의 길이가 충분한 동안 실행
-        if (this.buffer.length < headerLength + payloadByte) continue;
+        if (socket.buffer.length < headerLength + payloadByte) continue;
         const packet = socket.buffer.subarray(0, headerLength + payloadByte);
         // 남은 패킷 buffer 재할당
         socket.buffer = socket.buffer.subarray(headerLength + payloadByte);
