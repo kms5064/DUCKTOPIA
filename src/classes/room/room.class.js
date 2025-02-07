@@ -1,11 +1,18 @@
 import { MAX_USER_AMOUNT } from '../../config/constants/room.js';
 
+const RoomStateType = {
+  WAIT: 0,
+  PREPARE: 1,
+  INGAME: 2,
+};
+Object.freeze(RoomStateType);
+
 class Room {
   constructor(id, name, ownerId) {
     this.users = new Map();
     this.id = id; // 숫자(TODO 나중에 uuid로?)
     this.name = name; // room name
-    this.state = 'waiting'; // 'waiting', 'running'
+    this.state = RoomStateType.WAIT;
     this.game = null;
     this.ownerId = ownerId;
   }
