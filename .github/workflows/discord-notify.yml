@@ -16,7 +16,11 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         with:
-          args: '🔔 New PR to **dev**: **${{ github.event.pull_request.title }}** by ${{ github.event.pull_request.user.login }} 🚀'
+          args: |
+            🔔 **New PR to dev!** 🚀
+            **Title:** ${{ github.event.pull_request.title }}
+            **Author:** ${{ github.event.pull_request.user.login }}
+            🔗 [View PR](${{ github.event.pull_request.html_url }})
 
       - name: Send Discord Notification on PR Merge
         if: github.event.pull_request.merged == true
@@ -28,5 +32,8 @@ jobs:
             🚀 **PR Merged into dev!** 🎉
             **Title:** ${{ github.event.pull_request.title }}
             **Author:** ${{ github.event.pull_request.user.login }}
-            **Description:** ${{ github.event.pull_request.body }}
+            **Description:**  
+            ```  
+            ${{ github.event.pull_request.body }}  
+            ``` 
             🔗 [View PR](${{ github.event.pull_request.html_url }})
