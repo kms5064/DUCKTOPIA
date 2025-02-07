@@ -6,35 +6,30 @@ class Game {
     this.players = [];
     this.monsters = [];
     this.map = []; //0과 1로 된 2차원배열?
-    this.monsterAssets = getGameAssets().monster;
     this.lastUpdate = 0;
-    this.maxStageX = 1000;
-    this.maxStageY = 1000;
-    this.centerStageX = 100;
-    this.centerStageY = 100;
     this.gameLoop = null;
   }
 
-  addRandomAllMonsterAfterGameStart() {
-    //중간 지점이 플레이어라고 가정하고 중간 지점에서 벗어난 위치들에 몬스터를 생성하도록 한다.
-    while (this.globalMonsters.size < maxMonsterCount) {
-      const vecX = Math.floor(Math.random() * 2) === 1 ? 1 : -1;
-      const vecY = Math.floor(Math.random() * 2) === 1 ? 1 : -1;
-      const id = uuidV4();
+  // addRandomAllMonsterAfterGameStart() {
+  //   //중간 지점이 플레이어라고 가정하고 중간 지점에서 벗어난 위치들에 몬스터를 생성하도록 한다.
+  //   while (this.globalMonsters.size < maxMonsterCount) {
+  //     const vecX = Math.floor(Math.random() * 2) === 1 ? 1 : -1;
+  //     const vecY = Math.floor(Math.random() * 2) === 1 ? 1 : -1;
+  //     const id = uuidV4();
 
-      const summonX = vecX * (Math.random() * (this.maxStageX - this.centerStageX) + this.centerStageX);
-      const summonY = vecY * (Math.random() * (this.maxStageY - this.centerStageY) + this.centerStageY);
+  //     const summonX = vecX * (Math.random() * (this.maxStageX - this.centerStageX) + this.centerStageX);
+  //     const summonY = vecY * (Math.random() * (this.maxStageY - this.centerStageY) + this.centerStageY);
 
-      const monsterCode = Math.floor(Math.random() * this.monsterAssets.data.length);
-      const monsterInfo = this.monsterAssets.data[monsterCode];
+  //     const monsterCode = Math.floor(Math.random() * this.monsterAssets.data.length);
+  //     const monsterInfo = this.monsterAssets.data[monsterCode];
 
-      const newMonster = new Monster(id, monsterCode, summonX, summonY, monsterInfo.range, monsterInfo.speed);
-      this.monsters.push(newMonster);
+  //     const newMonster = new Monster(id, monsterCode, summonX, summonY, monsterInfo.range, monsterInfo.speed);
+  //     this.monsters.push(newMonster);
 
-    }
-  }
+  //   }
+  // }
 
-  addPlayer(player) {
+
   addPlayer(player) {
     this.players.push(player);
     console.log(`addPlayer : ${player}`);
@@ -42,18 +37,16 @@ class Game {
 
   getPlayer(playerId) {
     const player = this.players.find((player) => player.id === playerId);
-    const player = this.players.find((player) => player.id === playerId);
     console.log(`getPlayer : ${player}`);
     return player;
   }
 
   removePlayer(playerId) {
-  removePlayer(playerId) {
     this.players = this.players.filter((player) => player.id !== playerId);
     console.log(`removedPlayerId : ${playerId}`);
   }
 
-  addMonster(monster) {
+
   addMonster(monster) {
     this.monsters.push(monster);
     console.log(`addMonster : ${monster}`);
@@ -61,13 +54,9 @@ class Game {
 
   getMonster(monsterId) {
     const monster = this.monsters.find((monster) => monster.id === monsterId);
-  getMonster(monsterId) {
-    const monster = this.monsters.find((monster) => monster.id === monsterId);
     console.log(`getMonster : ${monster}`);
     return monster;
   }
-
-  removeMonster(monsterId) {
 
   removeMonster(monsterId) {
     this.monsters = this.monsters.filter((monster) => monster.id !== monsterId);
@@ -75,12 +64,9 @@ class Game {
   }
 
   addMap(map) {
-
-  addMap(map) {
     this.map = map;
   }
 
-  //게임 루프를 시작한다고 하자
   gameLoopStart() {
     if (this.gameLoop !== null) {
       return;
