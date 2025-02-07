@@ -14,7 +14,7 @@
 
 class User {
   constructor(socket) {
-    this.id = null; //클라이언트 접속시 id = null, 로그인했을때 id에 값 넣을 것임
+    this.id = null; //클라이언트 접속시 id = null, 로그인했을때 id에 email 값 넣을 것임
     this.roomId = null;
     this.socket = socket;
     this.state = null; // 'lobby', 'room', 'playing' 등 현재 상태 체크용
