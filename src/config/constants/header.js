@@ -14,8 +14,9 @@ export const PACKET_TYPE = {
   CREATE_ROOM_RESPONSE: [2002, 'createRoomResponse'],
   JOIN_ROOM_REQUEST: [2003, 'joinRoomRequest'],
   JOIN_ROOM_RESPONSE: [2004, 'joinRoomResponse'],
-  GET_ROOM_LIST_REQUEST: [2005, 'getRoomListRequest'],
-  GET_ROOM_LIST_RESPONSE: [2006, 'getRoomListResponse'],
+  JOIN_ROOM_NOTIFICATION: [2005, 'joinRoomNotification'],
+  GET_ROOM_LIST_REQUEST: [2006, 'getRoomListRequest'],
+  GET_ROOM_LIST_RESPONSE: [2007, 'getRoomListResponse'],
 
   // 게임 시작
   PREPARE_GAME_REQUEST: [3001, 'gamePrepareRequest'],
