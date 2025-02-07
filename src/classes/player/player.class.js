@@ -73,8 +73,7 @@ class Player {
   //각각의 플레이어마다 interval이 있는 방법과 map에서 관리하는 방법 중에 하나를 고르는 걸 해보자.
   //이 쪽은 일단 유저가 interval을 관리하는 방식
   isDead() {
-    if(this.hp <= 0)
-    {
+    if (this.hp <= 0) {
       this.isAlive = false;
     }
 
