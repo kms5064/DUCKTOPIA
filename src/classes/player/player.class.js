@@ -6,8 +6,9 @@ import {
 } from '../../constants/player.js';
 
 class Player {
-  constructor(id, maxHp, atk, x, y) {
+  constructor(id, maxHp, atk, x, y, user) {
     this.id = id;
+    this.user = user; // User Class
     this.maxHp = maxHp;
     this.hp = maxHp;
     this.hunger = PLAYER_MAX_HUNGER;
@@ -73,6 +74,10 @@ class Player {
   //각각의 플레이어마다 interval이 있는 방법과 map에서 관리하는 방법 중에 하나를 고르는 걸 해보자.
   //이 쪽은 일단 유저가 interval을 관리하는 방식
   isDead() {
+    if (this.hp <= 0) {
+      this.isAlive = false;
+    }
+
     this.reviveInterval = setTimeout(() => {
       if (this.isAlive) {
         clearInterval(this.reviveInterval);
@@ -102,6 +107,10 @@ class Player {
     return this.angle;
   }
 
+  getUser() {
+    return this.user;
+  }
+
   //유저 동기화는 어떤 방식으로 하지?
   //hp, lv, hunger,inventory,equippedWeapon,isAlive같은 status는 변화가 있을때만 동기화하기
   //hp변화(피격) 브로드캐스트용 패킷
@@ -122,3 +131,5 @@ class Player {
 
   //허기가0이면 데미지를 받는다
 }
+
+export default Player;

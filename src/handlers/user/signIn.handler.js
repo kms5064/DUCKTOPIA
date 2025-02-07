@@ -1,6 +1,10 @@
+import { PACKET_TYPE } from '../../config/constants/header.js';
 import { findUserByEmail } from '../../db/user/user.db.js';
+import { userSession } from '../../sessions/session.js';
+import makePacket from '../../utils/packet/makePacket.js';
+import bcrypt from 'bcrypt';
 
-const signInHandler = async (socket, payload) => {
+const signInHandler = async ({ socket, payload }) => {
   try {
     const { email, password } = payload;
 
@@ -16,6 +20,16 @@ const signInHandler = async (socket, payload) => {
       throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
     }
 
+    // 3. 소켓을 이용해서 유저 찾기
+    const user = userSession.getUser(socket);
+
+    if (!user) {
+      throw new Error('소켓을 찾을 수 없습니다.');
+    }
+
+    // 4. 찾은 유저에 로그인 정보 추가
+    user.login(email, userData.name);
+
     // 3. 중복 로그인 유저 세션에서 체크 TODO
     // ex) const dupUser = getUserByEmail;
 
@@ -23,19 +37,16 @@ const signInHandler = async (socket, payload) => {
     //   throw new Error('이미 접속 중인 유저입니다.');
     // }
 
-    // 4. 유저 세션에서 자신의 user 찾아서 정보 입력하기 TODO
-    // ex) const user = getUserBySocket;
-    
-    // if(!user) {
-    //     throw new Error('소켓을 찾을 수 없습니다.');
-    // }
+    // 5. 패킷 전송
+    const loginResponse = makePacket(PACKET_TYPE.LOGIN_RESPONSE, {
+      success: true,
+      name: userData.name,
+    });
 
-    // user.updateUserInfo(userData.name, userData.email);
-
-    // 5. 결과 반환 TODO
-    // ex) createResponse~
-
-} catch (error) {
+    socket.write(loginResponse);
+  } catch (error) {
     console.log(error);
   }
 };
+
+export default signInHandler;

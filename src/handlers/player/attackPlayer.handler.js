@@ -1,6 +1,6 @@
 import { calculateDistance, calculateAngle } from '../../utils/calculate.js';
 
-const attackPlayerHandler = (socket, payload) => {
+const attackPlayerHandler = ({ socket, payload }) => {
   const { x: playerDirX, y: playerDirY } = payload;
 
   // 유저 객체 조회
@@ -56,7 +56,7 @@ const attackPlayerHandler = (socket, payload) => {
         console.log(`MONSTER ID: ${monster.getMonsterId()} (${monsterX}, ${monsterY}) ATTACK`);
 
         // 몬스터 HP 차감 처리
-        const currHp = monster.getDamaged(player.getPlayerAtkDamage());
+        const currHp = monster.setDamaged(player.getPlayerAtkDamage());
 
         let payloadData = {};
         let packetType;
