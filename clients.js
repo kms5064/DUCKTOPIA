@@ -105,7 +105,7 @@ class Client {
   }
 
   async loginRequest() {
-    const payload = { id: this.id, password: this.password };
+    const payload = { email: this.id, password: this.password };
     this.sendPacket(config.packetType.LOGIN_REQUEST, payload);
   }
 }
@@ -139,5 +139,5 @@ const loginTest = async (client_count = 1) => {
 
 // 테스트 실행문
 await loadProtos().then(() => {
-  registerTest();
+  loginTest();
 });
