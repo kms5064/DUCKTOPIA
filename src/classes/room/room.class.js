@@ -18,6 +18,14 @@ class Room {
     this.users.set(user.socket, user);
   }
 
+  removeUser(socket) {
+    this.users.delete(socket);
+  }
+
+  getUsers() {
+    return this.users.values();
+  }
+
   changeState(state) {
     this.state = state;
   }
