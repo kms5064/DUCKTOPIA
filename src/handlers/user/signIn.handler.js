@@ -2,8 +2,9 @@ import { PACKET_TYPE } from '../../config/constants/header.js';
 import { findUserByEmail } from '../../db/user/user.db.js';
 import { userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
+import bcrypt from 'bcrypt';
 
-const signInHandler = async ({socket, payload}) => {
+const signInHandler = async ({ socket, payload }) => {
   try {
     const { email, password } = payload;
 
