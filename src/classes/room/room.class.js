@@ -39,7 +39,7 @@ class Room {
 
     for (const key of this.users.keys()) {
       // const userData = getUserData();
-      //userDatas.push(userData);
+      // userDatas.push(userData);
     }
 
     return {
@@ -57,14 +57,14 @@ class Room {
   }
 
   startGame() {
-    this.changeState('running');
+    this.changeState(RoomStateType.INGAME);
 
     // TODO 게임 추가
     this.game = new Game();
   }
 
   endGame() {
-    this.changeState('waiting');
+    this.changeState(RoomStateType.WAIT);
 
     // TODO 게임 삭제
 
