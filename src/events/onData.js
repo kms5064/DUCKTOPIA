@@ -36,8 +36,7 @@ const onData = (socket) => (data) => {
             const gamePacket = proto.decode(payloadBuffer);
             const payload = gamePacket[gamePacket.payload];
 
-
-            // 핸들러 기입 예정, 맵핑 있으면 편할 듯
+            await handler(socket, payload);
         } catch (e){
             console.error(e);
         }
