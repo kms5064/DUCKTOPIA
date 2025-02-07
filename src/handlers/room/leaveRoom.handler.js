@@ -3,7 +3,7 @@ import { roomSession, userSession } from '../../sessions/session.js';
 import broadcast from '../../utils/packet/broadcast.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
-const leaveRoomHandler = (socket, payload) => {
+const leaveRoomHandler = ({socket, payload}) => {
   try {
     // 1. 유저 찾기
     const user = userSession.getUser(socket);

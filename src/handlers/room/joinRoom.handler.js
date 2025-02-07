@@ -3,7 +3,7 @@ import { roomSession } from '../../sessions/session.js';
 import broadcast from '../../utils/packet/broadcast.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
-const joinRoomHandler = (socket, payload) => {
+const joinRoomHandler = ({socket, payload}) => {
   try {
     const { roomId } = payload;
 
