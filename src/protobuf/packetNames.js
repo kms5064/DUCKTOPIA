@@ -8,7 +8,7 @@ export const packetNames = [
     'C2SRegisterRequest',
     'S2CRegisterResponse',
     'C2SLoginRequest',
-    'C2SLoginResponse',
+    'S2CLoginResponse',
     'S2CMonsterAwakeNotification',
     'S2CMonsterMoveNotification',
     'C2SPlayerAttackRequest',
