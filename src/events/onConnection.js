@@ -1,3 +1,4 @@
+import { userSession } from '../sessions/session.js';
 import onEnd from './onEnd.js';
 import onError from './onError.js';
 //import { onData } from './onData.js';
@@ -10,6 +11,8 @@ const onConnection = (socket) => {
   socket.on('data', onData(socket));
   socket.on('end', onEnd(socket));
   socket.on('error', onError(socket));
+  // id정보 없는 유저 생성
+  userSession.addUser(socket);
 };
 
 export default onConnection;
