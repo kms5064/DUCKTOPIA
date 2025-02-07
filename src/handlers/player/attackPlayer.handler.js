@@ -56,7 +56,7 @@ const attackPlayerHandler = (socket, payload) => {
         console.log(`MONSTER ID: ${monster.getMonsterId()} (${monsterX}, ${monsterY}) ATTACK`);
 
         // 몬스터 HP 차감 처리
-        const currHp = monster.getDamaged(player.getPlayerAtkDamage());
+        const currHp = monster.setDamaged(player.getPlayerAtkDamage());
 
         let payloadData = {};
         let packetType;
