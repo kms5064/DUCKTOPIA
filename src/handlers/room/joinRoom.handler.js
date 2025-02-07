@@ -46,8 +46,12 @@ const joinRoomHandler = (socket, payload) => {
     });
 
     // 당사자 제외하고 보내기
-    broadcast(room.getUsers(), joinRoomNotification); // 브로드캐스트
+    const targetUsers = room.getUsers().map((user) => user.socket !== socket);
+
+    broadcast(targetUsers, joinRoomNotification); // 브로드캐스트
   } catch (error) {
     console.log(error);
   }
 };
+
+export default joinRoomHandler;
