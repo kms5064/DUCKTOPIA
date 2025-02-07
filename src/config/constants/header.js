@@ -32,6 +32,8 @@ export const PACKET_TYPE = {
     PLAYER_ATTACK_REQUEST: [4004,'playerAttackRequest'],
     PLAYER_ATTACK_NOTIFICATION: [4005,'playerAttackNotification'],
     PLAYER_DEATH_NOTIFICATION: [4006,'playerDeathNotification'],
+    FOOD_EAT_REQUEST: [4007,'eatFoodRequest'],
+    FOOD_EAT_RESPONSE: [4008,'eatFoodResponse'],
     USER_UPDATE_NOTIFICATION: [4040,'userUpdateNotification'],
 
     // 몬스터

@@ -8,7 +8,7 @@ export const packetNames = [
     'C2SRegisterRequest',
     'S2CRegisterResponse',
     'C2SLoginRequest',
-    'C2SLoginResponse',
+    'S2CLoginResponse',
     'S2CMonsterAwakeNotification',
     'S2CMonsterMoveNotification',
     'C2SPlayerAttackRequest',
@@ -22,8 +22,6 @@ export const packetNames = [
     'S2CGetRoomListResponse',
     'C2SJoinRoomRequest',
     'S2CJoinRoomResponse',
-    'S2CPlayerDamagedNotification',
-    'S2CMonsterDiscovered',
     'C2SGamePrepareRequest',
     'S2CGamePrepareResponse',
     'S2CGamePrepareNotification',
@@ -35,5 +33,7 @@ export const packetNames = [
     'S2CUserUpdateNotification',
     'S2CPlayerDeathNotification',
     'S2CPlayerHpUpdateNotification',
+    'C2SEatFoodRequest',
+    'S2CEatFoodResponse',
     'GamePacket'
 ]

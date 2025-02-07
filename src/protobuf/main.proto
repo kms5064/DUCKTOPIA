@@ -191,6 +191,18 @@ message S2CPlayerHpUpdateNotification{
     uint32 hp = 2;
 }
 
+message C2SEatFoodRequest {
+  uint32 foodId = 1;
+  uint64 playerId = 2;
+}
+
+// 식량 아이템 소모 응답
+message S2CEatFoodResponse {
+  bool isEaten = 1;
+  string message = 2;
+  uint32 currentHunger = 3;
+}
+
 message GamePacket {
     oneof payload {
         S2CMonsterAwakeNotification monsterAwakeNotification = 1;
@@ -221,5 +233,7 @@ message GamePacket {
         S2CUserUpdateNotification userUpdateNotification = 27;
         S2CPlayerDeathNotification playerDeathNotification = 28;
         S2CPlayerHpUpdateNotification playerHpUpdateNotification = 29;
+        C2SEatFoodRequest eatFoodRequest = 30;
+        S2CEatFoodResponse eatFoodResponse = 31;
     }
 }
