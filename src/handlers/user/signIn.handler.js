@@ -47,3 +47,5 @@ const signInHandler = async (socket, payload) => {
     console.log(error);
   }
 };
+
+export default signInHandler;

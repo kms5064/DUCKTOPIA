@@ -1,23 +1,219 @@
 syntax = 'proto3';
 
-message Position {
+// 기본 구조
+message Position 
+{
   float x = 1;
   float y = 2;
 }
 
-message S2CMonsterAwake {
+message CharacterPositionData {
+    int64 id = 1;
+    float x = 2;
+    float y = 3;
+}
+
+message User {
+    string name = 1;
+}
+
+// 방 정보
+message RoomData {
+    string roomId = 1;
+    string state = 2;
+    repeated User users =3;
+}
+
+message CharacterData {
+    int32 hp = 1;
+    int32 weapon = 2;
+    int32 atk =3 ;
+}
+
+message UserData {
+    int64 id = 1;
+    string nickname = 2;
+    CharacterData character = 3;
+}
+
+
+
+// 통신 Payload
+message C2SRegisterRequest
+{
+ string email = 1;
+ string password = 2;
+ string name = 3;
+}
+
+message S2CRegisterResponse
+{
+ bool success = 1;
+}
+
+message C2SLoginRequest
+{
+ string email = 1;
+ string password = 2;
+}
+
+message S2CLoginResponse
+{
+ bool success = 1;
+}
+
+message S2CMonsterAwakeNotification 
+{
     uint32 monsterId = 1;
 }
 
-message S2CMonsterMove {
+message S2CMonsterMoveNotification 
+{
     uint32 monsterId = 1;
     float Direct = 2;
     Position direct = 3;
     Position position = 4;
     uint32 speed = 5;
-    int64 timestamp = 6;
+    uint64 timestamp = 6;
 }
 
-message C2SPositionUpdateRequest{
-    Position position = 1;
+message C2SPlayerAttackRequest
+{
+ float x = 1;
+ float y = 2;
+}
+
+// 플레이어 공격 
+message S2CPlayerAttackNotification
+{
+ uint32 playerId = 1;
+}
+
+// 몬스터 사망 
+message S2CMonsterDeathNotification
+{
+ uint32 monsterId = 1;
+}
+
+// 몬스터 체력 감소
+message S2CMonsterHpNotification
+{
+ uint32 monsterId = 1;
+ uint32 monsterHp = 2;
+}
+
+// 몬스터 스폰 (초기)
+message S2CSpawnMonsterNotification
+{
+ uint32 monsterId = 1;
+ uint32 code = 2;
+ float x = 3;
+ float y = 4;
+}
+
+message C2SCreateRoomRequest {
+    string name = 1;
+}
+
+message S2CCreateRoomResponse {
+    bool success = 1;
+    string roomId = 2;
+    string message = 3;
+}
+
+message C2SGetRoomListRequest {
+}
+ 
+message S2CGetRoomListResponse {
+    bool success = 1;
+    repeated RoomData rooms = 2;
+    string message = 3;
+}
+
+message C2SJoinRoomRequest {
+    string roomId = 1;
+}
+
+message S2CJoinRoomResponse {
+    bool success = 1;
+    repeated User users = 2;
+    string message = 3;
+}
+
+message C2SGamePrepareRequest {
+}
+
+message S2CGamePrepareResponse{
+    bool success = 1;
+}
+
+message S2CGamePrepareNotification {
+    RoomData room = 1;
+}
+
+message C2SGameStartRequest {
+}
+
+message S2CGameStartResponse {
+    bool success = 1;
+}
+
+message S2CGameStartNotification {
+    GameStateData gameState = 1;
+    repeated UserData users = 2;
+    repeated CharacterPositionData characterPositions = 3;
+}
+
+message C2SPositionUpdateRequest {
+    float x = 1;
+    float y = 2;
+}
+
+message S2CPositionUpdateNotification {
+    repeated CharacterPositionData characterPositions = 1;
+}
+message S2CUserUpdateNotification {
+    repeated UserData user = 1;
+}
+
+message S2CPlayerDeadNotification{
+    uint32 playerId = 1;
+}
+
+message S2CPlayerHpUpdateNotification{
+    uint32 playerId = 1;
+    uint32 hp = 2;
+}
+
+message GamePacket {
+    oneof payload {
+        S2CMonsterAwakeNotification monsterAwake = 1;
+        S2CMonsterMoveNotification monsterMove = 2;
+        C2SPositionUpdateRequest positionUpdateRequest = 3;
+        C2SPlayerAttackRequest playerAttackRequest = 4;
+        S2CPlayerAttackNotification playerAttackNotification = 5;
+        S2CMonsterDeathNotification monsterDeathNotification = 6;
+        S2CMonsterHpNotification monsterHpNotification = 7;
+        S2CSpawnMonsterNotification spawnMonsterNotification = 8;
+        C2SRegisterRequest registerRequest = 9;
+        S2CRegisterResponse registerResponse = 10;
+        C2SLoginRequest loginRequest = 11;
+        S2CLoginResponse loginResponse = 12;
+        C2SCreateRoomRequest createRoomRequest = 13;
+        S2CCreateRoomResponse createRoomResponse = 14;
+        C2SGetRoomListRequest getRoomListRequest = 15;
+        S2CGetRoomListResponse getRoomListResponse = 16;
+        C2SJoinRoomRequest joinRoomRequest = 17;
+        S2CJoinRoomResponse joinRoomResponse = 18;
+        C2SGamePrepareRequest gamePrepareRequest = 19;
+        S2CGamePrepareResponse gamePrepareResponse = 20;
+        S2CGamePrepareNotification gamePrepareNotification = 21;
+        C2SGameStartRequest gameStartRequest = 22;
+        S2CGameStartResponse gameStartResponse = 23;
+        S2CGameStartNotification gameStartNotification = 24;
+        S2CPositionUpdateNotification positionUpdateNotification = 25;
+        S2CUserUpdateNotification userUpdateNotification = 26;
+        S2CPlayerDeadNotification playerDeadNotification = 27;
+        S2CPlayerHpUpdateNotification playerHpUpdateNotification = 28;
+    }
 }
