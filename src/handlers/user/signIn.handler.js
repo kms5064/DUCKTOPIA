@@ -1,4 +1,5 @@
 import { findUserByEmail } from '../../db/user/user.db.js';
+import { userSession } from '../../sessions/session.js';
 
 const signInHandler = async (socket, payload) => {
   try {
@@ -15,6 +16,13 @@ const signInHandler = async (socket, payload) => {
     if (!(await bcrypt.compare(password, userData.password))) {
       throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
     }
+
+    // 3. 소켓을 이용해서 유저 찾기
+    const user = userSession.getUser(socket);
+
+    // 4. 찾은 유저에 로그인 정보 추가
+    user.login(email);
+    
 
     // 3. 중복 로그인 유저 세션에서 체크 TODO
     // ex) const dupUser = getUserByEmail;
