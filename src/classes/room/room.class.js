@@ -3,7 +3,7 @@ import { MAX_USER_AMOUNT } from '../../config/constants/room.js';
 class Room {
   constructor(id, name, ownerId) {
     this.users = new Map();
-    this.id = id; // uuid
+    this.id = id; // 숫자(TODO 나중에 uuid로?)
     this.name = name; // room name
     this.state = 'waiting'; // 'waiting', 'running'
     this.game = null;
