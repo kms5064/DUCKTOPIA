@@ -12,6 +12,21 @@
 //   }
 // }
 
+// 임시 캐릭터 enum
+const CharacterType = {
+  NONE_CHARACTER: 0,
+  RED: 1, // 빨강이
+  SHARK: 3, // 상어군
+  MALANG: 5, // 말랑이
+  FROGGY: 7, // 개굴군
+  PINK: 8, // 핑크군
+  SWIM_GLASSES: 9, // 물안경군
+  MASK: 10, // 가면군
+  DINOSAUR: 12, // 공룡이
+  PINK_SLIME: 13, // 핑크슬라임
+};
+Object.freeze(CharacterType);
+
 class User {
   constructor(socket) {
     this.id = null; //클라이언트 접속시 id = null, 로그인했을때 id에 email 값 넣을 것임
@@ -19,7 +34,7 @@ class User {
     this.socket = socket;
     this.state = null; // 'lobby', 'room', 'playing' 등 현재 상태 체크용
     this.name = null;
-    this.characterType = characterType;
+    this.characterType = CharacterType.RED;
     this.hp = 100;
     this.weapon = null;
     this.atk = 10;
