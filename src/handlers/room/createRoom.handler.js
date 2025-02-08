@@ -19,7 +19,7 @@ const createRoomHandler = async ({socket, payload}) => {
     }
 
     // 3. 방 만들기
-    const room = roomSession.addRoom(user.email, name);
+    const room = roomSession.addRoom(user.id, name);
 
     if (!room) {
       throw new Error('방 생성에 실패했습니다!');
