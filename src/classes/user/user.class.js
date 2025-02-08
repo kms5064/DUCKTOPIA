@@ -42,6 +42,7 @@ class User {
   // 방 퇴장
   exitRoom() {
     this.roomId = null;
+    this.state = 'lobby';
   }
   //게임 종료
   gameEnd() {
