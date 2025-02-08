@@ -1,28 +1,28 @@
 import { PACKET_TYPE } from '../../config/constants/header.js';
-import { roomSession } from '../../sessions/session.js';
+import { roomSession, userSession } from '../../sessions/session.js';
 import broadcast from '../../utils/packet/broadcast.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
-const joinRoomHandler = ({socket, payload}) => {
+const joinRoomHandler = ({ socket, payload }) => {
   try {
     const { roomId } = payload;
 
     // 1. 유저 찾기
-    const user = roomSession.getUser(socket);
+    const user = userSession.getUser(socket);
 
     if (!user) {
       throw new Error('유저를 찾지 못했습니다.');
     }
 
     // 2. 방 찾기
-    const room = roomSession.getRoom(room);
+    const room = roomSession.getRoom(roomId);
 
     if (!room) {
       throw new Error('유효하지 않은 roomId입니다.');
     }
 
     // 3. 방 인원 추가
-    const result = room.addUser(socket);
+    const result = room.addUser(user);
 
     if (!result) {
       throw new Error('방 정원이 다 찼습니다.');
@@ -42,11 +42,15 @@ const joinRoomHandler = ({socket, payload}) => {
 
     // 6. notification 전송
     const joinRoomNotification = makePacket(PACKET_TYPE.JOIN_ROOM_NOTIFICATION, {
-      joinUser: user.getUserData(), // TODO 유저 데이터 받는 함수 연동
+      joinUser: user.getUserData(),
     });
 
     // 당사자 제외하고 보내기
     const targetUsers = room.getUsers().map((user) => user.socket !== socket);
+
+    console.log('targetUsers : ', targetUsers);
+    console.log('isArray : ', Array.isArray(targetUsers));
+    console.log('isMap :', targetUsers instanceof Map);
 
     broadcast(targetUsers, joinRoomNotification); // 브로드캐스트
   } catch (error) {
