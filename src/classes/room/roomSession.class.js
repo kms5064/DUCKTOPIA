@@ -38,7 +38,11 @@ class RoomSession {
     let roomsData = [];
     for (const room of this.getRooms()) {
       roomsData.push(room.getRoomData());
+
+      console.log('room Data : ', room.getRoomData());
     }
+
+    return roomsData;
   }
 }
 
