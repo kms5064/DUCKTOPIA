@@ -4,6 +4,8 @@ import { userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import bcrypt from 'bcrypt';
 
+let newId = 1; // (TODO) 임시로!!
+
 const signInHandler = async ({ socket, payload }) => {
   try {
     const { email, password } = payload;
@@ -28,7 +30,9 @@ const signInHandler = async ({ socket, payload }) => {
     }
 
     // 4. 찾은 유저에 로그인 정보 추가
-    user.login(email, userData.name);
+    user.login(newId, userData.name); // TODO 나중에 newId -> email로 변경하기
+
+    newId += 1;  // TODO 나중에 삭제
 
     // 3. 중복 로그인 유저 세션에서 체크 TODO
     // ex) const dupUser = getUserByEmail;
@@ -40,7 +44,7 @@ const signInHandler = async ({ socket, payload }) => {
     // 5. 패킷 전송
     const loginResponse = makePacket(PACKET_TYPE.LOGIN_RESPONSE, {
       success: true,
-      myInfo: user.getUserData()
+      myInfo: user.getUserData(),
       // name: userData.name,
     });
 
