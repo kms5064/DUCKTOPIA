@@ -26,13 +26,13 @@ class User {
     this.x = 0;
     this.y = 0;
   }
-  posiup(x,y){
+  posiup(x, y) {
     this.x = x;
     this.y = y;
   }
 
-  getpsi(){
-    return { playerId:this.id, x:this.x, y:this.y}
+  getpsi() {
+    return { playerId: this.id, x: this.x, y: this.y };
   }
 
   getCharacter() {
@@ -47,7 +47,7 @@ class User {
     return {
       playerId: this.id,
       nickname: this.name,
-      character: this.getCharacter()
+      character: this.getCharacter(),
     };
   }
   // 로그인
@@ -81,6 +81,10 @@ class User {
   //소켓 조회
   getSocket() {
     return this.socket;
+  }
+  //Room Id 조회
+  getRoomId() {
+    return this.roomId;
   }
 }
 

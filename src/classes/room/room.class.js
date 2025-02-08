@@ -78,6 +78,10 @@ class Room {
 
     this.game = null;
   }
+  // 게임 조회
+  getGame() {
+    return this.game;
+  }
 }
 
 export default Room;
