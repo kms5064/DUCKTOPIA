@@ -45,14 +45,7 @@ const joinRoomHandler = ({ socket, payload }) => {
       joinUser: user.getUserData(),
     });
 
-    // 당사자 제외하고 보내기
-    const targetUsers = room.getUsers().map((user) => user.socket !== socket);
-
-    console.log('targetUsers : ', targetUsers);
-    console.log('isArray : ', Array.isArray(targetUsers));
-    console.log('isMap :', targetUsers instanceof Map);
-
-    broadcast(targetUsers, joinRoomNotification); // 브로드캐스트
+    room.notification(socket, joinRoomNotification); // 브로드캐스트
   } catch (error) {
     console.log(error);
   }
