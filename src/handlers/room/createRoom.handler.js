@@ -6,7 +6,7 @@ import { roomNameSchema } from '../../utils/validations/room.validation.js';
 // 방 생성 핸들러
 const createRoomHandler = async ({socket, payload}) => {
   try {
-    const { name } = payload;
+    const { name, maxUserNum } = payload;
 
     // 1. 방 이름 유효성 검사
     await roomNameSchema.validateAsync(name);

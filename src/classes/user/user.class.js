@@ -15,10 +15,40 @@
 class User {
   constructor(socket) {
     this.id = null; //클라이언트 접속시 id = null, 로그인했을때 id에 email 값 넣을 것임
-    this.roomId = null;
+    this.roomId = null; // game이 room 안에 있으므로 여기서 찾을 수 있습니다!
     this.socket = socket;
     this.state = null; // 'lobby', 'room', 'playing' 등 현재 상태 체크용
     this.name = null;
+    this.characterType = characterType;
+    this.hp = 100;
+    this.weapon = null;
+    this.atk = 10;
+    this.x = 0;
+    this.y = 0;
+  }
+  posiup(x,y){
+    this.x = x;
+    this.y = y;
+  }
+
+  getpsi(){
+    return { playerId:this.id, x:this.x, y:this.y}
+  }
+
+  getCharacter() {
+    return {
+      characterType: this.characterType,
+      hp: this.hp,
+      weapon: this.weapon,
+      atk: this.atk,
+    };
+  }
+  getUserData() {
+    return {
+      playerId: this.id,
+      nickname: this.name,
+      character: this.getCharacter()
+    };
   }
   // 로그인
   login(userId, name) {
@@ -32,7 +62,7 @@ class User {
     this.state = 'room';
   }
   // 게임 시작
-  gameStart() {
+  gameStart(gameId) {
     this.state = 'playing';
   }
   // 로그 아웃

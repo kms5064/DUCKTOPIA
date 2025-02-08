@@ -40,11 +40,11 @@ class Room {
 
   // 방 데이터 추출 (패킷 전송 용도로 가공)
   getRoomData() {
-    let userDatas = [];
+    let usersData = [];
 
     for (const user of this.getUsers()) {
       // const userData = user.getUserData();
-      // userDatas.push(userData);
+      // usersData.push(userData);
     }
 
     return {
@@ -53,7 +53,7 @@ class Room {
       name: this.name,
       maxUserNum: MAX_USER_AMOUNT,
       state: this.state,
-      users: userDatas,
+      users: usersData,
     };
   }
 
