@@ -1,4 +1,5 @@
 import { MAX_USER_AMOUNT } from '../../config/constants/room.js';
+import broadcast from '../../utils/packet/broadcast.js';
 
 const RoomStateType = {
   WAIT: 0,
@@ -43,12 +44,12 @@ class Room {
     let usersData = [];
 
     for (const user of this.getUsers()) {
-      // const userData = user.getUserData();
-      // usersData.push(userData);
+      const userData = user.getUserData();
+      usersData.push(userData);
     }
 
     return {
-      roomId: this.roomId,
+      roomId: this.id,
       ownerId: this.ownerId,
       name: this.name,
       maxUserNum: MAX_USER_AMOUNT,
@@ -81,6 +82,15 @@ class Room {
   // 게임 조회
   getGame() {
     return this.game;
+  }
+
+  notification(socket, packet) {
+    let targetUsers = [];
+    this.getUsers().forEach((user) => {
+      if (user.socket !== socket) targetUsers.push(user);
+    });
+
+    broadcast(targetUsers, packet);
   }
 }
 
