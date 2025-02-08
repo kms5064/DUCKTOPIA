@@ -1,15 +1,16 @@
 import {
   ATK_PER_LV,
   PLAYER_MAX_HUNGER,
+  PLAYER_SPEED,
   PLAYER_DEFAULT_RANGE,
   PLAYER_DEFAULT_ANGLE,
 } from '../../constants/player.js';
 
 class Player {
-  constructor(id, maxHp, atk, x, y) {
+  constructor(id, atk, x, y) {
     this.id = id;
-    this.maxHp = maxHp;
-    this.hp = maxHp;
+    this.maxHp = PLAYER_MAX_HP;
+    this.hp = PLAYER_MAX_HP;
     this.hunger = PLAYER_MAX_HUNGER;
     this.lv = 1;
     this.atk = atk;
@@ -18,6 +19,9 @@ class Player {
     this.x = x;
     this.y = y;
     this.isAlive = true;
+    this.latency = 0;
+    this.speed = PLAYER_SPEED;
+    this.lastPosUpdateTime = Date.now();
 
     this.range = PLAYER_DEFAULT_RANGE;
     this.angle = PLAYER_DEFAULT_ANGLE;
