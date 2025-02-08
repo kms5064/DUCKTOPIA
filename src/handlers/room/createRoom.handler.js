@@ -4,7 +4,7 @@ import { PACKET_TYPE } from '../../config/constants/header.js';
 import { roomNameSchema } from '../../utils/validations/room.validation.js';
 
 // 방 생성 핸들러
-const createRoomHandler = async (socket, payload) => {
+const createRoomHandler = async ({socket, payload}) => {
   try {
     const { name } = payload;
 
@@ -34,7 +34,7 @@ const createRoomHandler = async (socket, payload) => {
     // 6. 패킷 전송
     const createRoomResponse = makePacket(PACKET_TYPE.CREATE_ROOM_RESPONSE, {
       success: true,
-      roomId: room.id,
+      room: room.getRoomData(),
       message: '방이 생성되었습니다!',
     });
 
