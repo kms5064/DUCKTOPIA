@@ -67,12 +67,12 @@ const getErrorMessage = (code, defaultMessage) => {
 
 /**
  * 클라이언트와 연결되어 어떠한 동작을 하던 중 에러가 발생할 경우 호출되는 함수
- * @param {Socket} socket - 소켓 객체
- * @param {Error} error - 에러 객체
- * @param {number} handlerId - 핸들러 ID (기본값: 0, 시스템 레벨 에러를 나타냄)
+ * @param {Socket} socket
+ * @param {Error} error
+ * @param {number} handlerId
  */
 
-export const handleError = (socket, error, handlerId = 0) => {
+export const errorHandler = (socket, error, handlerId = 0) => {
   let responseCode;
   let message;
 
