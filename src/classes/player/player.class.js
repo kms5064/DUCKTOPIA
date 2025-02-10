@@ -20,6 +20,7 @@ class Player {
     this.x = x;
     this.y = y;
     this.isAlive = true;
+    this.characterType = CharacterType.RED;
     this.packetTerm = 0; //위치 변경 요청 패킷간의 시간차
     this.speed = PLAYER_SPEED;
     this.lastPosUpdateTime = Date.now();
@@ -42,6 +43,55 @@ class Player {
     this.y = y;
     return { x: this.x, y: this.y };
   }
+
+  getPlayer() {
+    return {
+      characterType: this.characterType,
+      hp: this.hp,
+      weapon: this.weapon,
+      atk: this.atk,
+    };
+  }
+
+  getUserData() {
+    return {
+      playerId: this.id,
+      // nickname: this.name,
+      character: this.getCharacter(),
+    };
+  }
+
+  //player 메서드 여기에 만들어놓고 나중에 옮기기
+
+  playerPositionUpdate = (dx, dy) => {
+    this.x = dx;
+    this.y = dy;
+  };
+
+  calculatePosition = (otherPlayer) => {
+    // 현재 위치와 요청받은 위치로 방향을 구하고 speed와 레이턴시를 곱해 이동거리를 구하고 좌표 예측 검증
+    const seta = (Math.atan2(y - this.y, x - this.x) * 180) / Math.PI;
+    const distance = this.speed * otherPlayer.packetTerm;
+
+    // 만약 거속시로 구한 거리보다 멀면 서버가 알고있는 좌표로 강제 이동
+    if (distance > VALID_DISTANCE) {
+      console.error(`유효하지 않은 이동입니다.`);
+    }
+
+    const dx = Math.cos(seta) * distance;
+    const dy = Math.sin(seta) * distance;
+
+    // 유효한 이동이라면 player.lastPosUpdateTime 업데이트
+    this.playerPositionUpdate( dx, dy);
+    return { playerId: this.id, x: this.x, y: this.y };
+  };
+
+  calculateLatency = () => {
+    //레이턴시 구하기 => 수정할 것)각 클라마다 다른 레이턴시를 가지고 계산
+    //레이턴시 속성명도 생각해볼 필요가 있다
+    this.packetTerm = Date.now() - this.lastPosUpdateTime; //player값 직접 바꾸는건 메서드로 만들어서 사용
+    this.lastPosUpdateTime = Date.now();
+  };
 
   changePlayerHunger(amount) {
     this.hunger += amount;
