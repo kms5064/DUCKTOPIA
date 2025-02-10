@@ -3,6 +3,7 @@ import { createUser } from '../../db/user/user.db.js';
 import { signUpSchema } from '../../utils/validations/auth.validation.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
+import { errorHandler } from '../../utils/error/errorHandler.js';
 
 const SALT_OR_ROUNDS = 10;
 
@@ -33,10 +34,10 @@ const signUpHandler = async ({ socket, payload }) => {
 
     socket.write(registerResponse);
   } catch (error) {
-    // TODO 에러 캐치해서 email or name 중복체크하기
-    // Error code : 'ER_DUP_ENTRY', sqlMessage : "Duplicate entry 'asdf@naver.com' for key 'users.email'"
     console.log(error.code);
     console.log(error);
+
+    errorHandler(socket, error);
   }
 };
 
