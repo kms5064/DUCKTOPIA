@@ -34,11 +34,15 @@ class RoomSession {
   }
 
   // 방 전체 정보 추출 (패킷 전송 용도로 가공)
-  getRoomDatas() {
-    let roomDatas = [];
+  getRoomsData() {
+    let roomsData = [];
     for (const room of this.getRooms()) {
-      roomDatas.push(room.getRoomData());
+      roomsData.push(room.getRoomData());
+
+      console.log('room Data : ', room.getRoomData());
     }
+
+    return roomsData;
   }
 }
 

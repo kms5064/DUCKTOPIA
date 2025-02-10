@@ -26,6 +26,8 @@ const signUpHandler = async ({ socket, payload }) => {
     // 3. 유저 정보 저장
     await createUser(name, email, hashedPw);
 
+    console.log('회원가입 성공!');
+
     // 4. 패킷 전송
     const registerResponse = makePacket(PACKET_TYPE.REGISTER_RESPONSE, { success: true });
 
