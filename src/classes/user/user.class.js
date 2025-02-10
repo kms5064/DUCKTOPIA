@@ -42,6 +42,8 @@ class User {
     this.x = 0;
     this.y = 0;
   }
+  
+  // player 클래스에 존재
   posiup(x, y) {
     this.x = x;
     this.y = y;
@@ -51,6 +53,7 @@ class User {
     return { playerId: this.id, x: this.x, y: this.y };
   }
 
+  // player 클래스로 이동
   getCharacter() {
     return {
       characterType: this.characterType,
@@ -66,6 +69,7 @@ class User {
       character: this.getCharacter(),
     };
   }
+
   // 로그인
   login(email, name) {
     this.email = email;
