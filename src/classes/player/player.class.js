@@ -9,6 +9,7 @@ import {
 class Player {
   constructor(id, atk, x, y) {
     this.id = id;
+    this.user = user; // User Class
     this.maxHp = PLAYER_MAX_HP;
     this.hp = PLAYER_MAX_HP;
     this.hunger = PLAYER_MAX_HUNGER;
@@ -108,6 +109,10 @@ class Player {
 
   getAngle() {
     return this.angle;
+  }
+
+  getUser() {
+    return this.user;
   }
 
   //유저 동기화는 어떤 방식으로 하지?
