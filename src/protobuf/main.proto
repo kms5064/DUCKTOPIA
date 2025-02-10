@@ -200,6 +200,12 @@ message S2CEatFoodResponse {
   int32 currentHunger = 3;
 }
 
+// 에러 응답
+message S2CErrorResponse {
+  string errorMessage = 1;
+  int64 timestamp = 2;
+}
+
 message GamePacket {
   oneof payload {
     S2CMonsterAwakeNotification monsterAwakeNotification = 1;
@@ -236,5 +242,6 @@ message GamePacket {
     S2CLeaveRoomResponse leaveRoomResponse = 33;
     S2CLeaveRoomNotification leaveRoomNotification = 34;
     S2CJoinRoomNotification joinRoomNotification = 35;
+    S2CErrorResponse errorResponse = 36;
   }
 }
