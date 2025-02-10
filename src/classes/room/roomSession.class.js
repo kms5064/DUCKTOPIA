@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 class RoomSession {
   constructor() {
     this.rooms = new Map(); // key : roomId, value : room
+    this.game = null;
     this.newId = 1;
   }
 
@@ -43,6 +44,12 @@ class RoomSession {
     }
 
     return roomsData;
+  }
+
+  gameStart()
+  {
+    const id = uuidv4();
+    
   }
 }
 

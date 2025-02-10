@@ -58,8 +58,8 @@ class Monster extends MovableObjectBase {
 
   getDirectByPlayer()
   {
-    const vectorX = (this.priorityPlayer.x - this.x) / distance; //+, -를 구분지어서 할 수 있을 듯
-    const vectorY = (this.priorityPlayer.y - this.y) / distance;
+    const vectorX = Math.acos((this.priorityPlayer.x - this.x) / distance); //+, -를 구분지어서 할 수 있을 듯
+    const vectorY = Math.asin((this.priorityPlayer.y - this.y) / distance);
 
     return {x : vectorX, y : vectorY};
   }
@@ -181,8 +181,8 @@ class Monster extends MovableObjectBase {
   //x가 -1이면 왼쪽 1이면 오른쪽
   //y가 -1이면 아래쪽 1이면 위쪽
   //공격 사거리 내에 들어온다면 몬스터의
-  moveByLatency(latency) {
-    const timediff = latency / 1000; //레이턴시는 1초를 1000으로 받아온다는 전제
+  moveByLatency(deltaTime) {
+    const timediff = deltaTime / 1000; //레이턴시는 1초를 1000으로 받아온다는 전제
 
     const lateMove = this.speed * timediff;
     const distance = Math.sqrt(

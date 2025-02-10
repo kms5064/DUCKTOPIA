@@ -1,5 +1,7 @@
 import { MAX_USER_AMOUNT } from '../../config/constants/room.js';
 import broadcast from '../../utils/packet/broadcast.js';
+import { v4 as uuidv4 } from 'uuid';
+import {Game} from '../game/game.class.js';
 
 const RoomStateType = {
   WAIT: 0,
@@ -66,13 +68,20 @@ class Room {
   // 게임 시작
   startGame() {
     this.changeState(RoomStateType.INGAME);
-
+    
     // TODO 게임 추가
-    this.game = new Game();
+    const uuid = uuidv4();
+    this.game = new Game(uuid);
+    for(const user of this.users.values())
+    {
+      this.game.addPlayer(user);
+    }
+    this.game.gameLoopStart();
   }
 
   // 게임 종료
   endGame() {
+    this.game.gameLoopEnd();
     this.changeState(RoomStateType.WAIT);
 
     // TODO 게임 삭제
@@ -86,7 +95,7 @@ class Room {
 
   notification(socket, packet) {
     let targetUsers = [];
-    this.getUsers().forEach((user) => {
+    Array.from(this.getUsers()).forEach((user) => {
       if (user.socket !== socket) targetUsers.push(user);
     });
 

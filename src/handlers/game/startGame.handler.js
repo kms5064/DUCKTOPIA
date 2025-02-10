@@ -4,7 +4,7 @@ import { PACKET_TYPE } from '../../config/constants/header.js';
 import { roomSession, userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
-
+//3004 : 게임 시작
 const gameStartHandler = ({socket, payload}) => {
   try {
     const user = userSession.getUser(socket);
@@ -20,9 +20,13 @@ const gameStartHandler = ({socket, payload}) => {
       characterPositions: room.getUsersPositionData()
     })
 
+
+
     room.joinUserNotification(GameStartNotification);
 
     console.log('Game Start!');
+
+    room.startGame();
 
   } catch (err) {
 

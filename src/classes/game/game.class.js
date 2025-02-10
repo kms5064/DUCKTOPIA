@@ -5,21 +5,24 @@ import { getGameAssets } from '../../init/assets.js';
 import Monster from '../monster/monster.class.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
 import broadcast from '../../utils/packet/broadcast.js';
+import { date } from 'joi';
 
-class Game {
+export class Game {
   constructor(uuid) {
     this.id = uuid;
     this.players = [];
     this.monsterIndex = 1;
     this.monsters = new Map();
     this.map = []; //0과 1로 된 2차원배열?
-    this.lastUpdate = 0;
+    this.lastUpdate = Date.now();
     this.gameLoop = null;
+    this.highLatency = 120;
+    this.waveStamp = 60000;
   }
-  
+
   addPlayer(player) {
     this.players.push(player);
-    console.log(`addPlayer : ${player}`);
+    console.log(player);
   }
 
   getPlayer(playerId) {
@@ -83,7 +86,57 @@ class Game {
         y,
       };
       const packet = makePacket(PACKET_TYPE.MONSTER_SPAWN_NOTIFICATION, payload);
-      this.broadcast(packet);
+      broadcast(this.players[0], packet);
+    }
+  }
+
+  addMonster(x,y)
+  {
+    if (this.monsters.size >= MAX_SPAWN_COUNT) {
+      return;
+    }
+
+    // TODO : 한번에 생성할지 프레임단위로 단일 생성할지 성능보고?
+    // maxLeng 만큼 몬스터 생성
+    const maxLeng = MAX_SPAWN_COUNT - this.monsters.size;
+
+    for (let i = 1; i <= maxLeng; i++) {
+      const monsterId = this.monsterIndex;
+      // Monster Asset 조회
+      const { monster: monsterAsset } = getGameAssets();
+      // 몬스터 데이터 뽑기
+      const codeIdx = Math.floor(Math.random() * monsterAsset.data.length);
+      const data = monsterAsset.data[codeIdx];
+
+      // 좌표 최소 값 조정
+      if (x < MIN_VALUE_X) x = MIN_VALUE_X;
+      if (y < MIN_VALUE_Y) y = MIN_VALUE_Y;
+      // 몬스터 생성
+      const monster = new Monster(
+        monsterId,
+        data.monsterCode,
+        data.name,
+        data.hp,
+        data.attack,
+        data.defence,
+        data.range,
+        data.speed,
+        x,
+        y,
+      );
+
+      this.monsters.set(monsterId, monster);
+      this.monsterIndex++; //Index 증가
+
+      // 페이로드
+      const payload = {
+        monsterId,
+        code: monster.monsterCode,
+        x,
+        y,
+      };
+      const packet = makePacket(PACKET_TYPE.MONSTER_SPAWN_NOTIFICATION, payload);
+      broadcast(this.players[0], packet);
     }
   }
 
@@ -128,51 +181,78 @@ class Game {
       return;
     }
     this.gameLoop = setInterval(() => {
-      if (!this.game) {
-        clearInterval(this.gameLoop);
-        this.gameLoop = null;
-      } else {
-        const now = Date.now();
-        const latency = now - this.lastUpdate;
-        this.lastUpdate = Date.now();
-        //업데이트를 보낼 때마다
-        //몬스터가 플레이어를 발견하는 과정
-        this.monsterDisCovered();
-        //
-        this.monsterMove(latency);
-        //몬스터가 플레이어를 잃는 과정
-        this.monsterLostPlayerCheck();
-      }
-    }, 60);
+      this.waveCheck();
+      //this.addMonster();
+      this.monsterUpdate();
+      this.userUpdate();
+      //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
+
+
+    }, 1000);
+  }
+
+  waveCheck()
+  {
+    const now = Date.now();
+    const delta = now - this.lastUpdate;
+    this.waveStamp -= delta;
+    this.lastUpdate = now;
+
+    if(this.waveStamp <= 0)
+    {
+      this.waveStamp = 60000;
+      //여기서 웨이브 처리를 해주도록 한다.
+    }
+  }
+
+  userUpdate()
+  {
+    for(const player of this.players)
+    {
+      console.log(player.x, player.y);
+    }
+  }
+
+  monsterUpdate() {
+    this.monsterDisCovered();
+    //
+    this.monsterMove(this.highLatency);
+    //몬스터가 플레이어를 잃는 과정
+    this.monsterLostPlayerCheck();
   }
 
   monsterDisCovered() {
-    for (const monster of this.monsters) {
+    for (const [key, monster] of this.monsters) {
       if (!monster.hasPriorityPlayer()) {
         for (const player of this.players) {
           monster.setTargetPlayer(player);
+          if(monster.hasPriorityPlayer())
+          {
+            console.log("플레이어가 등록됨");
+          }
         }
       }
     }
   }
 
-  monsterMove(latency) {
-    for (const monster of this.monsters) {
+  //
+  monsterMove(deltaTime) {
+    for (const [key, monster] of this.monsters) {
       if (!monster.hasPriorityPlayer()) {
         continue;
       } else {
-        monster.moveByLatency(latency); //S2CMonsterMoveNotification을 보낸다
+        monster.moveByLatency(deltaTime); //S2CMonsterMoveNotification을 보낸다
 
-        
+
 
         const monsterMovePayload = {
           monsterId: monster.getId(),
-          direct : monster.getDirectByPlayer(),
-          position : monster.getPosition(),
-          speed : monster.getSpeed(),
-          timestamp : latency
+          direct: monster.getDirectByPlayer(),
+          position: monster.getPosition(),
+          speed: monster.getSpeed(),
+          timestamp: deltaTime
         };
-        const packet = makePacket(PACKET_TYPE.monsterMove,monsterMovePayload);
+        const packet = makePacket(PACKET_TYPE.monsterMove, monsterMovePayload);
         broadcast(monster.getPriorityPlayer(), packet);
 
         //아래쪽은 공격 체크용
@@ -182,7 +262,7 @@ class Game {
         //     monsterId : monster.id,
         //   }
 
-          
+
         //   this.game.broadcast(packet);
         // }
       }
@@ -190,18 +270,15 @@ class Game {
   }
 
   monsterLostPlayerCheck() {
-    for (const monster of this.monsters) {
+    for (const [key, monster] of this.monsters) {
       if (monster.hasPriorityPlayer()) {
         monster.lostPlayer();
       }
     }
   }
 
-  gameLoopEnd()
-  {
+  gameLoopEnd() {
     clearInterval(this.gameLoop);
     this.gameLoop = null;
   }
 }
-
-export default Game;

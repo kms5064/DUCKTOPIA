@@ -1,5 +1,5 @@
 import { PACKET_TYPE } from '../../config/constants/header.js';
-import { findUserByEmail } from '../../db/user/user.db.js';
+import { FindAllUser, findUserByEmail } from '../../db/user/user.db.js';
 import { userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import bcrypt from 'bcrypt';
@@ -10,6 +10,8 @@ const signInHandler = async ({ socket, payload }) => {
   try {
     const { email, password } = payload;
 
+    //몬스터 체크 동안 잠시 주석 처리
+
     // 1. 사용자 존재 여부 DB에서 확인
     const userData = await findUserByEmail(email);
 
@@ -17,10 +19,11 @@ const signInHandler = async ({ socket, payload }) => {
       throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
     }
 
-    // 2. 비밀번호 일치 여부 확인
-    if (!(await bcrypt.compare(password, userData.password))) {
-      throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
-    }
+    //여기 잠깐 정지시켜둠
+    // // 2. 비밀번호 일치 여부 확인
+    // if (!(await bcrypt.compare(password, userData.password))) {
+    //   throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
+    // }
 
     // 3. 소켓을 이용해서 유저 찾기
     const user = userSession.getUser(socket);
