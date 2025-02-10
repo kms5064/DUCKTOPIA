@@ -1,128 +1,146 @@
 syntax = 'proto3';
 
 // 기본 구조
-message Position 
+message Position //기본 위치 정보
 {
   float x = 1;
   float y = 2;
 }
 
-message CharacterPositionData {
+message CharacterPositionData { // 플레이어 아이디를 포함한 위치정보
     int64 playerId = 1;
     float x = 2;
     float y = 3;
 }
 
-message User {
+message User { // User 닉네임
     string name = 1;
 }
 
-enum RoomStateType {
+enum RoomStateType { // 방 상태
     WAIT = 0;
     PREPARE = 1;
-    INGAME = 2;
+    // INGAME = 2;
+    PLAYING = 2; //이게 더 적합해보임
 }
 
 // 방 정보
-message RoomData {
+message RoomData { // ok
     int32 roomId = 1;
     int64 ownerId = 2; //방장 아이디.
     string name = 3; //방 이름
     int32 maxUserNum = 4; // 최대 수용 인원 수
     RoomStateType state = 5; //방 상태
-    repeated UserData users = 6; // 있는 인원
+    repeated UserData users = 6; // 있는 인원, UserData가 사라진다면 User로
 }
 
-message CharacterData {
+message CharacterData { // 캐릭터 구분없이 모든 플레이어가 같은 캐릭터라면 필요 없을듯
     CharacterType characterType = 1;
-    int32 hp = 2;
-    int32 weapon = 3;
-    int32 atk = 4;
+    // int32 hp = 2; // CharacterData가 필요하더라도 hp, weapon, atk를 db에서 관리하지 않는 한 필요없을듯
+    // int32 weapon = 3;
+    // int32 atk = 4;
 }
 
-message UserData {
-    int64 playerId = 1;
+message UserData { // 로그인 할 때 클라이언트에 정보 전달을 위한 프로토, playerId가 1,2 등 넘버링으로 알고있는데 없어도 될듯. 없다면 위의 User와 차이가 없을듯.
+    int64 playerId = 1; //있어야하나?
     string nickname = 2;
-    CharacterData character = 3;
+    // CharacterData character = 3;
 }
 
-enum PhaseType {
-    NONE_PHASE = 0;
+enum PhaseType { // NONE_PHASE가 낮이고, EVENING이 끝나면 DAY가 될테니 두가지만 있으면 될듯
+    // NONE_PHASE = 0;
     DAY = 1;
-    EVENING = 2;
-    END = 3;
+    // EVENING = 2;
+    NIGHT = 2; // '저녁'보단 '밤'이 어울려보임
+    // END = 3;
 }
 
-enum CharacterType {
-    NONE_CHARACTER = 0;
-    RED = 1; // 빨강이
-    SHARK = 3; // 상어군
-    MALANG = 5; // 말랑이
-    FROGGY = 7; // 개굴군
-    PINK = 8; // 핑크군
-    SWIM_GLASSES = 9; // 물안경군
-    MASK = 10; // 가면군
-    DINOSAUR = 12; // 공룡이
-    PINK_SLIME = 13; // 핑크슬라임
-}
+// enum CharacterType { // 마찬가지로, 모든 플레이어가 같은 캐릭터를 사용한다면 필요없을 듯
+//     NONE_CHARACTER = 0;
+//     RED = 1; // 빨강이
+//     SHARK = 3; // 상어군
+//     MALANG = 5; // 말랑이
+//     FROGGY = 7; // 개굴군
+//     PINK = 8; // 핑크군
+//     SWIM_GLASSES = 9; // 물안경군
+//     MASK = 10; // 가면군
+//     DINOSAUR = 12; // 공룡이
+//     PINK_SLIME = 13; // 핑크슬라임
+// }
 
-message GameStateData {
+message GameStateData { // ok
     // DAY 1, EVENING 2, END 3 (하루 종료시 카드 버리는 턴)
     PhaseType phaseType = 1; 
      // 다음 페이즈 시작 시점(밀리초 타임스탬프)
     int64 nextPhaseAt = 2;
 }
 
+message MonsterData {
+    int32 monsterId = 1;
+    int32 monsterCode = 2;
+    float x = 3; // 몬스터 좌표를 서버에서 찍어서 줄지, 클라이언트에서 찍을지
+    float y = 4;
+}
+
+message ObjectData {
+    int32 objectId = 1;
+    float x = 2;
+    float y = 3;
+}
 
 // 통신 Payload
-message C2SRegisterRequest
+message C2SRegisterRequest // 회원가입 ok
 {
  string email = 1;
  string password = 2;
  string name = 3;
 }
 
-message S2CRegisterResponse
+message S2CRegisterResponse // 회원가입 응답 ok
 {
  bool success = 1;
 }
 
-message C2SLoginRequest
+message C2SLoginRequest //로그인 ok
 {
  string email = 1;
  string password = 2;
 }
 
-message S2CLoginResponse
+message S2CLoginResponse // 로그인 응답
 {
  bool success = 1;
  UserData myInfo = 4;
 }
 
-message S2CMonsterAwakeNotification 
+message S2CMonsterAwakeNotification // 몬스터 깨어남 ok
 {
     int32 monsterId = 1;
 }
 
-message S2CMonsterMoveNotification 
-{
-    int32 monsterId = 1;
-    Position direct = 2;
-    Position position = 3;
-    int32 speed = 4;
-    int64 timestamp = 5;
-}
+// message S2CMonsterMoveNotification // 클라에서 이동시킬것이니 필요없을듯
+// {
+//     int32 monsterId = 1;
+//     Position direct = 2;
+//     Position position = 3;
+//     int32 speed = 4;
+//     int64 timestamp = 5;
+// }
 
 message C2SPlayerAttackRequest
 {
- float x = 1;
+ float x = 1; //플레이어 위치인데 없어도 괜찮은지
  float y = 2;
+ float playerDirX = 3; // 마우스 위치 정보
+ float playerDirY = 4;
 }
 
 // 플레이어 공격 
 message S2CPlayerAttackNotification
 {
- int64 playerId = 1;
+ int64 playerId = 1; //Id 1, 2 같은 넘버링일텐데 없애고 nickname이나 email로 통신하는게 좋을 듯
+ float playerDirX = 3; // 마우스 위치 정보 마찬가지로 있어야할듯
+ float playerDirY = 4;
 }
 
 // 몬스터 사망 
@@ -142,12 +160,12 @@ message S2CMonsterHpUpdateNotification
 message S2CMonsterSpawnNotification
 {
  int32 monsterId = 1;
- int32 code = 2;
- float x = 3;
+ int32 code = 2; //아마 monsterCode? 맞다면 이름을 바꾸자
+ float x = 3; //좌표를 장애물 생성과 맵 크기등, 서버에서 정하고 클라는 찍기만 할 것인지? 좌표없애고 클라에서 랜덤 좌표에 찍을지?
  float y = 4;
 }
 
-message C2SCreateRoomRequest {
+message C2SCreateRoomRequest { // ㄱㅊ!
  string name = 1;
  int32 maxUserNum = 2;
 }
@@ -155,40 +173,40 @@ message C2SCreateRoomRequest {
 message S2CCreateRoomResponse {
  bool success = 1;
  RoomData room = 2;
- string message = 3;
+ string message = 3; // 이건 뭐에요....?
 }
 
-message C2SGetRoomListRequest {
+message C2SGetRoomListRequest { // ok
 }
  
-message S2CGetRoomListResponse {
- repeated RoomData rooms = 1;
+message S2CGetRoomListResponse { //ok 
+ repeated RoomData rooms = 1; // Array
 }
 
-message C2SJoinRoomRequest {
+message C2SJoinRoomRequest { //ok
  int32 roomId = 1;
 }
 
 message S2CJoinRoomResponse {
     bool success = 1;
     RoomData room = 2;
-    string message = 3;
+    string message = 3; // 진짜 뭐에요...??
 }
 
 message S2CJoinRoomNotification {
-    UserData joinUser = 1;
+    UserData joinUser = 1; //이것도 UserData 안쓸지도
 }
 
 
-message C2SLeaveRoomRequest {
+message C2SLeaveRoomRequest { // ok
 }
 
-message S2CLeaveRoomResponse {
+message S2CLeaveRoomResponse { // ok
     bool success = 1;
 }
 
 message S2CLeaveRoomNotification {
-    int64 userId = 1;
+    int64 userId = 1; //이거말고 nickname이나 email로
 }
 
 message C2SGamePrepareRequest {
@@ -196,20 +214,24 @@ message C2SGamePrepareRequest {
 
 message S2CGamePrepareResponse{
  bool success = 1;
+ repeated MonsterData monsters = 2;
+ repeated ObjectData objects = 3;
 }
 
-message S2CGamePrepareNotification {
+message S2CGamePrepareNotification { // ok
  RoomData room = 1;
 }
 
 message C2SGameStartRequest {
+    // repeated MonsterData monsters = 2; // 클라에서 좌표찍고 다시 줄지??
+    // repeated ObjectData objects = 3;
 }
 
 message S2CGameStartResponse {
  bool success = 1;
 }
 
-message S2CGameStartNotification {
+message S2CGameStartNotification { //세부내용만 확인
  GameStateData gameState = 1;
  repeated UserData users = 2;
  repeated CharacterPositionData characterPositions = 3;
