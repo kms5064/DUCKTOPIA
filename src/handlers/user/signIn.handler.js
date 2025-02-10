@@ -29,17 +29,19 @@ const signInHandler = async ({ socket, payload }) => {
       throw new Error('소켓을 찾을 수 없습니다.');
     }
 
-    // 4. 찾은 유저에 로그인 정보 추가
+    // 4. 중복 로그인 유저 세션에서 체크
+    const existingUser = userSession.forEach((user, key, map) => {
+      if (user.email === email) return user;
+    });
+
+    if (existingUser) {
+      throw new Error('이미 접속 중인 유저입니다.');
+    }
+
+    // 5. 찾은 유저에 로그인 정보 추가
     user.login(newId, userData.name); // TODO 나중에 newId -> email로 변경하기
 
-    newId += 1;  // TODO 나중에 삭제
-
-    // 3. 중복 로그인 유저 세션에서 체크 TODO
-    // ex) const dupUser = getUserByEmail;
-
-    // if (dupUser) {
-    //   throw new Error('이미 접속 중인 유저입니다.');
-    // }
+    newId += 1; // TODO 나중에 삭제
 
     console.log(`${user.name} 님이 로그인하였습니다.`);
 
