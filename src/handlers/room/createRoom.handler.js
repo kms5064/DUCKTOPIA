@@ -31,6 +31,8 @@ const createRoomHandler = async ({socket, payload}) => {
     // 5. 유저 방에 추가
     room.addUser(user);
 
+    console.log(`${name} 방이 생성되었습니다.`);
+
     // 6. 패킷 전송
     const createRoomResponse = makePacket(PACKET_TYPE.CREATE_ROOM_RESPONSE, {
       success: true,

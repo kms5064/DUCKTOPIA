@@ -92,6 +92,49 @@ class Room {
 
     broadcast(targetUsers, packet);
   }
+
+  // 여기부터 구동을 위해 추가된 부분 나중에 입맛대로 수정해주세요!
+  getUsersData() {
+    const roomUsers = Array.from(this.getUsers());
+
+    return roomUsers.map((user) => user.getUserData()); // 유저 데이터를 배열로 변환
+  }
+
+  joinUserNotification(packet) {
+    const roomUsers = Array.from(this.getUsers());
+
+    roomUsers.forEach((user) => {
+      if (user.socket) {
+        user.socket.write(packet);
+      }
+    });
+  }
+
+  getUsersPositionData() {
+    const roomUsers = Array.from(this.getUsers()); // Iterator → Array
+
+    return roomUsers.map((user, index) => {
+        // 새로운 x, y 값 계산
+        const newX = index * 3;
+        const newY = index * 3;
+
+        // 유저 위치 업데이트
+        user.posiup(newX, newY);
+
+        // 업데이트된 위치 정보 반환
+        return {
+            playerId: user.id,
+            x: user.x, // 업데이트된 값
+            y: user.y  // 업데이트된 값
+        };
+    });
+  }
+
+  getPositionUpdateNotification() {
+    const roomUsers = Array.from(this.getUsers()); // Iterator → Array
+  
+    return roomUsers.map(user => user.getpsi()) ;
+  }
 }
 
 export default Room;

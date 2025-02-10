@@ -41,6 +41,8 @@ const signInHandler = async ({ socket, payload }) => {
     //   throw new Error('이미 접속 중인 유저입니다.');
     // }
 
+    console.log(`${user.name} 님이 로그인하였습니다.`);
+
     // 5. 패킷 전송
     const loginResponse = makePacket(PACKET_TYPE.LOGIN_RESPONSE, {
       success: true,

@@ -1,7 +1,8 @@
-import Game from '../../class/game/game.class.js';
-import Player from '../../class/player/player.class.js';
+// import Game from '../../class/game/game.class.js';
+// import Player from '../../class/player/player.class.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
-import { userSession } from '../../sessions/session.js';
+import { roomSession, userSession } from '../../sessions/session.js';
+import makePacket from '../../utils/packet/makePacket.js';
 
 // const gamePrepareReqHandler = (room) => {
 //   try {
@@ -36,7 +37,7 @@ import { userSession } from '../../sessions/session.js';
 
 // export default gamePrepareReqHandler;
 
-const startGameHandler = ({socket, payload}) => {
+const gameStartHandler = ({socket, payload}) => {
   try {
     const user = userSession.getUser(socket);
     const room = roomSession.getRoom(user.roomId);
@@ -51,9 +52,13 @@ const startGameHandler = ({socket, payload}) => {
       characterPositions: room.getUsersPositionData()
     })
 
-    //아직 미완입니다!
+    room.joinUserNotification(GameStartNotification);
+
+    console.log('Game Start!');
 
   } catch (err) {
 
   }
-}
+};
+
+export default gameStartHandler;
