@@ -4,6 +4,7 @@ import { MAX_SPAWN_COUNT } from '../../constants/monster.js';
 import { getGameAssets } from '../../init/assets.js';
 import Monster from '../monster/monster.class.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
+import broadcast from '../../utils/packet/broadcast.js';
 
 class Game {
   constructor(uuid) {
@@ -15,26 +16,7 @@ class Game {
     this.lastUpdate = 0;
     this.gameLoop = null;
   }
-
-  // addRandomAllMonsterAfterGameStart() {
-  //   //중간 지점이 플레이어라고 가정하고 중간 지점에서 벗어난 위치들에 몬스터를 생성하도록 한다.
-  //   while (this.globalMonsters.size < maxMonsterCount) {
-  //     const vecX = Math.floor(Math.random() * 2) === 1 ? 1 : -1;
-  //     const vecY = Math.floor(Math.random() * 2) === 1 ? 1 : -1;
-  //     const id = uuidV4();
-
-  //     const summonX = vecX * (Math.random() * (this.maxStageX - this.centerStageX) + this.centerStageX);
-  //     const summonY = vecY * (Math.random() * (this.maxStageY - this.centerStageY) + this.centerStageY);
-
-  //     const monsterCode = Math.floor(Math.random() * this.monsterAssets.data.length);
-  //     const monsterInfo = this.monsterAssets.data[monsterCode];
-
-  //     const newMonster = new Monster(id, monsterCode, summonX, summonY, monsterInfo.range, monsterInfo.speed);
-  //     this.monsters.push(newMonster);
-
-  //   }
-  // }
-
+  
   addPlayer(player) {
     this.players.push(player);
     console.log(`addPlayer : ${player}`);
@@ -141,13 +123,6 @@ class Game {
     });
   }
 
-  //전체 전송 (본인 포함)
-  broadcast(packet) {
-    this.players.forEach((player) => {
-      const socket = player.getUser().getSocket();
-      socket.write(packet);
-    });
-  }
   gameLoopStart() {
     if (this.gameLoop !== null) {
       return;
@@ -181,20 +156,35 @@ class Game {
     }
   }
 
-  monsterMove() {
+  monsterMove(latency) {
     for (const monster of this.monsters) {
       if (!monster.hasPriorityPlayer()) {
         continue;
       } else {
         monster.moveByLatency(latency); //S2CMonsterMoveNotification을 보낸다
 
+        
+
         const monsterMovePayload = {
-          monsterId: monster.id,
-          x: monster.x,
-          y: monster.y,
+          monsterId: monster.getId(),
+          direct : monster.getDirectByPlayer(),
+          position : monster.getPosition(),
+          speed : monster.getSpeed(),
+          timestamp : latency
         };
-        const packet = createResponse(packetNames[11], monsterMovePayload);
-        this.game.broadcast(packet);
+        const packet = makePacket(PACKET_TYPE.monsterMove,monsterMovePayload);
+        broadcast(monster.getPriorityPlayer(), packet);
+
+        //아래쪽은 공격 체크용
+        // if(monster.isAttack())
+        // {
+        //   const monsterAttackPayload = {
+        //     monsterId : monster.id,
+        //   }
+
+          
+        //   this.game.broadcast(packet);
+        // }
       }
     }
   }
@@ -205,6 +195,12 @@ class Game {
         monster.lostPlayer();
       }
     }
+  }
+
+  gameLoopEnd()
+  {
+    clearInterval(this.gameLoop);
+    this.gameLoop = null;
   }
 }
 

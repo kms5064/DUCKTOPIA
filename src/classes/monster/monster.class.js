@@ -20,7 +20,7 @@ class Monster extends MovableObjectBase {
     this.monsterCode = monsterCode;
     this.priorityPlayer = null;
     //몬스터가 여러 패턴을 가지고 있을 때 그 패턴들을 이 안에서 쿨타임을 관리한다.
-    this.patternInterval = new Map();
+    this.patternInterval = null;
     this.distanceBetweenPlayer = Infinity;
     //드랍 아이템 숫자 확률을 이걸로 정해보자.
   }
@@ -43,7 +43,7 @@ class Monster extends MovableObjectBase {
     return this.attack;
   }
 
-  getDistance() {
+  getDistanceByPlayer() {
     return this.distanceBetweenPlayer;
   }
 
@@ -54,6 +54,34 @@ class Monster extends MovableObjectBase {
       this.hp -= damage - this.defence;
     }
     return this.hp;
+  }
+
+  getDirectByPlayer()
+  {
+    const vectorX = (this.priorityPlayer.x - this.x) / distance; //+, -를 구분지어서 할 수 있을 듯
+    const vectorY = (this.priorityPlayer.y - this.y) / distance;
+
+    return {x : vectorX, y : vectorY};
+  }
+
+  getSpeed()
+  {
+    return this.speed;
+  }
+
+  getPosition()
+  {
+    return {x : this.x, y : this.y};
+  }
+
+  getId()
+  {
+    return this.id;
+  }
+
+  getPriorityPlayer()
+  {
+    return this.priorityPlayer;
   }
 
   calculateBetweenDistance() {
@@ -124,6 +152,29 @@ class Monster extends MovableObjectBase {
         return 3;
         break;
     }
+  }
+
+  setPatternInterval()
+  {
+    this.patternInterval = setInterval(() => {
+      clearInterval(this.patternInterval);
+      console.log("패턴 인터벌 초기화함");
+      this.patternInterval = null;
+    }, 5000);
+  }
+
+  isAttack()
+  {
+    if(this.patternInterval === null)
+    {
+      return this.distanceBetweenPlayer < 10 ? true : false;
+    }
+    else
+    {
+      return false;
+    }
+
+    
   }
 
   //default로 호출될 때는 별다른 기능 없음

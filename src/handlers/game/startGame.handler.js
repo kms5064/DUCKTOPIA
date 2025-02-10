@@ -1,8 +1,9 @@
 import Game from '../../class/game/game.class.js';
 import Player from '../../class/player/player.class.js';
 
-const gamePrepareReqHandler = (room) => {
+const gamePrepareReqHandler = (socket,payload) => {
   try {
+    
     const game = new Game(room.uuid); //room의 uuid 따라가기
 
     room.users.forEach((user) => {

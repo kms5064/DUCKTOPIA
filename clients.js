@@ -12,6 +12,7 @@ class Client {
     this.socket = new net.Socket();
     this.buffer = Buffer.alloc(0);
 
+    console.log("check");
     this.socket.connect(config.server.port, config.server.host, this.onConnection);
     this.socket.on('data', this.onData);
   }
