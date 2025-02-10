@@ -1,1 +1,1 @@
-export const MAX_USER_AMOUNT = 4;
+export const MAX_USER_AMOUNT = 2;

@@ -1,7 +1,7 @@
 import { calculateDistance, calculateAngle } from '../../utils/calculate.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
 import makePacket from '../../utils/packet/makePacket.js';
-import { userSession } from '../../sessions/session.js';
+import { roomSession, userSession } from '../../sessions/session.js';
 
 const attackPlayerHandler = ({ socket, payload }) => {
   const { x: playerDirX, y: playerDirY } = payload;
@@ -9,14 +9,31 @@ const attackPlayerHandler = ({ socket, payload }) => {
   // 유저 객체 조회
   const user = userSession.getUser(socket);
   if (!user) {
-    throw new Error('user does not exist');
+    throw new Error('유저 정보가 없습니다.');
   }
 
-  // TODO : 현재 게임 세션을 찾을 방법이 없음...
+  // RoomId 조회
+  const roomId = user.getRoomId();
+  if (!roomId) {
+    throw new Error(`User(${user.id}): RoomId 가 없습니다.`);
+  }
+
+  // 룸 객체 조회
+  const room = roomSession.getRoom(roomId);
+  if (!room) {
+    throw new Error(`Room ID(${roomId}): Room 정보가 없습니다.`);
+  }
+
   // 게임 객체(세션) 조회
-  const game = getGameById(gameId);
+  const game = room.getGame();
   if (!game) {
-    throw new Error('game does not exist');
+    throw new Error(`Room ID(${roomId}): Game 정보가 없습니다.`);
+  }
+
+  // 플레이어 객체 조회
+  const player = game.getPlayer(user.id);
+  if (!player) {
+    throw new Error(`Room ID(${roomId})-User(${user.id}): Player 정보가 없습니다.`);
   }
 
   // Notification - 다른 플레이어들에게 전달
@@ -24,18 +41,16 @@ const attackPlayerHandler = ({ socket, payload }) => {
   const packet = makePacket(PACKET_TYPE.PLAYER_ATTACK_NOTIFICATION, motionPayload);
   game.notification(socket, packet);
 
-  // TODO : 여기도 아직 미구현
-  // 플레이어 객체 조회
-  const player = game.getPlayer(playerId);
   // 플레이어 위치 조회
   const { x: playerX, y: playerY } = player.getPlayerPos();
 
   // 몬스터 목록 조회
   const monsterList = game.getAllMonster();
 
+  // 몬스터 리스트 순회
   monsterList.forEach((monster) => {
     // 몬스터 정보 조회
-    const { id: monsterId, hp: monsterHp, x: monsterX, y: monsterY } = monster.monsterDataSend();
+    const { id: monsterId, x: monsterX, y: monsterY } = monster.monsterDataSend();
 
     //대상(몬스터)의 거리 계산
     const distance = calculateDistance(playerX, playerY, monsterX, monsterY);
@@ -66,13 +81,12 @@ const attackPlayerHandler = ({ socket, payload }) => {
           game.removeMonster(monsterId);
         }
 
-        // 페이로드
-        const resPayload = {
+        // 패킷 생성
+        const packet = makePacket(PACKET_TYPE.MONSTER_HP_UPDATE_NOTIFICATION, {
           monsterId,
           damege,
-        };
+        });
 
-        const packet = makePacket(PACKET_TYPE.MONSTER_HP_UPDATE_NOTIFICATION, resPayload);
         // broadcast - 모든 플레이어들에게 전달
         game.broadcast(packet);
       } else {
