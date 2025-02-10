@@ -30,6 +30,7 @@ Object.freeze(CharacterType);
 class User {
   constructor(socket) {
     this.id = null; //클라이언트 접속시 id = null, 로그인했을때 id에 email 값 넣을 것임
+    this.email = null;
     this.roomId = null; // game이 room 안에 있으므로 여기서 찾을 수 있습니다!
     this.socket = socket;
     this.state = null; // 'lobby', 'room', 'playing' 등 현재 상태 체크용
@@ -66,8 +67,8 @@ class User {
     };
   }
   // 로그인
-  login(userId, name) {
-    this.id = userId;
+  login(email, name) {
+    this.email = email;
     this.name = name;
     this.state = 'lobby';
   }
