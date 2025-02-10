@@ -19,7 +19,7 @@ class Player {
     this.x = x;
     this.y = y;
     this.isAlive = true;
-    this.latency = 0;
+    this.packetTerm = 0; //위치 변경 요청 패킷간의 시간차
     this.speed = PLAYER_SPEED;
     this.lastPosUpdateTime = Date.now();
 
