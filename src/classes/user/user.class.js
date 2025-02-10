@@ -34,39 +34,40 @@ class User {
     this.socket = socket;
     this.state = null; // 'lobby', 'room', 'playing' 등 현재 상태 체크용
     this.name = null;
-    // this.characterType = CharacterType.RED;
-    // // this.hp = 100;
-    // // this.weapon = null;
-    // // this.atk = 10;
-    // // this.x = 0;
-    // // this.y = 0;
+    this.characterType = CharacterType.RED;
+    this.hp = 100;
+    this.weapon = null;
+    this.atk = 10;
+    this.x = 0;
+    this.y = 0;
   }
-  //player 클래스에 존재
-  // posiup(x, y) {
-  //   this.x = x;
-  //   this.y = y;
-  // }
+  
+  // player 클래스에 존재
+  posiup(x, y) {
+    this.x = x;
+    this.y = y;
+  }
 
-  // getpsi() {
-  //   return { playerId: this.id, x: this.x, y: this.y };
-  // }
+  getpsi() {
+    return { playerId: this.id, x: this.x, y: this.y };
+  }
 
-  //player 클래스로 이동
-  // getCharacter() {
-  //   return {
-  //     characterType: this.characterType,
-  //     hp: this.hp,
-  //     weapon: this.weapon,
-  //     atk: this.atk,
-  //   };
-  // }
-  // getUserData() {
-  //   return {
-  //     playerId: this.id,
-  //     nickname: this.name,
-  //     character: this.getCharacter(),
-  //   };
-  // }
+  // player 클래스로 이동
+  getCharacter() {
+    return {
+      characterType: this.characterType,
+      hp: this.hp,
+      weapon: this.weapon,
+      atk: this.atk,
+    };
+  }
+  getUserData() {
+    return {
+      playerId: this.id,
+      nickname: this.name,
+      character: this.getCharacter(),
+    };
+  }
 
   // 로그인
   login(userId, name) {

@@ -44,22 +44,22 @@ class Player {
     return { x: this.x, y: this.y };
   }
 
-  getPlayer() {
-    return {
-      characterType: this.characterType,
-      hp: this.hp,
-      weapon: this.weapon,
-      atk: this.atk,
-    };
-  }
+  // getPlayer() {
+  //   return {
+  //     characterType: this.characterType,
+  //     hp: this.hp,
+  //     weapon: this.weapon,
+  //     atk: this.atk,
+  //   };
+  // }
 
-  getUserData() {
-    return {
-      playerId: this.id,
-      // nickname: this.name,
-      character: this.getCharacter(),
-    };
-  }
+  // getUserData() {
+  //   return {
+  //     playerId: this.id,
+  //     nickname: this.name,
+  //     character: this.getCharacter(),
+  //   };
+  // }
 
   //player 메서드 여기에 만들어놓고 나중에 옮기기
 
