@@ -22,7 +22,7 @@ const updateLocationHandler = ({ socket, payload }) => {
 
     game.players.forEach((otherPlayer) => {
       // 계산한 좌표 전송(브로드캐스트)
-      const payload = player.calculatePosition(otherPlayer);
+      const payload = player.calculatePosition(otherPlayer,x,y);
 
       //payload 인코딩
       const notification = makePacket([PACKET_TYPE.PLAYER_UPDATE_POSITION_NOTIFICATION], payload);

@@ -53,7 +53,7 @@ class Player {
   //   };
   // }
 
-  // getUserData() {
+  // getPlayerData() {
   //   return {
   //     playerId: this.id,
   //     nickname: this.name,
@@ -68,7 +68,7 @@ class Player {
     this.y = dy;
   };
 
-  calculatePosition = (otherPlayer) => {
+  calculatePosition = (otherPlayer, x, y) => {
     // 현재 위치와 요청받은 위치로 방향을 구하고 speed와 레이턴시를 곱해 이동거리를 구하고 좌표 예측 검증
     const seta = (Math.atan2(y - this.y, x - this.x) * 180) / Math.PI;
     const distance = this.speed * otherPlayer.packetTerm;
@@ -81,8 +81,10 @@ class Player {
     const dx = Math.cos(seta) * distance;
     const dy = Math.sin(seta) * distance;
 
-    // 유효한 이동이라면 player.lastPosUpdateTime 업데이트
-    this.playerPositionUpdate( dx, dy);
+    //서버에 저장하는 좌표는 본인 기준으로 계산된 좌표
+    if (this.id === otherPlayer.id) {
+      this.playerPositionUpdate(dx, dy);
+    }
     return { playerId: this.id, x: this.x, y: this.y };
   };
 
