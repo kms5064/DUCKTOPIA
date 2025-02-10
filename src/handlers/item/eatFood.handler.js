@@ -1,8 +1,11 @@
 // 식량 아이템 소모 핸들러
 //! 추후에 Player 클래스 대신 gameSession 내에 어떤 것 들고와서 사용해야 함.
-
+import CustomError from '../../utils/error/customError.js';
+import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import Player from '../../classes/player/player.class';
 import { getGameAssets } from '../../init/assets';
+import { errorHandler } from '../../utils/error/errorHandler.js';
+import { PACKET_TYPE } from '../../config/constants/header.js';
 
 const eatFoodHandler = (socket, sequence, payload) => {
   try {
@@ -16,7 +19,8 @@ const eatFoodHandler = (socket, sequence, payload) => {
     // payload로 받아온 식량 고유 번호가 존재하는지 확인한다.
     const existingFood = foodData.find((food) => food.id === foodId);
     if (!existingFood) {
-      throw new Error('존재하지 않는 아이템입니다.');
+      // throw new Error('존재하지 않는 아이템입니다.');
+      throw new CustomError(ErrorCodes.ITEM_NOT_FOUND, '존재하지 않는 아이템입니다.');
     }
 
     // 해당 아이템이 유저의 인벤토리에 있는지 확인한다.
@@ -27,11 +31,15 @@ const eatFoodHandler = (socket, sequence, payload) => {
       // 유저의 인벤토리에서 해당 아이템을 제거한다.
       Player.removeItem(foodId);
     } else {
-      throw new Error('유저의 인벤토리에 존재하지 않는 아이템입니다.');
+      // throw new Error('유저의 인벤토리에 존재하지 않는 아이템입니다.');
+      throw new CustomError(
+        ErrorCodes.ITEM_NOT_IN_INVENTORY,
+        '유저의 인벤토리에 존재하지 않는 아이템입니다.',
+      );
     }
   } catch (error) {
-    //! 에러 핸들러 추가되면 관련 코드 추가 필요함.
     console.error(error);
+    errorHandler(socket, error, PACKET_TYPE.FOOD_EAT_RESPONSE);
   }
 };
 
