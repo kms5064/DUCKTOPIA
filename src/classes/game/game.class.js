@@ -40,9 +40,14 @@ class Game {
     console.log(`addPlayer : ${player}`);
   }
 
-  getPlayer(playerId) {
+  getPlayerById(playerId) {
     const player = this.players.find((player) => player.id === playerId);
     console.log(`getPlayer : ${player}`);
+    return player;
+  }
+
+  getPlayerBySocket(socket){
+    const player = this.players.find((player)=> player.user.socket === socket);
     return player;
   }
 
