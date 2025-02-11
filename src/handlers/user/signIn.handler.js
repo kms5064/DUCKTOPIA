@@ -2,6 +2,8 @@ import { PACKET_TYPE } from '../../config/constants/header.js';
 import { FindAllUser, findUserByEmail } from '../../db/user/user.db.js';
 import { userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
+import { errorHandler } from '../../utils/error/errorHandler.js';
+import CustomError from '../../utils/error/customError.js';
 import bcrypt from 'bcrypt';
 
 let newId = 1; // (TODO) 임시로!!
@@ -16,46 +18,46 @@ const signInHandler = async ({ socket, payload }) => {
     const userData = await findUserByEmail(email);
 
     if (!userData) {
-      throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
+      throw new CustomError('아이디 또는 비밀번호가 일치하지 않습니다.');
     }
 
-    //여기 잠깐 정지시켜둠
-    // // 2. 비밀번호 일치 여부 확인
-    // if (!(await bcrypt.compare(password, userData.password))) {
-    //   throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.');
-    // }
+    // 2. 비밀번호 일치 여부 확인
+    if (!(await bcrypt.compare(password, userData.password))) {
+      throw new CustomError('아이디 또는 비밀번호가 일치하지 않습니다.');
+    }
 
     // 3. 소켓을 이용해서 유저 찾기
     const user = userSession.getUser(socket);
 
     if (!user) {
-      throw new Error('소켓을 찾을 수 없습니다.');
+      throw new CustomError('소켓을 찾을 수 없습니다.');
     }
 
-    // 4. 찾은 유저에 로그인 정보 추가
+    // 4. 중복 로그인 유저 세션에서 체크
+    const existingUser = userSession.forEach((user, key, map) => {
+      if (user.email === email) return user;
+    });
+
+    if (existingUser) {
+      throw new CustomError('이미 접속 중인 유저입니다.');
+    }
+
+    // 5. 찾은 유저에 로그인 정보 추가
     user.login(newId, userData.name); // TODO 나중에 newId -> email로 변경하기
 
-    newId += 1;  // TODO 나중에 삭제
-
-    // 3. 중복 로그인 유저 세션에서 체크 TODO
-    // ex) const dupUser = getUserByEmail;
-
-    // if (dupUser) {
-    //   throw new Error('이미 접속 중인 유저입니다.');
-    // }
+    newId += 1; // TODO 나중에 삭제
 
     console.log(`${user.name} 님이 로그인하였습니다.`);
 
-    // 5. 패킷 전송
+    // 6. 패킷 전송
     const loginResponse = makePacket(PACKET_TYPE.LOGIN_RESPONSE, {
       success: true,
       myInfo: user.getUserData(),
-      // name: userData.name,
     });
 
     socket.write(loginResponse);
   } catch (error) {
-    console.log(error);
+    errorHandler(socket, error);
   }
 };
 

@@ -25,16 +25,15 @@ export class Game {
     console.log(player);
   }
 
-  getPlayer(playerId) {
+  getPlayerById(playerId) {
     const player = this.players.find((player) => player.id === playerId);
     console.log(`getPlayer : ${player}`);
     return player;
   }
 
-  getPlayerBySocket(socket)
-  {
-    this.player = this.players.find((data) => data.socket === socket);
-    return this.player;
+  getPlayerBySocket(socket){
+    const player = this.players.find((player)=> player.user.socket === socket);
+    return player;
   }
 
   removePlayer(playerId) {
