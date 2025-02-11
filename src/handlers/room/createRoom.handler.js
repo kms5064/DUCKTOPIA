@@ -30,9 +30,6 @@ const createRoomHandler = async ({socket, payload}) => {
       throw new Error('방 생성에 실패했습니다!');
     }
 
-    // 4. 유저 정보 병경
-    user.enterRoom(room.id);
-
     // 5. 유저 방에 추가
     room.addUser(user);
 

@@ -25,6 +25,7 @@ class Room {
 
     // 유저 추가
     this.users.set(user.socket, user);
+    user.enterRoom(this.id)
     return true;
   }
 
