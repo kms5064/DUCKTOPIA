@@ -1,4 +1,3 @@
-import { MAX_USER_AMOUNT } from '../../config/constants/room.js';
 import broadcast from '../../utils/packet/broadcast.js';
 
 const RoomStateType = {
@@ -9,9 +8,10 @@ const RoomStateType = {
 Object.freeze(RoomStateType);
 
 class Room {
-  constructor(id, name, ownerId) {
+  constructor({ id, name, ownerId, maxUserNum }) {
     this.users = new Map();
     this.id = id; // 숫자(TODO 나중에 uuid로?)
+    this.maxUserAmount = maxUserNum;
     this.name = name; // room name
     this.state = RoomStateType.WAIT;
     this.game = null;
@@ -21,11 +21,10 @@ class Room {
   // 유저 추가
   addUser(user) {
     // 방 인원 검사
-    if (this.users.size >= MAX_USER_AMOUNT) return false;
+    if (this.users.size >= this.maxUserAmount) return false;
 
     // 유저 추가
     this.users.set(user.socket, user);
-
     return true;
   }
 
@@ -52,7 +51,7 @@ class Room {
       roomId: this.id,
       ownerId: this.ownerId,
       name: this.name,
-      maxUserNum: MAX_USER_AMOUNT,
+      maxUserNum: this.maxUserAmount,
       state: this.state,
       users: usersData,
     };
