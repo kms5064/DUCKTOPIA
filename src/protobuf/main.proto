@@ -221,8 +221,6 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
 }
 
 
-
-
 //몬스터
 message S2CMonsterSpawnRequest // 몬스터 스폰 호스트클라이언트에게만 요청
 {
@@ -350,18 +348,5 @@ message GamePacket {
         S2CGameOverNotification gameOverNotification = 43;
 
         S2CErrorNotification errorNotification = 44;
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }
 }
