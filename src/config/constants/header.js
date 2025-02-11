@@ -3,6 +3,9 @@ export const VERSION_LENGTH_BYTE = 1;
 export const PAYLOAD_LENGTH_BYTE = 4;
 
 export const PACKET_TYPE = {
+  // 에러 응답
+  ERROR_RESPONSE: [9999, 'errorResponse'],
+
   // 유저 회원가입,로그인
   REGISTER_REQUEST: [1001, 'registerRequest'],
   REGISTER_RESPONSE: [1002, 'registerResponse'],

@@ -1,0 +1,1 @@
+export const CORE_MAX_HP = 100;

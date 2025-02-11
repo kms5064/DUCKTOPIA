@@ -292,6 +292,12 @@ message S2CErrorNotification {
     int64 timestamp = 2;
 }
 
+// 에러 응답
+message S2CErrorResponse {
+  string errorMessage = 1;
+  int64 timestamp = 2;
+}
+
 message GamePacket {
     oneof payload {
         C2SRegisterRequest registerRequest = 1;
