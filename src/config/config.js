@@ -15,6 +15,7 @@ import {
   PAYLOAD_LENGTH_BYTE,
   VERSION_LENGTH_BYTE,
 } from './constants/header.js';
+import { CORE_MAX_HP } from './constants/core.js';
 
 export const config = {
   header: {
@@ -41,4 +42,9 @@ export const config = {
       port: DB_PORT,
     },
   },
+  game : {
+    core: {
+      maxHP: CORE_MAX_HP
+    }
+  }
 };

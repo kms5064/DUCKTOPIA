@@ -4,6 +4,7 @@ import { MAX_SPAWN_COUNT } from '../../constants/monster.js';
 import { getGameAssets } from '../../init/assets.js';
 import Monster from '../monster/monster.class.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
+import { config } from 'dotenv';
 
 class Game {
   constructor(uuid) {
@@ -13,6 +14,7 @@ class Game {
     this.monsters = new Map();
     this.map = []; //0과 1로 된 2차원배열?
     this.lastUpdate = 0;
+    this.coreHp = config.game.core.maxHP;
     this.gameLoop = null;
   }
 
@@ -40,9 +42,14 @@ class Game {
     console.log(`addPlayer : ${player}`);
   }
 
-  getPlayer(playerId) {
+  getPlayerById(playerId) {
     const player = this.players.find((player) => player.id === playerId);
     console.log(`getPlayer : ${player}`);
+    return player;
+  }
+
+  getPlayerBySocket(socket){
+    const player = this.players.find((player)=> player.user.socket === socket);
     return player;
   }
 
@@ -206,6 +213,21 @@ class Game {
       }
     }
   }
+
+  coreDamaged(damage) {
+    this.coreHp -= damage;
+    if (this.coreHp <= 0) {
+      this.gameEnd();
+    }
+    return this.coreHp
+  }
+
+  gameEnd() {
+    clearInterval(this.gameLoop);
+    this.gameLoop = null;
+    this.broadcast(makePacket(PACKET_TYPE.GAME_END_NOTIFICATION));
+  }
+
 }
 
 export default Game;
