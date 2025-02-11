@@ -1,14 +1,8 @@
 syntax = 'proto3';
 
 // 기본 구조
-message Position //기본 위치 정보
-{
-  float x = 1;
-  float y = 2;
-}
 
-message PlayerPositionData { // 위치동기화에서 ID까지
-    // int64 playerId = 1;
+message PlayerPositionData {
     int32 playerId = 1;
     float x = 2;
     float y = 3;
@@ -21,72 +15,34 @@ message User { // User 닉네임
 enum RoomStateType { // 방 상태
     WAIT = 0;
     PREPARE = 1;
-    // INGAME = 2;
     PLAY = 2;
 }
 
 // 방 정보
 message RoomData { //방 리스트 받을때
     int32 roomId = 1;
-    // int64 ownerId = 2;
     int32 ownerId = 2;
     string name = 3; //방 이름
     int32 maxUserNum = 4; // 최대 수용 인원 수
     RoomStateType state = 5; //방 상태
-    repeated UserData users = 6; // 있는 인원, UserData가 사라진다면 User로
+    repeated User users = 6;
 }
 
-// message CharacterData {
-//     // CharacterType characterType = 1; //아마 없어질듯
-//     int32 hp = 1;
-//     int32 hunger = 2; // 배고픔을 모든 플레이어 인터페이스에 표기한다면 필요함
-//     // int32 weapon = 3;
-//     // int32 atk = 4;
-// }
-
-// message PlayerData {
-//     // int64 playerId = 1;
-//     int32 playerId = 1;
-//     string nickname = 2;
-//     CharacterData character = 3;
-// }
-
-enum PhaseType { // NONE_PHASE가 낮이고, EVENING이 끝나면 DAY가 될테니 두가지만 있으면 될듯
-    // NONE_PHASE = 0;
+enum PhaseType {
     DAY = 1;
-    // EVENING = 2;
-    NIGHT = 2; // '저녁'보단 '밤'이 어울려보임
-    // END = 3;
+    NIGHT = 2;
 }
-
-// enum CharacterType { // 마찬가지로, 모든 플레이어가 같은 캐릭터를 사용한다면 필요없을 듯
-//     NONE_CHARACTER = 0;
-//     RED = 1; // 빨강이
-//     SHARK = 3; // 상어군
-//     MALANG = 5; // 말랑이
-//     FROGGY = 7; // 개굴군
-//     PINK = 8; // 핑크군
-//     SWIM_GLASSES = 9; // 물안경군
-//     MASK = 10; // 가면군
-//     DINOSAUR = 12; // 공룡이
-//     PINK_SLIME = 13; // 핑크슬라임
-// }
-
-message GameStateData { // ok
-    // DAY 1, EVENING 2, END 3 (하루 종료시 카드 버리는 턴)
+message GameStateData {
     PhaseType phaseType = 1; 
-     // 다음 페이즈 시작 시점(밀리초 타임스탬프)
-    int64 nextPhaseAt = 2; //이거때문에 long을 써야하나...
+    int64 nextPhaseAt = 2;
 }
 
 message MonsterData {
     int32 monsterId = 1;
     int32 monsterCode = 2;
-    // float x = 3; // 몬스터 좌표를 서버에서 찍어서 줄지, 클라이언트에서 찍을지
-    // float y = 4;
 }
 
-message MonsterPositionData { //스폰시에
+message MonsterPositionData {
     int32 monsterId = 1;
     int32 monsterCode = 2;
     float x = 3; 
@@ -106,32 +62,31 @@ message ObjectPositionData {
 }
 
 // 통신 Payload
-message C2SRegisterRequest // 회원가입 ok
+message C2SRegisterRequest // 회원가입
 {
  string email = 1;
  string password = 2;
- string name = 3;
+ string nickname = 3;
 }
 
-message S2CRegisterResponse // 회원가입 응답 ok
+message S2CRegisterResponse // 회원가입 응답
 {
  bool success = 1;
 }
 
-message C2SLoginRequest //로그인 요청 ok
+message C2SLoginRequest //로그인 요청
 {
  string email = 1;
  string password = 2;
 }
 
-message S2CLoginResponse // 로그인 응답 
+message S2CLoginResponse // 로그인 응답
 {
  bool success = 1;
- // UserData myInfo = 4;
-//  User myInfo = 2;
+ string nickname = 2;
 }
 
-message C2SCreateRoomRequest { // 방생성 요청 ok
+message C2SCreateRoomRequest { // 방생성 요청
  string roomName = 1;
  int32 maxUserNum = 2;
 }
@@ -139,42 +94,36 @@ message C2SCreateRoomRequest { // 방생성 요청 ok
 message S2CCreateRoomResponse { // 방생성 응답
  bool success = 1;
  RoomData room = 2;
- string message = 3; // 이건 뭐에요....?
 }
 
-message C2SGetRoomListRequest { // 방리스트 요청 ok
+message C2SGetRoomListRequest { // 방리스트 요청
 }
  
-message S2CGetRoomListResponse { // 방리스트 응답 ok 
- repeated RoomData rooms = 1; // Array
+message S2CGetRoomListResponse { // 방리스트 응답
+ repeated RoomData rooms = 1;
 }
 
-message C2SJoinRoomRequest { // 방참가 요청 ok
+message C2SJoinRoomRequest { // 방참가 요청
  int32 roomId = 1;
 }
 
 message S2CJoinRoomResponse { // 방참가 응답
     bool success = 1;
     RoomData room = 2;
-    string message = 3; // 이것도
 }
 
 message S2CJoinRoomNotification { // 방참가 알림
     string nickname = 1;
-    // UserData joinUser = 1; //이것도 UserData 안쓸지도
-    // User joinUser = 1;
 }
 
-
-message C2SLeaveRoomRequest { // 방나감 요청 ok
+message C2SLeaveRoomRequest { // 방나감 요청
 }
 
-message S2CLeaveRoomResponse { // 방나감 응답 ok
+message S2CLeaveRoomResponse { // 방나감 응답
     bool success = 1;
 }
 
 message S2CLeaveRoomNotification { // 방나감 알림
-    // int64 userId = 1; //nickname이나 email로 (playerId아직 없음)
     string nickname = 1;
 }
 
@@ -187,7 +136,7 @@ message S2CGamePrepareResponse{ // 게임준비 응답 to 호스트클라이언�
  repeated ObjectData objects = 3;
 }
 
-message S2CGamePrepareNotification { // 게임준비 알림 ok      
+message S2CGamePrepareNotification { // 게임준비 알림     
  RoomData room = 1;
 }
 
@@ -209,122 +158,135 @@ message S2CGameStartNotification { //게임시작 알림
 
 //이때 클라 서버 모두 몬스터, 장애물(오브젝트), 플레이어 정보를 가짐
 
-message C2SPositionUpdateRequest { // 캐릭터이동 요청
+
+//여기부터 인게임
+
+message C2SPlayerPositionUpdateRequest { // 캐릭터이동 요청
  float x = 1;
  float y = 2;
 }
 
-//여기부터 인게임
-message S2CPositionUpdateNotification { // 캐릭터이동 알림
+message S2CPlayerPositionUpdateNotification { // 캐릭터이동 알림
  repeated PlayerPositionData playerPositions = 1;
 }
 
 message S2CPlayerHpUpdateNotification{ //플레이어 체력 변경 알림
-    // int64 playerId = 1;
     int32 playerId = 1;
     int32 hp = 2;
    }
 
-// message C2SEatFoodRequest {
-//     int32 foodId = 1; //food class가 없지만, 종류구분은 code, 개체구분은 index 이런식으로 확실히 정하는게 좋을듯
-//     // int64 playerId = 2;
-//     int32 playerId = 2;
-//   }
-
-message C2SUseItemRequest { //아이템 사용 요청
-    int32 itemId = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은 소모)
-}
-  
-message S2CEatFoodResponse {  // 사용한 아이템이 식량일 때
-    // bool isEaten = 1; // 일관성을 위해
-    bool success = 1;
-    string message = 2; //여기 뭐가들어가죠?
-    // int32 currentHunger = 3; //
-    int32 hunger = 3; //이전 배고픔 수치보단 검증 후 출력될 배고픔 수치나, 수치 회복량을 넣는게 좋아보임
-  }
-
-message S2CEquipWeaponResponse { // 사용한 아이템이 무기일 때
-    bool success = 1;
-}
-
-// message S2CUserUpdateNotification { // 상태동기화를 위치, 체력, 배고픔을 각각 적용
-//  repeated UserData users = 1;
-// }
-
-message S2CPlayerDeathNotification{ //플레이어가 사망했을 때
- // int64 playerId = 1;
- int32 playerId = 1;
-}
-
-message C2SPlayerAttackRequest // 플레이어 공격 요청
+   message C2SPlayerAttackRequest // 플레이어 공격 요청
 {
- float x = 1; //플레이어 위치인데 없어도 괜찮은지
- float y = 2;
- float playerDirX = 3; // 마우스 위치 정보
- float playerDirY = 4;
+ float playerDirX = 1; // 마우스 위치 정보
+ float playerDirY = 2;
 }
 
+message C2SPlayerAttackMonsterRequest {
+    float playerDirX = 1; // 마우스 위치 정보
+    float playerDirY = 2;
+    int32 monsterId = 3;
+}
 
 message S2CPlayerAttackNotification // 플레이어 공격 알림(동기화용)
 {
- // int64 playerId = 1;
  int32 playerId = 1;
- float playerDirX = 3; // 마우스 위치 정보 마찬가지로 있어야할듯
- float playerDirY = 4;
+ float playerDirX = 2;
+ float playerDirY = 3;
 }
 
-message S2CMonsterSpawnNotification // 몬스터 스폰 (웨이브)
+message S2CPlayerDeathNotification{ //플레이어가 사망했을 때
+    int32 playerId = 1;
+   }
+
+message S2CPlayerGetItemRequest {
+    int32 playerId = 1;
+    int32 itemId = 2;
+}
+
+message C2SPlayerUseItemRequest { //아이템 사용 요청
+    int32 itemId = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은 소모)
+}
+  
+message S2CPlayerEatFoodResponse {  // 사용한 아이템이 식량일 때
+    bool success = 1;
+    int32 itemId = 2;
+    int32 playerId = 3;
+    int32 hunger = 4; 
+  }
+
+message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
+    bool success = 1;
+    int32 itemId = 2;
+    int32 playerId = 3;
+}
+
+
+
+
+//몬스터
+message S2CMonsterSpawnRequest // 몬스터 스폰 호스트클라이언트에게만 요청
 {
- int32 monsterId = 1;
- int32 monsterCode = 2;
-//  float x = 3; 
-//  float y = 4;
+    repeated MonsterData monsters = 1;
 }
 
-message S2CMonsterAwakeNotification // 몬스터 깨어남 ok
+message C2SMonsterSpawnResponse { // 몬스터 좌표를 찍어서 서버에 전송
+    repeated MonsterPositionData monsters = 1;
+}
+
+message S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
+    repeated MonsterPositionData monsters = 1;
+}
+
+message S2CMonsterAwakeNotification // 몬스터 깨어남
 {
     int32 monsterId = 1;
+    int32 targetId = 2;
 }
-
-// message S2CMonsterMoveNotification // 클라에서 이동시킬것이니 필요없을듯
-// {
-//     int32 monsterId = 1;
-//     Position direct = 2;
-//     Position position = 3;
-//     int32 speed = 4;
-//     int64 timestamp = 5;
-// }
 
 message S2CMonsterDeathNotification // 몬스터 사망 
 {
  int32 monsterId = 1;
 }
 
-message C2SMonsterMoveNotification { //몬스터 이동
+message C2SMonsterMoveRequest { //몬스터 이동
     int32 monsterId = 1;
-    int32 targetPlayerId = 2;
+    int32 targetId = 2;
     float x = 3;
     float y = 4;
 }
 
 message S2CMonsterMoveNotification { // 몬스터 이동 알림
     int32 monsterId = 1;
-    int32 targetPlayerId = 2; // 몬스터 몸 방향을 위해 필요한지
+    int32 targetId = 2; // 몬스터 몸 방향을 위해 필요
     float x = 3;
     float y = 4;
 }
 
-message C2SMonsterAttackNotification { // 몬스터 공격 알림
+message C2SMonsterAttackRequest { // 몬스터 공격 알림
     int32 monsterId = 1;
-    int32 targetPlayerId = 2;
+    int32 targetId = 2;
+}
+
+message S2CMonsterAttackNotification { // 몬스터 공격 모든 클라이언트에 알림
+    int32 monsterId = 1;
+    int32 targetId = 2;
 }
 
 message S2CMonsterHpUpdateNotification // 몬스터 체력 감소
 {
  int32 monsterId = 1;
- int32 damage = 2; //현재 hp정보가 좋을지?
+ int32 hp = 2;
 }
 
+//코어
+message S2CCoreHpUpdateNotification{ // 코어 체력 감소 알림
+    int32 hp = 2;
+   }
+
+message S2CGameOverNotification {
+}
+
+//에러
 message S2CErrorNotification {
     string errorMessage = 1;
     int64 timestamp = 2;
@@ -332,39 +294,68 @@ message S2CErrorNotification {
 
 message GamePacket {
     oneof payload {
-        S2CMonsterAwakeNotification monsterAwakeNotification = 1;
-        S2CMonsterMoveNotification monsterMoveNotification = 2;
-        C2SPlayerAttackRequest playerAttackRequest = 4;
-        S2CPlayerAttackNotification playerAttackNotification = 5;
-        S2CMonsterDeathNotification monsterDeathNotification = 6;
-        S2CMonsterHpUpdateNotification monsterHpUpdateNotification = 7;
-        S2CMonsterSpawnNotification monsterSpawnNotification = 8;
-        C2SRegisterRequest registerRequest = 9;
-        S2CRegisterResponse registerResponse = 10;
-        C2SLoginRequest loginRequest = 11;
-        S2CLoginResponse loginResponse = 12;
-        C2SCreateRoomRequest createRoomRequest = 13;
-        S2CCreateRoomResponse createRoomResponse = 14;
-        C2SGetRoomListRequest getRoomListRequest = 15;
-        S2CGetRoomListResponse getRoomListResponse = 16;
-        C2SJoinRoomRequest joinRoomRequest = 17;
-        S2CJoinRoomResponse joinRoomResponse = 18;
-        C2SGamePrepareRequest gamePrepareRequest = 19;
-        S2CGamePrepareResponse gamePrepareResponse = 20;
-        S2CGamePrepareNotification gamePrepareNotification = 21;
-        C2SGameStartRequest gameStartRequest = 22;
-        S2CGameStartResponse gameStartResponse = 23;
-        S2CGameStartNotification gameStartNotification = 24;
-        C2SPositionUpdateRequest positionUpdateRequest = 25;
-        S2CPositionUpdateNotification positionUpdateNotification = 26;
-        S2CUserUpdateNotification userUpdateNotification = 27;
-        S2CPlayerDeathNotification playerDeathNotification = 28;
-        S2CPlayerHpUpdateNotification playerHpUpdateNotification = 29;
-        C2SEatFoodRequest eatFoodRequest = 30;
-        S2CEatFoodResponse eatFoodResponse = 31;
-        C2SLeaveRoomRequest leaveRoomRequest = 32;
-        S2CLeaveRoomResponse leaveRoomResponse = 33;
-        S2CLeaveRoomNotification leaveRoomNotification = 34;
-        S2CJoinRoomNotification joinRoomNotification = 35;
+        C2SRegisterRequest registerRequest = 1;
+        S2CRegisterResponse registerResponse = 2;
+        C2SLoginRequest loginRequest = 3;
+        S2CLoginResponse loginResponse = 4;
+
+        C2SCreateRoomRequest createRoomRequest = 5;
+        S2CCreateRoomResponse createRoomResponse = 6;
+        C2SJoinRoomRequest joinRoomRequest = 7;
+        S2CJoinRoomResponse joinRoomResponse = 8;
+        S2CJoinRoomNotification joinRoomNotification = 9;
+        C2SGetRoomListRequest getRoomListRequest = 10;
+        S2CGetRoomListResponse getRoomListResponse = 11;
+        C2SLeaveRoomRequest leaveRoomRequest = 12;
+        S2CLeaveRoomResponse leaveRoomResponse = 13;
+        S2CLeaveRoomNotification leaveRoomNotification = 14;
+
+        C2SGamePrepareRequest gamePrepareRequest = 15;
+        S2CGamePrepareResponse gamePrepareResponse = 16;
+        S2CGamePrepareNotification gamePrepareNotification = 17;
+        C2SGameStartRequest gameStartRequest = 18;
+        S2CGameStartResponse gameStartResponse = 19;
+        S2CGameStartNotification gameStartNotification = 20;
+
+        C2SPlayerPositionUpdateRequest playerPositionUpdateRequest = 21;
+        S2CPlayerPositionUpdateNotification playerPositionUpdateNotification = 22;
+        S2CPlayerHpUpdateNotification playerHpUpdateNotification = 23;
+        C2SPlayerAttackRequest playerAttackRequest = 24;
+        C2SPlayerAttackMonsterRequest playerAttackMonsterRequest = 25;
+        S2CPlayerAttackNotification playerAttackNotification = 26;
+        S2CPlayerDeathNotification playerDeathNotification = 27;
+        S2CPlayerGetItemRequest playerGetItemRequest = 28;
+        C2SPlayerUseItemRequest playerUseItemRequest = 29;
+        S2CPlayerEatFoodResponse playerEatFoodResponse = 30;
+        S2CPlayerEquipWeaponResponse playerEquipWeaponResponse = 31;
+
+        S2CMonsterSpawnRequest monsterSpawnRequest = 32;
+        C2SMonsterSpawnResponse monsterSpawnResponse = 33;
+        S2CMonsterWaveStartNotification MonsterWaveStartNotification = 34;
+        S2CMonsterAwakeNotification monsterAwakeNotification = 35;
+        S2CMonsterDeathNotification monsterDeathNotification = 36;
+        C2SMonsterMoveRequest monsterMoveRequest = 37;
+        S2CMonsterMoveNotification monsterMoveNotification = 38;
+        C2SMonsterAttackRequest monsterAttackRequest = 39;
+        S2CMonsterAttackNotification MonsterAttackNotification = 40;
+        S2CMonsterHpUpdateNotification monsterHpUpdateNotification = 41;
+
+        S2CCoreHpUpdateNotification coreHpUpdateNotification = 42;
+        S2CGameOverNotification gameOverNotification = 43;
+
+        S2CErrorNotification errorNotification = 44;
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
 }

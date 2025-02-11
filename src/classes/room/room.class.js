@@ -4,7 +4,7 @@ import broadcast from '../../utils/packet/broadcast.js';
 const RoomStateType = {
   WAIT: 0,
   PREPARE: 1,
-  INGAME: 2,
+  PLAY: 2,
 };
 Object.freeze(RoomStateType);
 
@@ -65,7 +65,7 @@ class Room {
 
   // 게임 시작
   startGame() {
-    this.changeState(RoomStateType.INGAME);
+    this.changeState(RoomStateType.PLAY);
 
     // TODO 게임 추가
     this.game = new Game();
