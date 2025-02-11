@@ -10,11 +10,11 @@ class UserSession {
 
   // 로그인 시 이메일 추가
   addId(email, socket) {
-    if (this.logins.has(email)) {
-      // 중복 로그인이면 기존 로그인된 소켓 연결 종료
-      onEnd(this.emails.get(email))();
-      this.emails.delete(email);
-    }
+    // if (this.logins.has(email)) {
+    //   // 중복 로그인이면 기존 로그인된 소켓 연결 종료
+    //   onEnd(this.emails.get(email))();
+    //   this.emails.delete(email);
+    // }
 
     this.emails.set(email, socket);
   }
