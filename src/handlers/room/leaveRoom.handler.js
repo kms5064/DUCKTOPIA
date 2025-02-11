@@ -24,16 +24,15 @@ const leaveRoomHandler = ({socket, payload}) => {
     const isOwner = user.id === room.ownerId;
     // 3-1. 방장이면 방 터트리기 (TODO 추후 개발)
 
-
-    // 4. 방장이 아니면 방에서 유저 삭제
-    room.removeUser(user);
-
-    // 5. response 전송
-    const leaveRoomResponse = makePacket(config.packetType.LEAVE_ROOM_RESPONSE, {
-      success: true,
-    });
-
     if (!isOwner) {
+      // 4. 방장이 아니면 방에서 유저 삭제
+      room.removeUser(user);
+
+      // 5. response 전송
+      const leaveRoomResponse = makePacket(config.packetType.LEAVE_ROOM_RESPONSE, {
+        success: true,
+      });
+
       socket.write(leaveRoomResponse);
       // 6. notification 전송
       const leaveRoomNotification = makePacket(config.packetType.LEAVE_ROOM_NOTIFICATION, {

@@ -23,10 +23,6 @@ class UserSession {
     return this.logins.has(email);
   }
 
-  deleteEmail(email) {
-    this.logins.delete(email);
-  }
-
   /* 세션에 유저 추가시키는 메서드 */
   addUser(socket) {
     const newUser = new User(socket);
@@ -36,8 +32,9 @@ class UserSession {
   }
 
   /* 나간 유저 세션에서 제거하는 메서드 */
-  User(socket) {
+  deleteUser(socket) {
     this.users.delete(socket);
+    this.logins.delete(email);
   }
 
   /* 특정 유저 조회하는 메서드 */

@@ -24,12 +24,13 @@ class Room {
   addUser(user) {
     // 방 인원 검사
     if (this.users.size >= this.maxUserAmount) return false;
-
     // 유저 추가
     this.users.add(user);
+    console.log(this.users)
     // 플레이어 추가
     this.game.addPlayer(user)
     user.enterRoom(this.id)
+
     return true;
   }
 
