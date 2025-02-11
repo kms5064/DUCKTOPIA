@@ -48,7 +48,7 @@ const attackPlayerMonsterhandler = ({ socket, payload }) => {
 
   // 몬스터 HP 차감 처리
   const damege = player.getPlayerAtkDamage();
-  const currHp = monster.setDamaged(damege);
+  let currHp = monster.setDamaged(damege);
 
   if (currHp <= 0) {
     // 몬스터 사망 처리
@@ -58,7 +58,7 @@ const attackPlayerMonsterhandler = ({ socket, payload }) => {
   // 패킷 생성
   packet = makePacket(PACKET_TYPE.MONSTER_HP_UPDATE_NOTIFICATION, {
     monsterId,
-    damege,
+    hp: currHp,
   });
 
   // broadcast - 모든 플레이어들에게 전달
