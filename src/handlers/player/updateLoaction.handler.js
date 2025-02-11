@@ -1,6 +1,4 @@
-import { LOCATION_REQ_TIME_TERM, VALID_DISTANCE } from '../../constants/player.js';
 import makePacket from '../../utils/packet/makePacket.js';
-import { PACKET_TYPE } from '../../config/constants/header.js';
 import { config } from '../../config/config.js';
 
 const updateLocationHandler = ({ socket, payload }) => {
