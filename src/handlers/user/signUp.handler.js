@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
 import Joi from 'joi';
 import { createUser } from '../../db/user/user.db.js';
-import { PACKET_TYPE } from '../../config/constants/header.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
+import { config } from '../../config/config.js';
 
 const SALT_OR_ROUNDS = 10;
 
@@ -45,7 +45,7 @@ const signUpHandler = async ({ socket, payload }) => {
     // console.log('회원가입 성공!');
 
     // 4. 패킷 전송
-    const registerResponse = makePacket(PACKET_TYPE.REGISTER_RESPONSE, { success: true });
+    const registerResponse = makePacket(config.packetType.REGISTER_RESPONSE, { success: true });
 
     socket.write(registerResponse);
   } catch (error) {

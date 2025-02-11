@@ -1,10 +1,10 @@
-import { PACKET_TYPE } from '../../config/constants/header.js';
 import { findUserByEmail } from '../../db/user/user.db.js';
 import { userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import bcrypt from 'bcrypt';
+import { config } from '../../config/config.js';
 
 const signInHandler = async ({ socket, payload }) => {
   try {
@@ -39,7 +39,7 @@ const signInHandler = async ({ socket, payload }) => {
     // console.log(`${user.name} 님이 로그인하였습니다.`);
 
     // 6. 패킷 전송
-    const loginResponse = makePacket(PACKET_TYPE.LOGIN_RESPONSE, {
+    const loginResponse = makePacket(config.packetType.LOGIN_RESPONSE, {
       success: true,
       myInfo: user.getFakeUserData(),
     });

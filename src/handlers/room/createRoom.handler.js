@@ -1,8 +1,8 @@
 import Joi from 'joi';
 import { roomSession, userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
-import { PACKET_TYPE } from '../../config/constants/header.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
+import { config } from '../../config/config.js';
 
 const roomNameSchema = Joi.string().max(25).required().messages({
   'string.base': '방 이름은 문자열이어야 합니다.',
@@ -36,7 +36,7 @@ const createRoomHandler = async ({socket, payload}) => {
     // console.log(`${name} 방이 생성되었습니다.`);
 
     // 6. 패킷 전송
-    const createRoomResponse = makePacket(PACKET_TYPE.CREATE_ROOM_RESPONSE, {
+    const createRoomResponse = makePacket(config.packetType.CREATE_ROOM_RESPONSE, {
       success: true,
       room: room.getRoomData(),
       message: '방이 생성되었습니다!',

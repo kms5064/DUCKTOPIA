@@ -1,4 +1,4 @@
-import { PACKET_TYPE } from '../../config/constants/header.js';
+import { config } from '../../config/config.js';
 import { roomSession, userSession } from '../../sessions/session.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import makePacket from '../../utils/packet/makePacket.js';
@@ -26,7 +26,7 @@ const joinRoomHandler = ({ socket, payload }) => {
     }
 
     // 5. response 전송
-    const joinRoomResponse = makePacket(PACKET_TYPE.JOIN_ROOM_RESPONSE, {
+    const joinRoomResponse = makePacket(config.packetType.JOIN_ROOM_RESPONSE, {
       success: true,
       room: room.getRoomData(),
       message: '방에 참가했습니다!',
@@ -35,7 +35,7 @@ const joinRoomHandler = ({ socket, payload }) => {
     socket.write(joinRoomResponse);
 
     // 6. notification 전송
-    const joinRoomNotification = makePacket(PACKET_TYPE.JOIN_ROOM_NOTIFICATION, {
+    const joinRoomNotification = makePacket(config.packetType.JOIN_ROOM_NOTIFICATION, {
       joinUser: user.getFakeUserData(),
     });
 
