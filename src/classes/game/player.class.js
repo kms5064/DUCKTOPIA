@@ -58,31 +58,35 @@ class Player {
     this.y = dy;
   };
 
-  calculatePosition = (otherPlayer, x, y) => {
+  calculatePosition = (x, y) => {
+    const now = Date.now()
+    this.packetTerm = now - this.lastPosUpdateTime
     // 현재 위치와 요청받은 위치로 방향을 구하고 speed와 레이턴시를 곱해 이동거리를 구하고 좌표 예측 검증
     const seta = (Math.atan2(y - this.y, x - this.x) * 180) / Math.PI;
-    const distance = this.speed * otherPlayer.packetTerm;
+    const distance = this.speed * this.packetTerm;
+    const realDistance = Math.sqrt((this.x - x)**2 + (this.y - y)**2)
 
+    let newX = y;
+    let newY = x;
     // 만약 거속시로 구한 거리보다 멀면 서버가 알고있는 좌표로 강제 이동
-    if (distance > VALID_DISTANCE) {
+    if (Math.abs(distance - realDistance) > config.game.player.validDistance) {
+      newX = this.x + Math.cos(seta) * distance;
+      newY = this.y + Math.sin(seta) * distance;
       console.error(`유효하지 않은 이동입니다.`);
-    }
+    } 
 
-    const dx = Math.cos(seta) * distance;
-    const dy = Math.sin(seta) * distance;
+    // 위치 적용
+    this.playerPositionUpdate(newX, newY);
+    this.lastPosUpdateTime = now
 
-    //서버에 저장하는 좌표는 본인 기준으로 계산된 좌표
-    if (this.id === otherPlayer.id) {
-      this.playerPositionUpdate(dx, dy);
-    }
-    return { playerId: this.id, x: this.x, y: this.y };
+    return { playerId: this.user.id, x: this.x, y: this.y };
   };
 
   calculateLatency = () => {
     //레이턴시 구하기 => 수정할 것)각 클라마다 다른 레이턴시를 가지고 계산
     //레이턴시 속성명도 생각해볼 필요가 있다
-    this.packetTerm = Date.now() - this.lastPosUpdateTime; //player값 직접 바꾸는건 메서드로 만들어서 사용
-    this.lastPosUpdateTime = Date.now();
+    ; //player값 직접 바꾸는건 메서드로 만들어서 사용
+    
   };
 
   changePlayerHunger(amount) {
