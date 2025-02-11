@@ -7,8 +7,9 @@ message Position //기본 위치 정보
   float y = 2;
 }
 
-message CharacterPositionData { // 플레이어 아이디를 포함한 위치정보
-    int64 playerId = 1;
+message CharacterPositionData { // int32로?
+    // int64 playerId = 1;
+    int32 playerId = 1;
     float x = 2;
     float y = 3;
 }
@@ -27,22 +28,25 @@ enum RoomStateType { // 방 상태
 // 방 정보
 message RoomData { // ok
     int32 roomId = 1;
-    int64 ownerId = 2; //방장 아이디.
+    // int64 ownerId = 2; //방장 아이디.
+    int32 ownerId = 2;
     string name = 3; //방 이름
     int32 maxUserNum = 4; // 최대 수용 인원 수
     RoomStateType state = 5; //방 상태
     repeated UserData users = 6; // 있는 인원, UserData가 사라진다면 User로
 }
 
-message CharacterData { // 캐릭터 구분없이 모든 플레이어가 같은 캐릭터라면 필요 없을듯
-    CharacterType characterType = 1;
-    // int32 hp = 2; // CharacterData가 필요하더라도 hp, weapon, atk를 db에서 관리하지 않는 한 필요없을듯
+message CharacterData { // 로그인할땐 필요없음, 상태동기화에 필요함
+    // CharacterType characterType = 1;
+    int32 hp = 2;
+    int32 hunger = 3; // 배고픔을 모든 플레이어 인터페이스에 표기한다면 필요함
     // int32 weapon = 3;
     // int32 atk = 4;
 }
 
-message UserData { // 로그인 할 때 클라이언트에 정보 전달을 위한 프로토, playerId가 1,2 등 넘버링으로 알고있는데 없어도 될듯. 없다면 위의 User와 차이가 없을듯.
-    int64 playerId = 1; //있어야하나?
+message UserData {
+    // int64 playerId = 1;
+    int32 playerId = 1;
     string nickname = 2;
     // CharacterData character = 3;
 }
@@ -72,18 +76,31 @@ message GameStateData { // ok
     // DAY 1, EVENING 2, END 3 (하루 종료시 카드 버리는 턴)
     PhaseType phaseType = 1; 
      // 다음 페이즈 시작 시점(밀리초 타임스탬프)
-    int64 nextPhaseAt = 2;
+    int64 nextPhaseAt = 2; //이거때문에 long을 써야하나...
 }
 
 message MonsterData {
     int32 monsterId = 1;
     int32 monsterCode = 2;
-    float x = 3; // 몬스터 좌표를 서버에서 찍어서 줄지, 클라이언트에서 찍을지
+    // float x = 3; // 몬스터 좌표를 서버에서 찍어서 줄지, 클라이언트에서 찍을지
+    // float y = 4;
+}
+
+message MonsterPositionData {
+    int32 monsterId = 1;
+    int32 monsterCode = 2;
+    float x = 3; 
     float y = 4;
 }
 
 message ObjectData {
     int32 objectId = 1;
+    int32 objectCode = 2;
+}
+
+message ObjectPositionData {
+    int32 objectId = 1;
+    int32 objectCode = 2;
     float x = 2;
     float y = 3;
 }
@@ -101,16 +118,131 @@ message S2CRegisterResponse // 회원가입 응답 ok
  bool success = 1;
 }
 
-message C2SLoginRequest //로그인 ok
+message C2SLoginRequest //로그인 요청 ok
 {
  string email = 1;
  string password = 2;
 }
 
-message S2CLoginResponse // 로그인 응답
+message S2CLoginResponse // 로그인 응답 
 {
  bool success = 1;
- UserData myInfo = 4;
+ // UserData myInfo = 4;
+ User myInfo = 2;
+}
+
+message C2SCreateRoomRequest { // 방생성 요청 ok
+ string name = 1;
+ int32 maxUserNum = 2;
+}
+
+message S2CCreateRoomResponse { // 방생성 응답
+ bool success = 1;
+ RoomData room = 2;
+ string message = 3; // 이건 뭐에요....?
+}
+
+message C2SGetRoomListRequest { // 방리스트 요청 ok
+}
+ 
+message S2CGetRoomListResponse { // 방리스트 응답 ok 
+ repeated RoomData rooms = 1; // Array
+}
+
+message C2SJoinRoomRequest { // 방참가 요청 ok
+ int32 roomId = 1;
+}
+
+message S2CJoinRoomResponse { // 방참가 응답
+    bool success = 1;
+    RoomData room = 2;
+    string message = 3; // 이것도
+}
+
+message S2CJoinRoomNotification { // 방참가 알림
+    // UserData joinUser = 1; //이것도 UserData 안쓸지도
+    // User joinUser = 1;
+}
+
+
+message C2SLeaveRoomRequest { // 방나감 요청 ok
+}
+
+message S2CLeaveRoomResponse { // 방나감 응답 ok
+    bool success = 1;
+}
+
+message S2CLeaveRoomNotification { // 방나감 알림
+    // int64 userId = 1; //nickname이나 email로 (playerId아직 없음)
+    string nickname = 1;
+}
+
+message C2SGamePrepareRequest { // 게임준비 요청
+}
+
+message S2CGamePrepareResponse{ // 게임준비 응답 to 호스트클라이언트
+ bool success = 1;
+ repeated MonsterData monsters = 2; //이렇게 맞나요
+ repeated ObjectData objects = 3;
+}
+
+message S2CGamePrepareNotification { // 게임준비 알림 ok
+ RoomData room = 1;
+}
+
+message C2SGameStartRequest { // 게임시작 요청
+    repeated MonsterPositionData monsters = 2; // 클라에서 좌표찍고 다시 줄지??
+    repeated ObjectPositionData objects = 3;
+}
+
+message S2CGameStartResponse { // 게임시작 응답
+ bool success = 1;
+}
+
+message S2CGameStartNotification { //게임시작 알림
+ GameStateData gameState = 1;
+ repeated UserData users = 2;
+ repeated CharacterPositionData characterPositions = 3;
+}
+
+message C2SPositionUpdateRequest { // 캐릭터이동 요청
+ float x = 1;
+ float y = 2;
+}
+
+message S2CPositionUpdateNotification { // 캐릭터이동 알림
+ repeated CharacterPositionData characterPositions = 1;
+}
+
+message S2CUserUpdateNotification { // 상태동기화 
+ repeated UserData users = 1;
+ repeated 
+}
+
+message S2CPlayerDeathNotification{
+ // int64 playerId = 1;
+ int32 playerId = 1;
+}
+
+message S2CPlayerHpUpdateNotification{
+ // int64 playerId = 1;
+ int32 playerId = 1;
+ int32 hp = 2;
+}
+
+message C2SEatFoodRequest {
+  int32 foodId = 1; //food class가 없지만, 종류구분은 code, 개체구분은 index 이런식으로 확실히 정하는게 좋을듯
+  // int64 playerId = 2;
+  int32 playerId = 2;
+}
+
+// 식량 아이템 소모 응답
+message S2CEatFoodResponse {
+  // bool isEaten = 1; // 일관성을 위해
+  bool success = 1;
+  string message = 2; //여기 뭐가들어가죠?
+  // int32 currentHunger = 3; //
+  int32 hunger = 3; //이전 배고픔 수치보단 검증 후 출력될 배고픔 수치나, 수치 회복량을 넣는게 좋아보임
 }
 
 message S2CMonsterAwakeNotification // 몬스터 깨어남 ok
@@ -138,7 +270,8 @@ message C2SPlayerAttackRequest
 // 플레이어 공격 
 message S2CPlayerAttackNotification
 {
- int64 playerId = 1; //Id 1, 2 같은 넘버링일텐데 없애고 nickname이나 email로 통신하는게 좋을 듯
+ // int64 playerId = 1;
+ int32 playerId = 1;
  float playerDirX = 3; // 마우스 위치 정보 마찬가지로 있어야할듯
  float playerDirY = 4;
 }
@@ -165,110 +298,7 @@ message S2CMonsterSpawnNotification
  float y = 4;
 }
 
-message C2SCreateRoomRequest { // ㄱㅊ!
- string name = 1;
- int32 maxUserNum = 2;
-}
 
-message S2CCreateRoomResponse {
- bool success = 1;
- RoomData room = 2;
- string message = 3; // 이건 뭐에요....?
-}
-
-message C2SGetRoomListRequest { // ok
-}
- 
-message S2CGetRoomListResponse { //ok 
- repeated RoomData rooms = 1; // Array
-}
-
-message C2SJoinRoomRequest { //ok
- int32 roomId = 1;
-}
-
-message S2CJoinRoomResponse {
-    bool success = 1;
-    RoomData room = 2;
-    string message = 3; // 진짜 뭐에요...??
-}
-
-message S2CJoinRoomNotification {
-    UserData joinUser = 1; //이것도 UserData 안쓸지도
-}
-
-
-message C2SLeaveRoomRequest { // ok
-}
-
-message S2CLeaveRoomResponse { // ok
-    bool success = 1;
-}
-
-message S2CLeaveRoomNotification {
-    int64 userId = 1; //이거말고 nickname이나 email로
-}
-
-message C2SGamePrepareRequest {
-}
-
-message S2CGamePrepareResponse{
- bool success = 1;
- repeated MonsterData monsters = 2;
- repeated ObjectData objects = 3;
-}
-
-message S2CGamePrepareNotification { // ok
- RoomData room = 1;
-}
-
-message C2SGameStartRequest {
-    // repeated MonsterData monsters = 2; // 클라에서 좌표찍고 다시 줄지??
-    // repeated ObjectData objects = 3;
-}
-
-message S2CGameStartResponse {
- bool success = 1;
-}
-
-message S2CGameStartNotification { //세부내용만 확인
- GameStateData gameState = 1;
- repeated UserData users = 2;
- repeated CharacterPositionData characterPositions = 3;
-}
-
-message C2SPositionUpdateRequest {
- float x = 1;
- float y = 2;
-}
-
-message S2CPositionUpdateNotification {
- repeated CharacterPositionData characterPositions = 1;
-}
-message S2CUserUpdateNotification {
- repeated UserData users = 1;
-}
-
-message S2CPlayerDeathNotification{
- int64 playerId = 1;
-}
-
-message S2CPlayerHpUpdateNotification{
- int64 playerId = 1;
- int32 hp = 2;
-}
-
-message C2SEatFoodRequest {
-  int32 foodId = 1;
-  int64 playerId = 2;
-}
-
-// 식량 아이템 소모 응답
-message S2CEatFoodResponse {
-  bool isEaten = 1;
-  string message = 2;
-  int32 currentHunger = 3;
-}
 
 message GamePacket {
     oneof payload {
