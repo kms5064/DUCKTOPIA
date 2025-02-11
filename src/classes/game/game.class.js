@@ -48,8 +48,8 @@ class Game {
     return player;
   }
 
-  getPlayerBySocket(socket){
-    const player = this.players.find((player)=> player.user.socket === socket);
+  getPlayerBySocket(socket) {
+    const player = this.players.find((player) => player.user.socket === socket);
     return player;
   }
 
@@ -112,7 +112,7 @@ class Game {
     }
   }
 
-  getMonster(monsterId) {
+  getMonsterById(monsterId) {
     return this.monsters.get(monsterId);
   }
 
@@ -219,7 +219,7 @@ class Game {
     if (this.coreHp <= 0) {
       this.gameEnd();
     }
-    return this.coreHp
+    return this.coreHp;
   }
 
   gameEnd() {
@@ -227,7 +227,6 @@ class Game {
     this.gameLoop = null;
     this.broadcast(makePacket(PACKET_TYPE.GAME_END_NOTIFICATION));
   }
-
 }
 
 export default Game;
