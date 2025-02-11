@@ -86,7 +86,7 @@ message C2SLoginRequest {
 
 message S2CLoginResponse {
   bool success = 1;
-  UserData myInfo = 2;
+  UserData myInfo = 4;
 }
 
 message S2CMonsterAwakeNotification { int32 monsterId = 1; }
