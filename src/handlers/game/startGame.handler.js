@@ -9,10 +9,19 @@ const gameStartHandler = ({socket, payload}) => {
   try {
     const user = userSession.getUser(socket);
     const room = roomSession.getRoom(user.roomId);
+    const game = room.game;
+    
 
     if(!room) {
       throw new Error('방 생성에 실패했습니다!');
     }
+    
+    if(game !== null)
+    {
+      return;
+    }
+
+    
     
     const GameStartNotification = makePacket(PACKET_TYPE.START_GAME_NOTIFICATION, {
       gameState: { phaseType: 1, nextPhaseAt: 100000 }, //이삭님 코드에 이렇게돼있음!

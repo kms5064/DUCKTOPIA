@@ -55,7 +55,7 @@ export class Game {
       const { monster: monsterAsset } = getGameAssets();
       // 몬스터 데이터 뽑기
       const codeIdx = Math.floor(Math.random() * monsterAsset.data.length);
-      const data = monsterAsset.data[codeIdx];
+      const data = monsterAsset.data[0];
 
       // 좌표 생성
       let x = this.createRandomPositionValue(MAX_VALUE_X);
