@@ -41,7 +41,7 @@ const signInHandler = async ({ socket, payload }) => {
     // 6. 패킷 전송
     const loginResponse = makePacket(PACKET_TYPE.LOGIN_RESPONSE, {
       success: true,
-      myInfo: user.getUserData(),
+      myInfo: user.getFakeUserData(),
     });
 
     socket.write(loginResponse);
