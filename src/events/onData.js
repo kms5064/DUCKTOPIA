@@ -35,7 +35,7 @@ const onData = (socket) => async (data) => {
       const gamePacket = proto.decode(payloadBuffer);
       const payload = gamePacket[gamePacket.payload];
 
-      await handler({ socket, payload });
+      handler({ socket, payload });
     } catch (e) {
       console.error(e);
     }
