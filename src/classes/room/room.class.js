@@ -83,29 +83,15 @@ class Room {
     return this.game;
   }
 
-  notification(socket, packet) {
-    let targetUsers = [];
-    this.getUsers().forEach((user) => {
-      if (user.socket !== socket) targetUsers.push(user);
+  notification(id, packet) {
+    this.users.forEach((user, socket) => {
+      if (user.id !== id) socket.write(packet)
     });
-
-    broadcast(targetUsers, packet);
   }
 
-  // 여기부터 구동을 위해 추가된 부분 나중에 입맛대로 수정해주세요!
-  getUsersData() {
-    const roomUsers = Array.from(this.getUsers());
-
-    return roomUsers.map((user) => user.getUserData()); // 유저 데이터를 배열로 변환
-  }
-
-  joinUserNotification(packet) {
-    const roomUsers = Array.from(this.getUsers());
-
-    roomUsers.forEach((user) => {
-      if (user.socket) {
-        user.socket.write(packet);
-      }
+  broadcast(packet) {
+    this.users.forEach((user, socket) => {
+      socket.write(packet)
     });
   }
 
