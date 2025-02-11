@@ -22,7 +22,7 @@ class User {
       playerId: this.id,
       nickname: this.name,
       characterData : {
-        characterType: config.game.characterType.RED,
+        character: config.game.characterType.RED,
         hp: 0,
         weapon: 0,
         atk: 0,

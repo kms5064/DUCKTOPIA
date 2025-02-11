@@ -43,7 +43,7 @@ class Player {
   getPlayerData() {
     return {
       ...this.user.getUserData(),
-      characterData: {
+      character: {
         characterType: this.characterType,
         hp: this.hp,
         weapon: this.equippedWeapon,
