@@ -11,6 +11,12 @@ const DayPhase = {
 };
 Object.freeze(DayPhase);
 
+const WaveState = {
+  NONE: 0,
+  INWAVE: 1,
+};
+Object.freeze(WaveState);
+
 class Game {
   constructor(uuid) {
     this.id = uuid;
@@ -21,6 +27,7 @@ class Game {
     this.lastUpdate = 0;
     this.gameLoop = null;
     this.dayPhase = DayPhase.DAY;
+    this.waveState = WaveState.NONE;
   }
 
   // addRandomAllMonsterAfterGameStart() {
