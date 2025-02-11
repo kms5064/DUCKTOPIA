@@ -1,4 +1,4 @@
-import { userSession } from "../sessions/session";
+import { userSession } from "../sessions/session.js";
 
 const onEnd = (socket) => () => {
   console.log('클라이언트 연결이 종료되었습니다.');

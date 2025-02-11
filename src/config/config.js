@@ -16,8 +16,7 @@ import {
   VERSION_LENGTH_BYTE,
 } from './constants/header.js';
 import { CORE_MAX_HP, CORE_POSITION } from './constants/core.js';
-import { ATK_PER_LV, PLAYER_DEFAULT_ANGLE, PLAYER_DEFAULT_RANGE } from './constants/player.js';
-import { PLAYER_MAX_HUNGER } from '../constants/player.js';
+import { PLAYER_MAX_HUNGER, ATK_PER_LV, PLAYER_DEFAULT_ANGLE, PLAYER_DEFAULT_RANGE, PLAYER_MAX_HP, PLAYER_SPEED, VALID_DISTANCE } from './constants/player.js';
 import { MAX_DROP_ITEM_COUNT, MAX_SPAWN_COUNT } from './constants/monster.js';
 import { MAX_VALUE_X, MAX_VALUE_Y, MIN_VALUE_X, MIN_VALUE_Y } from './constants/map.js';
 
