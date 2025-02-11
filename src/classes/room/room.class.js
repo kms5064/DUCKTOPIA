@@ -1,4 +1,3 @@
-import broadcast from '../../utils/packet/broadcast.js';
 import Game from '../game/game.class.js';
 
 const RoomStateType = {
@@ -10,7 +9,7 @@ Object.freeze(RoomStateType);
 
 class Room {
   constructor({ id, name, ownerId, maxUserNum }) {
-    this.users = new Map();
+    this.users = new Set();
     this.id = id; // 숫자(TODO 나중에 uuid로?)
     this.maxUserAmount = maxUserNum;
     this.name = name; // room name
@@ -25,25 +24,20 @@ class Room {
     if (this.users.size >= this.maxUserAmount) return false;
 
     // 유저 추가
-    this.users.set(user.socket, user);
-    user.enterRoom(this.id)
+    this.users.add(user);
     // 플레이어 추가
     this.game.addPlayer(user)
+    user.enterRoom(this.id)
     return true;
   }
 
   // 유저 삭제
-  removeUser(socket) {
-    const user = this.users.get(socket)
+  removeUser(user) {
     // 유저 삭제
-    this.users.delete(socket);
+    this.users.delete(user);
     // 플레이어 삭제
-    this.game.delete(user.id);
-  }
-
-  // 유저 조회
-  getUsers() {
-    return this.users.values();
+    this.game.removePlayer(user.id);
+    user.exitRoom();
   }
 
   // 방 데이터 추출 (패킷 전송 용도로 가공)
@@ -78,20 +72,21 @@ class Room {
 
     this.game = null;
   }
+
   // 게임 조회
   getGame() {
     return this.game;
   }
 
   notification(id, packet) {
-    this.users.forEach((user, socket) => {
-      if (user.id !== id) socket.write(packet)
+    this.users.forEach((user) => {
+      if (user.id !== id) user.socket.write(packet)
     });
   }
 
   broadcast(packet) {
-    this.users.forEach((user, socket) => {
-      socket.write(packet)
+    this.users.forEach((user) => {
+      user.socket.write(packet)
     });
   }
 
