@@ -5,7 +5,7 @@ import Game from '../game/game.class.js';
 const RoomStateType = {
   WAIT: 0,
   PREPARE: 1,
-  INGAME: 2,
+  PLAY: 2,
 };
 Object.freeze(RoomStateType);
 
