@@ -45,7 +45,7 @@ class Room {
 
   // 방 데이터 추출 (패킷 전송 용도로 가공)
   getRoomData() {
-    const usersData = this.game.getGameData()
+    const usersData = this.getRoomData()
 
     return {
       roomId: this.id,
@@ -55,6 +55,11 @@ class Room {
       state: this.state,
       users: usersData,
     };
+  }
+
+  getUserData() {
+    const userData = this.game.getGameData()
+    return userData
   }
 
   deleteRoom() {
@@ -81,7 +86,6 @@ class Room {
     this.changeState(RoomStateType.WAIT);
 
     // TODO 게임 삭제
-
     this.game = null;
   }
 
@@ -103,23 +107,24 @@ class Room {
   }
 
   getUsersPositionData() {
-    const roomUsers = Array.from(this.getUsers()); // Iterator → Array
+    const positions = [];
+    let i = 1;
+    this.game.players.forEach((player, id) => {
+      // 새로운 x, y 값 계산
+      const newX = i * 3;
+      const newY = i * 3;
 
-    return roomUsers.map((user, index) => {
-        // 새로운 x, y 값 계산
-        const newX = index * 3;
-        const newY = index * 3;
-
-        // 유저 위치 업데이트
-        user.posiup(newX, newY);
-
-        // 업데이트된 위치 정보 반환
-        return {
-            playerId: user.id,
-            x: user.x, // 업데이트된 값
-            y: user.y  // 업데이트된 값
-        };
+      // 유저 위치 업데이트
+      player.playerPositionUpdate(newX, newY)
+      // 업데이트된 위치 정보 반환
+      positions.push({
+        playerId: id,
+        x: player.x, // 업데이트된 값
+        y: player.y  // 업데이트된 값
+      });
+      i++
     });
+    return positions
   }
 
   getPositionUpdateNotification() {

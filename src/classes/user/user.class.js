@@ -63,15 +63,6 @@ class User {
     this.state = 'lobby';
   }
 
-  //소켓 조회
-  getSocket() {
-    return this.socket;
-  }
-
-  //Room Id 조회
-  getRoomId() {
-    return this.roomId;
-  }
 }
 
 export default User;
