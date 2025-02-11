@@ -155,20 +155,33 @@ message S2CLeaveRoomResponse { bool success = 1; }
 
 message S2CLeaveRoomNotification { int64 userId = 1; }
 
-message C2SGamePrepareRequest {}
+message C2SGamePrepareRequest { // 게임준비 요청
+}
 
-message S2CGamePrepareResponse { bool success = 1; }
+message S2CGamePrepareResponse{ // 게임준비 응답 to 호스트클라이언트
+ bool success = 1;
+ repeated MonsterData monsters = 2;
+ repeated ObjectData objects = 3;
+}
 
-message S2CGamePrepareNotification { RoomData room = 1; }
+message S2CGamePrepareNotification { // 게임준비 알림 ok
+ RoomData room = 1;
+}
 
-message C2SGameStartRequest {}
+message C2SGameStartRequest { // 게임시작 요청
+    repeated MonsterPositionData monsters = 1;
+    repeated ObjectPositionData objects = 2;
+}
 
-message S2CGameStartResponse { bool success = 1; }
+//이때 game을 만들고, player 생성, 몬스터, 오브젝트 정보 만들기
 
-message S2CGameStartNotification {
-  GameStateData gameState = 1;
-  repeated UserData users = 2;
-  repeated CharacterPositionData characterPositions = 3;
+message S2CGameStartResponse { // 게임시작 응답
+ bool success = 1;
+}
+
+message S2CGameStartNotification { //게임시작 알림
+ GameStateData gameState = 1;
+ repeated PlayerPositionData playerPositions = 2;
 }
 
 message C2SPositionUpdateRequest {
