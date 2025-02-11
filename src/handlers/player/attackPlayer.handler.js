@@ -4,7 +4,7 @@ import makePacket from '../../utils/packet/makePacket.js';
 import { roomSession, userSession } from '../../sessions/session.js';
 
 const attackPlayerHandler = ({ socket, payload }) => {
-  const { x: playerDirX, y: playerDirY } = payload;
+  const { playerDirX, playerDirY } = payload;
 
   // 유저 객체 조회
   const user = userSession.getUser(socket);
@@ -37,7 +37,7 @@ const attackPlayerHandler = ({ socket, payload }) => {
   }
 
   // Notification - 다른 플레이어들에게 전달
-  const motionPayload = { playerId: player.id };
+  const motionPayload = { playerId: player.id, playerDirX, playerDirY };
   const packet = makePacket(PACKET_TYPE.PLAYER_ATTACK_NOTIFICATION, motionPayload);
   game.notification(socket, packet);
 };
