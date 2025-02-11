@@ -31,6 +31,12 @@ export class Game {
     return player;
   }
 
+  getPlayerBySocket(socket)
+  {
+    this.player = this.players.find((data) => data.socket === socket);
+    return this.player;
+  }
+
   removePlayer(playerId) {
     this.players = this.players.filter((player) => player.id !== playerId);
     console.log(`removedPlayerId : ${playerId}`);
@@ -280,5 +286,13 @@ export class Game {
   gameLoopEnd() {
     clearInterval(this.gameLoop);
     this.gameLoop = null;
+  }
+
+  broadcastAllPlayer(packet)
+  {
+    for(const player of this.players)
+    {
+      player.socket.write(packet);
+    }
   }
 }

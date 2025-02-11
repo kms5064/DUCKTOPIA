@@ -31,6 +31,18 @@ class Room {
     return true;
   }
 
+  findGameBySocket(socket)
+  {
+    if(this.users.has(socket))
+    {
+      return this.game;
+    }
+    else
+    {
+      return -1;
+    }
+  }
+
   // 유저 삭제
   removeUser(socket) {
     this.users.delete(socket);

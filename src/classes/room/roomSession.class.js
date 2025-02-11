@@ -29,6 +29,22 @@ class RoomSession {
     return this.rooms.get(roomId);
   }
 
+  getRoomBySocket(socket)
+  {
+    for(const [key, room] of this.rooms)
+    {
+      const havingRoom = room.findGameBySocket(socket);
+      if(!havingRoom)
+      {
+        continue;
+      }
+      else
+      {
+        return havingRoom;
+      }
+    }
+  }
+
   // 방 전체 조회
   getRooms() {
     return this.rooms.values();
