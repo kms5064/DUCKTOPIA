@@ -5,6 +5,12 @@ import { getGameAssets } from '../../init/assets.js';
 import Monster from '../monster/monster.class.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
 
+const DayPhase = {
+  DAY: 0,
+  NIGHT: 1,
+};
+Object.freeze(DayPhase);
+
 class Game {
   constructor(uuid) {
     this.id = uuid;
@@ -14,6 +20,7 @@ class Game {
     this.map = []; //0과 1로 된 2차원배열?
     this.lastUpdate = 0;
     this.gameLoop = null;
+    this.dayPhase = DayPhase.DAY;
   }
 
   // addRandomAllMonsterAfterGameStart() {
@@ -46,8 +53,8 @@ class Game {
     return player;
   }
 
-  getPlayerBySocket(socket){
-    const player = this.players.find((player)=> player.user.socket === socket);
+  getPlayerBySocket(socket) {
+    const player = this.players.find((player) => player.user.socket === socket);
     return player;
   }
 
