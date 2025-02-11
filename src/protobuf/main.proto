@@ -1,20 +1,33 @@
 syntax = 'proto3';
 
 // 기본 구조
+<<<<<<< Updated upstream
 message Position //기본 위치 정보
+=======
+message Position // 위치동기화? 단순 x, y
+>>>>>>> Stashed changes
 {
   float x = 1;
   float y = 2;
 }
 
+<<<<<<< Updated upstream
 message CharacterPositionData { // int32로?
     // int64 playerId = 1;
     int32 playerId = 1;
+=======
+message CharacterPositionData { // 위치동기화에서 ID까지
+    int64 playerId = 1;
+>>>>>>> Stashed changes
     float x = 2;
     float y = 3;
 }
 
+<<<<<<< Updated upstream
 message User { // User 닉네임
+=======
+message User { //있어야하나?
+>>>>>>> Stashed changes
     string name = 1;
 }
 
@@ -22,11 +35,19 @@ enum RoomStateType { // 방 상태
     WAIT = 0;
     PREPARE = 1;
     // INGAME = 2;
+<<<<<<< Updated upstream
     PLAYING = 2; //이게 더 적합해보임
 }
 
 // 방 정보
 message RoomData { // ok
+=======
+    PLAYING = 2;
+}
+
+// 방 정보
+message RoomData { //방 리스트 받을때
+>>>>>>> Stashed changes
     int32 roomId = 1;
     // int64 ownerId = 2; //방장 아이디.
     int32 ownerId = 2;
@@ -36,8 +57,13 @@ message RoomData { // ok
     repeated UserData users = 6; // 있는 인원, UserData가 사라진다면 User로
 }
 
+<<<<<<< Updated upstream
 message CharacterData { // 로그인할땐 필요없음, 상태동기화에 필요함
     // CharacterType characterType = 1;
+=======
+message CharacterData { //필요한지?
+    CharacterType characterType = 1; //아마 없어질듯
+>>>>>>> Stashed changes
     int32 hp = 2;
     int32 hunger = 3; // 배고픔을 모든 플레이어 인터페이스에 표기한다면 필요함
     // int32 weapon = 3;
@@ -45,9 +71,14 @@ message CharacterData { // 로그인할땐 필요없음, 상태동기화에 필�
 }
 
 message UserData {
+<<<<<<< Updated upstream
     // int64 playerId = 1;
     int32 playerId = 1;
     string nickname = 2;
+=======
+    // int64 playerId = 1; // =>email로 보내면??
+    string nickname = 2; // 이것만 있어도 괜찮지 않을까 근데 이럴거면 User랑 다를게 뭐지?? 
+>>>>>>> Stashed changes
     // CharacterData character = 3;
 }
 
@@ -59,7 +90,11 @@ enum PhaseType { // NONE_PHASE가 낮이고, EVENING이 끝나면 DAY가 될테�
     // END = 3;
 }
 
+<<<<<<< Updated upstream
 // enum CharacterType { // 마찬가지로, 모든 플레이어가 같은 캐릭터를 사용한다면 필요없을 듯
+=======
+// enum CharacterType {
+>>>>>>> Stashed changes
 //     NONE_CHARACTER = 0;
 //     RED = 1; // 빨강이
 //     SHARK = 3; // 상어군
@@ -72,7 +107,11 @@ enum PhaseType { // NONE_PHASE가 낮이고, EVENING이 끝나면 DAY가 될테�
 //     PINK_SLIME = 13; // 핑크슬라임
 // }
 
+<<<<<<< Updated upstream
 message GameStateData { // ok
+=======
+message GameStateData { // 이건 있어야할텐데, 어떤식으로 바꿔야할지 아직 모르겠음
+>>>>>>> Stashed changes
     // DAY 1, EVENING 2, END 3 (하루 종료시 카드 버리는 턴)
     PhaseType phaseType = 1; 
      // 다음 페이즈 시작 시점(밀리초 타임스탬프)
@@ -106,19 +145,31 @@ message ObjectPositionData {
 }
 
 // 통신 Payload
+<<<<<<< Updated upstream
 message C2SRegisterRequest // 회원가입 ok
+=======
+message C2SRegisterRequest // ok
+>>>>>>> Stashed changes
 {
  string email = 1;
  string password = 2;
  string name = 3;
 }
 
+<<<<<<< Updated upstream
 message S2CRegisterResponse // 회원가입 응답 ok
+=======
+message S2CRegisterResponse // ok
+>>>>>>> Stashed changes
 {
  bool success = 1;
 }
 
+<<<<<<< Updated upstream
 message C2SLoginRequest //로그인 요청 ok
+=======
+message C2SLoginRequest // ok
+>>>>>>> Stashed changes
 {
  string email = 1;
  string password = 2;
@@ -299,6 +350,104 @@ message S2CMonsterSpawnNotification
 }
 
 
+<<<<<<< Updated upstream
+=======
+message S2CCreateRoomResponse {
+ bool success = 1;
+ RoomData room = 2;
+ string message = 3;
+}
+
+message C2SGetRoomListRequest {
+}
+ 
+message S2CGetRoomListResponse {
+ repeated RoomData rooms = 1;
+}
+
+message C2SJoinRoomRequest {
+ int32 roomId = 1;
+}
+
+message S2CJoinRoomResponse {
+    bool success = 1;
+    RoomData room = 2;
+    string message = 3;
+}
+
+message S2CJoinRoomNotification {
+    UserData joinUser = 1;
+}
+
+
+message C2SLeaveRoomRequest {
+}
+
+message S2CLeaveRoomResponse {
+    bool success = 1;
+}
+
+message S2CLeaveRoomNotification {
+    int64 userId = 1;
+}
+
+message C2SGamePrepareRequest {
+}
+
+message S2CGamePrepareResponse{
+ bool success = 1;
+}
+
+message S2CGamePrepareNotification {
+ RoomData room = 1;
+}
+
+message C2SGameStartRequest {
+}
+
+message S2CGameStartResponse {
+ bool success = 1;
+}
+
+message S2CGameStartNotification {
+ GameStateData gameState = 1;
+ repeated UserData users = 2;
+ repeated CharacterPositionData characterPositions = 3; //여기도 다 보내야하나?
+}
+
+message C2SPositionUpdateRequest {
+ float x = 1;
+ float y = 2;
+}
+
+message S2CPositionUpdateNotification {
+ repeated CharacterPositionData characterPositions = 1;
+}
+message S2CUserUpdateNotification {
+ repeated UserData users = 1;
+}
+
+message S2CPlayerDeathNotification{
+ int64 playerId = 1;
+}
+
+message S2CPlayerHpUpdateNotification{
+ int64 playerId = 1;
+ int32 hp = 2;
+}
+
+message C2SEatFoodRequest {
+  int32 foodId = 1;
+  int64 playerId = 2;
+}
+
+// 식량 아이템 소모 응답
+message S2CEatFoodResponse {
+  bool isEaten = 1;
+  string message = 2;
+  int32 currentHunger = 3;
+}
+>>>>>>> Stashed changes
 
 message GamePacket {
     oneof payload {
