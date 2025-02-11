@@ -1,3 +1,5 @@
+import { userSession } from "../sessions/session";
+
 const onError = (socket) => (err) => {
   console.error('소켓 오류:', err);
   console.log('클라이언트 연결이 종료되었습니다.');
