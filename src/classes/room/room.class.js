@@ -14,7 +14,7 @@ class Room {
     this.maxUserAmount = maxUserNum;
     this.name = name; // room name
     this.state = RoomStateType.WAIT;
-    this.game = null;
+    this.game = new Game();
     this.ownerId = ownerId;
   }
 
@@ -26,12 +26,18 @@ class Room {
     // 유저 추가
     this.users.set(user.socket, user);
     user.enterRoom(this.id)
+    // 플레이어 추가
+    this.game.addPlayer(user)
     return true;
   }
 
   // 유저 삭제
   removeUser(socket) {
+    const user = this.users.get(socket)
+    // 유저 삭제
     this.users.delete(socket);
+    // 플레이어 삭제
+    this.game.delete(user.id);
   }
 
   // 유저 조회
@@ -41,13 +47,8 @@ class Room {
 
   // 방 데이터 추출 (패킷 전송 용도로 가공)
   getRoomData() {
-    let usersData = [];
-
-    for (const user of this.getUsers()) {
-      const userData = user.getUserData();
-      usersData.push(userData);
-    }
-
+    const usersData = this.game.getGameData()
+    
     return {
       roomId: this.id,
       ownerId: this.ownerId,
@@ -66,9 +67,6 @@ class Room {
   // 게임 시작
   startGame() {
     this.changeState(RoomStateType.INGAME);
-
-    // TODO 게임 추가
-    this.game = new Game();
   }
 
   // 게임 종료
