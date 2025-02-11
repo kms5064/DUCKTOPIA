@@ -18,8 +18,9 @@ class RoomSession {
   }
 
   // 방 지우기
-  removeRoom(roomId) {
-    this.rooms.delete(roomId);
+  removeRoom(room) {
+    room.deleteRoom()
+    this.rooms.delete(room.id);
   }
 
   // 방 조회

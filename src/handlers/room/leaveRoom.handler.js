@@ -1,4 +1,4 @@
-import { PACKET_TYPE } from '../../config/constants/header.js';
+import { config } from '../../config/config.js';
 import { roomSession, userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
@@ -24,22 +24,26 @@ const leaveRoomHandler = ({socket, payload}) => {
     const isOwner = user.id === room.ownerId;
     // 3-1. 방장이면 방 터트리기 (TODO 추후 개발)
 
+
     // 4. 방장이 아니면 방에서 유저 삭제
     room.removeUser(user);
 
     // 5. response 전송
-    const leaveRoomResponse = makePacket(PACKET_TYPE.LEAVE_ROOM_RESPONSE, {
+    const leaveRoomResponse = makePacket(config.packetType.LEAVE_ROOM_RESPONSE, {
       success: true,
     });
 
-    socket.write(leaveRoomResponse);
+    if (!isOwner) {
+      socket.write(leaveRoomResponse);
+      // 6. notification 전송
+      const leaveRoomNotification = makePacket(config.packetType.LEAVE_ROOM_NOTIFICATION, {
+        userId: user.id,
+      });
 
-    // 6. notification 전송
-    const leaveRoomNotification = makePacket(PACKET_TYPE.LEAVE_ROOM_NOTIFICATION, {
-      userId: user.id,
-    });
-
-    room.notification(socket, leaveRoomNotification);
+      room.notification(socket, leaveRoomNotification);
+    } else {
+      roomSession.removeRoom(room)
+    }
   } catch (error) {
     console.log(error);
   }

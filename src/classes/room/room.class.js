@@ -1,3 +1,5 @@
+import { config } from '../../config/config.js';
+import makePacket from '../../utils/packet/makePacket.js';
 import Game from '../game/game.class.js';
 
 const RoomStateType = {
@@ -52,6 +54,15 @@ class Room {
       state: this.state,
       users: usersData,
     };
+  }
+
+  deleteRoom() {
+    const leaveRoomResponse = makePacket(config.packetType.LEAVE_ROOM_RESPONSE, {
+      success: true,
+    });
+    this.broadcast(leaveRoomResponse)
+    this.users = null
+    this.game = null
   }
 
   // 방 상태 변경
