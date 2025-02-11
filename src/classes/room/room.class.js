@@ -26,7 +26,6 @@ class Room {
     if (this.users.size >= this.maxUserAmount) return false;
     // 유저 추가
     this.users.add(user);
-    console.log(this.users)
     // 플레이어 추가
     this.game.addPlayer(user)
     user.enterRoom(this.id)
@@ -45,8 +44,8 @@ class Room {
 
   // 방 데이터 추출 (패킷 전송 용도로 가공)
   getRoomData() {
-    const usersData = this.getRoomData()
-
+    const usersData = this.getUserData()
+    
     return {
       roomId: this.id,
       ownerId: this.ownerId,
@@ -127,11 +126,6 @@ class Room {
     return positions
   }
 
-  getPositionUpdateNotification() {
-    const roomUsers = Array.from(this.getUsers()); // Iterator → Array
-  
-    return roomUsers.map(user => user.getpsi()) ;
-  }
 }
 
 export default Room;

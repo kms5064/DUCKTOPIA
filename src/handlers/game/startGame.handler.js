@@ -17,6 +17,7 @@ const gameStartHandler = ({socket, payload}) => {
       characterPositions: room.getUsersPositionData()
     })
 
+    room.startGame();
     room.broadcast(GameStartNotification);
   } catch (err) {
 
