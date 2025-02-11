@@ -26,5 +26,4 @@ export const transaction = async (callback) => {
 
 export const FindAllUser = async () => {
   const [rows] = await pools.USER_DB.query(SQL_USER_QUERIES.FIND_ALL_USER, []);
-  console.log(rows);
 }

@@ -79,6 +79,10 @@ class Room {
 
   // 게임 시작
   startGame() {
+    if(this.game !== null)
+    {
+      return;
+    }
     this.changeState(RoomStateType.INGAME);
     
     // TODO 게임 추가
@@ -87,6 +91,11 @@ class Room {
     for(const user of this.users.values())
     {
       this.game.addPlayer(user);
+    }
+
+    for(let i = 0;i<10;i++)
+    {
+      this.game.addMonster();
     }
     this.game.gameLoopStart();
   }

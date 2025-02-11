@@ -34,7 +34,6 @@ const onData = (socket) => async (data) => {
       console.log(`$packet type : ${packetType}`);
       const proto = getProtoMessages().GamePacket;
       const handler = handlers[packetType];
-      //console.log(`${version} : ${packetType} : ${headerLength} : ${versionByte} : ${payloadByte}`);
       const gamePacket = proto.decode(payloadBuffer);
       const payload = gamePacket[gamePacket.payload];
       await handler({ socket, payload });

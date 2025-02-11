@@ -5,6 +5,7 @@ import { getGameAssets } from '../../init/assets.js';
 import Monster from '../monster/monster.class.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
 import broadcast from '../../utils/packet/broadcast.js';
+import { config } from 'dotenv';
 
 export class Game {
   constructor(uuid) {
@@ -21,12 +22,10 @@ export class Game {
 
   addPlayer(player) {
     this.players.push(player);
-    console.log(player);
   }
 
   getPlayerById(playerId) {
     const player = this.players.find((player) => player.id === playerId);
-    console.log(`getPlayer : ${player}`);
     return player;
   }
 
@@ -37,7 +36,6 @@ export class Game {
 
   removePlayer(playerId) {
     this.players = this.players.filter((player) => player.id !== playerId);
-    console.log(`removedPlayerId : ${playerId}`);
   }
 
   addMonster() {
@@ -45,6 +43,7 @@ export class Game {
     if (this.monsters.size >= MAX_SPAWN_COUNT) {
       return;
     }
+    console.log("몬스터 생성")
 
     // TODO : 한번에 생성할지 프레임단위로 단일 생성할지 성능보고?
     // maxLeng 만큼 몬스터 생성
@@ -61,6 +60,7 @@ export class Game {
       // 좌표 생성
       let x = this.createRandomPositionValue(MAX_VALUE_X);
       let y = this.createRandomPositionValue(MAX_VALUE_Y);
+      console.log(x,y);
 
       // 좌표 최소 값 조정
       if (x < MIN_VALUE_X) x = MIN_VALUE_X;
@@ -90,57 +90,7 @@ export class Game {
         y,
       };
       const packet = makePacket(PACKET_TYPE.MONSTER_SPAWN_NOTIFICATION, payload);
-      broadcast(this.players[0], packet);
-    }
-  }
-
-  addMonster(x,y)
-  {
-    if (this.monsters.size >= MAX_SPAWN_COUNT) {
-      return;
-    }
-
-    // TODO : 한번에 생성할지 프레임단위로 단일 생성할지 성능보고?
-    // maxLeng 만큼 몬스터 생성
-    const maxLeng = MAX_SPAWN_COUNT - this.monsters.size;
-
-    for (let i = 1; i <= maxLeng; i++) {
-      const monsterId = this.monsterIndex;
-      // Monster Asset 조회
-      const { monster: monsterAsset } = getGameAssets();
-      // 몬스터 데이터 뽑기
-      const codeIdx = Math.floor(Math.random() * monsterAsset.data.length);
-      const data = monsterAsset.data[codeIdx];
-
-      // 좌표 최소 값 조정
-      if (x < MIN_VALUE_X) x = MIN_VALUE_X;
-      if (y < MIN_VALUE_Y) y = MIN_VALUE_Y;
-      // 몬스터 생성
-      const monster = new Monster(
-        monsterId,
-        data.monsterCode,
-        data.name,
-        data.hp,
-        data.attack,
-        data.defence,
-        data.range,
-        data.speed,
-        x,
-        y,
-      );
-
-      this.monsters.set(monsterId, monster);
-      this.monsterIndex++; //Index 증가
-
-      // 페이로드
-      const payload = {
-        monsterId,
-        code: monster.monsterCode,
-        x,
-        y,
-      };
-      const packet = makePacket(PACKET_TYPE.MONSTER_SPAWN_NOTIFICATION, payload);
-      broadcast(this.players[0], packet);
+      this.broadcastAllPlayer(packet);
     }
   }
 
@@ -188,7 +138,7 @@ export class Game {
       this.waveCheck();
       //this.addMonster();
       this.monsterUpdate();
-      this.userUpdate();
+      //this.userUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
 
 
@@ -209,11 +159,12 @@ export class Game {
     }
   }
 
+  
   userUpdate()
   {
     for(const player of this.players)
     {
-      console.log(player.x, player.y);
+      //console.log(player.x, player.y);
     }
   }
 
