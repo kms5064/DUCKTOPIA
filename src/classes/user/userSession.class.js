@@ -12,19 +12,19 @@ class UserSession {
   addId(email, socket) {
     // if (this.logins.has(email)) {
     //   // 중복 로그인이면 기존 로그인된 소켓 연결 종료
-    //   onEnd(this.emails.get(email))();
-    //   this.emails.delete(email);
+    //   onEnd(this.logins.get(email))();
+    //   this.logins.delete(email);
     // }
 
-    this.emails.set(email, socket);
+    this.logins.set(email, socket);
   }
 
   checkId(email) {
-    return this.emails.has(email);
+    return this.logins.has(email);
   }
 
   deleteEmail(email) {
-    this.emails.delete(email);
+    this.logins.delete(email);
   }
 
   /* 세션에 유저 추가시키는 메서드 */
