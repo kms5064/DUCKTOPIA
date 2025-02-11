@@ -21,7 +21,7 @@ class User {
     return {
       playerId: this.id,
       nickname: this.name,
-      characterData : {
+      character : {
         character: config.game.characterType.RED,
         hp: 0,
         weapon: 0,
