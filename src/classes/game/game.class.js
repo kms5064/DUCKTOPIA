@@ -5,7 +5,6 @@ import { getGameAssets } from '../../init/assets.js';
 import Monster from '../monster/monster.class.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
 import broadcast from '../../utils/packet/broadcast.js';
-import { date } from 'joi';
 
 export class Game {
   constructor(uuid) {
@@ -287,11 +286,25 @@ export class Game {
     this.gameLoop = null;
   }
 
-  broadcastAllPlayer(packet)
+  broadcastAllPlayer(packet, socketArray = [])
   {
-    for(const player of this.players)
+    if(socketArray.length === 0)
     {
-      player.socket.write(packet);
+      for(const player of this.players)
+        {
+          
+          player.socket.write(packet);
+        }
     }
+    else
+    {
+      const exceptArray = this.players.filter((data)=>!socketArray.includes(data));
+      for(const player of exceptArray)
+      {
+        player.socket.write(packet);
+      }
+
+    }
+    
   }
 }

@@ -104,9 +104,18 @@ class Monster extends MovableObjectBase {
 
   //생성되었을 때 위치 지정은 이걸로 해주자.
   //내 생각에 x, y는 맵의 중간 지점을 (0,0)이라 했을 때의 값이라 생각함
-  setPositionFromCreating(x, y) {
-    this.x = x;
-    this.y = y;
+  setPosition(position, moveCheck = false) {
+    //moveCheck는 강제적으로 몬스터의 위치를 이동시켜 줘야 할 때. 그러니까 순간이동 등의 경우
+    if(!moveCheck)
+    {
+      this.x = position.x;
+      this.y = position.y;
+    }
+    else//순간 이동 같은 게 아니라면 서버에서 이동 시의 오류 처리를 확인해 보도록 하자.
+    {
+      this.x = position.x;
+      this.y = position.y;
+    }
   }
 
   //몬스터의 플레이어 추적을 잃게 만든다.
