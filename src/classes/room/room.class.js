@@ -1,4 +1,5 @@
 import broadcast from '../../utils/packet/broadcast.js';
+import Game from '../game/game.class.js';
 
 const RoomStateType = {
   WAIT: 0,
@@ -48,7 +49,7 @@ class Room {
   // 방 데이터 추출 (패킷 전송 용도로 가공)
   getRoomData() {
     const usersData = this.game.getGameData()
-    
+
     return {
       roomId: this.id,
       ownerId: this.ownerId,
