@@ -144,6 +144,7 @@ class Game {
       );
 
       this.monsters.set(monsterId, monster);
+      this.waveMonsters.set(monsterId, monster);
       this.monsterIndex++; //Index 증가
 
       // 페이로드
@@ -152,9 +153,18 @@ class Game {
         code: monster.monsterCode,
       };
 
-      //const packet = makePacket(PACKET_TYPE.MONSTER_SPAWN_NOTIFICATION, payload);
+      const monsterSpawnRequestPacket = makePacket(
+        config.packetType.S_MONSTER_SPAWN_REQUEST,
+        payload,
+      );
 
-      this.broadcast(packet);
+      const owner = this.getPlayerById(this.ownerId);
+
+      if (!owner) {
+        throw new CustomError('방장이 존재하지 않습니다.');
+      }
+
+      owner.socket.write(monsterSpawnRequestPacket);
     }
   }
 
@@ -168,10 +178,15 @@ class Game {
 
   removeMonster(monsterId) {
     this.monsters.delete(monsterId);
+
+    if (this.waveMonsters.has(monsterId)) {
+      this.waveMonsters.delete(monsterId);
+    }
   }
 
   removeAllMonster() {
     this.monsters.clear();
+    this.waveMonsters.clear();
   }
 
   //다른 사람에게 전송(본인 제외)
