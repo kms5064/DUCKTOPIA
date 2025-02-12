@@ -3,6 +3,7 @@ import { getGameAssets } from '../../init/assets.js';
 import Monster from './monster.class.js';
 import Player from './player.class.js';
 import { config } from '../../config/config.js';
+import { PACKET_TYPE } from '../../config/constants/header.js';
 
 class Game {
   constructor() {
@@ -41,6 +42,53 @@ class Game {
     return this.players.get(userId);
   }
 
+  createMonsterData() {
+    const monsterData = [];
+
+    // 생성 제한 처리
+    if (this.monsters.size >= config.game.monster.maxSpawnCount) {
+      return;
+    }
+    const maxAmount = config.game.monster.maxSpawnCount - this.monsters.size;
+
+    for (let i = 1; i <= maxAmount; i++) {
+      const monsterId = this.monsterIndex;
+      // Monster Asset 조회
+      const { monster: monsterAsset } = getGameAssets();
+
+      // 몬스터 데이터 뽑기
+      const codeIdx = Math.floor(Math.random() * monsterAsset.data.length);
+      const data = monsterAsset.data[codeIdx];
+
+      // 몬스터 생성
+      const monster = new Monster(
+        monsterId,
+        data.monsterCode,
+        data.name,
+        data.hp,
+        data.attack,
+        data.defence,
+        data.range,
+        data.speed,
+        0,
+        0,
+      );
+
+      this.monsters.set(monsterId, monster);
+      this.monsterIndex++; //Index 증가
+
+      monsterData.push({
+        monsterId,
+        monsterCode: monster.monsterCode,
+      });
+    }
+    return monsterData;
+  }
+
+  updateMonsterPosition(monsterId, x, y) {
+    this.monsters.get(monsterId).setPositionFromCreating(x, y);
+  }
+
   addMonster() {
     // 생성 제한 처리
     if (this.monsters.size >= config.game.monster.maxSpawnCount) {
@@ -51,7 +99,7 @@ class Game {
     // maxAmount 만큼 몬스터 생성
     const maxAmount = config.game.monster.maxSpawnCount - this.monsters.size;
 
-    for (let i = 1; i <= maxLeng; i++) {
+    for (let i = 1; i <= maxAmount; i++) {
       const monsterId = this.monsterIndex;
       // Monster Asset 조회
       const { monster: monsterAsset } = getGameAssets();
