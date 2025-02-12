@@ -1,6 +1,7 @@
 import { config } from '../../config/config.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import Game from '../game/game.class.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const RoomStateType = {
   WAIT: 0,
@@ -31,6 +32,30 @@ class Room {
     user.enterRoom(this.id);
 
     return true;
+  }
+
+  findGameBySocket(socket)
+  {
+    if(this.users.has(socket))
+    {
+      return this.game;
+    }
+    else
+    {
+      return -1;
+    }
+  }
+
+  findGameBySocket(socket)
+  {
+    if(this.users.has(socket))
+    {
+      return this.game;
+    }
+    else
+    {
+      return -1;
+    }
   }
 
   // 유저 삭제
@@ -85,11 +110,31 @@ class Room {
 
   // 게임 시작
   startGame() {
+    if(this.game !== null)
+    {
+      return;
+    }
+    this.changeState(RoomStateType.INGAME);
+    
+    // TODO 게임 추가
+    const uuid = uuidv4();
+    this.game = new Game(uuid);
+    for(const user of this.users.values())
+    {
+      this.game.addPlayer(user);
+    }
+
+    for(let i = 0;i<10;i++)
+    {
+      this.game.addMonster();
+    }
+    this.game.gameLoopStart();
     this.changeState(RoomStateType.INGAME);
   }
 
   // 게임 종료
   endGame() {
+    this.game.gameLoopEnd();
     this.changeState(RoomStateType.WAIT);
 
     // TODO 게임 삭제

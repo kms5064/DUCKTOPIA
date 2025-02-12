@@ -42,6 +42,11 @@ class UserSession {
   getUser(socket) {
     return this.users.get(socket);
   }
+
+  getUsers()
+  {
+    return this.users;
+  }
 }
 
 export default UserSession;

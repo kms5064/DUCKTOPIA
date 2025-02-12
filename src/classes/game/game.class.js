@@ -14,14 +14,8 @@ class Game {
     this.corePosition = config.game.core.position;
     this.lastUpdate = 0;
     this.gameLoop = null;
-  }
-
-  getGameData() {
-    const gameData = [];
-    this.players.forEach((player) => {
-      gameData.push(player.getPlayerData());
-    });
-    return gameData
+    this.highLatency = 120;
+    this.waveStamp = 60000;
   }
 
   addPlayer(user) {
@@ -42,6 +36,7 @@ class Game {
     if (this.monsters.size >= config.game.monster.maxSpawnCount) {
       return;
     }
+    console.log("몬스터 생성")
 
     // TODO : 한번에 생성할지 프레임단위로 단일 생성할지 성능보고?
     // maxAmount 만큼 몬스터 생성
@@ -53,7 +48,7 @@ class Game {
       const { monster: monsterAsset } = getGameAssets();
       // 몬스터 데이터 뽑기
       const codeIdx = Math.floor(Math.random() * monsterAsset.data.length);
-      const data = monsterAsset.data[codeIdx];
+      const data = monsterAsset.data[0];
 
       // 좌표 생성
       let x = Math.random() * (config.game.map.endX - config.game.map.startX)  + config.game.map.startX
@@ -84,7 +79,7 @@ class Game {
         y,
       };
       const packet = makePacket(PACKET_TYPE.MONSTER_SPAWN_NOTIFICATION, payload);
-      this.broadcast(packet);
+      this.broadcastAllPlayer(packet);
     }
   }
 
@@ -113,86 +108,141 @@ class Game {
     });
   }
 
-  //전체 전송 (본인 포함)
-  broadcast(packet) {
-    this.players.forEach((player) => {
-      const socket = player.getUser().getSocket();
-      socket.write(packet);
-    });
-  }
   gameLoopStart() {
     if (this.gameLoop !== null) {
       return;
     }
     this.gameLoop = setInterval(() => {
-      if (!this.game) {
-        clearInterval(this.gameLoop);
-        this.gameLoop = null;
-      } else {
-        const now = Date.now();
-        const latency = now - this.lastUpdate;
-        this.lastUpdate = Date.now();
-        //업데이트를 보낼 때마다
-        //몬스터가 플레이어를 발견하는 과정
-        this.monsterDisCovered();
-        //
-        this.monsterMove(latency);
-        //몬스터가 플레이어를 잃는 과정
-        this.monsterLostPlayerCheck();
-      }
-    }, 60);
+      this.waveCheck();
+      //this.addMonster();
+      this.monsterUpdate();
+      //this.userUpdate();
+      //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
+
+
+    }, 1000);
+  }
+
+  waveCheck()
+  {
+    const now = Date.now();
+    const delta = now - this.lastUpdate;
+    this.waveStamp -= delta;
+    this.lastUpdate = now;
+
+    if(this.waveStamp <= 0)
+    {
+      this.waveStamp = 60000;
+      //여기서 웨이브 처리를 해주도록 한다.
+    }
+  }
+
+  
+  userUpdate()
+  {
+    for(const player of this.players)
+    {
+      //console.log(player.x, player.y);
+    }
+  }
+
+  monsterUpdate() {
+    this.monsterDisCovered();
+    //
+    this.monsterMove(this.highLatency);
+    //몬스터가 플레이어를 잃는 과정
+    this.monsterLostPlayerCheck();
   }
 
   monsterDisCovered() {
-    for (const monster of this.monsters) {
+    for (const [key, monster] of this.monsters) {
       if (!monster.hasPriorityPlayer()) {
         for (const player of this.players) {
           monster.setTargetPlayer(player);
+          if(monster.hasPriorityPlayer())
+          {
+            console.log("플레이어가 등록됨");
+            const monsterDiscoverPayload = {
+              monsterId : monster.id,
+              targetId : player.id
+            }
+
+            const packet = makePacket(PACKET_TYPE.S_MONSTER_AWAKE_NOTIFICATION,monsterDiscoverPayload);
+            this.broadcastAllPlayer(packet);
+          }
         }
       }
     }
   }
 
-  monsterMove() {
-    for (const monster of this.monsters) {
+  //
+  monsterMove(deltaTime) {
+    for (const [key, monster] of this.monsters) {
       if (!monster.hasPriorityPlayer()) {
         continue;
       } else {
-        monster.moveByLatency(latency); //S2CMonsterMoveNotification을 보낸다
+        monster.moveByLatency(deltaTime); //S2CMonsterMoveNotification을 보낸다
+
+
 
         const monsterMovePayload = {
-          monsterId: monster.id,
-          x: monster.x,
-          y: monster.y,
+          monsterId: monster.getId(),
+          direct: monster.getDirectByPlayer(),
+          position: monster.getPosition(),
+          speed: monster.getSpeed(),
+          timestamp: deltaTime
         };
-        const packet = createResponse(packetNames[11], monsterMovePayload);
-        this.game.broadcast(packet);
+        const packet = makePacket(PACKET_TYPE.monsterMove, monsterMovePayload);
+        broadcast(monster.getPriorityPlayer(), packet);
+
+        //아래쪽은 공격 체크용
+        // if(monster.isAttack())
+        // {
+        //   const monsterAttackPayload = {
+        //     monsterId : monster.id,
+        //   }
+
+
+        //   this.game.broadcast(packet);
+        // }
       }
     }
   }
 
   monsterLostPlayerCheck() {
-    for (const monster of this.monsters) {
+    for (const [key, monster] of this.monsters) {
       if (monster.hasPriorityPlayer()) {
         monster.lostPlayer();
       }
     }
   }
 
-  coreDamaged(damage) {
-    this.coreHp -= damage;
-    if (this.coreHp <= 0) {
-      this.gameEnd();
-    }
-    return this.coreHp
-  }
-
-  gameEnd() {
+  gameLoopEnd() {
     clearInterval(this.gameLoop);
     this.gameLoop = null;
-    this.broadcast(makePacket(PACKET_TYPE.GAME_END_NOTIFICATION));
   }
 
+  broadcastAllPlayer(packet, socketArray = [])
+  {
+    if(socketArray.length === 0)
+    {
+      for(const player of this.players)
+        {
+          
+          player.socket.write(packet);
+        }
+    }
+    else
+    {
+      const exceptArray = this.players.filter((data)=>!socketArray.includes(data));
+      for(const player of exceptArray)
+      {
+        player.socket.write(packet);
+      }
+
+    }
+    
+  }
 }
 
 export default Game;

@@ -23,3 +23,7 @@ export const transaction = async (callback) => {
     pools.USER_DB.releaseConnection();
   }
 };
+
+export const FindAllUser = async () => {
+  const [rows] = await pools.USER_DB.query(SQL_USER_QUERIES.FIND_ALL_USER, []);
+}

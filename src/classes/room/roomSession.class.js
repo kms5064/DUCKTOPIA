@@ -3,6 +3,7 @@ import Room from './room.class.js';
 class RoomSession {
   constructor() {
     this.rooms = new Map(); // key : roomId, value : room
+    this.game = null;
     this.newId = 1;
   }
 
@@ -28,6 +29,22 @@ class RoomSession {
     return this.rooms.get(roomId);
   }
 
+  getRoomBySocket(socket)
+  {
+    for(const [key, room] of this.rooms)
+    {
+      const havingRoom = room.findGameBySocket(socket);
+      if(!havingRoom)
+      {
+        continue;
+      }
+      else
+      {
+        return havingRoom;
+      }
+    }
+  }
+
   // 방 전체 조회
   getRooms() {
     return this.rooms.values();
@@ -41,6 +58,12 @@ class RoomSession {
     }
 
     return roomsData;
+  }
+
+  gameStart()
+  {
+    const id = uuidv4();
+    
   }
 }
 

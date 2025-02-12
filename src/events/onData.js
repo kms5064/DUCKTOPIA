@@ -30,6 +30,8 @@ const onData = (socket) => async (data) => {
     const packetType = packet.readUInt16BE(0);
     const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
     try {
+      //여기서 패킷 받는지 확인
+      console.log(`$packet type : ${packetType}`);
       const proto = getProtoMessages().GamePacket;
       const handler = handlers[packetType];
       const gamePacket = proto.decode(payloadBuffer);
