@@ -66,6 +66,10 @@ class User {
   getRoomId() {
     return this.roomId;
   }
+
+  getSocket() {
+    return this.socket;
+  }
 }
 
 export default User;
