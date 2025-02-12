@@ -30,7 +30,7 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
   }
 
   // 플레이어 객체 조회
-  const player = game.getPlayer(user.id);
+  const player = game.getPlayerById(user.id);
   if (!player) {
     throw new Error(`Room ID(${roomId})-User(${user.id}): Player 정보가 없습니다.`);
   }
