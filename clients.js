@@ -100,7 +100,7 @@ class Client {
   // 요청 메서드 모음
 
   async registerRequest() {
-    const payload = { email: this.id, password: this.password, name: 'test' };
+    const payload = { email: this.id, password: this.password, name: this.name };
     this.sendPacket(config.packetType.REGISTER_REQUEST, payload);
   }
 
@@ -108,9 +108,15 @@ class Client {
     const payload = { email: this.id, password: this.password };
     this.sendPacket(config.packetType.LOGIN_REQUEST, payload);
   }
+
+  async createRoomRequest() {
+    const payload = { name: this.id, maxUserNum: 2 };
+    this.sendPacket(config.packetType.CREATE_ROOM_REQUEST, payload);
+  }
 }
 
 // 테스트용 함수 모음
+// 회원가입
 const registerTest = async (client_count = 1) => {
   await Promise.all(
     Array.from({ length: client_count }, async (__, idx) => {
@@ -123,7 +129,7 @@ const registerTest = async (client_count = 1) => {
     }),
   );
 };
-
+// 로그인
 const loginTest = async (client_count = 1) => {
   await Promise.all(
     Array.from({ length: client_count }, async (__, idx) => {
@@ -136,8 +142,23 @@ const loginTest = async (client_count = 1) => {
     }),
   );
 };
+// 커스텀
+const customTest = async (client_count = 1) => {
+  await Promise.all(
+    Array.from({ length: client_count }, async (__, idx) => {
+      const id = `test${idx}@email.com`;
+      const password = '123456';
+      const name = `test${idx}`;
+      const client = new Client(id, password, name);
+
+      await client.loginRequest();
+      // 로그인 이후 사용할 메서드 적용
+      await client.createRoomRequest();
+    }),
+  );
+};
 
 // 테스트 실행문
 await loadProtos().then(() => {
-  loginTest();
+  registerTest(50);
 });
