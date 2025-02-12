@@ -22,7 +22,7 @@ const WaveState = {
 Object.freeze(WaveState);
 
 class Game {
-  constructor() {
+  constructor(ownerId) {
     this.players = new Map();
     this.monsterIndex = 1;
     this.monsters = new Map();
@@ -31,6 +31,7 @@ class Game {
     this.corePosition = config.game.core.position;
     this.lastUpdate = 0;
     this.gameLoop = null;
+    this.ownerId = ownerId;
 
     // 웨이브 시스템
     this.dayPhase = DayPhase.DAY;
