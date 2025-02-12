@@ -1,4 +1,4 @@
-import { WaveState } from '../../classes/game/game.class.js';
+import { WaveState } from '../../config/constants/game.js';
 import { config } from '../../config/config.js';
 import { roomSession, userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
@@ -30,7 +30,7 @@ const waveStartHandler = ({ socket, payload }) => {
   }
 
   // 4. 웨이브 상태 변경
-  game.setState(WaveState.INWAVE);
+  game.setWaveState(WaveState.INWAVE);
 
   // 5. 게임 내부 유저들에게 notification
   const waveStartNotification = makePacket(config.packetType.S_MONSTER_WAVE_START_NOTIFICATION, {
