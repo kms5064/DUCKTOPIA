@@ -1,3 +1,4 @@
+import { WaveState } from '../../classes/game/game.class.js';
 import { config } from '../../config/config.js';
 import { roomSession, userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
@@ -23,12 +24,15 @@ const waveStartHandler = ({ socket, payload }) => {
 
   // 3. 게임에 반영하기
   for (const item of monsters) {
-    const monster = game.getMonster(item.monsterId);
+    const monster = game.getMonsterById(item.monsterId);
 
-    monster.setPos(item.x, item.y);
+    monster.setPosition(item.x, item.y);
   }
 
-  // 4. 게임 내부 유저들에게 notification
+  // 4. 웨이브 상태 변경
+  game.setState(WaveState.INWAVE);
+
+  // 5. 게임 내부 유저들에게 notification
   const waveStartNotification = makePacket(config.packetType.S_MONSTER_WAVE_START_NOTIFICATION, {
     monsters,
   });
