@@ -1,4 +1,3 @@
-import { calculateDistance, calculateAngle } from '../../utils/calculate.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import { roomSession, userSession } from '../../sessions/session.js';
@@ -31,14 +30,14 @@ const attackPlayerHandler = ({ socket, payload }) => {
   }
 
   // 플레이어 객체 조회
-  const player = game.getPlayer(user.id);
+  const player = game.getPlayerById(user.id);
   if (!player) {
     throw new Error(`Room ID(${roomId})-User(${user.id}): Player 정보가 없습니다.`);
   }
 
   // Notification - 다른 플레이어들에게 전달
   const motionPayload = { playerId: player.id, playerDirX, playerDirY };
-  const packet = makePacket(PACKET_TYPE.PLAYER_ATTACK_NOTIFICATION, motionPayload);
+  const packet = makePacket(PACKET_TYPE.S_PLAYER_ATTACK_NOTIFICATION, motionPayload);
   game.notification(socket, packet);
 };
 
