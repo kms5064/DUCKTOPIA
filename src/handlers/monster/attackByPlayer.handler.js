@@ -52,7 +52,7 @@ export const AttackByPlayerHandler = async (socket, payload) => {
       packet = createResponse(PACKET_TYPE.S_MONSTER_ATTACK_NOTIFICATION, monsterAttackPayload);
     }
 
-    game.broadcastAllPlayer(packet, [socket]);
+    game.notification(socket, packet);
 
 
 
