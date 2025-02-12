@@ -3,6 +3,7 @@ import { getGameAssets } from '../../init/assets.js';
 import Monster from './monster.class.js';
 import Player from './player.class.js';
 import { config } from '../../config/config.js';
+import { PACKET_TYPE } from '../../config/constants/header.js';
 
 class Game {
   constructor() {
@@ -21,20 +22,67 @@ class Game {
     this.players.forEach((player) => {
       gameData.push(player.getPlayerData());
     });
-    return gameData
+    return gameData;
   }
 
   addPlayer(user) {
-    const player = new Player(user, 0, 0, 0)
+    const player = new Player(user, 0, 0, 0);
     this.players.set(user.id, player);
   }
 
   removePlayer(userId) {
-    this.players.delete(userId)
+    this.players.delete(userId);
   }
 
   getPlayerById(userId) {
     return this.players.get(userId);
+  }
+
+  createMonsterData() {
+    const monsterData = [];
+
+    // 생성 제한 처리
+    if (this.monsters.size >= config.game.monster.maxSpawnCount) {
+      return;
+    }
+    const maxAmount = config.game.monster.maxSpawnCount - this.monsters.size;
+
+    for (let i = 1; i <= maxAmount; i++) {
+      const monsterId = this.monsterIndex;
+      // Monster Asset 조회
+      const { monster: monsterAsset } = getGameAssets();
+
+      // 몬스터 데이터 뽑기
+      const codeIdx = Math.floor(Math.random() * monsterAsset.data.length);
+      const data = monsterAsset.data[codeIdx];
+
+      // 몬스터 생성
+      const monster = new Monster(
+        monsterId,
+        data.monsterCode,
+        data.name,
+        data.hp,
+        data.attack,
+        data.defence,
+        data.range,
+        data.speed,
+        0,
+        0,
+      );
+
+      this.monsters.set(monsterId, monster);
+      this.monsterIndex++; //Index 증가
+
+      monsterData.push({
+        monsterId,
+        monsterCode: monster.monsterCode,
+      });
+    }
+    return monsterData;
+  }
+
+  updateMonsterPosition(monsterId, x, y) {
+    this.monsters.get(monsterId).setPositionFromCreating(x, y);
   }
 
   addMonster() {
@@ -47,7 +95,7 @@ class Game {
     // maxAmount 만큼 몬스터 생성
     const maxAmount = config.game.monster.maxSpawnCount - this.monsters.size;
 
-    for (let i = 1; i <= maxLeng; i++) {
+    for (let i = 1; i <= maxAmount; i++) {
       const monsterId = this.monsterIndex;
       // Monster Asset 조회
       const { monster: monsterAsset } = getGameAssets();
@@ -56,8 +104,10 @@ class Game {
       const data = monsterAsset.data[codeIdx];
 
       // 좌표 생성
-      let x = Math.random() * (config.game.map.endX - config.game.map.startX)  + config.game.map.startX
-      let y = Math.random() * (config.game.map.endY - config.game.map.startY) + config.game.map.startY
+      let x =
+        Math.random() * (config.game.map.endX - config.game.map.startX) + config.game.map.startX;
+      let y =
+        Math.random() * (config.game.map.endY - config.game.map.startY) + config.game.map.startY;
 
       // 몬스터 생성
       const monster = new Monster(
@@ -184,7 +234,7 @@ class Game {
     if (this.coreHp <= 0) {
       this.gameEnd();
     }
-    return this.coreHp
+    return this.coreHp;
   }
 
   gameEnd() {
@@ -192,7 +242,6 @@ class Game {
     this.gameLoop = null;
     this.broadcast(makePacket(PACKET_TYPE.GAME_END_NOTIFICATION));
   }
-
 }
 
 export default Game;
