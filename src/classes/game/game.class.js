@@ -9,18 +9,7 @@ import {
   WAVE_MONSTER_MAX_CODE,
   WAVE_MONSTER_MIN_CODE,
 } from '../../config/constants/monster.js';
-
-const DayPhase = {
-  DAY: 0,
-  NIGHT: 1,
-};
-Object.freeze(DayPhase);
-
-export const WaveState = {
-  NONE: 0,
-  INWAVE: 1,
-};
-Object.freeze(WaveState);
+import { DayPhase, WaveState } from '../../config/constants/game.js';
 
 class Game {
   constructor(ownerId) {
@@ -33,7 +22,6 @@ class Game {
     this.lastUpdate = 0;
     this.gameLoop = null;
     this.highLatency = 120;
-    this.waveStamp = 60000;
     this.ownerId = ownerId;
 
     // 웨이브 시스템
@@ -43,7 +31,12 @@ class Game {
     this.waveMonsters = new Map();
   }
 
-  setState(state) {
+  changePhase() {
+    if (this.dayPhase === DayPhase.DAY) this.dayPhase = DayPhase.NIGHT;
+    else this.dayPhase = DayPhase.DAY;
+  }
+
+  setWaveState(state) {
     this.waveState = state;
   }
 
@@ -166,15 +159,19 @@ class Game {
     }
   }
 
+  // 웨이브 몬스터 생성
   addWaveMonster() {
-    for (let i = 1; i <= WAVE_MAX_MONSTER_COUNT; i++) {
+    const monstersData = [];
+    for (let i = 1; i <= config.game.monster.waveMaxMonsterCount; i++) {
       const monsterId = this.monsterIndex;
       // Monster Asset 조회
       const { monster: monsterAsset } = getGameAssets();
       // 몬스터 데이터 뽑기
       const codeIdx =
-        Math.floor(Math.random() * (WAVE_MONSTER_MAX_CODE - WAVE_MONSTER_MIN_CODE + 1)) +
-        WAVE_MONSTER_MIN_CODE;
+        Math.floor(
+          Math.random() *
+            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
+        ) + config.game.monster.waveMonsterMinCode;
       const data = monsterAsset.data[codeIdx];
 
       // 몬스터 생성
@@ -196,25 +193,23 @@ class Game {
       this.waveMonsters.set(monsterId, monster);
       this.monsterIndex++; //Index 증가
 
-      // 페이로드
-      const payload = {
+      // 몬스터 id와 code 저장
+      monstersData.push({
         monsterId,
-        code: monster.monsterCode,
-      };
-
-      const monsterSpawnRequestPacket = makePacket(
-        config.packetType.S_MONSTER_SPAWN_REQUEST,
-        payload,
-      );
-
-      const owner = this.getPlayerById(this.ownerId);
-
-      if (!owner) {
-        throw new CustomError('방장이 존재하지 않습니다.');
-      }
-
-      owner.socket.write(monsterSpawnRequestPacket);
+        monsterCode: monster.monsterCode,
+      });
     }
+
+    // 패킷 전송
+    const monsterSpawnRequestPacket = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, {
+      monsters: monstersData,
+    });
+
+    const owner = this.getPlayerById(this.ownerId);
+
+    owner.socket.write(monsterSpawnRequestPacket);
+
+    this.setWaveState(WaveState.INWAVE);
   }
 
   getMonsterById(monsterId) {
@@ -228,8 +223,10 @@ class Game {
   removeMonster(monsterId) {
     this.monsters.delete(monsterId);
 
+    // 웨이브 몬스터 삭제
     if (this.waveMonsters.has(monsterId)) {
       this.waveMonsters.delete(monsterId);
+      if (this.waveMonsters.size === 0) this.setWaveState(WaveState.NONE);
     }
   }
 
@@ -252,7 +249,7 @@ class Game {
       return;
     }
     this.gameLoop = setInterval(() => {
-      this.waveCheck();
+      this.phaseCheck();
       //this.addMonster();
       this.monsterUpdate();
       //this.userUpdate();
@@ -260,15 +257,24 @@ class Game {
     }, 1000);
   }
 
-  waveCheck() {
+  phaseCheck() {
+    // 데이 카운터 감소
     const now = Date.now();
-    const delta = now - this.lastUpdate;
-    this.waveStamp -= delta;
+    const deltaTime = now - this.lastUpdate;
+    this.dayCounter += deltaTime;
     this.lastUpdate = now;
 
-    if (this.waveStamp <= 0) {
-      this.waveStamp = 60000;
-      //여기서 웨이브 처리를 해주도록 한다.
+    // 현재 phase 에 따라 기준 다르게 받기
+    if (this.dayCounter >= config.game.phaseCount[this.dayPhase]) {
+      isOver = true;
+
+      if (this.dayPhase === DayPhase.DAY) {
+        this.addWaveMonster();
+      }
+
+      this.changePhase();
+
+      this.dayCounter = 0;
     }
   }
 
