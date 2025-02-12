@@ -4,6 +4,11 @@ import { MAX_SPAWN_COUNT } from '../../constants/monster.js';
 import { getGameAssets } from '../../init/assets.js';
 import Monster from '../monster/monster.class.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
+import {
+  WAVE_MAX_MONSTER_COUNT,
+  WAVE_MONSTER_MAX_CODE,
+  WAVE_MONSTER_MIN_CODE,
+} from '../../config/constants/monster.js';
 
 const DayPhase = {
   DAY: 0,
@@ -124,6 +129,47 @@ class Game {
         y,
       };
       const packet = makePacket(PACKET_TYPE.MONSTER_SPAWN_NOTIFICATION, payload);
+      this.broadcast(packet);
+    }
+  }
+
+  addWaveMonster() {
+    for (let i = 1; i <= WAVE_MAX_MONSTER_COUNT; i++) {
+      const monsterId = this.monsterIndex;
+      // Monster Asset 조회
+      const { monster: monsterAsset } = getGameAssets();
+      // 몬스터 데이터 뽑기
+      const codeIdx =
+        Math.floor(Math.random() * (WAVE_MONSTER_MAX_CODE - WAVE_MONSTER_MIN_CODE + 1)) +
+        WAVE_MONSTER_MIN_CODE;
+      const data = monsterAsset.data[codeIdx];
+
+      // 몬스터 생성
+      const monster = new Monster(
+        monsterId,
+        data.monsterCode,
+        data.name,
+        data.hp,
+        data.attack,
+        data.defence,
+        data.range,
+        data.speed,
+        0,
+        0,
+        true,
+      );
+
+      this.monsters.set(monsterId, monster);
+      this.monsterIndex++; //Index 증가
+
+      // 페이로드
+      const payload = {
+        monsterId,
+        code: monster.monsterCode,
+      };
+
+      //const packet = makePacket(PACKET_TYPE.MONSTER_SPAWN_NOTIFICATION, payload);
+
       this.broadcast(packet);
     }
   }
