@@ -184,6 +184,13 @@ export class Game {
           if(monster.hasPriorityPlayer())
           {
             console.log("플레이어가 등록됨");
+            const monsterDiscoverPayload = {
+              monsterId : monster.id,
+              targetId : player.id
+            }
+
+            const packet = makePacket(PACKET_TYPE.S_MONSTER_AWAKE_NOTIFICATION,monsterDiscoverPayload);
+            this.broadcastAllPlayer(packet);
           }
         }
       }

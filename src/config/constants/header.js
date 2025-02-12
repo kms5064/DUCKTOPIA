@@ -33,20 +33,37 @@ export const PACKET_TYPE = {
   START_GAME_NOTIFICATION: [3006, 'gameStartNotification'],
 
   // 플레이어
-  PLAYER_UPDATE_POSITION_REQUEST: [4001, 'positionUpdateRequest'],
-  PLAYER_UPDATE_POSITION_NOTIFICATION: [4002, 'positionUpdateNotification'],
-  PLAYER_UPDATE_HP_NOTIFICATION: [4003, 'playerHpUpdateNotification'],
-  PLAYER_ATTACK_REQUEST: [4004, 'playerAttackRequest'],
-  PLAYER_ATTACK_NOTIFICATION: [4005, 'playerAttackNotification'],
-  PLAYER_DEATH_NOTIFICATION: [4006, 'playerDeathNotification'],
-  FOOD_EAT_REQUEST: [4007, 'eatFoodRequest'],
-  FOOD_EAT_RESPONSE: [4008, 'eatFoodResponse'],
-  USER_UPDATE_NOTIFICATION: [4040, 'userUpdateNotification'],
+  C_PLAYER_POSITION_UPDATE_REQUEST: [4001, 'playerPositionUpdateRequest'],
+  S_PLAYER_POSITION_UPDATE_NOTIFICATION: [4002, 'playerPositionUpdateNotification'],
+  S_PLAYER_HP_UPDATE_NOTIFICATION: [4003, 'playerHpUpdateNotification'],
+  C_PLAYER_ATTACK_REQUEST: [4004, 'playerAttackRequest'],
+  C_PLAYER_ATTACK_MONSTER_REQUEST: [4005, 'playerAttackMonsterRequest'],
+  S_PLAYER_ATTACK_NOTIFICATION: [4006, 'playerAttackNotification'],
+  S_PLAYER_DEATH_NOTIFICATION: [4007, 'playerDeathNotification'],
+  S_PLAYER_GET_ITEM_REQUEST: [4008, 'playerGetItemRequest'],
+  C_PLAYER_USE_ITEM_REQUEST: [4009, 'playerUseItemRequest'],
+  S_PLAYER_EAT_FOOD_RESPONSE: [4010, 'playerEatFoodResponse'],
+  S_PLAYER_EQUIP_WEAPON_RESPONSE: [4011, 'playerEquipWeaponResponse'],
+  
 
   // 몬스터
-  MONSTER_SPAWN_NOTIFICATION: [5001, 'monsterSpawnNotification'],
-  MONSTER_AWAKE_NOTIFICATION: [5002, 'monsterAwakeNotification'],
-  MONSTER_MOVE_NOTIFICATION: [5003, 'monsterMoveNotification'],
-  MONSTER_DEATH_NOTIFICATION: [5004, 'monsterDeathNotification'],
-  MONSTER_HP_UPDATE_NOTIFICATION: [5005, 'monsterHpUpdateNotification'],
+  S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
+  C_MONSTER_SPAWN_RESPONSE: [5002, 'monsterSpawnResponse'],
+  S_MONSTER_WAVE_START_NOTIFICATION: [5003, 'monsterWaveStartNotification'],
+  S_MONSTER_AWAKE_NOTIFICATION: [5004, 'monsterAwakeNotification'],
+  S_MONSTER_DEATH_NOTIFICATION: [5005, 'monsterDeathNotification'],
+  C_MONSTER_MOVE_REQUEST: [5006, 'monsterMoveRequest'],
+  S_MONSTER_MOVE_NOTIFICATION: [5007, 'monsterMoveNotification'],
+  C_MONSTER_ATTACK_REQUEST: [5008, 'monsterAttackRequest'],
+  S_MONSTER_ATTACK_NOTIFICATION: [5009, 'monsterAttackNotification'],
+  S_MONSTER_HP_UPDATE_NOTIFICATION: [5010, 'monsterHpUpdateNotification'],
+
+
+  // 코어
+  S_CORE_HP_UPDATE_NOTIFICATION: [6001, 'coreHpUpdateNotification'],
+  S_GAME_OVER_NOTIFICATION: [6002, 'gameOverNotification'],
+
+
+  // 에러
+  S_ERROR_NOTIFICATION: [7001, 'errorNotification'],
 };
