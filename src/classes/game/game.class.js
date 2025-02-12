@@ -16,7 +16,7 @@ const DayPhase = {
 };
 Object.freeze(DayPhase);
 
-const WaveState = {
+export const WaveState = {
   NONE: 0,
   INWAVE: 1,
 };
@@ -41,6 +41,10 @@ class Game {
     this.waveState = WaveState.NONE;
     this.dayCounter = 0;
     this.waveMonsters = new Map();
+  }
+
+  setState(state) {
+    this.waveState = state;
   }
 
   addPlayer(user) {
@@ -213,57 +217,6 @@ class Game {
     }
   }
 
-  addWaveMonster() {
-    for (let i = 1; i <= WAVE_MAX_MONSTER_COUNT; i++) {
-      const monsterId = this.monsterIndex;
-      // Monster Asset 조회
-      const { monster: monsterAsset } = getGameAssets();
-      // 몬스터 데이터 뽑기
-      const codeIdx =
-        Math.floor(Math.random() * (WAVE_MONSTER_MAX_CODE - WAVE_MONSTER_MIN_CODE + 1)) +
-        WAVE_MONSTER_MIN_CODE;
-      const data = monsterAsset.data[codeIdx];
-
-      // 몬스터 생성
-      const monster = new Monster(
-        monsterId,
-        data.monsterCode,
-        data.name,
-        data.hp,
-        data.attack,
-        data.defence,
-        data.range,
-        data.speed,
-        0,
-        0,
-        true,
-      );
-
-      this.monsters.set(monsterId, monster);
-      this.waveMonsters.set(monsterId, monster);
-      this.monsterIndex++; //Index 증가
-
-      // 페이로드
-      const payload = {
-        monsterId,
-        code: monster.monsterCode,
-      };
-
-      const monsterSpawnRequestPacket = makePacket(
-        config.packetType.S_MONSTER_SPAWN_REQUEST,
-        payload,
-      );
-
-      const owner = this.getPlayerById(this.ownerId);
-
-      if (!owner) {
-        throw new CustomError('방장이 존재하지 않습니다.');
-      }
-
-      owner.socket.write(monsterSpawnRequestPacket);
-    }
-  }
-
   getMonsterById(monsterId) {
     return this.monsters.get(monsterId);
   }
@@ -338,7 +291,7 @@ class Game {
       if (!monster.hasPriorityPlayer()) {
         for (const player of this.players) {
           monster.setTargetPlayer(player);
-  
+
           if (monster.hasPriorityPlayer()) {
             console.log('플레이어가 등록됨');
             const monsterDiscoverPayload = {
@@ -375,7 +328,6 @@ class Game {
         const packet = makePacket(PACKET_TYPE.monsterMove, monsterMovePayload);
         broadcast(monster.getPriorityPlayer(), packet);
 
-      
         //아래쪽은 공격 체크용
         // if(monster.isAttack())
         // {

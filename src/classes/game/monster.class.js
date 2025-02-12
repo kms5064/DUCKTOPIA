@@ -56,11 +56,6 @@ class Monster extends MovableObjectBase {
     this.name = name;
   }
 
-  setPos(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-
   getAttack() {
     return this.attack;
   }
@@ -80,31 +75,26 @@ class Monster extends MovableObjectBase {
     return this.hp;
   }
 
-  getDirectByPlayer()
-  {
+  getDirectByPlayer() {
     const vectorX = Math.acos((this.priorityPlayer.x - this.x) / distance); //+, -를 구분지어서 할 수 있을 듯
     const vectorY = Math.asin((this.priorityPlayer.y - this.y) / distance);
 
-    return {x : vectorX, y : vectorY};
+    return { x: vectorX, y: vectorY };
   }
 
-  getSpeed()
-  {
+  getSpeed() {
     return this.speed;
   }
 
-  getPosition()
-  {
-    return {x : this.x, y : this.y};
+  getPosition() {
+    return { x: this.x, y: this.y };
   }
 
-  getId()
-  {
+  getId() {
     return this.id;
   }
 
-  getPriorityPlayer()
-  {
+  getPriorityPlayer() {
     return this.priorityPlayer;
   }
 
@@ -130,13 +120,11 @@ class Monster extends MovableObjectBase {
   //내 생각에 x, y는 맵의 중간 지점을 (0,0)이라 했을 때의 값이라 생각함
   setPosition(position, moveCheck = false) {
     //moveCheck는 강제적으로 몬스터의 위치를 이동시켜 줘야 할 때. 그러니까 순간이동 등의 경우
-    if(!moveCheck)
-    {
+    if (!moveCheck) {
       this.x = position.x;
       this.y = position.y;
-    }
-    else//순간 이동 같은 게 아니라면 서버에서 이동 시의 오류 처리를 확인해 보도록 하자.
-    {
+    } //순간 이동 같은 게 아니라면 서버에서 이동 시의 오류 처리를 확인해 보도록 하자.
+    else {
       this.x = position.x;
       this.y = position.y;
     }
@@ -190,27 +178,20 @@ class Monster extends MovableObjectBase {
     }
   }
 
-  setPatternInterval()
-  {
+  setPatternInterval() {
     this.patternInterval = setInterval(() => {
       clearInterval(this.patternInterval);
-      console.log("패턴 인터벌 초기화함");
+      console.log('패턴 인터벌 초기화함');
       this.patternInterval = null;
     }, 5000);
   }
 
-  isAttack()
-  {
-    if(this.patternInterval === null)
-    {
+  isAttack() {
+    if (this.patternInterval === null) {
       return this.distanceBetweenPlayer < 10 ? true : false;
-    }
-    else
-    {
+    } else {
       return false;
     }
-
-    
   }
 
   //default로 호출될 때는 별다른 기능 없음
