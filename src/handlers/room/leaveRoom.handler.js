@@ -5,7 +5,7 @@ import makePacket from '../../utils/packet/makePacket.js';
 const leaveRoomHandler = ({ socket, payload }) => {
   try {
     // 1. 유저 찾기
-    const user = userSession.getUser(socket);
+    const user = userSession.getUser(socket.id);
     if (!user) {
       throw new Error('유저가 읎어요!');
     }

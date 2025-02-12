@@ -5,7 +5,7 @@ import { roomSession, userSession } from '../../sessions/session.js';
 const updateLocationHandler = ({ socket, payload }) => {
   const { x, y } = payload;
 
-  const user = userSession.getUser(socket);
+  const user = userSession.getUser(socket.id);
   const room = roomSession.getRoom(user.roomId);
       if(!room) {
     throw new Error('방 생성에 실패했습니다!');

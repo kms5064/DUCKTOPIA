@@ -6,7 +6,7 @@ const gameStartHandler = ({ socket, payload }) => {
   try {
     const { monsters, objects } = payload;
 
-    const user = userSession.getUser(socket);
+    const user = userSession.getUser(socket.id);
     const room = roomSession.getRoom(user.roomId);
 
     if (!room) {
