@@ -7,8 +7,8 @@ import leaveRoomHandler from './room/leaveRoom.handler.js';
 import signInHandler from './user/signIn.handler.js';
 import signUpHandler from './user/signUp.handler.js';
 import gameStartHandler from './game/startGame.handler.js';
-import movePlayerHandler from './player/move.Player.handler.js';
 import gamePrepareReqHandler from './game/gamePrepareReq.handler.js';
+import updateLocationHandler from './player/updateLoaction.handler.js';
 
 const handlers = {
   [config.packetType.REGISTER_REQUEST[0]]: signUpHandler,
@@ -19,7 +19,7 @@ const handlers = {
   [config.packetType.JOIN_ROOM_REQUEST[0]]: joinRoomHandler,
   [config.packetType.LEAVE_ROOM_REQUEST[0]]: leaveRoomHandler,
   [config.packetType.START_GAME_REQUEST[0]]: gameStartHandler,
-  [config.packetType.PLAYER_UPDATE_POSITION_REQUEST[0]]: movePlayerHandler,
+  [config.packetType.PLAYER_UPDATE_POSITION_REQUEST[0]]: updateLocationHandler,
   [config.packetType.PREPARE_GAME_REQUEST[0]]: gamePrepareReqHandler,
 };
 

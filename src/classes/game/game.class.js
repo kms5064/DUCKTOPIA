@@ -1,72 +1,55 @@
 import makePacket from '../../utils/packet/makePacket.js';
-import { MAX_VALUE_X, MAX_VALUE_Y, MIN_VALUE_X, MIN_VALUE_Y } from '../../constants/map.js';
-import { MAX_SPAWN_COUNT } from '../../constants/monster.js';
 import { getGameAssets } from '../../init/assets.js';
-import Monster from '../monster/monster.class.js';
-import { PACKET_TYPE } from '../../config/constants/header.js';
-import { config } from 'dotenv';
+import Monster from './monster.class.js';
+import Player from './player.class.js';
+import { config } from '../../config/config.js';
 
 class Game {
-  constructor(uuid) {
-    this.id = uuid;
-    this.players = [];
+  constructor() {
+    this.players = new Map();
     this.monsterIndex = 1;
     this.monsters = new Map();
     this.map = []; //0과 1로 된 2차원배열?
-    this.lastUpdate = 0;
     this.coreHp = config.game.core.maxHP;
+    this.corePosition = config.game.core.position;
+    this.lastUpdate = 0;
     this.gameLoop = null;
   }
 
-  // addRandomAllMonsterAfterGameStart() {
-  //   //중간 지점이 플레이어라고 가정하고 중간 지점에서 벗어난 위치들에 몬스터를 생성하도록 한다.
-  //   while (this.globalMonsters.size < maxMonsterCount) {
-  //     const vecX = Math.floor(Math.random() * 2) === 1 ? 1 : -1;
-  //     const vecY = Math.floor(Math.random() * 2) === 1 ? 1 : -1;
-  //     const id = uuidV4();
-
-  //     const summonX = vecX * (Math.random() * (this.maxStageX - this.centerStageX) + this.centerStageX);
-  //     const summonY = vecY * (Math.random() * (this.maxStageY - this.centerStageY) + this.centerStageY);
-
-  //     const monsterCode = Math.floor(Math.random() * this.monsterAssets.data.length);
-  //     const monsterInfo = this.monsterAssets.data[monsterCode];
-
-  //     const newMonster = new Monster(id, monsterCode, summonX, summonY, monsterInfo.range, monsterInfo.speed);
-  //     this.monsters.push(newMonster);
-
-  //   }
-  // }
-
-  addPlayer(player) {
-    this.players.push(player);
-    console.log(`addPlayer : ${player}`);
+  getGameData() {
+    const gameData = [];
+    this.players.forEach((player) => {
+      gameData.push(player.getPlayerData());
+    });
+    return gameData;
   }
 
-  getPlayerById(playerId) {
-    const player = this.players.find((player) => player.id === playerId);
-    console.log(`getPlayer : ${player}`);
-    return player;
+  addPlayer(user) {
+    const player = new Player(user, 0, 0, 0);
+    this.players.set(user.id, player);
   }
 
   getPlayerBySocket(socket) {
     const player = this.players.find((player) => player.user.socket === socket);
     return player;
   }
+  removePlayer(userId) {
+    this.players.delete(userId);
+  }
 
-  removePlayer(playerId) {
-    this.players = this.players.filter((player) => player.id !== playerId);
-    console.log(`removedPlayerId : ${playerId}`);
+  getPlayerById(userId) {
+    return this.players.get(userId);
   }
 
   addMonster() {
     // 생성 제한 처리
-    if (this.monsters.size >= MAX_SPAWN_COUNT) {
+    if (this.monsters.size >= config.game.monster.maxSpawnCount) {
       return;
     }
 
     // TODO : 한번에 생성할지 프레임단위로 단일 생성할지 성능보고?
-    // maxLeng 만큼 몬스터 생성
-    const maxLeng = MAX_SPAWN_COUNT - this.monsters.size;
+    // maxAmount 만큼 몬스터 생성
+    const maxAmount = config.game.monster.maxSpawnCount - this.monsters.size;
 
     for (let i = 1; i <= maxLeng; i++) {
       const monsterId = this.monsterIndex;
@@ -77,12 +60,11 @@ class Game {
       const data = monsterAsset.data[codeIdx];
 
       // 좌표 생성
-      let x = this.createRandomPositionValue(MAX_VALUE_X);
-      let y = this.createRandomPositionValue(MAX_VALUE_Y);
+      let x =
+        Math.random() * (config.game.map.endX - config.game.map.startX) + config.game.map.startX;
+      let y =
+        Math.random() * (config.game.map.endY - config.game.map.startY) + config.game.map.startY;
 
-      // 좌표 최소 값 조정
-      if (x < MIN_VALUE_X) x = MIN_VALUE_X;
-      if (y < MIN_VALUE_Y) y = MIN_VALUE_Y;
       // 몬스터 생성
       const monster = new Monster(
         monsterId,
@@ -126,17 +108,6 @@ class Game {
 
   removeAllMonster() {
     this.monsters.clear();
-  }
-
-  // 랜덤 좌표 값 생성
-  createRandomPositionValue(maxvalue) {
-    let isPositiveNum = Math.floor(Math.random() * 2); // 0 : 음수 1: 양수
-    let randomNumber = Math.random() * maxvalue;
-    return isPositiveNum === 1 ? randomNumber : randomNumber * -1;
-  }
-
-  addMap(map) {
-    this.map = map;
   }
 
   //다른 사람에게 전송(본인 제외)
