@@ -58,31 +58,26 @@ class Monster extends MovableObjectBase {
     return this.hp;
   }
 
-  getDirectByPlayer()
-  {
+  getDirectByPlayer() {
     const vectorX = Math.acos((this.priorityPlayer.x - this.x) / distance); //+, -를 구분지어서 할 수 있을 듯
     const vectorY = Math.asin((this.priorityPlayer.y - this.y) / distance);
 
-    return {x : vectorX, y : vectorY};
+    return { x: vectorX, y: vectorY };
   }
 
-  getSpeed()
-  {
+  getSpeed() {
     return this.speed;
   }
 
-  getPosition()
-  {
-    return {x : this.x, y : this.y};
+  getPosition() {
+    return { x: this.x, y: this.y };
   }
 
-  getId()
-  {
+  getId() {
     return this.id;
   }
 
-  getPriorityPlayer()
-  {
+  getPriorityPlayer() {
     return this.priorityPlayer;
   }
 
@@ -91,11 +86,6 @@ class Monster extends MovableObjectBase {
       this.distanceBetweenPlayer = Math.sqrt(
         Math.pow(this.x - this.priorityPlayer.x, 2) + Math.pow(this.y - this.priorityPlayer.y, 2),
       );
-      if (this.distanceBetweenPlayer < 10) {
-        //공격 범위 안에 들어갔다면
-        const packet = createResponse(packetNames);
-        this.priorityPlayer.sendPacket();
-      }
     }
   }
 
@@ -106,7 +96,7 @@ class Monster extends MovableObjectBase {
 
   //생성되었을 때 위치 지정은 이걸로 해주자.
   //내 생각에 x, y는 맵의 중간 지점을 (0,0)이라 했을 때의 값이라 생각함
-  setPosition(x,y) {
+  setPosition(x, y) {
     this.x = x;
     this.y = y;
   }
@@ -156,8 +146,7 @@ class Monster extends MovableObjectBase {
     }
   }
 
-  setPatternInterval()
-  {
+  setPatternInterval() {
     this.patternInterval = setInterval(() => {
       clearInterval(this.patternInterval);
       console.log("패턴 인터벌 초기화함");

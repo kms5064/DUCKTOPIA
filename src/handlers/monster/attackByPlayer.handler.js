@@ -8,19 +8,19 @@ export const AttackByPlayerHandler = async (socket, payload) => {
     //몬스터가 플레이어를 때렸을 때 [1] : 우선 몬스터의 정보를 가져온다.
     const { monsterId, targetId } = payload;
 
+    const user = userSession.getUser(socket);
+    const game = roomSession.getRoom(user.getRoomId()).getGame();
+    const monster = game.getMonster(monsterId);
+    const player = game.getPlayerById(targetId);
     //몬스터가 플레이어를 때렸을 때 [2] : 같은 아이디를 가진 플레이어와 몬스터를 세션에서 찾는다.
-    const game = RoomSession.findGameBySocket(socket);
 
     if (!game) {
       throw new Error("game fail");
     }
-    const player = game.getPlayerBySocket(socket);
 
     if (!player || player.id !== targetId) {
       throw new Error("player fail");
     }
-
-    const monster = game.getMonster(monsterId);
 
     //별개 : 해당 플레이어만 가지고 있던 몬스터가 있다면 동기화가 잘못된 것이므로 일단 오류 처리
     if (!monster) {
@@ -29,7 +29,7 @@ export const AttackByPlayerHandler = async (socket, payload) => {
         monsterId: monsterId
       }
 
-      const monsterDeadPacket = makePacket(PACKET_TYPE.MONSTER_DEATH_NOTIFICATION, alreadMonsterDead);
+      const monsterDeadPacket = await makePacket(PACKET_TYPE.MONSTER_DEATH_NOTIFICATION, alreadMonsterDead);
       player.socket.write(monsterDeadPacket);
       return;
     }
@@ -41,9 +41,7 @@ export const AttackByPlayerHandler = async (socket, payload) => {
     //몬스터가 플레이어를 때렸을 때 [3] : 충격 처리
     if (remainPlayerHp <= 0) {
       //유저 사망 처리 먼저 하도록 하자.
-      player.isDead();
       //플레이어가 살아날 위치를 지정해준다.
-
       const deadPayload = { playerId: player.id };
       packet = makePacket(PACKET_TYPE.S_PLAYER_DEATH_NOTIFICATION, deadPayload);
     } else {

@@ -7,7 +7,6 @@ import {
   DB_USER,
   HOST,
   PORT,
-  LOCATION_REQ_TIME_TERM,
 } from './constants/env.js';
 import {
   PACKET_TYPE,
@@ -15,11 +14,7 @@ import {
   PAYLOAD_LENGTH_BYTE,
   VERSION_LENGTH_BYTE,
 } from './constants/header.js';
-import { CORE_MAX_HP, CORE_POSITION } from './constants/core.js';
-import { PLAYER_MAX_HUNGER, ATK_PER_LV, PLAYER_DEFAULT_ANGLE, PLAYER_DEFAULT_RANGE, PLAYER_MAX_HP, PLAYER_SPEED, VALID_DISTANCE } from './constants/player.js';
-import { MAX_DROP_ITEM_COUNT, MAX_SPAWN_COUNT } from './constants/monster.js';
-import { MAX_VALUE_X, MAX_VALUE_Y, MIN_VALUE_X, MIN_VALUE_Y } from './constants/map.js';
-import { CharacterType } from './constants/character.js';
+import { CORE_MAX_HP } from './constants/core.js';
 
 export const config = {
   header: {
@@ -36,7 +31,6 @@ export const config = {
   },
   client: {
     version: CLIENT_VERSION,
-    locationReqTimeTerm: LOCATION_REQ_TIME_TERM,
   },
   databases: {
     USER_DB: {
@@ -47,33 +41,9 @@ export const config = {
       port: DB_PORT,
     },
   },
-  game : {
+  game: {
     core: {
-      maxHP: CORE_MAX_HP,
-      position: CORE_POSITION,
-    },
-    player:{
-      atkPerLv: ATK_PER_LV,
-      playerMaxHunger: PLAYER_MAX_HUNGER,
-      playerDefaultRange: PLAYER_DEFAULT_RANGE,
-      playerDefaultAngle: PLAYER_DEFAULT_ANGLE,
-      playerMaxHealth: PLAYER_MAX_HP,
-      playerSpeed: PLAYER_SPEED,
-      validDistance: VALID_DISTANCE,
-    },
-    characterType: {
-      ...CharacterType
-    }
-    ,
-    monster:{
-      maxItemDropCount: MAX_DROP_ITEM_COUNT,
-      maxSpawnCount: MAX_SPAWN_COUNT,
-    },
-    map: {
-      startX: MIN_VALUE_X,
-      startY: MIN_VALUE_Y,
-      endX: MAX_VALUE_X,
-      endY: MAX_VALUE_Y,
+      maxHP: CORE_MAX_HP
     }
   }
 };
