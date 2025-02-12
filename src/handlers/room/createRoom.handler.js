@@ -11,7 +11,7 @@ const roomNameSchema = Joi.string().max(25).required().messages({
 });
 
 // 방 생성 핸들러
-const createRoomHandler = async ({socket, payload}) => {
+const createRoomHandler = async ({ socket, payload }) => {
   try {
     const { roomName, maxUserNum } = payload;
 
@@ -43,7 +43,7 @@ const createRoomHandler = async ({socket, payload}) => {
 
     socket.write(createRoomResponse);
   } catch (error) {
-     errorHandler(socket, error);
+    errorHandler(socket, error);
   }
 };
 
