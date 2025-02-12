@@ -1,4 +1,4 @@
-import { config } from "../../config/config.js";
+import { config } from '../../config/config.js';
 
 class User {
   constructor(socket) {
@@ -12,8 +12,8 @@ class User {
 
   getUserData() {
     return {
-      playerId: this.id,
-      nickname: this.name,
+      userId: this.id,
+      name: this.name,
     };
   }
 
@@ -21,12 +21,12 @@ class User {
     return {
       playerId: this.id,
       nickname: this.name,
-      character : {
+      character: {
         characterType: config.game.characterType.RED,
         hp: 0,
         weapon: 0,
         atk: 0,
-      }
+      },
     };
   }
 
@@ -63,6 +63,9 @@ class User {
     this.state = 'lobby';
   }
 
+  getRoomId() {
+    return this.roomId;
+  }
 }
 
 export default User;
