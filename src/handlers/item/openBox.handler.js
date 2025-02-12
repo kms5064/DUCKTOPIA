@@ -1,7 +1,8 @@
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
-import { PACKET_TYPE } from '../../config/constants/header.js';
+import { config } from '../../config/config.js';
+
 
 const openBoxHandler = (socket, sequence, payload) => {
   try {
