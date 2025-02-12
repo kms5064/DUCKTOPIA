@@ -9,6 +9,7 @@ import signUpHandler from './user/signUp.handler.js';
 import gameStartHandler from './game/startGame.handler.js';
 import gamePrepareReqHandler from './game/gamePrepareReq.handler.js';
 import updateLocationHandler from './player/updateLoaction.handler.js';
+import attackPlayerMonsterHandler from './player/attackPlayerMonster.handler.js';
 
 const handlers = {
   [config.packetType.REGISTER_REQUEST[0]]: signUpHandler,
@@ -21,6 +22,7 @@ const handlers = {
   [config.packetType.START_GAME_REQUEST[0]]: gameStartHandler,
   [config.packetType.PLAYER_UPDATE_POSITION_REQUEST[0]]: updateLocationHandler,
   [config.packetType.PREPARE_GAME_REQUEST[0]]: gamePrepareReqHandler,
+  [config.packetType.C_PLAYER_ATTACK_MONSTER_REQUEST[0]]: attackPlayerMonsterHandler,
 };
 
 export default handlers;

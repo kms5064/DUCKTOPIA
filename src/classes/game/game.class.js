@@ -21,16 +21,20 @@ class Game {
     this.players.forEach((player) => {
       gameData.push(player.getPlayerData());
     });
-    return gameData
+    return gameData;
   }
 
   addPlayer(user) {
-    const player = new Player(user, 0, 0, 0)
+    const player = new Player(user, 0, 0, 0);
     this.players.set(user.id, player);
   }
 
+  getPlayerBySocket(socket) {
+    const player = this.players.find((player) => player.user.socket === socket);
+    return player;
+  }
   removePlayer(userId) {
-    this.players.delete(userId)
+    this.players.delete(userId);
   }
 
   getPlayerById(userId) {
@@ -56,8 +60,10 @@ class Game {
       const data = monsterAsset.data[codeIdx];
 
       // 좌표 생성
-      let x = Math.random() * (config.game.map.endX - config.game.map.startX)  + config.game.map.startX
-      let y = Math.random() * (config.game.map.endY - config.game.map.startY) + config.game.map.startY
+      let x =
+        Math.random() * (config.game.map.endX - config.game.map.startX) + config.game.map.startX;
+      let y =
+        Math.random() * (config.game.map.endY - config.game.map.startY) + config.game.map.startY;
 
       // 몬스터 생성
       const monster = new Monster(
@@ -88,7 +94,7 @@ class Game {
     }
   }
 
-  getMonster(monsterId) {
+  getMonsterById(monsterId) {
     return this.monsters.get(monsterId);
   }
 
@@ -184,7 +190,7 @@ class Game {
     if (this.coreHp <= 0) {
       this.gameEnd();
     }
-    return this.coreHp
+    return this.coreHp;
   }
 
   gameEnd() {
@@ -192,7 +198,6 @@ class Game {
     this.gameLoop = null;
     this.broadcast(makePacket(PACKET_TYPE.GAME_END_NOTIFICATION));
   }
-
 }
 
 export default Game;
