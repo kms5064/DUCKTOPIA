@@ -43,7 +43,7 @@ class UserSession {
 
   /* 특정 유저 조회하는 메서드 */
   getUser(socketId) {
-    return this.users.get(socket);
+    return this.users.get(socketId);
   }
 }
 
