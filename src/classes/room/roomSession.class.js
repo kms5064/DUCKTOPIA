@@ -10,7 +10,7 @@ class RoomSession {
   addRoom(ownerId, name, maxUserNum) {
     //const roomId = uuidv4();
     const roomId = this.newId; // TODO(나중에 복구?)
-    const room = new Room({ id: roomId, name, ownerId, maxUserNum });
+    const room = new Room(roomId, name, ownerId, maxUserNum);
     this.rooms.set(roomId, room);
 
     this.newId += 1;
