@@ -1,4 +1,4 @@
-import { maxItemDropCount } from '../../config/constants/monster.js';
+import { config } from '../../config/config.js';
 import MovableObjectBase from '../base/objectBase.class.js';
 
 class Monster extends MovableObjectBase {
@@ -138,7 +138,7 @@ class Monster extends MovableObjectBase {
   //몬스터가 죽거나 할 때 아이템 드롭할 아이템의 숫자를 제공한다.
   dropItemCount() {
     const dropCount =
-      10 - Math.floor(Math.log(Math.ceil(Math.random() * maxItemDropCount)) / Math.log(2));
+      10 - Math.floor(Math.log(Math.ceil(Math.random() * config.game.monster.maxItemDropCount)) / Math.log(2));
 
     switch (dropCount) {
       case 0:

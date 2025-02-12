@@ -1,53 +1,46 @@
 import makePacket from '../../utils/packet/makePacket.js';
-import { MAX_VALUE_X, MAX_VALUE_Y, MIN_VALUE_X, MIN_VALUE_Y } from '../../constants/map.js';
-import { MAX_SPAWN_COUNT } from '../../constants/monster.js';
 import { getGameAssets } from '../../init/assets.js';
-import Monster from '../monster/monster.class.js';
-import { PACKET_TYPE } from '../../config/constants/header.js';
-import broadcast from '../../utils/packet/broadcast.js';
-import { config } from 'dotenv';
+import Monster from './monster.class.js';
+import Player from './player.class.js';
+import { config } from '../../config/config.js';
 
-export class Game {
-  constructor(uuid) {
-    this.id = uuid;
-    this.players = [];
+class Game {
+  constructor() {
+    this.players = new Map();
     this.monsterIndex = 1;
     this.monsters = new Map();
     this.map = []; //0과 1로 된 2차원배열?
-    this.lastUpdate = Date.now();
+    this.coreHp = config.game.core.maxHP;
+    this.corePosition = config.game.core.position;
+    this.lastUpdate = 0;
     this.gameLoop = null;
     this.highLatency = 120;
     this.waveStamp = 60000;
   }
 
-  addPlayer(player) {
-    this.players.push(player);
+  addPlayer(user) {
+    const player = new Player(user, 0, 0, 0)
+    this.players.set(user.id, player);
   }
 
-  getPlayerById(playerId) {
-    const player = this.players.find((player) => player.id === playerId);
-    return player;
+  removePlayer(userId) {
+    this.players.delete(userId)
   }
 
-  getPlayerBySocket(socket){
-    const player = this.players.find((player)=> player.user.socket === socket);
-    return player;
-  }
-
-  removePlayer(playerId) {
-    this.players = this.players.filter((player) => player.id !== playerId);
+  getPlayerById(userId) {
+    return this.players.get(userId);
   }
 
   addMonster() {
     // 생성 제한 처리
-    if (this.monsters.size >= MAX_SPAWN_COUNT) {
+    if (this.monsters.size >= config.game.monster.maxSpawnCount) {
       return;
     }
     console.log("몬스터 생성")
 
     // TODO : 한번에 생성할지 프레임단위로 단일 생성할지 성능보고?
-    // maxLeng 만큼 몬스터 생성
-    const maxLeng = MAX_SPAWN_COUNT - this.monsters.size;
+    // maxAmount 만큼 몬스터 생성
+    const maxAmount = config.game.monster.maxSpawnCount - this.monsters.size;
 
     for (let i = 1; i <= maxLeng; i++) {
       const monsterId = this.monsterIndex;
@@ -58,13 +51,9 @@ export class Game {
       const data = monsterAsset.data[0];
 
       // 좌표 생성
-      let x = this.createRandomPositionValue(MAX_VALUE_X);
-      let y = this.createRandomPositionValue(MAX_VALUE_Y);
-      console.log(x,y);
+      let x = Math.random() * (config.game.map.endX - config.game.map.startX)  + config.game.map.startX
+      let y = Math.random() * (config.game.map.endY - config.game.map.startY) + config.game.map.startY
 
-      // 좌표 최소 값 조정
-      if (x < MIN_VALUE_X) x = MIN_VALUE_X;
-      if (y < MIN_VALUE_Y) y = MIN_VALUE_Y;
       // 몬스터 생성
       const monster = new Monster(
         monsterId,
@@ -108,17 +97,6 @@ export class Game {
 
   removeAllMonster() {
     this.monsters.clear();
-  }
-
-  // 랜덤 좌표 값 생성
-  createRandomPositionValue(maxvalue) {
-    let isPositiveNum = Math.floor(Math.random() * 2); // 0 : 음수 1: 양수
-    let randomNumber = Math.random() * maxvalue;
-    return isPositiveNum === 1 ? randomNumber : randomNumber * -1;
-  }
-
-  addMap(map) {
-    this.map = map;
   }
 
   //다른 사람에게 전송(본인 제외)
@@ -266,3 +244,5 @@ export class Game {
     
   }
 }
+
+export default Game;

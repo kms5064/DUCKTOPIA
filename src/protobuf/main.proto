@@ -9,6 +9,7 @@ message PlayerPositionData {
 
 message User { // User 닉네임
     string name = 1;
+    int32 userId = 2;
 }
 
 enum RoomStateType { // 방 상태
@@ -28,8 +29,8 @@ message RoomData { //방 리스트 받을때
 }
 
 enum PhaseType {
-    DAY = 1;
-    NIGHT = 2;
+    DAY = 0;
+    NIGHT = 1;
 }
 message GameStateData {
     PhaseType phaseType = 1; 
@@ -56,8 +57,8 @@ message ObjectData {
 message ObjectPositionData {
     int32 objectId = 1;
     int32 objectCode = 2;
-    float x = 2;
-    float y = 3;
+    float x = 3;
+    float y = 4;
 }
 
 // 통신 Payload
@@ -82,7 +83,7 @@ message C2SLoginRequest //로그인 요청
 message S2CLoginResponse // 로그인 응답
 {
  bool success = 1;
- string nickname = 2;
+ User user = 2;
 }
 
 message C2SCreateRoomRequest { // 방생성 요청
@@ -114,7 +115,7 @@ message S2CJoinRoomResponse { // 방참가 응답
 }
 
 message S2CJoinRoomNotification { // 방참가 알림
-    string nickname = 1;
+    User user = 1;
 }
 
 message C2SLeaveRoomRequest { // 방나감 요청
@@ -125,7 +126,7 @@ message S2CLeaveRoomResponse { // 방나감 응답
 }
 
 message S2CLeaveRoomNotification { // 방나감 알림
-    string nickname = 1;
+    User user = 1;
 }
 
 message C2SGamePrepareRequest { // 게임준비 요청
