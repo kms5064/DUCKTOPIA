@@ -23,11 +23,15 @@ class Game {
     this.players = [];
     this.monsterIndex = 1;
     this.monsters = new Map();
-    this.map = []; //0과 1로 된 2차원배열?
+    this.map = []; // 0과 1로 된 2차원배열?
     this.lastUpdate = 0;
     this.gameLoop = null;
+
+    // 웨이브 시스템
     this.dayPhase = DayPhase.DAY;
     this.waveState = WaveState.NONE;
+    this.dayCounter = 0;
+    this.waveMonsters = new Map();
   }
 
   // addRandomAllMonsterAfterGameStart() {
