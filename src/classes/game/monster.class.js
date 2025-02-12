@@ -56,6 +56,11 @@ class Monster extends MovableObjectBase {
     this.name = name;
   }
 
+  setPos(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
   getAttack() {
     return this.attack;
   }
@@ -118,7 +123,10 @@ class Monster extends MovableObjectBase {
   //몬스터가 죽거나 할 때 아이템 드롭할 아이템의 숫자를 제공한다.
   dropItemCount() {
     const dropCount =
-      10 - Math.floor(Math.log(Math.ceil(Math.random() * config.game.monster.maxItemDropCount)) / Math.log(2));
+      10 -
+      Math.floor(
+        Math.log(Math.ceil(Math.random() * config.game.monster.maxItemDropCount)) / Math.log(2),
+      );
 
     switch (dropCount) {
       case 0:
