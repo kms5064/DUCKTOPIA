@@ -1,0 +1,37 @@
+import { config } from '../../config/config.js';
+import { roomSession, userSession } from '../../sessions/session.js';
+import CustomError from '../../utils/error/customError.js';
+import makePacket from '../../utils/packet/makePacket.js';
+
+// 호스트 플레이어가 몬스터 좌표 전달
+const waveStartHandler = ({ socket, payload }) => {
+  const { monsters } = payload;
+
+  // 1. 유저 찾기
+  const user = userSession.getUser(socket);
+
+  if (!user) {
+    new CustomError('유저가 존재하지 않습니다.');
+  }
+
+  // 2. 게임 찾기
+  const game = roomSession.getRoom(user.getRoomId()).getGame();
+
+  if (!game) {
+    new CustomError('게임이 존재하지 않습니다.');
+  }
+
+  // 3. 게임에 반영하기
+  for (const item of monsters) {
+    const monster = game.getMonster(item.monsterId);
+
+    monster.setPos(item.x, item.y);
+  }
+
+  // 4. 게임 내부 유저들에게 notification
+  const waveStartNotification = makePacket(config.packetType.S_MONSTER_WAVE_START_NOTIFICATION, {
+    monsters,
+  });
+
+  game.notification(socket, waveStartNotification);
+};
