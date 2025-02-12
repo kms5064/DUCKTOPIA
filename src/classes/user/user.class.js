@@ -12,8 +12,8 @@ class User {
 
   getUserData() {
     return {
-      playerId: this.id,
-      nickname: this.name,
+      userId: this.id,
+      name: this.name,
     };
   }
 
