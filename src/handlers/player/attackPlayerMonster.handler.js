@@ -2,7 +2,7 @@ import { PACKET_TYPE } from '../../config/constants/header.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import { roomSession, userSession } from '../../sessions/session.js';
 
-const attackPlayerMonsterhandler = ({ socket, payload }) => {
+const attackPlayerMonsterHandler = ({ socket, payload }) => {
   const { playerDirX, playerDirY, monsterId } = payload;
 
   // 유저 객체 조회
@@ -37,7 +37,7 @@ const attackPlayerMonsterhandler = ({ socket, payload }) => {
 
   // Notification - 다른 플레이어들에게 전달
   const motionPayload = { playerId: player.id, playerDirX, playerDirY };
-  let packet = makePacket(PACKET_TYPE.PLAYER_ATTACK_NOTIFICATION, motionPayload);
+  let packet = makePacket(PACKET_TYPE.S_PLAYER_ATTACK_NOTIFICATION, motionPayload);
   game.notification(socket, packet);
 
   // 몬스터 조회
@@ -56,7 +56,7 @@ const attackPlayerMonsterhandler = ({ socket, payload }) => {
   }
 
   // 패킷 생성
-  packet = makePacket(PACKET_TYPE.MONSTER_HP_UPDATE_NOTIFICATION, {
+  packet = makePacket(PACKET_TYPE.S_MONSTER_HP_UPDATE_NOTIFICATION, {
     monsterId,
     hp: currHp,
   });
@@ -121,4 +121,4 @@ const attackPlayerMonsterhandler = ({ socket, payload }) => {
   // });
 };
 
-export default attackPlayerMonsterhandler;
+export default attackPlayerMonsterHandler;
