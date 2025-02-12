@@ -154,42 +154,6 @@ class Monster extends MovableObjectBase {
     }, 5000);
   }
 
-  //default로 호출될 때는 별다른 기능 없음
-  //x가 -1이면 왼쪽 1이면 오른쪽
-  //y가 -1이면 아래쪽 1이면 위쪽
-  //나중에 클라이언트가 몬스터를 움직이는 게 아니라고 나왔을 경우는 이걸 베이스로 하자.
-  moveByLatency(deltaTime) {
-    const timediff = deltaTime / 1000; //레이턴시는 1초를 1000으로 받아온다는 전제
-
-    const lateMove = this.speed * timediff;
-    const distance = Math.sqrt(
-      Math.pow(this.priorityPlayer.x - this.x, 2) + Math.pow(this.priorityPlayer.y - this.y, 2),
-    );
-    const vectorX = (this.priorityPlayer.x - this.x) / distance; //+, -를 구분지어서 할 수 있을 듯
-    const vectorY = (this.priorityPlayer.y - this.y) / distance;
-    const degree = Math.acos(vectorX);
-
-    //공격할 몬스터 ID, 공격 받는 플레이어 ID
-
-    switch (this.monsterCode) {
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-        //삼각함수를 통해 방향을 정해보자.
-        this.x += vectorX * lateMove;
-        this.y += vectorY * lateMove;
-        break;
-      case 5:
-      case 6:
-      case 7:
-      case 8:
-        this.x += vectorX * lateMove;
-        this.y += vectorY * lateMove;
-        break;
-    }
-  }
-
   //몬스터가 사망했을 때의 데이터
   //이후 몬스터 사망 시 아이템 드롭도 해야 하나
 
