@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import Joi from 'joi';
 import { createUser } from '../../db/user/user.db.js';
 import makePacket from '../../utils/packet/makePacket.js';
-import { errorHandler } from '../../utils/error/errorHandler.js';
+import CustomError from '../../utils/error/customError.js';
 import { config } from '../../config/config.js';
 
 const SALT_OR_ROUNDS = 10;
@@ -28,29 +28,25 @@ const signUpSchema = Joi.object({
 });
 
 const signUpHandler = async ({ socket, payload }) => {
+  const { email, password, nickname } = payload;
+  const obj = { nickname, email, password };
+
+  // 1. payload 유효성 검사
   try {
-    const { email, password, nickname } = payload;
-
-    const obj = { nickname, email, password };
-
-    // 1. payload 유효성 검사
     await signUpSchema.validateAsync(obj);
-
-    // 2. 비밀번호 bcrypt로 암호화
-    const hashedPw = await bcrypt.hash(password, SALT_OR_ROUNDS);
-
-    // 3. 유저 정보 저장
-    await createUser(nickname, email, hashedPw);
-
-    // console.log('회원가입 성공!');
-
-    // 4. 패킷 전송
-    const registerResponse = makePacket(config.packetType.REGISTER_RESPONSE, { success: true });
-
-    socket.write(registerResponse);
-  } catch (error) {
-    errorHandler(socket, error);
+  } catch (validationError) {
+    throw new CustomError(validationError.message);
   }
+
+  // 2. 비밀번호 bcrypt로 암호화
+  const hashedPw = await bcrypt.hash(password, SALT_OR_ROUNDS);
+
+  // 3. 유저 정보 저장
+  await createUser(nickname, email, hashedPw);
+
+  // 4. 패킷 전송
+  const registerResponse = makePacket(config.packetType.REGISTER_RESPONSE, { success: true });
+  socket.write(registerResponse);
 };
 
 export default signUpHandler;
