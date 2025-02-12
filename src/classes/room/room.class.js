@@ -101,12 +101,14 @@ class Room {
     return this.game;
   }
 
+  // 전체 공지(본인 제외)
   notification(id, packet) {
     this.users.forEach((user) => {
       if (user.id !== id) user.socket.write(packet);
     });
   }
 
+  // 전체 공지(본인 포함)
   broadcast(packet) {
     this.users.forEach((user) => {
       user.socket.write(packet);

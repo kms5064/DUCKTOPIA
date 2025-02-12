@@ -2,7 +2,7 @@ import { config } from '../../config/config.js';
 import { roomSession, userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
-const leaveRoomHandler = ({socket, payload}) => {
+const leaveRoomHandler = ({ socket, payload }) => {
   try {
     // 1. 유저 찾기
     const user = userSession.getUser(socket);
@@ -36,12 +36,12 @@ const leaveRoomHandler = ({socket, payload}) => {
       socket.write(leaveRoomResponse);
       // 6. notification 전송
       const leaveRoomNotification = makePacket(config.packetType.LEAVE_ROOM_NOTIFICATION, {
-        userId: user.id,
+        user: user.getUserData(),
       });
 
       room.notification(socket, leaveRoomNotification);
     } else {
-      roomSession.removeRoom(room)
+      roomSession.removeRoom(room);
     }
   } catch (error) {
     console.log(error);

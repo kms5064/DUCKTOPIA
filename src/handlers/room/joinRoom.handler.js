@@ -29,19 +29,18 @@ const joinRoomHandler = ({ socket, payload }) => {
     const joinRoomResponse = makePacket(config.packetType.JOIN_ROOM_RESPONSE, {
       success: true,
       room: room.getRoomData(),
-      message: '방에 참가했습니다!',
     });
 
     socket.write(joinRoomResponse);
 
     // 6. notification 전송
     const joinRoomNotification = makePacket(config.packetType.JOIN_ROOM_NOTIFICATION, {
-      joinUser: user.getFakeUserData(),
+      user: user.getUserData(),
     });
 
     room.notification(user.id, joinRoomNotification); // 브로드캐스트
   } catch (error) {
-    errorHandler(socket,error)
+    errorHandler(socket, error);
   }
 };
 
