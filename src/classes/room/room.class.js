@@ -10,9 +10,9 @@ const RoomStateType = {
 Object.freeze(RoomStateType);
 
 class Room {
-  constructor({ id, name, ownerId, maxUserNum }) {
+  constructor(id, name, ownerId, maxUserNum) {
     this.users = new Set();
-    this.id = id; // 숫자(TODO 나중에 uuid로?)
+    this.id = id; // 숫자
     this.maxUserAmount = maxUserNum;
     this.name = name; // room name
     this.state = RoomStateType.WAIT;
@@ -27,8 +27,8 @@ class Room {
     // 유저 추가
     this.users.add(user);
     // 플레이어 추가
-    this.game.addPlayer(user)
-    user.enterRoom(this.id)
+    this.game.addPlayer(user);
+    user.enterRoom(this.id);
 
     return true;
   }
@@ -44,30 +44,38 @@ class Room {
 
   // 방 데이터 추출 (패킷 전송 용도로 가공)
   getRoomData() {
-    const usersData = this.getUserData()
-    
     return {
       roomId: this.id,
       ownerId: this.ownerId,
       name: this.name,
       maxUserNum: this.maxUserAmount,
       state: this.state,
-      users: usersData,
+      users: this.getUsersData(),
     };
   }
 
+  getUsersData() {
+    const usersData = [];
+
+    for (const user of this.users) {
+      usersData.push(user.getUserData());
+    }
+
+    return usersData;
+  }
+
   getUserData() {
-    const userData = this.game.getGameData()
-    return userData
+    const userData = this.game.getGameData();
+    return userData;
   }
 
   deleteRoom() {
     const leaveRoomResponse = makePacket(config.packetType.LEAVE_ROOM_RESPONSE, {
       success: true,
     });
-    this.broadcast(leaveRoomResponse)
-    this.users = null
-    this.game = null
+    this.broadcast(leaveRoomResponse);
+    this.users = null;
+    this.game = null;
   }
 
   // 방 상태 변경
@@ -95,13 +103,13 @@ class Room {
 
   notification(id, packet) {
     this.users.forEach((user) => {
-      if (user.id !== id) user.socket.write(packet)
+      if (user.id !== id) user.socket.write(packet);
     });
   }
 
   broadcast(packet) {
     this.users.forEach((user) => {
-      user.socket.write(packet)
+      user.socket.write(packet);
     });
   }
 
@@ -114,18 +122,17 @@ class Room {
       const newY = i * 3;
 
       // 유저 위치 업데이트
-      player.playerPositionUpdate(newX, newY)
+      player.playerPositionUpdate(newX, newY);
       // 업데이트된 위치 정보 반환
       positions.push({
         playerId: id,
         x: player.x, // 업데이트된 값
-        y: player.y  // 업데이트된 값
+        y: player.y, // 업데이트된 값
       });
-      i++
+      i++;
     });
-    return positions
+    return positions;
   }
-
 }
 
 export default Room;
