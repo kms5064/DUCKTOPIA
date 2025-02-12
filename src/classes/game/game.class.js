@@ -15,7 +15,7 @@ class Game {
     this.corePosition = config.game.core.position;
     this.lastUpdate = 0;
     this.gameLoop = null;
-    this.highLatency = 120;//플레이어들 가운데 제일 높은 레이턴시 값을 이걸로 하자. 플레이어 작업 하시는 분이 나중에 레이턴시 관리 해주시길.
+    this.highLatency = 120; //플레이어들 가운데 제일 높은 레이턴시 값을 이걸로 하자. 플레이어 작업 하시는 분이 나중에 레이턴시 관리 해주시길.
     this.waveStamp = 60000;
   }
 
@@ -83,57 +83,13 @@ class Game {
     this.monsters.get(monsterId).setPosition(x, y);
   }
 
-  addMonster() {
-    // 생성 제한 처리
-    if (this.monsters.size >= config.game.monster.maxSpawnCount) {
-      return;
-    }
+  addMonster(hostSocket) {
+    // 몬스터 데이터 생성
+    const monsterData = this.createMonsterData();
 
-    // TODO : 한번에 생성할지 프레임단위로 단일 생성할지 성능보고?
-    // maxAmount 만큼 몬스터 생성
-    const maxAmount = config.game.monster.maxSpawnCount - this.monsters.size;
-
-    for (let i = 1; i <= maxAmount; i++) {
-      const monsterId = this.monsterIndex;
-      // Monster Asset 조회
-      const { monster: monsterAsset } = getGameAssets();
-      // 몬스터 데이터 뽑기
-      const codeIdx = Math.floor(Math.random() * monsterAsset.data.length);
-      const data = monsterAsset.data[codeIdx];
-
-      // 좌표 생성
-      let x =
-        Math.random() * (config.game.map.endX - config.game.map.startX) + config.game.map.startX;
-      let y =
-        Math.random() * (config.game.map.endY - config.game.map.startY) + config.game.map.startY;
-
-      // 몬스터 생성
-      const monster = new Monster(
-        monsterId,
-        data.monsterCode,
-        data.name,
-        data.hp,
-        data.attack,
-        data.defence,
-        data.range,
-        data.speed,
-        x,
-        y,
-      );
-
-      this.monsters.set(monsterId, monster);
-      this.monsterIndex++; //Index 증가
-
-      // 페이로드
-      const payload = {
-        monsterId,
-        code: monster.monsterCode,
-        x,
-        y,
-      };
-      const packet = makePacket(PACKET_TYPE.MONSTER_SPAWN_NOTIFICATION, payload);
-      this.broadcast(packet);
-    }
+    // 패킷 생성
+    const packet = makePacket(PACKET_TYPE.S_MONSTER_SPAWN_REQUEST, { monsters: monsterData });
+    hostSocket.write(packet); // Host 에게 전송
   }
 
   getMonsterById(monsterId) {
@@ -164,21 +120,20 @@ class Game {
   broadcast(packet) {
     this.players.forEach((player) => {
       player.getUser().getSocket().write(packet);
-    })
+    });
   }
 
-  gameLoopStart() {
+  gameLoopStart(hostSocket) {
     if (this.gameLoop !== null) {
       return;
     }
     this.gameLoop = setInterval(() => {
+      console.log('루프 인터벌 도냐?');
       this.waveCheck();
-      //this.addMonster();
+      this.addMonster(hostSocket); // Host의 소켓
       this.monsterUpdate();
       //this.userUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
-
-
     }, 1000);
   }
 
@@ -193,7 +148,6 @@ class Game {
       //여기서 웨이브 처리를 해주도록 한다.
     }
   }
-
 
   userUpdate() {
     for (const player of this.players) {
@@ -215,13 +169,16 @@ class Game {
         for (const player of this.players) {
           monster.setTargetPlayer(player);
           if (monster.hasPriorityPlayer()) {
-            console.log("플레이어가 등록됨");
+            console.log('플레이어가 등록됨');
             const monsterDiscoverPayload = {
               monsterId: monster.id,
-              targetId: player.id
-            }
+              targetId: player.id,
+            };
 
-            const packet = makePacket(PACKET_TYPE.S_MONSTER_AWAKE_NOTIFICATION, monsterDiscoverPayload);
+            const packet = makePacket(
+              PACKET_TYPE.S_MONSTER_AWAKE_NOTIFICATION,
+              monsterDiscoverPayload,
+            );
             this.broadcast(packet);
           }
         }
@@ -235,13 +192,12 @@ class Game {
       if (!monster.hasPriorityPlayer()) {
         continue;
       } else {
-
         const monsterMovePayload = {
           monsterId: monster.getId(),
           direct: monster.getDirectByPlayer(),
           position: monster.getPosition(),
           speed: monster.getSpeed(),
-          timestamp: deltaTime
+          timestamp: deltaTime,
         };
         //위치로 이동시키는 개념이라 전체 브로드캐스팅을 해도 문제는 없어 보임.
         const packet = makePacket(PACKET_TYPE.monsterMove, monsterMovePayload);
