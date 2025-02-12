@@ -80,7 +80,7 @@ class Game {
   }
 
   updateMonsterPosition(monsterId, x, y) {
-    this.monsters.get(monsterId).setPositionFromCreating(x, y);
+    this.monsters.get(monsterId).setPosition(x, y);
   }
 
   addMonster() {
