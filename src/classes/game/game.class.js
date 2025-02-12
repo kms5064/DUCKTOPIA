@@ -30,6 +30,10 @@ class Game {
     this.players.set(user.id, player);
   }
 
+  getPlayerBySocket(socket) {
+    const player = this.players.find((player) => player.user.socket === socket);
+    return player;
+  }
   removePlayer(userId) {
     this.players.delete(userId);
   }
@@ -138,7 +142,7 @@ class Game {
     }
   }
 
-  getMonster(monsterId) {
+  getMonsterById(monsterId) {
     return this.monsters.get(monsterId);
   }
 
