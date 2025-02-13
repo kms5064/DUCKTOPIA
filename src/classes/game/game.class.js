@@ -101,7 +101,7 @@ class Game {
   }
 
   updateMonsterPosition(monsterId, x, y) {
-    this.monsters.get(monsterId).setPositionFromCreating(x, y);
+    this.monsters.get(monsterId).setPosition(x, y);
   }
 
   addMonster() {
@@ -122,7 +122,7 @@ class Game {
       const { monster: monsterAsset } = getGameAssets();
       // 몬스터 데이터 뽑기
       const codeIdx = Math.floor(Math.random() * monsterAsset.data.length);
-      const data = monsterAsset.data[0];
+      const data = monsterAsset.data[codeIdx];
 
       // 좌표 생성
       let x =
@@ -155,8 +155,61 @@ class Game {
         y,
       };
       const packet = makePacket(PACKET_TYPE.MONSTER_SPAWN_NOTIFICATION, payload);
-      this.broadcastAllPlayer(packet);
+      this.broadcast(packet);
     }
+  }
+
+  // 웨이브 몬스터 생성
+  addWaveMonster() {
+    const monstersData = [];
+    for (let i = 1; i <= config.game.monster.waveMaxMonsterCount; i++) {
+      const monsterId = this.monsterIndex;
+      // Monster Asset 조회
+      const { monster: monsterAsset } = getGameAssets();
+      // 몬스터 데이터 뽑기
+      const codeIdx =
+        Math.floor(
+          Math.random() *
+            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
+        ) + config.game.monster.waveMonsterMinCode;
+      const data = monsterAsset.data[0];
+
+      // 몬스터 생성
+      const monster = new Monster(
+        monsterId,
+        data.monsterCode,
+        data.name,
+        data.hp,
+        data.attack,
+        data.defence,
+        data.range,
+        data.speed,
+        0,
+        0,
+        true,
+      );
+
+      this.monsters.set(monsterId, monster);
+      this.waveMonsters.set(monsterId, monster);
+      this.monsterIndex++; //Index 증가
+
+      // 몬스터 id와 code 저장
+      monstersData.push({
+        monsterId,
+        monsterCode: monster.monsterCode,
+      });
+    }
+
+    // 패킷 전송
+    const monsterSpawnRequestPacket = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, {
+      monsters: monstersData,
+    });
+
+    const owner = this.getPlayerById(this.ownerId);
+
+    owner.socket.write(monsterSpawnRequestPacket);
+
+    this.setWaveState(WaveState.INWAVE);
   }
 
   // 웨이브 몬스터 생성
@@ -244,6 +297,12 @@ class Game {
     });
   }
 
+  broadcast(packet) {
+    this.players.forEach((player) => {
+      player.getUser().getSocket().write(packet);
+    })
+  }
+
   gameLoopStart() {
     if (this.gameLoop !== null) {
       return;
@@ -297,18 +356,14 @@ class Game {
       if (!monster.hasPriorityPlayer()) {
         for (const player of this.players) {
           monster.setTargetPlayer(player);
-
           if (monster.hasPriorityPlayer()) {
-            console.log('플레이어가 등록됨');
+            console.log("플레이어가 등록됨");
             const monsterDiscoverPayload = {
               monsterId: monster.id,
-              targetId: player.id,
-            };
+              targetId: player.id
+            }
 
-            const packet = makePacket(
-              PACKET_TYPE.S_MONSTER_AWAKE_NOTIFICATION,
-              monsterDiscoverPayload,
-            );
+            const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION,monsterDiscoverPayload);
             this.broadcastAllPlayer(packet);
           }
         }
@@ -316,13 +371,12 @@ class Game {
     }
   }
 
-  //
+  //플레이어가 등록된 몬스터들만 위치 패킷을 전송하는 게 좋겠다.
   monsterMove(deltaTime) {
     for (const [key, monster] of this.monsters) {
       if (!monster.hasPriorityPlayer()) {
         continue;
       } else {
-        monster.moveByLatency(deltaTime); //S2CMonsterMoveNotification을 보낸다
 
         const monsterMovePayload = {
           monsterId: monster.getId(),
@@ -331,18 +385,9 @@ class Game {
           speed: monster.getSpeed(),
           timestamp: deltaTime,
         };
+        //위치로 이동시키는 개념이라 전체 브로드캐스팅을 해도 문제는 없어 보임.
         const packet = makePacket(PACKET_TYPE.monsterMove, monsterMovePayload);
-        broadcast(monster.getPriorityPlayer(), packet);
-
-        //아래쪽은 공격 체크용
-        // if(monster.isAttack())
-        // {
-        //   const monsterAttackPayload = {
-        //     monsterId : monster.id,
-        //   }
-
-        //   this.game.broadcast(packet);
-        // }
+        this.broadcast(packet);
       }
     }
   }
@@ -366,19 +411,6 @@ class Game {
   gameEnd() {
     clearInterval(this.gameLoop);
     this.gameLoop = null;
-  }
-
-  broadcastAllPlayer(packet, socketArray = []) {
-    if (socketArray.length === 0) {
-      for (const player of this.players) {
-        player.socket.write(packet);
-      }
-    } else {
-      const exceptArray = this.players.filter((data) => !socketArray.includes(data));
-      for (const player of exceptArray) {
-        player.socket.write(packet);
-      }
-    }
   }
 }
 

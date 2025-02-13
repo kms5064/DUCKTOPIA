@@ -3,7 +3,7 @@ export const VERSION_LENGTH_BYTE = 1;
 export const PAYLOAD_LENGTH_BYTE = 4;
 
 export const PACKET_TYPE = {
-  // 에러 응답
+  // 에러 응답 - 안씀 (훈제오리가 실수로 안지움)
   ERROR_RESPONSE: [9999, 'errorResponse'],
 
   // 유저 회원가입,로그인
@@ -44,7 +44,6 @@ export const PACKET_TYPE = {
   C_PLAYER_USE_ITEM_REQUEST: [4009, 'playerUseItemRequest'],
   S_PLAYER_EAT_FOOD_RESPONSE: [4010, 'playerEatFoodResponse'],
   S_PLAYER_EQUIP_WEAPON_RESPONSE: [4011, 'playerEquipWeaponResponse'],
-  
 
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
@@ -58,11 +57,9 @@ export const PACKET_TYPE = {
   S_MONSTER_ATTACK_NOTIFICATION: [5009, 'monsterAttackNotification'],
   S_MONSTER_HP_UPDATE_NOTIFICATION: [5010, 'monsterHpUpdateNotification'],
 
-
   // 코어
   S_CORE_HP_UPDATE_NOTIFICATION: [6001, 'coreHpUpdateNotification'],
   S_GAME_OVER_NOTIFICATION: [6002, 'gameOverNotification'],
-
 
   // 에러
   S_ERROR_NOTIFICATION: [7001, 'errorNotification'],

@@ -25,7 +25,7 @@ import {
   PLAYER_SPEED,
   VALID_DISTANCE,
 } from './constants/player.js';
-import { MAX_DROP_ITEM_COUNT, MAX_SPAWN_COUNT } from './constants/monster.js';
+import { MAX_DROP_ITEM_COUNT, MAX_SPAWN_COUNT, NORMAL_MONSTER_MAX_CODE, WAVE_MAX_MONSTER_COUNT, WAVE_MONSTER_MAX_CODE, WAVE_MONSTER_MIN_CODE } from './constants/monster.js';
 import { MAX_VALUE_X, MAX_VALUE_Y, MIN_VALUE_X, MIN_VALUE_Y } from './constants/map.js';
 import { CharacterType } from './constants/character.js';
 import { DAY_TIME, NIGHT_TIME, DayPhase } from './constants/game.js';
@@ -80,7 +80,7 @@ export const config = {
     monster: {
       maxItemDropCount: MAX_DROP_ITEM_COUNT,
       maxSpawnCount: MAX_SPAWN_COUNT,
-      normalMonsterMaxCode: NORMAL_MONSTER_MIN_CODE,
+      normalMonsterMaxCode: NORMAL_MONSTER_MAX_CODE,
       waveMaxMonsterCount: WAVE_MAX_MONSTER_COUNT,
       waveMonsterMinCode: WAVE_MONSTER_MIN_CODE,
       waveMonsterMaxCode: WAVE_MONSTER_MAX_CODE,
