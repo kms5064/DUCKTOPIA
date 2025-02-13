@@ -17,7 +17,6 @@ class Game {
     this.lastUpdate = 0;
     this.gameLoop = null;
     this.highLatency = 120; //플레이어들 가운데 제일 높은 레이턴시 값을 이걸로 하자. 플레이어 작업 하시는 분이 나중에 레이턴시 관리 해주시길.
-    this.waveStamp = 60000;
     this.ownerId = ownerId;
 
     // 웨이브 시스템
@@ -156,7 +155,7 @@ class Game {
     const monsterData = this.createMonsterData();
 
     // 패킷 생성
-    const packet = makePacket(PACKET_TYPE.S_MONSTER_SPAWN_REQUEST, { monsters: monsterData });
+    const packet = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, { monsters: monsterData });
 
     const owner = this.getPlayerById(this.ownerId);
     owner.socket.write(packet); // Host 에게 전송
@@ -236,7 +235,10 @@ class Game {
           timestamp: deltaTime,
         };
         //위치로 이동시키는 개념이라 전체 브로드캐스팅을 해도 문제는 없어 보임.
-        const packet = makePacket(PACKET_TYPE.monsterMove, monsterMovePayload);
+        const packet = makePacket(
+          config.packetType.S_MONSTER_MOVE_NOTIFICATION,
+          monsterMovePayload,
+        );
         this.broadcast(packet);
       }
     }

@@ -2,6 +2,7 @@ import { userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
 import CustomError from '../../utils/error/customError.js';
+import { config } from '../../config/config.js';
 
 const spawnMonsterHandler = ({ socket, payload }) => {
   // 유저 객체 조회
@@ -39,7 +40,7 @@ const spawnMonsterHandler = ({ socket, payload }) => {
   });
 
   // TODO : NOTI용 패킷 추가 해야함.
-  const packet = makePacket(PACKET_TYPE.S_MONSTER_SPAWN_NOTIFICATION, payload);
+  const packet = makePacket(config.packetType.S_MONSTER_SPAWN_NOTIFICATION, payload);
   game.notification(socket, packet);
 };
 
