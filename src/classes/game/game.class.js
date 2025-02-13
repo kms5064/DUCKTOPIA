@@ -202,11 +202,12 @@ class Game {
   }
 
   monsterUpdate() {
+    //몬스터가 플레이어의 거리를 구해서 발견한다.
     this.monsterDisCovered();
-    //
+    //몬스터가 플레이어를 가지고 있을 경우 움직인다.
     this.monsterMove(this.highLatency);
     //몬스터가 플레이어를 잃는 과정
-    this.monsterLostPlayerCheck();
+    //this.monsterLostPlayerCheck();
   }
 
   monsterDisCovered() {

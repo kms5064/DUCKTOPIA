@@ -37,10 +37,6 @@ const monsterMoveNotificationHandler = async (socket, payload) => {
 
     //이런 식으로 게임에서 notification을 보내보도록 하자.
     game.broadcast(packet);
-
-
-
-
 }
 
 export default monsterMoveNotificationHandler;
