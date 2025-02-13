@@ -211,7 +211,7 @@ class Game {
             };
 
             const packet = makePacket(
-              PACKET_TYPE.S_MONSTER_AWAKE_NOTIFICATION,
+              config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
               monsterDiscoverPayload,
             );
             this.broadcast(packet);
