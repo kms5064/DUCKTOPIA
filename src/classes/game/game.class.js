@@ -48,7 +48,7 @@ class Game {
       return;
     }
     this.gameLoop = setInterval(() => {
-      this.addMonster();
+      //this.addMonster();
       this.phaseCheck();
       //this.addMonster();
       this.monsterUpdate();
@@ -122,7 +122,8 @@ class Game {
       const { monster: monsterAsset } = getGameAssets();
 
       // 몬스터 데이터 뽑기
-      const codeIdx = Math.floor(Math.random() * config.game.monster.normalMonsterMaxCode);
+      const codeIdx = 0;
+      //Math.floor(Math.random() * config.game.monster.normalMonsterMaxCode);
       const data = monsterAsset.data[codeIdx];
 
       // 몬스터 생성
@@ -162,7 +163,7 @@ class Game {
     const packet = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, { monsters: monsterData });
 
     const owner = this.getPlayerById(this.ownerId);
-    owner.socket.write(packet); // Host 에게 전송
+    owner.user.socket.write(packet); // Host 에게 전송
   }
 
   getMonsterById(monsterId) {
@@ -210,7 +211,7 @@ class Game {
             console.log('플레이어가 등록됨');
             const monsterDiscoverPayload = {
               monsterId: monster.id,
-              targetId: player.id,
+              targetId: playerId,
             };
 
             const packet = makePacket(
@@ -352,7 +353,7 @@ class Game {
     // 현재 phase 에 따라 기준 다르게 받기
     if (this.dayCounter >= config.game.phaseCount[this.dayPhase]) {
       if (this.dayPhase === DayPhase.DAY) {
-        this.addWaveMonster();
+        //this.addWaveMonster();
       }
 
       this.changePhase();
