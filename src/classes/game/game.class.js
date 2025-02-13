@@ -41,25 +41,9 @@ class Game {
     };
   }
 
-  //다른 사람에게 전송(본인 제외)
-  notification(socket, packet) {
-    this.players.forEach((player) => {
-      if (player.getUser().getSocket() !== socket) {
-        player.getUser().getSocket().write(packet);
-      }
-    });
-  }
-
   /********************
    * GAME
    */
-
-  //다른 사람에게 전송(본인 포함)
-  broadcast(packet) {
-    this.players.forEach((player) => {
-      player.getUser().getSocket().write(packet);
-    });
-  }
 
   gameLoopStart() {
     if (this.gameLoop !== null) {
@@ -77,6 +61,22 @@ class Game {
   gameEnd() {
     clearInterval(this.gameLoop);
     this.gameLoop = null;
+  }
+
+  //다른 사람에게 전송(본인 제외)
+  notification(socket, packet) {
+    this.players.forEach((player) => {
+      if (player.getUser().getSocket() !== socket) {
+        player.getUser().getSocket().write(packet);
+      }
+    });
+  }
+
+  //다른 사람에게 전송(본인 포함)
+  broadcast(packet) {
+    this.players.forEach((player) => {
+      player.getUser().getSocket().write(packet);
+    });
   }
 
   /********************
