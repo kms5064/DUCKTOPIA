@@ -4,19 +4,36 @@ import Monster from './monster.class.js';
 import Player from './player.class.js';
 import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
+import { DayPhase, WaveState } from '../../config/constants/game.js';
 
 class Game {
-  constructor() {
+  constructor(ownerId) {
     this.players = new Map();
     this.monsterIndex = 1;
     this.monsters = new Map();
-    this.map = []; //0과 1로 된 2차원배열?
+    this.map = []; // 0과 1로 된 2차원배열?
     this.coreHp = config.game.core.maxHP;
     this.corePosition = config.game.core.position;
     this.lastUpdate = 0;
     this.gameLoop = null;
     this.highLatency = 120; //플레이어들 가운데 제일 높은 레이턴시 값을 이걸로 하자. 플레이어 작업 하시는 분이 나중에 레이턴시 관리 해주시길.
     this.waveStamp = 60000;
+    this.ownerId = ownerId;
+
+    // 웨이브 시스템
+    this.dayPhase = DayPhase.DAY;
+    this.waveState = WaveState.NONE;
+    this.dayCounter = 0;
+    this.waveMonsters = new Map();
+  }
+
+  changePhase() {
+    if (this.dayPhase === DayPhase.DAY) this.dayPhase = DayPhase.NIGHT;
+    else this.dayPhase = DayPhase.DAY;
+  }
+
+  setWaveState(state) {
+    this.waveState = state;
   }
 
   addPlayer(user) {
@@ -90,6 +107,60 @@ class Game {
     // 패킷 생성
     const packet = makePacket(PACKET_TYPE.S_MONSTER_SPAWN_REQUEST, { monsters: monsterData });
     hostSocket.write(packet); // Host 에게 전송
+    console.log('몬스터 생성');
+  }
+
+  // 웨이브 몬스터 생성
+  addWaveMonster() {
+    const monstersData = [];
+    for (let i = 1; i <= config.game.monster.waveMaxMonsterCount; i++) {
+      const monsterId = this.monsterIndex;
+      // Monster Asset 조회
+      const { monster: monsterAsset } = getGameAssets();
+      // 몬스터 데이터 뽑기
+      const codeIdx =
+        Math.floor(
+          Math.random() *
+            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
+        ) + config.game.monster.waveMonsterMinCode;
+      const data = monsterAsset.data[0];
+
+      // 몬스터 생성
+      const monster = new Monster(
+        monsterId,
+        data.monsterCode,
+        data.name,
+        data.hp,
+        data.attack,
+        data.defence,
+        data.range,
+        data.speed,
+        0,
+        0,
+        true,
+      );
+
+      this.monsters.set(monsterId, monster);
+      this.waveMonsters.set(monsterId, monster);
+      this.monsterIndex++; //Index 증가
+
+      // 몬스터 id와 code 저장
+      monstersData.push({
+        monsterId,
+        monsterCode: monster.monsterCode,
+      });
+    }
+
+    // 패킷 전송
+    const monsterSpawnRequestPacket = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, {
+      monsters: monstersData,
+    });
+
+    const owner = this.getPlayerById(this.ownerId);
+
+    owner.socket.write(monsterSpawnRequestPacket);
+
+    this.setWaveState(WaveState.INWAVE);
   }
 
   getMonsterById(monsterId) {
@@ -102,10 +173,17 @@ class Game {
 
   removeMonster(monsterId) {
     this.monsters.delete(monsterId);
+
+    // 웨이브 몬스터 삭제
+    if (this.waveMonsters.has(monsterId)) {
+      this.waveMonsters.delete(monsterId);
+      if (this.waveMonsters.size === 0) this.setWaveState(WaveState.NONE);
+    }
   }
 
   removeAllMonster() {
     this.monsters.clear();
+    this.waveMonsters.clear();
   }
 
   //다른 사람에게 전송(본인 제외)
@@ -128,24 +206,33 @@ class Game {
       return;
     }
     this.gameLoop = setInterval(() => {
-      console.log('루프 인터벌 도냐?');
       this.waveCheck();
       this.addMonster(hostSocket); // Host의 소켓
+      this.phaseCheck();
       this.monsterUpdate();
       //this.userUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
     }, 1000);
   }
 
-  waveCheck() {
+  phaseCheck() {
+    // 데이 카운터 감소
     const now = Date.now();
-    const delta = now - this.lastUpdate;
-    this.waveStamp -= delta;
+    const deltaTime = now - this.lastUpdate;
+    this.dayCounter += deltaTime;
     this.lastUpdate = now;
 
-    if (this.waveStamp <= 0) {
-      this.waveStamp = 60000;
-      //여기서 웨이브 처리를 해주도록 한다.
+    // 현재 phase 에 따라 기준 다르게 받기
+    if (this.dayCounter >= config.game.phaseCount[this.dayPhase]) {
+      isOver = true;
+
+      if (this.dayPhase === DayPhase.DAY) {
+        this.addWaveMonster();
+      }
+
+      this.changePhase();
+
+      this.dayCounter = 0;
     }
   }
 
