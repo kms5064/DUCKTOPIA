@@ -9,7 +9,7 @@ const waveStartHandler = ({ socket, payload }) => {
   const { monsters } = payload;
 
   // 1. 유저 찾기
-  const user = userSession.getUser(socket);
+  const user = userSession.getUser(socket.id);
 
   if (!user) {
     new CustomError('유저가 존재하지 않습니다.');
