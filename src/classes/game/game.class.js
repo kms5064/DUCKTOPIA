@@ -4,11 +4,6 @@ import Monster from './monster.class.js';
 import Player from './player.class.js';
 import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
-import {
-  WAVE_MAX_MONSTER_COUNT,
-  WAVE_MONSTER_MAX_CODE,
-  WAVE_MONSTER_MIN_CODE,
-} from '../../config/constants/monster.js';
 import { DayPhase, WaveState } from '../../config/constants/game.js';
 
 class Game {
@@ -212,59 +207,6 @@ class Game {
     this.setWaveState(WaveState.INWAVE);
   }
 
-  // 웨이브 몬스터 생성
-  addWaveMonster() {
-    const monstersData = [];
-    for (let i = 1; i <= config.game.monster.waveMaxMonsterCount; i++) {
-      const monsterId = this.monsterIndex;
-      // Monster Asset 조회
-      const { monster: monsterAsset } = getGameAssets();
-      // 몬스터 데이터 뽑기
-      const codeIdx =
-        Math.floor(
-          Math.random() *
-            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
-        ) + config.game.monster.waveMonsterMinCode;
-      const data = monsterAsset.data[codeIdx];
-
-      // 몬스터 생성
-      const monster = new Monster(
-        monsterId,
-        data.monsterCode,
-        data.name,
-        data.hp,
-        data.attack,
-        data.defence,
-        data.range,
-        data.speed,
-        0,
-        0,
-        true,
-      );
-
-      this.monsters.set(monsterId, monster);
-      this.waveMonsters.set(monsterId, monster);
-      this.monsterIndex++; //Index 증가
-
-      // 몬스터 id와 code 저장
-      monstersData.push({
-        monsterId,
-        monsterCode: monster.monsterCode,
-      });
-    }
-
-    // 패킷 전송
-    const monsterSpawnRequestPacket = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, {
-      monsters: monstersData,
-    });
-
-    const owner = this.getPlayerById(this.ownerId);
-
-    owner.socket.write(monsterSpawnRequestPacket);
-
-    this.setWaveState(WaveState.INWAVE);
-  }
-
   getMonsterById(monsterId) {
     return this.monsters.get(monsterId);
   }
@@ -300,7 +242,7 @@ class Game {
   broadcast(packet) {
     this.players.forEach((player) => {
       player.getUser().getSocket().write(packet);
-    })
+    });
   }
 
   gameLoopStart() {
@@ -357,13 +299,16 @@ class Game {
         for (const player of this.players) {
           monster.setTargetPlayer(player);
           if (monster.hasPriorityPlayer()) {
-            console.log("플레이어가 등록됨");
+            console.log('플레이어가 등록됨');
             const monsterDiscoverPayload = {
               monsterId: monster.id,
-              targetId: player.id
-            }
+              targetId: player.id,
+            };
 
-            const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION,monsterDiscoverPayload);
+            const packet = makePacket(
+              config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
+              monsterDiscoverPayload,
+            );
             this.broadcastAllPlayer(packet);
           }
         }
@@ -377,7 +322,6 @@ class Game {
       if (!monster.hasPriorityPlayer()) {
         continue;
       } else {
-
         const monsterMovePayload = {
           monsterId: monster.getId(),
           direct: monster.getDirectByPlayer(),
