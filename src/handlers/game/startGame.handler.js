@@ -32,6 +32,8 @@ const gameStartHandler = ({ socket, payload }) => {
   const GameStartNotification = makePacket(config.packetType.START_GAME_NOTIFICATION, {
     gameState: { phaseType: 0, nextPhaseAt: 100000 }, //이삭님 코드에 이렇게돼있음!
     playerPositions: room.getUsersPositionData(),
+    monsters: monsters,
+    objects: objects,
   });
 
   room.startGame();

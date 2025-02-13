@@ -232,8 +232,7 @@ message C2SMonsterSpawnResponse { // 몬스터 좌표를 찍어서 서버에 전
   repeated MonsterPositionData monsters = 1;
 }
 
-message
-S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
+message S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
   repeated MonsterPositionData monsters = 1;
 }
 
@@ -291,11 +290,6 @@ message S2CErrorNotification {
   int64 timestamp = 2;
 }
 
-// 에러 응답 - 안씀 (훈제오리가 실수로 안지움)
-message S2CErrorResponse {
-  string errorMessage = 1;
-  int64 timestamp = 2;
-}
 
 message GamePacket {
   oneof payload {
