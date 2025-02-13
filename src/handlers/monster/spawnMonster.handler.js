@@ -1,6 +1,7 @@
 import { userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
+import CustomError from '../../utils/error/customError.js';
 
 const spawnMonsterHandler = ({ socket, payload }) => {
   // 유저 객체 조회
@@ -28,10 +29,16 @@ const spawnMonsterHandler = ({ socket, payload }) => {
   }
 
   payload.forEach((monster) => {
+    if (!game.checkSpawnArea(monster.monsterCode, monster.x, monster.y)) {
+      throw new CustomError(
+        `Monster ID: ${monster.monsterId} Monster Code : ${monster.monsterCode} 의 생성 구역이 적합하지 않습니다. (${monster.x},${monster.y})`,
+      );
+    }
     // 몬스터 위치 적용
-    game.getMonsterById(monster.id).setPosition(monster.x, monster.y);
+    game.getMonsterById(monster.monsterId).setPosition(monster.x, monster.y);
   });
 
+  // TODO : NOTI용 패킷 추가 해야함.
   const packet = makePacket(PACKET_TYPE.S_MONSTER_SPAWN_NOTIFICATION, payload);
   game.notification(socket, packet);
 };
