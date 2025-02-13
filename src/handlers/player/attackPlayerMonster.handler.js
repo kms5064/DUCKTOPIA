@@ -7,7 +7,7 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
   const { playerDirX, playerDirY, monsterId } = payload;
 
   // 유저 객체 조회
-  const user = userSession.getUser(socket);
+  const user = userSession.getUser(socket.id);
   if (!user) {
     throw new CustomError('유저 정보가 없습니다.');
   }
