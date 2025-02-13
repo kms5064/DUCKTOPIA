@@ -39,3 +39,5 @@ const waveStartHandler = ({ socket, payload }) => {
 
   game.notification(socket, waveStartNotification);
 };
+
+export default waveStartHandler;
