@@ -6,6 +6,7 @@ import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
 import { DayPhase, WaveState } from '../../config/constants/game.js';
 
+
 class Game {
   constructor(ownerId) {
     this.players = new Map();
@@ -232,7 +233,7 @@ class Game {
 
   //다른 사람에게 전송(본인 제외)
   notification(socket, packet) {
-    this.players.forEach((player) => {
+    Object.values(this.players).forEach((player) => {
       if (player.getUser().getSocket() !== socket) {
         player.getUser().getSocket().write(packet);
       }
@@ -240,7 +241,7 @@ class Game {
   }
 
   broadcast(packet) {
-    this.players.forEach((player) => {
+    Object.values(this.players).forEach((player) => {
       player.getUser().getSocket().write(packet);
     });
   }
@@ -251,7 +252,7 @@ class Game {
     }
     this.gameLoop = setInterval(() => {
       this.addMonster();
-      this.phaseCheck();
+      //this.phaseCheck();
       //this.addMonster();
       this.monsterUpdate();
       //this.userUpdate();
@@ -268,7 +269,7 @@ class Game {
 
     // 현재 phase 에 따라 기준 다르게 받기
     if (this.dayCounter >= config.game.phaseCount[this.dayPhase]) {
-      isOver = true;
+      //isOver = true;
 
       if (this.dayPhase === DayPhase.DAY) {
         this.addWaveMonster();
@@ -295,7 +296,7 @@ class Game {
     //몬스터가 플레이어의 거리를 구해서 발견한다.
     this.monsterDisCovered();
     //몬스터가 플레이어를 가지고 있을 경우 움직인다.
-    //this.monsterMove(this.highLatency);
+    //this.monsterMove();
     //몬스터가 플레이어를 잃는 과정
     //this.monsterLostPlayerCheck();
   }
@@ -303,7 +304,7 @@ class Game {
   monsterDisCovered() {
     for (const [key, monster] of this.monsters) {
       if (!monster.hasPriorityPlayer()) {
-        for (const player of this.players) {
+        for (const [key, player] of this.players) {
           monster.setTargetPlayer(player);
           if (monster.hasPriorityPlayer()) {
             console.log('플레이어가 등록됨');
@@ -316,16 +317,30 @@ class Game {
               config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
               monsterDiscoverPayload,
             );
-            this.broadcastAllPlayer(packet);
+            this.broadcast(packet);
           }
         }
+      }
+      else {
+        console.log("플레이어를 가지고 있음");
       }
     }
   }
 
   //플레이어가 등록된 몬스터들만 위치 패킷을 전송하는 게 좋겠다.
-  monsterMove(deltaTime) {
+  //repeated를 이용해 몬스터의 데이터를 전체 다 보내보도록 한다.
+  monsterMove() {
+    //const monsterList = [];
     for (const [key, monster] of this.monsters) {
+      // const position = monster.getPosition();
+      // const monsterMoveInfo = {
+      //   monsterId: monster.getId(),
+      //   x: position.x,
+      //   y: position.y
+      // }
+      //monsterList.push(monsterMoveInfo);
+
+
       if (!monster.hasPriorityPlayer()) {
         continue;
       } else {
@@ -336,11 +351,25 @@ class Game {
           speed: monster.getSpeed(),
           timestamp: deltaTime,
         };
+
+
+
+
         //위치로 이동시키는 개념이라 전체 브로드캐스팅을 해도 문제는 없어 보임.
         const packet = makePacket(PACKET_TYPE.S_MONSTER_MOVE_NOTIFICATION, monsterMovePayload);
         this.broadcast(packet);
       }
     }
+
+    const monsterPayload = {
+      monsterList
+    }
+
+    //const packet = makePacket(config.packetType.monster)
+
+
+    //만일 나중에 몬스터 전체의 정보를 보내는 방식을 쓸 경우 이렇게 해보자.
+
   }
 
   monsterLostPlayerCheck() {

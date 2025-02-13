@@ -8,6 +8,7 @@ import CustomError from '../../utils/error/customError.js';
 const monsterMoveNotificationHandler = async (socket, payload) => {
 
     const { monsterId, targetId, x, y } = payload;
+    console.log("몬스터 이동");
 
     //플레이어가 어떤 게임에 속해 있는지 찾기
     const user = userSession.getUser(socket);
@@ -24,6 +25,7 @@ const monsterMoveNotificationHandler = async (socket, payload) => {
     //플레이어를 기억하는 몬스터만 움직일지 말지 고려도 해볼 수 있음.
     monster.setPosition(x, y);
 
+    //몬스터의 이동 정보를 한 번에 여러 개를 동시에 보내주도록 해볼까.
     const monsterPos = monster.getPosition();
 
     const monsterMoverPayload = {

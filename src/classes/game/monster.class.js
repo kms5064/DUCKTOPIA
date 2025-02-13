@@ -187,7 +187,9 @@ class Monster extends MovableObjectBase {
   //플레이어를 세팅할 때의 조건을 확인한다.
   setTargetPlayer(player) {
     if (this.priorityPlayer === null) {
+      //사정거리 비교 
       const distance = Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
+      console.log(`distance : ${distance} : ${this.awakeRange}`);
       if (distance <= this.awakeRange) {
         this.distanceBetweenPlayer = distance;
         this.priorityPlayer = player;
