@@ -15,7 +15,7 @@ class Game {
     this.corePosition = config.game.core.position;
     this.lastUpdate = 0;
     this.gameLoop = null;
-    this.highLatency = 120;
+    this.highLatency = 120;//플레이어들 가운데 제일 높은 레이턴시 값을 이걸로 하자. 플레이어 작업 하시는 분이 나중에 레이턴시 관리 해주시길.
     this.waveStamp = 60000;
   }
 
@@ -88,7 +88,6 @@ class Game {
     if (this.monsters.size >= config.game.monster.maxSpawnCount) {
       return;
     }
-    console.log("몬스터 생성")
 
     // TODO : 한번에 생성할지 프레임단위로 단일 생성할지 성능보고?
     // maxAmount 만큼 몬스터 생성
@@ -100,7 +99,7 @@ class Game {
       const { monster: monsterAsset } = getGameAssets();
       // 몬스터 데이터 뽑기
       const codeIdx = Math.floor(Math.random() * monsterAsset.data.length);
-      const data = monsterAsset.data[0];
+      const data = monsterAsset.data[codeIdx];
 
       // 좌표 생성
       let x =
@@ -133,7 +132,7 @@ class Game {
         y,
       };
       const packet = makePacket(PACKET_TYPE.MONSTER_SPAWN_NOTIFICATION, payload);
-      this.broadcastAllPlayer(packet);
+      this.broadcast(packet);
     }
   }
 
@@ -162,6 +161,12 @@ class Game {
     });
   }
 
+  broadcast(packet) {
+    this.players.forEach((player) => {
+      player.getUser().getSocket().write(packet);
+    })
+  }
+
   gameLoopStart() {
     if (this.gameLoop !== null) {
       return;
@@ -177,25 +182,21 @@ class Game {
     }, 1000);
   }
 
-  waveCheck()
-  {
+  waveCheck() {
     const now = Date.now();
     const delta = now - this.lastUpdate;
     this.waveStamp -= delta;
     this.lastUpdate = now;
 
-    if(this.waveStamp <= 0)
-    {
+    if (this.waveStamp <= 0) {
       this.waveStamp = 60000;
       //여기서 웨이브 처리를 해주도록 한다.
     }
   }
 
-  
-  userUpdate()
-  {
-    for(const player of this.players)
-    {
+
+  userUpdate() {
+    for (const player of this.players) {
       //console.log(player.x, player.y);
     }
   }
@@ -213,31 +214,27 @@ class Game {
       if (!monster.hasPriorityPlayer()) {
         for (const player of this.players) {
           monster.setTargetPlayer(player);
-          if(monster.hasPriorityPlayer())
-          {
+          if (monster.hasPriorityPlayer()) {
             console.log("플레이어가 등록됨");
             const monsterDiscoverPayload = {
-              monsterId : monster.id,
-              targetId : player.id
+              monsterId: monster.id,
+              targetId: player.id
             }
 
-            const packet = makePacket(PACKET_TYPE.S_MONSTER_AWAKE_NOTIFICATION,monsterDiscoverPayload);
-            this.broadcastAllPlayer(packet);
+            const packet = makePacket(PACKET_TYPE.S_MONSTER_AWAKE_NOTIFICATION, monsterDiscoverPayload);
+            this.broadcast(packet);
           }
         }
       }
     }
   }
 
-  //
+  //플레이어가 등록된 몬스터들만 위치 패킷을 전송하는 게 좋겠다.
   monsterMove(deltaTime) {
     for (const [key, monster] of this.monsters) {
       if (!monster.hasPriorityPlayer()) {
         continue;
       } else {
-        monster.moveByLatency(deltaTime); //S2CMonsterMoveNotification을 보낸다
-
-
 
         const monsterMovePayload = {
           monsterId: monster.getId(),
@@ -246,19 +243,9 @@ class Game {
           speed: monster.getSpeed(),
           timestamp: deltaTime
         };
+        //위치로 이동시키는 개념이라 전체 브로드캐스팅을 해도 문제는 없어 보임.
         const packet = makePacket(PACKET_TYPE.monsterMove, monsterMovePayload);
-        broadcast(monster.getPriorityPlayer(), packet);
-
-        //아래쪽은 공격 체크용
-        // if(monster.isAttack())
-        // {
-        //   const monsterAttackPayload = {
-        //     monsterId : monster.id,
-        //   }
-
-
-        //   this.game.broadcast(packet);
-        // }
+        this.broadcast(packet);
       }
     }
   }
@@ -282,28 +269,6 @@ class Game {
   gameEnd() {
     clearInterval(this.gameLoop);
     this.gameLoop = null;
-  }
-
-  broadcastAllPlayer(packet, socketArray = [])
-  {
-    if(socketArray.length === 0)
-    {
-      for(const player of this.players)
-        {
-          
-          player.socket.write(packet);
-        }
-    }
-    else
-    {
-      const exceptArray = this.players.filter((data)=>!socketArray.includes(data));
-      for(const player of exceptArray)
-      {
-        player.socket.write(packet);
-      }
-
-    }
-    
   }
 }
 

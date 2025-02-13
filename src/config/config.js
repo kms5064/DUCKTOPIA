@@ -47,12 +47,12 @@ export const config = {
       port: DB_PORT,
     },
   },
-  game : {
+  game: {
     core: {
       maxHP: CORE_MAX_HP,
       position: CORE_POSITION,
     },
-    player:{
+    player: {
       atkPerLv: ATK_PER_LV,
       playerMaxHunger: PLAYER_MAX_HUNGER,
       playerDefaultRange: PLAYER_DEFAULT_RANGE,
@@ -65,7 +65,7 @@ export const config = {
       ...CharacterType
     }
     ,
-    monster:{
+    monster: {
       maxItemDropCount: MAX_DROP_ITEM_COUNT,
       maxSpawnCount: MAX_SPAWN_COUNT,
     },
