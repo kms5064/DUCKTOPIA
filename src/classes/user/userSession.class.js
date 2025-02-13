@@ -6,7 +6,7 @@ class UserSession {
     // key = email, value = socket
     this.logins = new Map();
     this.users = new Map();
-    this.id = 1;
+    this.id = 1; // 소켓에 socket.id값으로 1을 부여, addUser실행될 때마다 1 증가
   }
 
   // 로그인 시 이메일 추가
