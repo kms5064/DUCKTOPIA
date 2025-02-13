@@ -165,7 +165,7 @@ class Game {
       const codeIdx =
         Math.floor(
           Math.random() *
-            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
+          (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
         ) + config.game.monster.waveMonsterMinCode;
       const data = monsterAsset.data[0];
 
@@ -250,6 +250,7 @@ class Game {
       return;
     }
     this.gameLoop = setInterval(() => {
+      this.addMonster();
       this.phaseCheck();
       //this.addMonster();
       this.monsterUpdate();

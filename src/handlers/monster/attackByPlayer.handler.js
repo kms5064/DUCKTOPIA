@@ -17,9 +17,6 @@ const AttackByPlayerHandler = async (socket, payload) => {
   const player = game.getPlayerById(targetId);
   //몬스터가 플레이어를 때렸을 때 [2] : 같은 아이디를 가진 플레이어와 몬스터를 세션에서 찾는다.
 
-
-  //몬스터가 플레이어를 때렸을 때 [4] : 동기화 처리
-
   const attackMonsterPayload = {
     monsterId, targetId
   }
