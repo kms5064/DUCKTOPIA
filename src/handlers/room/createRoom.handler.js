@@ -20,13 +20,13 @@ const createRoomHandler = async ({ socket, payload }) => {
   // 2. 유저 찾기
   const user = userSession.getUser(socket.id);
   if (!user) {
-    throw new Error('유저가 존재하지 않습니다!');
+    throw new CustomError('유저가 존재하지 않습니다!');
   }
 
   // 3. 방 만들기
   const room = roomSession.addRoom(user.id, roomName, maxUserNum);
   if (!room) {
-    throw new Error('방 생성에 실패했습니다!');
+    throw new CustomError('방 생성에 실패했습니다!');
   }
 
   // 5. 유저 방에 추가
