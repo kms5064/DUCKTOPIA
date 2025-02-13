@@ -305,10 +305,11 @@ class Game {
         for (const [playerId, player] of this.players) {
           monster.setTargetPlayer(player);
           if (monster.hasPriorityPlayer()) {
-            console.log('플레이어가 등록됨');
+            console.log(`플레이어가 등록됨${playerId}`);
+            console.log(`몬스터 등록됨${monster.id}`);
             const monsterDiscoverPayload = {
               monsterId: monster.id,
-              targetId: player.id,
+              targetId: playerId,
             };
 
             const packet = makePacket(
