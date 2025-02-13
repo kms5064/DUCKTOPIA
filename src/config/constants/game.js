@@ -10,5 +10,5 @@ export const WaveState = {
 };
 Object.freeze(WaveState);
 
-export const DAY_TIME = 180000;
-export const NIGHT_TIME = 120000;
+export const DAY_TIME = 10000; // 임시 10초 
+export const NIGHT_TIME = 10000; // 임시 10초
