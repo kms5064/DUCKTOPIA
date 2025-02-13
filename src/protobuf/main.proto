@@ -177,6 +177,11 @@ message S2CPlayerHpUpdateNotification { // 플레이어 체력 변경 알림
   int32 hp = 2;
 }
 
+message S2CPlayerDamagedByMonster {
+  int32 playerId = 1;
+  int32 monsterId = 2;
+}
+
 message C2SPlayerAttackRequest // 플레이어 공격 요청
 {
   float playerDirX = 1; // 마우스 위치 정보
@@ -343,5 +348,6 @@ message GamePacket {
     S2CGameOverNotification gameOverNotification = 43;
 
     S2CErrorNotification errorNotification = 44;
+    S2CPlayerDamagedByMonster playerDamagedByMonster = 45;
   }
 }
