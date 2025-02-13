@@ -20,7 +20,6 @@ class Monster extends MovableObjectBase {
     this.monsterCode = monsterCode;
     this.priorityPlayer = null;
     //몬스터가 여러 패턴을 가지고 있을 때 그 패턴들을 이 안에서 쿨타임을 관리한다.
-    this.patternInterval = null;
     this.distanceBetweenPlayer = Infinity;
     //드랍 아이템 숫자 확률을 이걸로 정해보자.
   }
@@ -144,14 +143,6 @@ class Monster extends MovableObjectBase {
         return 3;
         break;
     }
-  }
-
-  setPatternInterval() {
-    this.patternInterval = setInterval(() => {
-      clearInterval(this.patternInterval);
-      console.log("패턴 인터벌 초기화함");
-      this.patternInterval = null;
-    }, 5000);
   }
 
   //몬스터가 사망했을 때의 데이터

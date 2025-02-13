@@ -201,11 +201,16 @@ class Game {
     }
   }
 
+  monsterAttackCheck(monsterId) {
+    const monsterIndex = this.monsters[monsterId];
+
+  }
+
   monsterUpdate() {
     //몬스터가 플레이어의 거리를 구해서 발견한다.
     this.monsterDisCovered();
     //몬스터가 플레이어를 가지고 있을 경우 움직인다.
-    this.monsterMove(this.highLatency);
+    //this.monsterMove(this.highLatency);
     //몬스터가 플레이어를 잃는 과정
     //this.monsterLostPlayerCheck();
   }
@@ -245,7 +250,7 @@ class Game {
           timestamp: deltaTime
         };
         //위치로 이동시키는 개념이라 전체 브로드캐스팅을 해도 문제는 없어 보임.
-        const packet = makePacket(PACKET_TYPE.monsterMove, monsterMovePayload);
+        const packet = makePacket(PACKET_TYPE.S_MONSTER_MOVE_NOTIFICATION, monsterMovePayload);
         this.broadcast(packet);
       }
     }
