@@ -7,7 +7,19 @@ class Monster extends MovableObjectBase {
   //위치 동기화는 언제 했는가
   //monsterCode는 몬스터가 어떤 녀석인지 확인하도록 한다.
   //몬스터와 플레이어는 각각 상하좌우를 베이스로 한 8개 방향으로 이동할 수 있도록 한다.
-  constructor(id, monsterCode, name, hp, attack, defence, range, speed, x, y) {
+  constructor(
+    id,
+    monsterCode,
+    name,
+    hp,
+    attack,
+    defence,
+    range,
+    speed,
+    x = 0,
+    y = 0,
+    isWaveMonster = false,
+  ) {
     //몬스터가 생성되었을 때의 인덱스 값
 
     //몬스터 코드에 따라서 데이터를 변경하도록 한다.
@@ -20,9 +32,14 @@ class Monster extends MovableObjectBase {
     this.monsterCode = monsterCode;
     this.priorityPlayer = null;
     //몬스터가 여러 패턴을 가지고 있을 때 그 패턴들을 이 안에서 쿨타임을 관리한다.
-    this.patternInterval = new Map();
+    this.patternInterval = null;
     this.distanceBetweenPlayer = Infinity;
     //드랍 아이템 숫자 확률을 이걸로 정해보자.
+
+    // 웨이브 몬스터 여부
+    this.isWaveMonster = isWaveMonster;
+    // 몬스터 코드 다르게 하기
+    // 초기 설정을 베이스로 => 플레이어 타입이랑 베이스랑 같이 넣을 수 있나?
   }
 
   //asset을 통해서 받은 데이터를 기반으로 여기에 데이터를 채워 넣는다.
@@ -43,7 +60,7 @@ class Monster extends MovableObjectBase {
     return this.attack;
   }
 
-  getDistance() {
+  getDistanceByPlayer() {
     return this.distanceBetweenPlayer;
   }
 
@@ -58,16 +75,34 @@ class Monster extends MovableObjectBase {
     return this.hp;
   }
 
+  getDirectByPlayer() {
+    const vectorX = Math.acos((this.priorityPlayer.x - this.x) / distance); //+, -를 구분지어서 할 수 있을 듯
+    const vectorY = Math.asin((this.priorityPlayer.y - this.y) / distance);
+
+    return { x: vectorX, y: vectorY };
+  }
+
+  getSpeed() {
+    return this.speed;
+  }
+
+  getPosition() {
+    return { x: this.x, y: this.y };
+  }
+
+  getId() {
+    return this.id;
+  }
+
+  getPriorityPlayer() {
+    return this.priorityPlayer;
+  }
+
   calculateBetweenDistance() {
     if (this.priorityPlayer !== null) {
       this.distanceBetweenPlayer = Math.sqrt(
         Math.pow(this.x - this.priorityPlayer.x, 2) + Math.pow(this.y - this.priorityPlayer.y, 2),
       );
-      if (this.distanceBetweenPlayer < 10) {
-        //공격 범위 안에 들어갔다면
-        const packet = createResponse(packetNames);
-        this.priorityPlayer.sendPacket();
-      }
     }
   }
 
@@ -78,7 +113,7 @@ class Monster extends MovableObjectBase {
 
   //생성되었을 때 위치 지정은 이걸로 해주자.
   //내 생각에 x, y는 맵의 중간 지점을 (0,0)이라 했을 때의 값이라 생각함
-  setPositionFromCreating(x, y) {
+  setPosition(x, y) {
     this.x = x;
     this.y = y;
   }
@@ -103,7 +138,10 @@ class Monster extends MovableObjectBase {
   //몬스터가 죽거나 할 때 아이템 드롭할 아이템의 숫자를 제공한다.
   dropItemCount() {
     const dropCount =
-      10 - Math.floor(Math.log(Math.ceil(Math.random() * config.game.monster.maxItemDropCount)) / Math.log(2));
+      10 -
+      Math.floor(
+        Math.log(Math.ceil(Math.random() * config.game.monster.maxItemDropCount)) / Math.log(2),
+      );
 
     switch (dropCount) {
       case 0:
@@ -128,42 +166,14 @@ class Monster extends MovableObjectBase {
     }
   }
 
-  //default로 호출될 때는 별다른 기능 없음
-  //x가 -1이면 왼쪽 1이면 오른쪽
-  //y가 -1이면 아래쪽 1이면 위쪽
-  //공격 사거리 내에 들어온다면 몬스터의
-  moveByLatency(latency) {
-    const timediff = latency / 1000; //레이턴시는 1초를 1000으로 받아온다는 전제
-
-    const lateMove = this.speed * timediff;
-    const distance = Math.sqrt(
-      Math.pow(this.priorityPlayer.x - this.x, 2) + Math.pow(this.priorityPlayer.y - this.y, 2),
-    );
-    const vectorX = (this.priorityPlayer.x - this.x) / distance; //+, -를 구분지어서 할 수 있을 듯
-    const vectorY = (this.priorityPlayer.y - this.y) / distance;
-    const degree = Math.acos(vectorX);
-
-    //공격할 몬스터 ID, 공격 받는 플레이어 ID
-
-    switch (this.monsterCode) {
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-        //삼각함수를 통해 방향을 정해보자.
-        this.x += vectorX * lateMove;
-        this.y += vectorY * lateMove;
-        break;
-      case 5:
-      case 6:
-      case 7:
-      case 8:
-        this.x += vectorX * lateMove;
-        this.y += vectorY * lateMove;
-        break;
-    }
+  setPatternInterval() {
+    this.patternInterval = setInterval(() => {
+      clearInterval(this.patternInterval);
+      console.log('패턴 인터벌 초기화함');
+      this.patternInterval = null;
+    }, 5000);
   }
-
+  
   //몬스터가 사망했을 때의 데이터
   //이후 몬스터 사망 시 아이템 드롭도 해야 하나
 

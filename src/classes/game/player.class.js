@@ -68,12 +68,13 @@ class Player {
 
     let newX = x;
     let newY = y;
+    
     // 만약 거속시로 구한 거리보다 멀면 서버가 알고있는 좌표로 강제 이동
-    if (Math.abs(distance - realDistance) > config.game.player.validDistance) {
-      newX = this.x + Math.cos(seta) * distance;
-      newY = this.y + Math.sin(seta) * distance;
-      console.error(`유효하지 않은 이동입니다.`);
-    } 
+    //if (Math.abs(distance - realDistance) > config.game.player.validDistance) {
+    //  newX = this.x + Math.cos(seta) * distance;
+    //  newY = this.y + Math.sin(seta) * distance;
+    //  console.error(`유효하지 않은 이동입니다.`);
+    //} 
 
     // 위치 적용
     this.playerPositionUpdate(newX, newY);
