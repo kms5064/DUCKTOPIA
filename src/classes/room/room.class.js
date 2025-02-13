@@ -86,6 +86,7 @@ class Room {
   // 게임 시작
   startGame() {
     this.changeState(RoomStateType.INGAME);
+    this.game.gameLoopStart();
   }
 
   // 게임 종료

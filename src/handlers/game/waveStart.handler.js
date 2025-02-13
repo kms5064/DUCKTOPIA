@@ -11,6 +11,7 @@ const waveStartHandler = ({ socket, payload }) => {
   // 1. 유저 찾기
   const user = userSession.getUser(socket.id);
 
+
   if (!user) {
     new CustomError('유저가 존재하지 않습니다.');
   }
@@ -37,7 +38,7 @@ const waveStartHandler = ({ socket, payload }) => {
     monsters,
   });
 
-  game.notification(socket, waveStartNotification);
+  game.broadcast(waveStartNotification);
 };
 
 export default waveStartHandler;
