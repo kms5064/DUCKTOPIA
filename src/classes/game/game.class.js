@@ -165,7 +165,7 @@ class Game {
       const codeIdx =
         Math.floor(
           Math.random() *
-            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
+          (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
         ) + config.game.monster.waveMonsterMinCode;
       const data = monsterAsset.data[0];
 
@@ -202,7 +202,7 @@ class Game {
 
     const owner = this.getPlayerById(this.ownerId);
 
-    owner.socket.write(monsterSpawnRequestPacket);
+    owner.user.socket.write(monsterSpawnRequestPacket);
 
     this.setWaveState(WaveState.INWAVE);
   }
@@ -233,15 +233,15 @@ class Game {
   //다른 사람에게 전송(본인 제외)
   notification(socket, packet) {
     this.players.forEach((player) => {
-      if (player.getUser().getSocket() !== socket) {
-        player.getUser().getSocket().write(packet);
+      if (player.getUser().socket !== socket) {
+        player.getUser().socket.write(packet);
       }
     });
   }
 
   broadcast(packet) {
     this.players.forEach((player) => {
-      player.getUser().getSocket().write(packet);
+      player.user.socket.write(packet);
     });
   }
 
@@ -250,6 +250,7 @@ class Game {
       return;
     }
     this.gameLoop = setInterval(() => {
+      this.addMonster();
       this.phaseCheck();
       //this.addMonster();
       this.monsterUpdate();
@@ -267,7 +268,6 @@ class Game {
 
     // 현재 phase 에 따라 기준 다르게 받기
     if (this.dayCounter >= config.game.phaseCount[this.dayPhase]) {
-      isOver = true;
 
       if (this.dayPhase === DayPhase.DAY) {
         this.addWaveMonster();
@@ -285,18 +285,24 @@ class Game {
     }
   }
 
+  monsterAttackCheck(monsterId) {
+    const monsterIndex = this.monsters[monsterId];
+
+  }
+
   monsterUpdate() {
+    //몬스터가 플레이어의 거리를 구해서 발견한다.
     this.monsterDisCovered();
-    //
-    this.monsterMove(this.highLatency);
+    //몬스터가 플레이어를 가지고 있을 경우 움직인다.
+    //this.monsterMove(this.highLatency);
     //몬스터가 플레이어를 잃는 과정
-    this.monsterLostPlayerCheck();
+    //this.monsterLostPlayerCheck();
   }
 
   monsterDisCovered() {
     for (const [key, monster] of this.monsters) {
       if (!monster.hasPriorityPlayer()) {
-        for (const player of this.players) {
+        for (const [playerId, player] of this.players) {
           monster.setTargetPlayer(player);
           if (monster.hasPriorityPlayer()) {
             console.log('플레이어가 등록됨');
@@ -309,7 +315,7 @@ class Game {
               config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
               monsterDiscoverPayload,
             );
-            this.broadcastAllPlayer(packet);
+            this.broadcast(packet);
           }
         }
       }
@@ -330,7 +336,7 @@ class Game {
           timestamp: deltaTime,
         };
         //위치로 이동시키는 개념이라 전체 브로드캐스팅을 해도 문제는 없어 보임.
-        const packet = makePacket(PACKET_TYPE.monsterMove, monsterMovePayload);
+        const packet = makePacket(PACKET_TYPE.S_MONSTER_MOVE_NOTIFICATION, monsterMovePayload);
         this.broadcast(packet);
       }
     }
