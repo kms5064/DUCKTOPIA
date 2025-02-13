@@ -51,9 +51,6 @@ export const AttackByPlayerHandler = async (socket, payload) => {
     }
 
     game.notification(socket, packet);
-
-
-
     //몬스터가 플레이어를 때렸을 때 [4] : 동기화 처리
   }
   catch (err) {
