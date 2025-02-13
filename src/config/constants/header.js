@@ -48,13 +48,13 @@ export const PACKET_TYPE = {
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
   C_MONSTER_SPAWN_RESPONSE: [5002, 'monsterSpawnResponse'],
-  S_MONSTER_WAVE_START_NOTIFICATION: [5003, 'MonsterWaveStartNotification'],
+  S_MONSTER_WAVE_START_NOTIFICATION: [5003, 'monsterWaveStartNotification'],
   S_MONSTER_AWAKE_NOTIFICATION: [5004, 'monsterAwakeNotification'],
   S_MONSTER_DEATH_NOTIFICATION: [5005, 'monsterDeathNotification'],
   C_MONSTER_MOVE_REQUEST: [5006, 'monsterMoveRequest'],
   S_MONSTER_MOVE_NOTIFICATION: [5007, 'monsterMoveNotification'],
   C_MONSTER_ATTACK_REQUEST: [5008, 'monsterAttackRequest'],
-  S_MONSTER_ATTACK_NOTIFICATION: [5009, 'MonsterAttackNotification'],
+  S_MONSTER_ATTACK_NOTIFICATION: [5009, 'monsterAttackNotification'],
   S_MONSTER_HP_UPDATE_NOTIFICATION: [5010, 'monsterHpUpdateNotification'],
 
   // 코어
