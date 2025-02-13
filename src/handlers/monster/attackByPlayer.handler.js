@@ -1,8 +1,8 @@
-import RoomSession from "../../classes/room/roomSession.class";
 import { PACKET_TYPE } from "../../config/constants/header.js";
 import makePacket from "../../utils/packet/makePacket.js";
 import CustomError from "../../utils/error/customError.js";
 import { config } from "../../config/config.js";
+import { roomSession, userSession } from "../../sessions/session.js";
 
 //몬스터 공격 모션 동기화 작업
 //몬스터의 동기화를 
