@@ -14,6 +14,8 @@ class ItemBox {
     const removedItem = this.itemList.splice(index, 1, null);
 
     player.addItem(removedItem);
+    
+    return removedItem;
   }
 
   putAnItem(index, item) {

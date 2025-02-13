@@ -4,7 +4,7 @@ import { errorHandler } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
 
 
-const openBoxHandler = (socket, sequence, payload) => {
+const openBoxHandler = ({socket, sequence, payload}) => {
   try {
    const {itemBoxId} = payload;
 
@@ -38,17 +38,17 @@ const openBoxHandler = (socket, sequence, payload) => {
         throw new CustomError(ErrorCodes.PLAYER_NOT_FOUND, '플레이어를 찾을 수 없습니다');
      }
 
-     const itemBox  = getItemBoxById(itemBoxId);
+     const itemBox  = game.getItemBoxById(itemBoxId);
 
      const payload = itemBox.getItemList();
 
-     const openBoxRes = makePacket(config.packetType.OPEN_BOX_RESPONSE,payload);
+     const openBoxRes = makePacket(config.packetType.S_PLAYER_OPEN_BOX_RESPONSE,payload);
 
      socket.write(openBoxRes);
 
   } catch (error) {
     console.error(error);
-    errorHandler(socket, error, PACKET_TYPE.OPEN_BOX_RESPONSE);
+    errorHandler(socket, error,config.packetType.S_PLAYER_OPEN_BOX_RESPONSE);
   }
 };
 
