@@ -7,7 +7,19 @@ class Monster extends MovableObjectBase {
   //위치 동기화는 언제 했는가
   //monsterCode는 몬스터가 어떤 녀석인지 확인하도록 한다.
   //몬스터와 플레이어는 각각 상하좌우를 베이스로 한 8개 방향으로 이동할 수 있도록 한다.
-  constructor(id, monsterCode, name, hp, attack, defence, range, speed, x, y) {
+  constructor(
+    id,
+    monsterCode,
+    name,
+    hp,
+    attack,
+    defence,
+    range,
+    speed,
+    x = 0,
+    y = 0,
+    isWaveMonster = false,
+  ) {
     //몬스터가 생성되었을 때의 인덱스 값
 
     //몬스터 코드에 따라서 데이터를 변경하도록 한다.
@@ -23,6 +35,11 @@ class Monster extends MovableObjectBase {
     this.patternInterval = null;
     this.distanceBetweenPlayer = Infinity;
     //드랍 아이템 숫자 확률을 이걸로 정해보자.
+
+    // 웨이브 몬스터 여부
+    this.isWaveMonster = isWaveMonster;
+    // 몬스터 코드 다르게 하기
+    // 초기 설정을 베이스로 => 플레이어 타입이랑 베이스랑 같이 넣을 수 있나?
   }
 
   //asset을 통해서 받은 데이터를 기반으로 여기에 데이터를 채워 넣는다.
@@ -121,7 +138,10 @@ class Monster extends MovableObjectBase {
   //몬스터가 죽거나 할 때 아이템 드롭할 아이템의 숫자를 제공한다.
   dropItemCount() {
     const dropCount =
-      10 - Math.floor(Math.log(Math.ceil(Math.random() * config.game.monster.maxItemDropCount)) / Math.log(2));
+      10 -
+      Math.floor(
+        Math.log(Math.ceil(Math.random() * config.game.monster.maxItemDropCount)) / Math.log(2),
+      );
 
     switch (dropCount) {
       case 0:
@@ -149,11 +169,11 @@ class Monster extends MovableObjectBase {
   setPatternInterval() {
     this.patternInterval = setInterval(() => {
       clearInterval(this.patternInterval);
-      console.log("패턴 인터벌 초기화함");
+      console.log('패턴 인터벌 초기화함');
       this.patternInterval = null;
     }, 5000);
   }
-
+  
   //몬스터가 사망했을 때의 데이터
   //이후 몬스터 사망 시 아이템 드롭도 해야 하나
 
