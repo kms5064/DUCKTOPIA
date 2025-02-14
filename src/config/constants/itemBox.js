@@ -1,0 +1,1 @@
+export const VALID_DISTANCE_OF_BOX = 2;

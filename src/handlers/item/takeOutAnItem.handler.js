@@ -2,9 +2,11 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
+import makePacket from "../../utils/packet/makePacket";
+
 
 const takeOutAnItemHandler = ({ socket, sequence, payload }) => {
-  try {
+
     const { itemBoxId, index } = payload;
 
     // 유저 객체 조회
@@ -42,13 +44,10 @@ const takeOutAnItemHandler = ({ socket, sequence, payload }) => {
     const item = itemBox.takeOutAnItem(index, player);
 
     // 패킷을 쏴줄 필요가 있나?
-    // const takeOutAnItemRes = makePacket(config.packetType.TAKE_OUT_AN_ITEM_RESPONSE, payload);
+    const takeOutAnItemRes = makePacket(config.packetType.TAKE_OUT_AN_ITEM_RESPONSE, payload);
 
-    // socket.write(takeOutAnItemRes);
-  } catch (error) {
-    console.error(error);
-    errorHandler(socket, error, config.packetType.TAKE_OUT_AN_ITEM_RESPONSE);
-  }
+    socket.write(takeOutAnItemRes);
+
 };
 
 export default takeOutAnItemHandler;

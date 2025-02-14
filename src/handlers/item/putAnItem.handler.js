@@ -2,10 +2,12 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
+import makePacket from "../../utils/packet/makePacket";
+
 
 const putAnItemHandler = ({ socket, sequence, payload }) => {
   try {
-    const { item, index } = payload;
+    const { itemBoxId,item, index } = payload;
 
     // 유저 객체 조회
     const user = userSession.getUser(socket);
@@ -40,12 +42,12 @@ const putAnItemHandler = ({ socket, sequence, payload }) => {
     const itemBox = game.getItemBoxById(itemBoxId);
 
     player.removeItem(item.id);
-    const addedItem = itemBox.putAnItem(index, item);
+    const payload = itemBox.putAnItem(index, item);
 
     // 패킷을 쏴줄 필요가 있나?
-    // const takeOutAnItemRes = makePacket(config.packetType.TAKE_OUT_AN_ITEM_RESPONSE, payload);
+    const putAnItemRes = makePacket(config.packetType.TAKE_OUT_AN_ITEM_RESPONSE, payload);
 
-    // socket.write(takeOutAnItemRes);
+    socket.write(putAnItemRes);
   } catch (error) {
     console.error(error);
     errorHandler(socket, error, config.packetType.TAKE_OUT_AN_ITEM_RESPONSE);

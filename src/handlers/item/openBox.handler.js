@@ -2,6 +2,8 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
+import makePacket from "../../utils/packet/makePacket";
+
 
 
 const openBoxHandler = ({socket, sequence, payload}) => {
@@ -37,14 +39,25 @@ const openBoxHandler = ({socket, sequence, payload}) => {
      if (!player) {
         throw new CustomError(ErrorCodes.PLAYER_NOT_FOUND, '플레이어를 찾을 수 없습니다');
      }
-
      const itemBox  = game.getItemBoxById(itemBoxId);
+     if (!itemBox) {
+      throw new CustomError(ErrorCodes.ITEMBOX_NOT_FOUND, '상자를 찾을 수 없습니다');
+   }
+     //유효한 거리인지 검증
+     if(itemBox.calculateDistance<=config.game.VALID_DISTANCE_OF_BOX){
+      const payload ={success:itemBox.getItemList()};
 
-     const payload = itemBox.getItemList();
+      const openBoxRes = makePacket(config.packetType.S_PLAYER_OPEN_BOX_RESPONSE,payload);
+ 
+      socket.write(openBoxRes);
+     } else{
+      const payload ={success:false};
 
-     const openBoxRes = makePacket(config.packetType.S_PLAYER_OPEN_BOX_RESPONSE,payload);
+      const openBoxRes = makePacket(config.packetType.S_PLAYER_OPEN_BOX_RESPONSE,payload);
+ 
+      socket.write(openBoxRes);
+     }
 
-     socket.write(openBoxRes);
 
   } catch (error) {
     console.error(error);

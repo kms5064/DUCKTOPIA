@@ -1,3 +1,5 @@
+import CustomError from "../../utils/error/customError";
+
 class ItemBox {
   constructor(id, x, y) {
     this.id = id;
@@ -12,16 +14,34 @@ class ItemBox {
 
   takeOutAnItem(index, player) {
     const removedItem = this.itemList.splice(index, 1, null);
+    if(!removedItem){
+      throw new CustomError(ErrorCode.ITEM_NOT_FOUND,'상자에서 아이템을 찾을 수 없습니다.');
+    }
+
 
     player.addItem(removedItem);
     
     return removedItem;
   }
 
-  putAnItem(index, item) {
-    this.itemList.splice(index, 0, item);
+  putAnItem(item) {
 
-    player.removeItem(item.id);
+    const checkRoom = (ele) => ele ===null;
+    const emptyIndex = this.itemList.findIndex(checkRoom);
+
+    if(emptyRoom !== -1){
+      this.itemList.splice(emptyIndex, 1, item);
+      player.removeItem(item.id);
+      return true;
+    } else{
+      return false;
+    }
+
+  }
+
+  calculateDistance(px,py){
+    const distance = Math.sqrt(Math.pow((px-this.x),2) + Math.pow((py-this.y),2));
+    return distance;
   }
 
   changeItemPos(index1, index2) {

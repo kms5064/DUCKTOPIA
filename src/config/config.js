@@ -20,6 +20,8 @@ import { PLAYER_MAX_HUNGER, ATK_PER_LV, PLAYER_DEFAULT_ANGLE, PLAYER_DEFAULT_RAN
 import { MAX_DROP_ITEM_COUNT, MAX_SPAWN_COUNT } from './constants/monster.js';
 import { MAX_VALUE_X, MAX_VALUE_Y, MIN_VALUE_X, MIN_VALUE_Y } from './constants/map.js';
 import { CharacterType } from './constants/character.js';
+import { VALID_DISTANCE_OF_BOX } from './constants/itemBox.js';
+
 
 export const config = {
   header: {
@@ -74,6 +76,9 @@ export const config = {
       startY: MIN_VALUE_Y,
       endX: MAX_VALUE_X,
       endY: MAX_VALUE_Y,
+    },
+    itemBox:{
+      validDistance: VALID_DISTANCE_OF_BOX,
     }
   }
 };
