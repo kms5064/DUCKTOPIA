@@ -16,7 +16,7 @@ class Room {
     this.maxUserAmount = maxUserNum;
     this.name = name; // room name
     this.state = RoomStateType.WAIT;
-    this.game = new Game();
+    this.game = new Game(ownerId);
     this.ownerId = ownerId;
   }
 
@@ -86,6 +86,7 @@ class Room {
   // 게임 시작
   startGame() {
     this.changeState(RoomStateType.INGAME);
+    this.game.gameLoopStart();
   }
 
   // 게임 종료
