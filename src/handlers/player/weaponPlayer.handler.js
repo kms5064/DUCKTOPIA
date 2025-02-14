@@ -29,16 +29,12 @@ const weaponPlayerHandler = ({ socket, payload }) => {
     throw new Error(`Room ID(${roomId}): Game 정보가 없습니다.`);
   }
 
-  game.getPlayerById();
   // TODO : NOTI용 패킷 추가 해야함.
   const packet = makePacket(config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE, {
     success: true,
     itemId,
-    playerId: user.id,
+    playerId: user.getUserData().userId,
   });
-
-  console.log(itemId,user.id);
-  
   game.broadcast(packet);
 };
 
