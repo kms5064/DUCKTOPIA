@@ -196,7 +196,7 @@ class Game {
     //몬스터가 플레이어의 거리를 구해서 발견한다.
     this.monsterDisCovered();
     //몬스터가 플레이어를 가지고 있을 경우 움직인다.
-    //this.monsterMove(this.highLatency);
+    //this.monsterMove();
     //몬스터가 플레이어를 잃는 과정
     //this.monsterLostPlayerCheck();
   }
@@ -238,20 +238,26 @@ class Game {
   }
 
   //플레이어가 등록된 몬스터들만 위치 패킷을 전송하는 게 좋겠다.
-  monsterMove(deltaTime) {
+  //플레이어 타겟이 정해져 있지 않다면 무조건 코어 쪽으로 이동시키도록 한다.
+  monsterMove() {
     for (const [key, monster] of this.monsters) {
       if (!monster.hasPriorityPlayer()) {
-        continue;
-      } else {
-        const monsterMovePayload = {
-          monsterId: monster.getId(),
-          direct: monster.getDirectByPlayer(),
-          position: monster.getPosition(),
-          speed: monster.getSpeed(),
-          timestamp: deltaTime,
+        const monsterPos = monster.getPosition();
+        const distanceFromCore = Math.sqrt(Math.pow(monsterPos.x, 2) + Math.pow(monsterPos.y, 2));
+        const direct_x = monsterPos.x / distanceFromCore * monster.getSpeed();
+        const direct_y = monsterPos.y / distanceFromCore * monster.getSpeed();
+
+
+
+
+        const monsterMoverPayload = {
+          monsterId: monsterId,
+          targetId: targetId,
+          x: monsterPos.x,
+          y: monsterPos.y
         };
         //위치로 이동시키는 개념이라 전체 브로드캐스팅을 해도 문제는 없어 보임.
-        const packet = makePacket(PACKET_TYPE.S_MONSTER_MOVE_NOTIFICATION, monsterMovePayload);
+        const packet = makePacket(PACKET_TYPE.S_MONSTER_MOVE_NOTIFICATION, monsterMoverPayload);
         this.broadcast(packet);
       }
     }
