@@ -162,7 +162,7 @@ class Game {
     const packet = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, { monsters: monsterData });
 
     const owner = this.getPlayerById(this.ownerId);
-    owner.socket.write(packet); // Host 에게 전송
+    owner.user.socket.write(packet); // Host 에게 전송
   }
 
   getMonsterById(monsterId) {
