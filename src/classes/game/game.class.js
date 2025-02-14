@@ -123,7 +123,7 @@ class Game {
 
       // 몬스터 데이터 뽑기
       const codeIdx = Math.floor(Math.random() * config.game.monster.normalMonsterMaxCode);
-      const data = monsterAsset.data[codeIdx];
+      const data = monsterAsset.data[0];
 
       // 몬스터 생성
       const monster = new Monster(
@@ -162,7 +162,7 @@ class Game {
     const packet = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, { monsters: monsterData });
 
     const owner = this.getPlayerById(this.ownerId);
-    owner.socket.write(packet); // Host 에게 전송
+    owner.getUser().getSocket().write(packet); // Host 에게 전송
   }
 
   getMonsterById(monsterId) {
