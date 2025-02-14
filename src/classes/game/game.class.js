@@ -122,9 +122,8 @@ class Game {
       const { monster: monsterAsset } = getGameAssets();
 
       // 몬스터 데이터 뽑기
-      const codeIdx = 0;
-      //Math.floor(Math.random() * config.game.monster.normalMonsterMaxCode);
-      const data = monsterAsset.data[codeIdx];
+      const codeIdx = Math.floor(Math.random() * config.game.monster.normalMonsterMaxCode);
+      const data = monsterAsset.data[0];
 
       // 몬스터 생성
       const monster = new Monster(
@@ -163,7 +162,7 @@ class Game {
     const packet = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, { monsters: monsterData });
 
     const owner = this.getPlayerById(this.ownerId);
-    owner.user.socket.write(packet); // Host 에게 전송
+    owner.getUser().getSocket().write(packet); // Host 에게 전송
   }
 
   getMonsterById(monsterId) {
@@ -217,23 +216,6 @@ class Game {
             inputPlayer = player;
             inputplayerId = playerId;
           }
-
-
-          // monster.setTargetPlayer(player);
-          // if (monster.hasPriorityPlayer()) {
-          //   console.log('플레이어가 등록됨');
-          //   const monsterDiscoverPayload = {
-          //     monsterId: monster.id,
-          //     targetId: playerId,
-          //   };
-          //   console.log(monster.getDistanceByPlayer());
-
-          //   const packet = makePacket(
-          //     config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
-          //     monsterDiscoverPayload,
-          //   );
-          //   this.broadcast(packet);
-          // }
         }
 
         if (inputPlayer === null || inputplayerId === null) {

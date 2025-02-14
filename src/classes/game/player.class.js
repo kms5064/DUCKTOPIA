@@ -96,7 +96,7 @@ class Player {
   }
   //플레이어 어택은 데미지만 리턴하기
   getPlayerAtkDamage() {
-    return this.atk + this.lv * ATK_PER_LV + this.equippedWeapon.atk;
+    return this.atk + this.lv * config.game.player.atkPerLv + this.equippedWeapon.atk;
   }
 
   playerDead() {

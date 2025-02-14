@@ -29,7 +29,7 @@ class Monster extends MovableObjectBase {
     this.attack = attack;
     this.defence = defence;
     this.name = name;
-    this.monsterCode = monsterCode;
+    this.monsterCode = 1;
     this.priorityPlayer = null;
     //몬스터가 여러 패턴을 가지고 있을 때 그 패턴들을 이 안에서 쿨타임을 관리한다.
     this.distanceBetweenPlayer = Infinity;
