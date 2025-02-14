@@ -203,24 +203,54 @@ class Game {
   }
 
   monsterDisCovered() {
-    for (const [key, monster] of this.monsters) {
-      if (!monster.hasPriorityPlayer()) {
-        for (const [playerId, player] of this.players) {
-          monster.setTargetPlayer(player);
-          if (monster.hasPriorityPlayer()) {
-            console.log('플레이어가 등록됨');
-            const monsterDiscoverPayload = {
-              monsterId: monster.id,
-              targetId: playerId,
-            };
 
-            const packet = makePacket(
-              config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
-              monsterDiscoverPayload,
-            );
-            this.broadcast(packet);
+    for (const [key, monster] of this.monsters) {
+      //몬스터가 등록되어 있지 않다면 체크 좀 하자
+      if (!monster.hasPriorityPlayer()) {
+        let distance = Infinity;
+        let inputPlayer = null;
+        let inputplayerId = null;
+        for (const [playerId, player] of this.players) {
+          const betweenDistance = monster.returnCalculateDistance(player);
+          if (betweenDistance !== -1 && distance > betweenDistance) {
+            distance = betweenDistance;
+            inputPlayer = player;
+            inputplayerId = playerId;
           }
+
+
+          // monster.setTargetPlayer(player);
+          // if (monster.hasPriorityPlayer()) {
+          //   console.log('플레이어가 등록됨');
+          //   const monsterDiscoverPayload = {
+          //     monsterId: monster.id,
+          //     targetId: playerId,
+          //   };
+          //   console.log(monster.getDistanceByPlayer());
+
+          //   const packet = makePacket(
+          //     config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
+          //     monsterDiscoverPayload,
+          //   );
+          //   this.broadcast(packet);
+          // }
         }
+
+        if (inputPlayer === null || inputplayerId === null) {
+          continue;
+        }
+        monster.setTargetPlayer(inputPlayer);
+
+        const monsterDiscoverPayload = {
+          monsterId: monster.id,
+          targetId: inputplayerId,
+        };
+
+        const packet = makePacket(
+          config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
+          monsterDiscoverPayload,
+        );
+        this.broadcast(packet);
       }
     }
   }
@@ -301,7 +331,7 @@ class Game {
       const codeIdx =
         Math.floor(
           Math.random() *
-            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
+          (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
         ) + config.game.monster.waveMonsterMinCode;
       const data = monsterAsset.data[0];
 

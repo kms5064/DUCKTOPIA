@@ -105,6 +105,11 @@ class Monster extends MovableObjectBase {
     }
   }
 
+  returnCalculateDistance(player) {
+    const distance = Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
+    return distance < this.awakeRange ? distance : -1;
+  }
+
   //플레이어를 쫒고 있는지 확인한다.
   hasPriorityPlayer() {
     return this.priorityPlayer !== null ? true : false;
@@ -184,8 +189,12 @@ class Monster extends MovableObjectBase {
     }
   }
 
-  //플레이어를 세팅할 때의 조건을 확인한다.
   setTargetPlayer(player) {
+    this.priorityPlayer = player;
+  }
+
+  //플레이어를 세팅할 때의 조건을 확인한다.
+  setTargetPlayerByDistance(player) {
     if (this.priorityPlayer === null) {
       const distance = Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
       if (distance <= this.awakeRange) {
@@ -194,7 +203,11 @@ class Monster extends MovableObjectBase {
         //패킷을 보내
       }
     } else {
-      if (player === this.priorityPlayer) {
+      if (player !== this.priorityPlayer) {
+        const distance = Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
+        if (this.distanceBetweenPlayer > distance) {
+          this.priorityPlayer = player;
+        }
         this.calculateBetweenDistance();
       }
     }
@@ -218,6 +231,9 @@ class Monster extends MovableObjectBase {
   getMonsterId() {
     return this.id;
   }
+
+  //현재 몬스터와 플레이어 사이에 얼마나 거리가 떨어져 있는지 보기
+
 }
 
 export default Monster;
