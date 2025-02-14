@@ -131,7 +131,7 @@ class Game {
         data.hp,
         1,
         data.defence,
-        data.range,
+        20,
         data.speed,
         0,
         0,
@@ -202,9 +202,11 @@ class Game {
   monsterDisCovered() {
     const monsterDiscoverPayload = [];
     for (const [key, monster] of this.monsters) {
+      // 대상이 없는 몬스터만
       if (!monster.hasPriorityPlayer()) {
         for (const [playerId, player] of this.players) {
-          monster.setTargetPlayer(player);
+          // 대상 찾아보기
+          monster.setTargetPlayerByDistance(player);
           if (monster.hasPriorityPlayer()) {
             console.log('플레이어가 등록됨');
             monsterDiscoverPayload.push({
