@@ -6,7 +6,7 @@ import { roomSession, userSession } from "../../sessions/session.js";
 
 //몬스터 공격 모션 동기화 작업
 //몬스터의 동기화를 
-const AttackByPlayerHandler = async (socket, payload) => {
+const AttackByPlayerHandler = async ({ socket, payload }) => {
 
   //몬스터가 플레이어를 때렸을 때 [1] : 우선 몬스터의 정보를 가져온다.
   const { monsterId, targetId } = payload;

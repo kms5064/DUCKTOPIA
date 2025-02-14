@@ -4,7 +4,7 @@ import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
 
 //실질적으로 몬스터의 데미지가 들어가는 핸들러
-const damagedByPlayerHandler = async (socket, payload) => {
+const damagedByPlayerHandler = async ({ socket, payload }) => {
     const { playerId, monsterId } = payload;
 
     const user = userSession.getUser(socket);
