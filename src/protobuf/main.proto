@@ -257,17 +257,11 @@ message S2CMonsterDeathNotification // 몬스터 사망
 }
 
 message C2SMonsterMoveRequest { // 몬스터 이동
-  int32 monsterId = 1;
-  int32 targetId = 2;
-  float x = 3;
-  float y = 4;
+  repeated MonsterPositionData monsterPositionData = 1;
 }
 
 message S2CMonsterMoveNotification { // 몬스터 이동 알림
-  int32 monsterId = 1;
-  int32 targetId = 2; // 몬스터 몸 방향을 위해 필요
-  float x = 3;
-  float y = 4;
+  repeated MonsterPositionData monsterPositionData = 1;
 }
 
 message C2SMonsterAttackRequest { // 몬스터 공격 알림
