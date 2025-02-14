@@ -4,7 +4,7 @@ import { getProtoMessages } from '../init/loadProtos.js';
 import { errorHandler } from '../utils/error/errorHandler.js';
 
 const onData = (socket) => async (data) => {
-  console.log('데이터 수신');
+  //console.log('데이터 수신');
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
