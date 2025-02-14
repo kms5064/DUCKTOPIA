@@ -129,7 +129,7 @@ class Game {
         data.monsterCode,
         data.name,
         data.hp,
-        data.attack,
+        1,
         data.defence,
         data.range,
         data.speed,
@@ -213,22 +213,6 @@ class Game {
             });
           }
         }
-
-        if (inputPlayer === null || inputplayerId === null) {
-          continue;
-        }
-        monster.setTargetPlayer(inputPlayer);
-
-        const monsterDiscoverPayload = {
-          monsterId: monster.id,
-          targetId: inputplayerId,
-        };
-
-        const packet = makePacket(
-          config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
-          monsterDiscoverPayload,
-        );
-        this.broadcast(packet);
       }
     }
     const packet = makePacket(

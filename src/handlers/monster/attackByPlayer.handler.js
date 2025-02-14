@@ -1,6 +1,4 @@
-import { PACKET_TYPE } from "../../config/constants/header.js";
 import makePacket from "../../utils/packet/makePacket.js";
-import CustomError from "../../utils/error/customError.js";
 import { config } from "../../config/config.js";
 import { roomSession, userSession } from "../../sessions/session.js";
 

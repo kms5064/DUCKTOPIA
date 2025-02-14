@@ -8,7 +8,7 @@ import signInHandler from './user/signIn.handler.js';
 import signUpHandler from './user/signUp.handler.js';
 import gameStartHandler from './game/startGame.handler.js';
 import gamePrepareReqHandler from './game/gamePrepareReq.handler.js';
-import updateLocationHandler from './player/updateLoaction.handler.js';
+import updateLocationHandler from './player/updateLocation.handler.js';
 import attackPlayerMonsterHandler from './player/attackPlayerMonster.handler.js';
 import waveStartHandler from './game/waveStart.handler.js';
 import AttackByPlayerHandler from './monster/attackByPlayer.handler.js';
