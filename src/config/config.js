@@ -25,8 +25,22 @@ import {
   PLAYER_SPEED,
   VALID_DISTANCE,
 } from './constants/player.js';
-import { MAX_DROP_ITEM_COUNT, MAX_SPAWN_COUNT, NORMAL_MONSTER_MAX_CODE, WAVE_MAX_MONSTER_COUNT, WAVE_MONSTER_MAX_CODE, WAVE_MONSTER_MIN_CODE } from './constants/monster.js';
-import { MAX_VALUE_X, MAX_VALUE_Y, MIN_VALUE_X, MIN_VALUE_Y } from './constants/map.js';
+import {
+  MAX_DROP_ITEM_COUNT,
+  MAX_SPAWN_COUNT,
+  NORMAL_MONSTER_MAX_CODE,
+  WAVE_MAX_MONSTER_COUNT,
+  WAVE_MONSTER_MAX_CODE,
+  WAVE_MONSTER_MIN_CODE,
+} from './constants/monster.js';
+import {
+  CENTER_X,
+  CENTER_Y,
+  MAX_VALUE_X,
+  MAX_VALUE_Y,
+  MIN_VALUE_X,
+  MIN_VALUE_Y,
+} from './constants/map.js';
 import { CharacterType } from './constants/character.js';
 import { DAY_TIME, NIGHT_TIME, DayPhase } from './constants/game.js';
 
@@ -90,6 +104,8 @@ export const config = {
       startY: MIN_VALUE_Y,
       endX: MAX_VALUE_X,
       endY: MAX_VALUE_Y,
+      centerX: CENTER_X,
+      centerY: CENTER_Y,
     },
   },
 };

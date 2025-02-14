@@ -155,6 +155,8 @@ message S2CGameStartResponse { // 게임시작 응답
 message S2CGameStartNotification { // 게임시작 알림
   GameStateData gameState = 1;
   repeated PlayerPositionData playerPositions = 2;
+  repeated MonsterPositionData monsters = 3;
+  repeated ObjectPositionData objects = 4;
 }
 
 // 이때 클라 서버 모두 몬스터, 장애물(오브젝트), 플레이어 정보를 가짐
@@ -230,8 +232,7 @@ message C2SMonsterSpawnResponse { // 몬스터 좌표를 찍어서 서버에 전
   repeated MonsterPositionData monsters = 1;
 }
 
-message
-S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
+message S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
   repeated MonsterPositionData monsters = 1;
 }
 
@@ -289,11 +290,6 @@ message S2CErrorNotification {
   int64 timestamp = 2;
 }
 
-// 에러 응답 - 안씀 (훈제오리가 실수로 안지움)
-message S2CErrorResponse {
-  string errorMessage = 1;
-  int64 timestamp = 2;
-}
 
 message GamePacket {
   oneof payload {
@@ -334,13 +330,13 @@ message GamePacket {
 
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;
     C2SMonsterSpawnResponse monsterSpawnResponse = 33;
-    S2CMonsterWaveStartNotification MonsterWaveStartNotification = 34;
+    S2CMonsterWaveStartNotification monsterWaveStartNotification = 34;
     S2CMonsterAwakeNotification monsterAwakeNotification = 35;
     S2CMonsterDeathNotification monsterDeathNotification = 36;
     C2SMonsterMoveRequest monsterMoveRequest = 37;
     S2CMonsterMoveNotification monsterMoveNotification = 38;
     C2SMonsterAttackRequest monsterAttackRequest = 39;
-    S2CMonsterAttackNotification MonsterAttackNotification = 40;
+    S2CMonsterAttackNotification monsterAttackNotification = 40;
     S2CMonsterHpUpdateNotification monsterHpUpdateNotification = 41;
 
     S2CCoreHpUpdateNotification coreHpUpdateNotification = 42;
