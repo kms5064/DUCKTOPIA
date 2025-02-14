@@ -20,11 +20,11 @@ const gameStartHandler = ({ socket, payload }) => {
 
   monsters.forEach((monster) => {
     // 생성 구역 체크
-    if (!game.checkSpawnArea(monster.monsterCode, monster.x, monster.y)) {
-      throw new CustomError(
-        `Monster ID: ${monster.monsterId} Monster Code : ${monster.monsterCode} 의 생성 구역이 적합하지 않습니다. (${monster.x},${monster.y})`,
-      );
-    }
+    // if (!game.checkSpawnArea(monster.monsterCode, monster.x, monster.y)) {
+    //   throw new CustomError(
+    //     `Monster ID: ${monster.monsterId} Monster Code : ${monster.monsterCode} 의 생성 구역이 적합하지 않습니다. (${monster.x},${monster.y})`,
+    //   );
+    // }
     // 몬스터 : 클라에서 생성된 좌표 값으로 변경
     game.getMonsterById(monster.monsterId).setPosition(monster.x, monster.y);
   });

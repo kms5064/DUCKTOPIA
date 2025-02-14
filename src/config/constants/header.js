@@ -42,6 +42,7 @@ export const PACKET_TYPE = {
   C_PLAYER_USE_ITEM_REQUEST: [4009, 'playerUseItemRequest'],
   S_PLAYER_EAT_FOOD_RESPONSE: [4010, 'playerEatFoodResponse'],
   S_PLAYER_EQUIP_WEAPON_RESPONSE: [4011, 'playerEquipWeaponResponse'],
+  S_PLAYER_DAMAGED_BY_MONSTER: [4012, 'playerDamagedByMonster'],
 
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
