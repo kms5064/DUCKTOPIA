@@ -1,5 +1,7 @@
 import { roomSession, userSession } from '../sessions/session.js';
 import CustomError from '../utils/error/customError.js';
+import { config } from '../config/config.js';
+import makePacket from '../utils/packet/makePacket.js';
 
 const onEnd = (socket) => () => {
   console.log('클라이언트 연결이 종료되었습니다.');
@@ -17,6 +19,12 @@ const onEnd = (socket) => () => {
       roomSession.removeRoom(room);
     } else {
       room.removeUser(user);
+
+      const leaveRoomNotification = makePacket(config.packetType.LEAVE_ROOM_NOTIFICATION, {
+        user: user.getUserData(),
+      });
+
+      room.notification(socket, leaveRoomNotification);
     }
   }
 
