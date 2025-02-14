@@ -203,7 +203,7 @@ class Game {
 
     const owner = this.getPlayerById(this.ownerId);
 
-    owner.socket.write(monsterSpawnRequestPacket);
+    owner.user.socket.write(monsterSpawnRequestPacket);
 
     this.setWaveState(WaveState.INWAVE);
   }
@@ -234,15 +234,17 @@ class Game {
   //다른 사람에게 전송(본인 제외)
   notification(socket, packet) {
     Object.values(this.players).forEach((player) => {
-      if (player.getUser().getSocket() !== socket) {
-        player.getUser().getSocket().write(packet);
+      if (player.getUser().socket !== socket) {
+        console.log("동기화 중")
+        player.getUser().socket.write(packet);
       }
     });
   }
 
   broadcast(packet) {
     Object.values(this.players).forEach((player) => {
-      player.getUser().getSocket().write(packet);
+      console.log("브로드캐스팅하는 중")
+      player.user.socket.write(packet);
     });
   }
 
@@ -269,7 +271,6 @@ class Game {
 
     // 현재 phase 에 따라 기준 다르게 받기
     if (this.dayCounter >= config.game.phaseCount[this.dayPhase]) {
-      //isOver = true;
 
       if (this.dayPhase === DayPhase.DAY) {
         this.addWaveMonster();
@@ -304,13 +305,14 @@ class Game {
   monsterDisCovered() {
     for (const [key, monster] of this.monsters) {
       if (!monster.hasPriorityPlayer()) {
-        for (const [key, player] of this.players) {
+        for (const [playerId, player] of this.players) {
           monster.setTargetPlayer(player);
           if (monster.hasPriorityPlayer()) {
-            console.log('플레이어가 등록됨');
+            console.log(`플레이어가 등록됨${playerId}`);
+            console.log(`몬스터 등록됨${monster.id}`);
             const monsterDiscoverPayload = {
               monsterId: monster.id,
-              targetId: player.id,
+              targetId: playerId,
             };
 
             const packet = makePacket(
@@ -320,9 +322,6 @@ class Game {
             this.broadcast(packet);
           }
         }
-      }
-      else {
-        console.log("플레이어를 가지고 있음");
       }
     }
   }
