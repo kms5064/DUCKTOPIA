@@ -8,6 +8,11 @@ message PlayerPositionData {
   float y = 3;
 }
 
+message MonsterTarget {
+  int32 monsterId = 1;
+  int32 targetId = 2;
+}
+
 message User { // User 닉네임
   string name = 1;
   int32 userId = 2;
@@ -222,6 +227,11 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
   int32 playerId = 3;
 }
 
+message S2CPlayerDamagedByMonster {
+  int32 playerId = 1;
+  int32 monsterId = 2;
+}
+
 // 몬스터
 message S2CMonsterSpawnRequest // 몬스터 스폰 호스트클라이언트에게만 요청
 {
@@ -238,8 +248,7 @@ message S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스
 
 message S2CMonsterAwakeNotification // 몬스터 깨어남
 {
-  int32 monsterId = 1;
-  int32 targetId = 2;
+  repeated MonsterTarget monsterTarget = 1;
 }
 
 message S2CMonsterDeathNotification // 몬스터 사망
@@ -327,6 +336,7 @@ message GamePacket {
     C2SPlayerUseItemRequest playerUseItemRequest = 29;
     S2CPlayerEatFoodResponse playerEatFoodResponse = 30;
     S2CPlayerEquipWeaponResponse playerEquipWeaponResponse = 31;
+    S2CPlayerDamagedByMonster playerDamagedByMonster = 45;
 
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;
     C2SMonsterSpawnResponse monsterSpawnResponse = 33;

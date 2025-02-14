@@ -48,11 +48,9 @@ class Game {
       return;
     }
     this.gameLoop = setInterval(() => {
-      this.addMonster();
-      this.phaseCheck();
-      //this.addMonster();
+      // this.addMonster();
+      // this.phaseCheck();
       this.monsterUpdate();
-      //this.userUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
     }, 1000);
   }
@@ -202,26 +200,27 @@ class Game {
   }
 
   monsterDisCovered() {
+    const monsterDiscoverPayload = [];
     for (const [key, monster] of this.monsters) {
       if (!monster.hasPriorityPlayer()) {
         for (const [playerId, player] of this.players) {
           monster.setTargetPlayer(player);
           if (monster.hasPriorityPlayer()) {
             console.log('플레이어가 등록됨');
-            const monsterDiscoverPayload = {
+            monsterDiscoverPayload.push({
               monsterId: monster.id,
-              targetId: player.id,
-            };
-
-            const packet = makePacket(
-              config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
-              monsterDiscoverPayload,
-            );
-            this.broadcast(packet);
+              targetId: playerId,
+            });
           }
         }
       }
     }
+    const packet = makePacket(
+      config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
+      {monsterTarget: monsterDiscoverPayload},
+    );
+    this.broadcast(packet);
+
   }
 
   //플레이어가 등록된 몬스터들만 위치 패킷을 전송하는 게 좋겠다.
