@@ -34,9 +34,11 @@ const weaponPlayerHandler = ({ socket, payload }) => {
   const packet = makePacket(config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE, {
     success: true,
     itemId,
-    playerId: user.getUserData().id,
+    playerId: user.id,
   });
-  console.log(packet);
+
+  console.log(itemId,user.id);
+  
   game.broadcast(packet);
 };
 
