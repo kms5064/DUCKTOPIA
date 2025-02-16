@@ -41,7 +41,7 @@ const spawnMonsterHandler = ({ socket, payload }) => {
 
   // TODO : NOTI용 패킷 추가 해야함.
   const packet = makePacket(config.packetType.S_MONSTER_SPAWN_NOTIFICATION, payload);
-  game.notification(socket, packet);
+  game.broadcast(packet);
 };
 
 export default spawnMonsterHandler;
