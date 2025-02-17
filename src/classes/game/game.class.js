@@ -5,6 +5,7 @@ import Player from './player.class.js';
 import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
 import { DayPhase, FRAME_PER_40, WaveState } from '../../config/constants/game.js';
+import { MIN_COOLTIME_MONSTER_TRACKING, RANGE_COOLTIME_MONSTER_TRACKING } from '../../config/constants/monster.js';
 
 class Game {
   constructor(ownerId) {
@@ -38,6 +39,9 @@ class Game {
       2: [4, 5, 6], // 중앙 근접 2
       3: [7, 8], // 중앙 근접 3
     };
+
+    //몬스터 쿨타임
+    this.monsterLastUpdate = Date.now();
   }
 
   /**************
@@ -49,7 +53,7 @@ class Game {
     }
     this.gameLoop = setInterval(() => {
       // this.addMonster();
-      // this.phaseCheck();
+      this.phaseCheck();
       this.monsterUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
     }, 1000);
@@ -120,8 +124,8 @@ class Game {
       const { monster: monsterAsset } = getGameAssets();
 
       // 몬스터 데이터 뽑기
-      const codeIdx = Math.floor(Math.random() * config.game.monster.normalMonsterMaxCode);
-      const data = monsterAsset.data[0];
+      const codeIdx = Math.floor(Math.random() * 7);
+      const data = monsterAsset.data[codeIdx];
 
       // 몬스터 생성
       const monster = new Monster(
@@ -181,6 +185,8 @@ class Game {
     }
   }
 
+  //여기부터 몬스터 영역
+
   removeAllMonster() {
     this.monsters.clear();
     this.waveMonsters.clear();
@@ -196,6 +202,10 @@ class Game {
     this.monsterDisCovered();
     //몬스터y가 플레이어를 가지고 있을 경우 움직인다.
     //this.monsterMove();
+    this.monsterTimeCheck();
+
+    //몬스터의 모든 업데이트가 monster업데이트 체크를 갱신하자.
+    this.monsterLastUpdate = Date.now();
   }
 
   //현재는 각각의 몬스터의 정보를 단일로 보내고 있지만 나중에는 리스트를 통해 보내는 걸 생각해 보도록 하자.
@@ -206,7 +216,7 @@ class Game {
       let distance = Infinity;
       let inputId = 0;
       let inputPlayer = null;
-      if (!monster.hasPriorityPlayer()) {
+      if (!monster.hasPriorityPlayer() && monster.AwakeCoolTimeCheck()) {
         for (const [playerId, player] of this.players) {
           // 대상 찾아보기
           const calculedDistance = monster.returnCalculateDistance(player);
@@ -223,6 +233,8 @@ class Game {
           continue;
         }
         monster.setTargetPlayer(inputPlayer);
+        monster.getMonsterTrackingTime(Math.floor(Math.random()
+          * RANGE_COOLTIME_MONSTER_TRACKING + MIN_COOLTIME_MONSTER_TRACKING));
         if (monster.hasPriorityPlayer()) {
           console.log('플레이어가 등록됨');
           monsterDiscoverPayload.push({
@@ -276,6 +288,27 @@ class Game {
 
 
   }
+
+  monsterTimeCheck() {
+    const monsterTimeCheckPayload = [];
+    for (const [monsterId, monster] of this.monsters) {
+      const now = Date.now();
+      const deltaTime = now - this.monsterLastUpdate;
+      if (monster.CoolTimeCheck(deltaTime)) {
+        monsterTimeCheckPayload.push({ monsterId: monsterId, targetId: 0 });
+      }
+    }
+
+    const packet = makePacket(
+      config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
+      { monsterTarget: monsterTimeCheckPayload },
+    );
+    this.broadcast(packet);
+
+
+  }
+
+  //여기까지 몬스터 영역
 
   checkSpawnArea(monsterCode, x, y) {
     const distanceX = Math.abs(config.game.map.centerX - x);
@@ -377,7 +410,7 @@ class Game {
     // 현재 phase 에 따라 기준 다르게 받기
     if (this.dayCounter >= config.game.phaseCount[this.dayPhase]) {
       if (this.dayPhase === DayPhase.DAY) {
-        //this.addWaveMonster();
+        this.addWaveMonster();
       }
 
       this.changePhase();
