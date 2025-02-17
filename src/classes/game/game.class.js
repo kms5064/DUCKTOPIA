@@ -13,6 +13,7 @@ class Game {
     this.monsterIndex = 1;
     this.monsters = new Map();
     this.itemBoxes = new Map();
+    this.object = new Map();
     this.map = []; // 0과 1로 된 2차원배열?
     this.coreHp = config.game.core.maxHP;
     this.corePosition = config.game.core.position;
@@ -51,7 +52,7 @@ class Game {
     }
     this.gameLoop = setInterval(() => {
       // this.addMonster();
-      // this.phaseCheck();
+      this.phaseCheck();
       this.monsterUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
     }, 1000);
@@ -265,7 +266,19 @@ class Game {
     return this.itemBoxes.get(itemBoxId);
   }
 
+  /**************
+   * CORE
+   */
 
+  createObjectData() {
+    const coreData = [{
+      objectId: 1,
+      objectCode: 1,
+      itemData: []
+    }];
+    return coreData;
+  }
+  
   coreDamaged(damage) {
     this.coreHp -= damage;
     if (this.coreHp <= 0) {
@@ -349,7 +362,7 @@ class Game {
     // 현재 phase 에 따라 기준 다르게 받기
     if (this.dayCounter >= config.game.phaseCount[this.dayPhase]) {
       if (this.dayPhase === DayPhase.DAY) {
-        //this.addWaveMonster();
+        this.addWaveMonster();
       }
 
       this.changePhase();

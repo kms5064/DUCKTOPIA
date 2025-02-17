@@ -19,6 +19,7 @@ import playerOpenBoxHandler from './item/openBox.handler.js';
 import playerTakeOutAnItemHandler from './item/takeOutAnItem.handler.js';
 import playerPutAnItemHandler from './item/putAnItem.handler.js';
 import playerCloseBoxHandler from './item/closeBox.handler.js';
+import objectDamagedByMonsterHandler from './object/objectDamagedByMonster.handler.js';
 
 const handlers = {
   [config.packetType.REGISTER_REQUEST[0]]: signUpHandler,
@@ -36,11 +37,16 @@ const handlers = {
   [config.packetType.C_MONSTER_ATTACK_REQUEST[0]]: AttackByPlayerHandler,
   [config.packetType.C_MONSTER_MOVE_REQUEST[0]]: monsterMoveNotificationHandler,
   [config.packetType.C_PLAYER_USE_ITEM_REQUEST[0]]: weaponPlayerHandler,
-  [config.packetType.S_PLAYER_DAMAGED_BY_MONSTER[0]]: playerDamagedByMonsterHandler,
   [config.packetType.C_PLAYER_OPEN_BOX_REQUEST[0]]: playerOpenBoxHandler,
   [config.packetType.C_PLAYER_TAKE_OUT_AN_ITEM_REQUEST[0]]: playerTakeOutAnItemHandler,
   [config.packetType.C_PLAYER_PUT_AN_ITEM_REQUEST[0]]: playerPutAnItemHandler,
-  [config.packetType.C_PLAYER_CLOSE_BOX_REQUEST[0]]: playerCloseBoxHandler
+  [config.packetType.C_PLAYER_CLOSE_BOX_REQUEST[0]]: playerCloseBoxHandler,
+  [config.packetType.C_PLAYER_DAMAGED_BY_MONSTER_REQUEST[0]]: playerDamagedByMonsterHandler,
+  [config.packetType.C_OBJECT_DAMAGED_BY_MONSTER_REQUEST[0]]: objectDamagedByMonsterHandler,
+  // [config.packetType.C_PLAYER_OPEN_BOX_REQUEST[0]]: playerOpenBoxHandler,
+  // [config.packetType.C_PLAYER_TAKE_OUT_AN_ITEM_REQUEST[0]]: playerTakeOutAnItemHandler,
+  // [config.packetType.C_PLAYER_PUT_AN_ITEM_REQUEST[0]]: playerPutAnItemHandler,
+  // [config.packetType.C_PLAYER_CLOSE_BOX_REQUEST[0]]: playerCloseBoxHandler
 };
 
 export default handlers;
