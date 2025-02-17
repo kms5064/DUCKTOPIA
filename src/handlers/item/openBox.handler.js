@@ -69,8 +69,9 @@ const playerOpenBoxHandler = ({ socket, sequence, payload }) => {
    //    room.broadcast(notification);
    //  }
     //테스트용 패킷
+    console.log("player.user.id"+player.user.id);
     const playerOpenBoxPayload = {
-      playerId: player.id,
+      playerId: player.user.id,
       itemBoxId: itemBoxId,
       itemData: itemBox.itemList,
     };

@@ -46,7 +46,7 @@ const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
 
     //테스트용 패킷
     const notificationPayload = {
-      playerId: player.id,
+      playerId: player.user.id,
       itemBoxId: itemBoxId,
     };
 

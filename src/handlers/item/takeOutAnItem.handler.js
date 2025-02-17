@@ -50,7 +50,7 @@ const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
 
     // 꺼내진 아이템을 success코드와 같이 브로드캐스트 해야한다.
     const playerTakeOutAnItemPayload = {
-      playerId:player.id,
+      playerId:player.user.id,
       itemBoxId:itemBox.id,
       itemData:{
         itemId:1,

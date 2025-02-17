@@ -50,7 +50,7 @@ const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
     // const putAnItemRes = makePacket(config.packetType.PUT_AN_ITEM_RESPONSE, payload);
 
     const playerPutAnItemPayload ={
-      playerId:player.id,
+      playerId:player.user.id,
       itemBoxId:itemBox.id,
       itemData:{
         itemId:1,
