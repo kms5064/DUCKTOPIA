@@ -68,13 +68,13 @@ message itemData {
 message ObjectData {
     int32 objectId = 1;
     int32 objectCode = 2;
-    repeated itemData =3;
+    repeated itemData itemData =3;
 }
 
 message ObjectPositionData {
     int32 objectId = 1;
     int32 objectCode = 2;
-    repeated itemData =3;
+    repeated itemData itemData =3;
     float x = 4;
     float y = 5;
 }
