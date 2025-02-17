@@ -1,4 +1,3 @@
-import { userSession } from "../../sessions/session";
 import { roomSession, userSession } from "../../sessions/session.js";
 import makePacket from "../../utils/packet/makePacket.js";
 

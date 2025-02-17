@@ -281,7 +281,8 @@ class Game {
   createObjectData() {
     const coreData = [{
       objectId: 1,
-      objectCode: 1
+      objectCode: 1,
+      itemData: []
     }];
     return coreData;
   }
