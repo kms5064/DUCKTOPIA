@@ -50,7 +50,7 @@ class Game {
     }
     this.gameLoop = setInterval(() => {
       // this.addMonster();
-      // this.phaseCheck();
+      this.phaseCheck();
       this.monsterUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
     }, 1000);
@@ -369,7 +369,7 @@ class Game {
     // 현재 phase 에 따라 기준 다르게 받기
     if (this.dayCounter >= config.game.phaseCount[this.dayPhase]) {
       if (this.dayPhase === DayPhase.DAY) {
-        //this.addWaveMonster();
+        this.addWaveMonster();
       }
 
       this.changePhase();
