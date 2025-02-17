@@ -2,9 +2,44 @@ syntax = 'proto3';
 
 // 기본 구조
 
+message PlayerPositionData {
+  int32 playerId = 1;
+  float x = 2;
+  float y = 3;
+}
+
+message MonsterTarget {
+  int32 monsterId = 1;
+  int32 targetId = 2;
+}
+
 message User { // User 닉네임
   string name = 1;
   int32 userId = 2;
+}
+
+message MonsterData {
+  int32 monsterId = 1;
+  int32 monsterCode = 2;
+}
+
+message MonsterPositionData {
+  int32 monsterId = 1;
+  int32 monsterCode = 2;
+  float x = 3;
+  float y = 4;
+}
+
+message ObjectData {
+  int32 objectId = 1;
+  int32 objectCode = 2;
+}
+
+message ObjectPositionData {
+  int32 objectId = 1;
+  int32 objectCode = 2;
+  float x = 3;
+  float y = 4;
 }
 
 message C2SGamePrepareRequest { // 게임준비 요청
@@ -37,6 +72,129 @@ message S2CGameStartNotification { // 게임시작 알림
   repeated MonsterPositionData monsters = 3;
   repeated ObjectPositionData objects = 4;
 }
+
+// 이때 클라 서버 모두 몬스터, 장애물(오브젝트), 플레이어 정보를 가짐
+
+// 여기부터 인게임
+
+message C2SPlayerPositionUpdateRequest { // 캐릭터이동 요청
+  float x = 1;
+  float y = 2;
+}
+
+message S2CPlayerPositionUpdateNotification { // 캐릭터이동 알림
+  repeated PlayerPositionData playerPositions = 1;
+}
+
+message S2CPlayerHpUpdateNotification { // 플레이어 체력 변경 알림
+  int32 playerId = 1;
+  int32 hp = 2;
+}
+
+message C2SPlayerAttackRequest // 플레이어 공격 요청
+{
+  float playerDirX = 1; // 마우스 위치 정보
+  float playerDirY = 2;
+}
+
+message C2SPlayerAttackMonsterRequest {
+  float playerDirX = 1; // 마우스 위치 정보
+  float playerDirY = 2;
+  int32 monsterId = 3;
+}
+
+message S2CPlayerAttackNotification // 플레이어 공격 알림(동기화용)
+{
+  int32 playerId = 1;
+  float playerDirX = 2;
+  float playerDirY = 3;
+}
+
+message S2CPlayerDeathNotification { // 플레이어가 사망했을 때
+  int32 playerId = 1;
+}
+
+message S2CPlayerGetItemRequest {
+  int32 playerId = 1;
+  int32 itemId = 2;
+}
+
+message C2SPlayerUseItemRequest { // 아이템 사용 요청
+  int32 itemId = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은 소모)
+}
+
+message S2CPlayerEatFoodResponse { // 사용한 아이템이 식량일 때
+  bool success = 1;
+  int32 itemId = 2;
+  int32 playerId = 3;
+  int32 hunger = 4;
+}
+
+message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
+  bool success = 1;
+  int32 itemId = 2;
+  int32 playerId = 3;
+}
+
+message S2CPlayerDamagedByMonster {
+  int32 playerId = 1;
+  int32 monsterId = 2;
+}
+
+// 몬스터
+message S2CMonsterSpawnRequest // 몬스터 스폰 호스트클라이언트에게만 요청
+{
+  repeated MonsterData monsters = 1;
+}
+
+message C2SMonsterSpawnResponse { // 몬스터 좌표를 찍어서 서버에 전송
+  repeated MonsterPositionData monsters = 1;
+}
+
+message S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
+  repeated MonsterPositionData monsters = 1;
+}
+
+message S2CMonsterAwakeNotification // 몬스터 깨어남
+{
+  repeated MonsterTarget monsterTarget = 1;
+}
+
+message S2CMonsterDeathNotification // 몬스터 사망
+{
+  int32 monsterId = 1;
+}
+
+message C2SMonsterMoveRequest { // 몬스터 이동
+  repeated MonsterPositionData monsterPositionData = 1;
+}
+
+message S2CMonsterMoveNotification { // 몬스터 이동 알림
+  repeated MonsterPositionData monsterPositionData = 1;
+}
+
+message C2SMonsterAttackRequest { // 몬스터 공격 알림
+  int32 monsterId = 1;
+  int32 targetId = 2;
+}
+
+message S2CMonsterAttackNotification { // 몬스터 공격 모든 클라이언트에 알림
+  int32 monsterId = 1;
+  int32 targetId = 2;
+}
+
+message S2CMonsterHpUpdateNotification // 몬스터 체력 감소
+{
+  int32 monsterId = 1;
+  int32 hp = 2;
+}
+
+// 코어
+message S2CCoreHpUpdateNotification { // 코어 체력 감소 알림
+  int32 hp = 2;
+}
+
+message S2CGameOverNotification {}
 
 // 에러
 message S2CErrorNotification {
