@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon src/server.js"
+    "start": "npx nodemon ./src/server.js",
+    "loby": "npx nodemon ./src_loby/server.js",
+    "game": "npx nodemon ./src_game/server.js"
   },
   "keywords": [],
   "author": "",
