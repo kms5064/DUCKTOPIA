@@ -273,13 +273,14 @@ message S2CMonsterMoveNotification { // 몬스터 이동 알림
 
 message C2SMonsterAttackRequest { // 몬스터 공격 알림
   int32 monsterId = 1;
-  bool isPlayer =2;
+  bool isPlayer = 2;
   int32 targetId = 3;
 }
 
 message S2CMonsterAttackNotification { // 몬스터 공격 모든 클라이언트에 알림
   int32 monsterId = 1;
-  int32 targetId = 2;
+  bool isPlayer = 2;
+  int32 targetId = 3;
 }
 
 message S2CMonsterHpUpdateNotification // 몬스터 체력 감소

@@ -5,7 +5,7 @@ import CustomError from '../../utils/error/customError.js';
 
 //실질적으로 몬스터의 데미지가 들어가는 핸들러
 const playerDamagedByMonsterHandler = async ({ socket, payload }) => {
-    const { playerId, monsterId } = payload;
+    const { playerId, isPlayer, monsterId } = payload;
 
     const user = userSession.getUser(socket.id);
     const game = roomSession.getRoom(user.getRoomId()).getGame();
@@ -27,7 +27,7 @@ const playerDamagedByMonsterHandler = async ({ socket, payload }) => {
         //동기화 패킷은 계속 보내지고 있을 터이니 그 쪽에서 처리하면 될 테고
         console.log("현재채력:",player.hp);
 
-        monsterAttackPayload = { playerId: playerId, hp: player.hp };
+        monsterAttackPayload = { playerId: playerId, isPlayer: isPlayer, hp: player.hp };
         packet = makePacket(config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION, monsterAttackPayload);
     }
 
