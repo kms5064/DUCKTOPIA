@@ -76,8 +76,9 @@ class Monster extends MovableObjectBase {
   }
 
   getDirectByPlayer() {
-    const vectorX = Math.acos((this.priorityPlayer.x - this.x) / distance); //+, -를 구분지어서 할 수 있을 듯
-    const vectorY = Math.asin((this.priorityPlayer.y - this.y) / distance);
+    const playerPos = this.priorityPlayer.getPlayerPos();
+    const vectorX = Math.acos((playerPos.x - this.x) / distance); //+, -를 구분지어서 할 수 있을 듯
+    const vectorY = Math.asin((playerPos.y - this.y) / distance);
 
     return { x: vectorX, y: vectorY };
   }
@@ -101,14 +102,16 @@ class Monster extends MovableObjectBase {
 
   calculateBetweenDistance() {
     if (this.priorityPlayer !== null) {
+      const playerPos = this.priorityPlayer.getPlayerPos();
       this.distanceBetweenPlayer = Math.sqrt(
-        Math.pow(this.x - this.priorityPlayer.x, 2) + Math.pow(this.y - this.priorityPlayer.y, 2),
+        Math.pow(this.x - playerPos.x, 2) + Math.pow(this.y - playerPos.y, 2),
       );
     }
   }
 
   returnCalculateDistance(player) {
-    const distance = Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
+    const playerPos = player.getPlayerPos();
+    const distance = Math.sqrt(Math.pow(this.x - playerPos.x, 2) + Math.pow(this.y - playerPos.y, 2));
     return distance < this.awakeRange ? distance : -1;
   }
 
@@ -127,11 +130,19 @@ class Monster extends MovableObjectBase {
   //몬스터의 플레이어 추적을 잃게 만든다.
   //외부 측에서 타겟 플레이어가 있는지 체크한다.
   lostPlayer() {
+    if (this.priorityPlayer === null) {
+      console.log("왜 여기 접근됐지? lost player");
+      return;
+    }
+
+    const playerPos = this.priorityPlayer.getPlayerPos();
     const distance = Math.sqrt(
-      Math.pow(this.priorityPlayer.x - this.x, 2) + Math.pow(this.priorityPlayer.y - this.y, 2),
+      Math.pow(playerPos.x - this.x, 2) + Math.pow(playerPos.y - this.y, 2),
     );
 
-    if (distance > this.awakeRange + 10) {
+    console.log(`현재 거리 : ${distance} 멀어질 거리 : ${this.awakeRange + 5}`);
+
+    if (distance > this.awakeRange + 5) {
       //인식 범위보다 인식 끊기는 범위가 좀 더 넓어야 할 것이다.
       this.distanceBetweenPlayer = Infinity;
       this.priorityPlayer = null;
@@ -142,6 +153,8 @@ class Monster extends MovableObjectBase {
       return false;
     }
   }
+
+
 
   //몬스터가 죽거나 할 때 아이템 드롭할 아이템의 숫자를 제공한다.
   dropItemCount() {
@@ -199,8 +212,11 @@ class Monster extends MovableObjectBase {
 
   //플레이어를 세팅할 때의 조건을 확인한다.
   setTargetPlayerByDistance(player) {
+
+
     if (this.priorityPlayer === null) {
-      const distance = Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
+      const playerPos = player.getPlayerPos();
+      const distance = Math.sqrt(Math.pow(this.x - playerPos.x, 2) + Math.pow(this.y - playerPos.y, 2));
       if (distance <= this.awakeRange) {
         this.distanceBetweenPlayer = distance;
         this.priorityPlayer = player;
@@ -208,7 +224,8 @@ class Monster extends MovableObjectBase {
       }
     } else {
       if (player !== this.priorityPlayer) {
-        const distance = Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
+        const playerPos = this.priorityPlayer.getPlayerPos();
+        const distance = Math.sqrt(Math.pow(this.x - playerPos.x, 2) + Math.pow(this.y - playerPos.y, 2));
         if (this.distanceBetweenPlayer > distance) {
           this.priorityPlayer = player;
         }

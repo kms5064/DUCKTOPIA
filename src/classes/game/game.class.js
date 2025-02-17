@@ -52,7 +52,7 @@ class Game {
       // this.phaseCheck();
       this.monsterUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
-    }, FRAME_PER_40);
+    }, 1000);
   }
 
   gameEnd() {
@@ -131,7 +131,7 @@ class Game {
         data.hp,
         1,
         data.defence,
-        20,
+        5,
         data.speed,
         0,
         0,
@@ -194,10 +194,8 @@ class Game {
     //몬스터가 플레이어의 거리를 구해서 발견한다.
     //몬스터의 거리가 너무 멀어지면 id값을 0이나 -1을
     this.monsterDisCovered();
-    //몬스터가 플레이어를 가지고 있을 경우 움직인다.
+    //몬스터y가 플레이어를 가지고 있을 경우 움직인다.
     //this.monsterMove();
-    //this.monsterLostPlayer();
-
   }
 
   //현재는 각각의 몬스터의 정보를 단일로 보내고 있지만 나중에는 리스트를 통해 보내는 걸 생각해 보도록 하자.
@@ -205,21 +203,39 @@ class Game {
     const monsterDiscoverPayload = [];
     for (const [monsterId, monster] of this.monsters) {
       // 대상이 없는 몬스터만
+      let distance = Infinity;
+      let inputId = 0;
+      let inputPlayer = null;
       if (!monster.hasPriorityPlayer()) {
         for (const [playerId, player] of this.players) {
           // 대상 찾아보기
-          monster.setTargetPlayerByDistance(player);
-          if (monster.hasPriorityPlayer()) {
-            console.log('플레이어가 등록됨');
-            monsterDiscoverPayload.push({
-              monsterId: monsterId,
-              targetId: playerId,
-            });
+          const calculedDistance = monster.returnCalculateDistance(player);
+          if (calculedDistance === -1 || distance < calculedDistance) {
+            continue;
           }
+
+          distance = calculedDistance;
+          inputId = playerId;
+          inputPlayer = player;
+        }
+
+        if (inputPlayer === null) {
+          continue;
+        }
+
+        console.log(inputPlayer);
+        monster.setTargetPlayer(inputPlayer);
+        if (monster.hasPriorityPlayer()) {
+          console.log('플레이어가 등록됨');
+          monsterDiscoverPayload.push({
+            monsterId: monsterId,
+            targetId: inputId,
+          });
         }
       }
       else {
         if (monster.lostPlayer()) {
+          console.log(`${monsterId}가 플레이어를 잃음`)
           monsterDiscoverPayload.push({
             monsterId: monsterId,
             targetId: 0
@@ -262,12 +278,6 @@ class Game {
     game.broadcast(packet);
 
 
-  }
-
-  monsterCoolTimeCheck() {
-    for (const [monsterId, monster] of this.monsters) {
-
-    }
   }
 
   checkSpawnArea(monsterCode, x, y) {
