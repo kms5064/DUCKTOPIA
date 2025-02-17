@@ -48,11 +48,9 @@ class Game {
       return;
     }
     this.gameLoop = setInterval(() => {
-      //this.addMonster();
-      this.phaseCheck();
-      //this.addMonster();
+      // this.addMonster();
+      // this.phaseCheck();
       this.monsterUpdate();
-      //this.userUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
     }, 1000);
   }
@@ -131,9 +129,9 @@ class Game {
         data.monsterCode,
         data.name,
         data.hp,
-        data.attack,
+        1,
         data.defence,
-        data.range,
+        20,
         data.speed,
         0,
         0,
@@ -202,39 +200,29 @@ class Game {
   }
 
   monsterDisCovered() {
-
+    const monsterDiscoverPayload = [];
     for (const [key, monster] of this.monsters) {
-      //몬스터가 등록되어 있지 않다면 체크 좀 하자
+      // 대상이 없는 몬스터만
       if (!monster.hasPriorityPlayer()) {
-        let distance = Infinity;
-        let inputPlayer = null;
-        let inputplayerId = null;
         for (const [playerId, player] of this.players) {
-          const betweenDistance = monster.returnCalculateDistance(player);
-          if (betweenDistance !== -1 && distance > betweenDistance) {
-            distance = betweenDistance;
-            inputPlayer = player;
-            inputplayerId = playerId;
+          // 대상 찾아보기
+          monster.setTargetPlayerByDistance(player);
+          if (monster.hasPriorityPlayer()) {
+            console.log('플레이어가 등록됨');
+            monsterDiscoverPayload.push({
+              monsterId: monster.id,
+              targetId: playerId,
+            });
           }
         }
-
-        if (inputPlayer === null || inputplayerId === null) {
-          continue;
-        }
-        monster.setTargetPlayer(inputPlayer);
-
-        const monsterDiscoverPayload = {
-          monsterId: monster.id,
-          targetId: inputplayerId,
-        };
-
-        const packet = makePacket(
-          config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
-          monsterDiscoverPayload,
-        );
-        this.broadcast(packet);
       }
     }
+    const packet = makePacket(
+      config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
+      {monsterTarget: monsterDiscoverPayload},
+    );
+    this.broadcast(packet);
+
   }
 
   //플레이어가 등록된 몬스터들만 위치 패킷을 전송하는 게 좋겠다.
