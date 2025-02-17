@@ -379,6 +379,7 @@ class Game {
 
       this.monsters.set(monsterId, monster);
       this.waveMonsters.set(monsterId, monster);
+
       this.monsterIndex++; //Index 증가
 
       // 몬스터 id와 code 저장
