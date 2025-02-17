@@ -24,9 +24,9 @@ const gamePrepareReqHandler = ({ socket, payload }) => {
   const GamePrepareResponse = makePacket(config.packetType.PREPARE_GAME_RESPONSE, {
     success: true,
     monsters: monsterData,
-    objects: [
+    objects: [ objectData,
       {
-        objectId: 1,
+        objectId: 2,
         objectCode: 2,
         itemData: {
           itemId: 1,

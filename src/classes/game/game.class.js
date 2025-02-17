@@ -271,11 +271,11 @@ class Game {
    */
 
   createObjectData() {
-    const coreData = [{
+    const coreData = {
       objectId: 1,
       objectCode: 1,
       itemData: []
-    }];
+    };
     return coreData;
   }
   
