@@ -44,16 +44,16 @@ const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
       throw new CustomError( '플레이어를 찾을 수 없습니다');
     }
 
-    const itemBox = game.getItemBoxById(itemBoxId);
+    // const itemBox = game.getItemBoxById(itemBoxId);
 
     // const item = itemBox.takeOutAnItem(itemType,count, player);
 
     // 꺼내진 아이템을 success코드와 같이 브로드캐스트 해야한다.
     const playerTakeOutAnItemPayload = {
       playerId:player.user.id,
-      itemBoxId:itemBox.id,
+      itemBoxId:2,
       itemData:{
-        itemId:1,
+        itemId:itemType,
         count: count,
       },
       count:count,

@@ -72,8 +72,8 @@ const playerOpenBoxHandler = ({ socket, sequence, payload }) => {
     console.log("player.user.id"+player.user.id);
     const playerOpenBoxPayload = {
       playerId: player.user.id,
-      itemBoxId: itemBoxId,
-      itemData: itemBox.itemList,
+      itemBoxId: 2,
+      itemData: [],
     };
 
     const notification = makePacket(config.packetType.S_PLAYER_OPEN_BOX_NOTIFICATION, playerOpenBoxPayload);

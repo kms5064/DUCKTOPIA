@@ -51,9 +51,9 @@ const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
 
     const playerPutAnItemPayload ={
       playerId:player.user.id,
-      itemBoxId:itemBox.id,
+      itemBoxId: 2,
       itemData:{
-        itemId:1,
+        itemId: itemType,
         count: count,
       },
       count:count,
