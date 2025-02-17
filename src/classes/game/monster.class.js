@@ -38,6 +38,7 @@ class Monster extends MovableObjectBase {
     // 웨이브 몬스터 여부
     this.isWaveMonster = isWaveMonster;
     // 몬스터 코드 다르게 하기
+
     // 초기 설정을 베이스로 => 플레이어 타입이랑 베이스랑 같이 넣을 수 있나?
   }
 
@@ -97,6 +98,7 @@ class Monster extends MovableObjectBase {
     return this.priorityPlayer;
   }
 
+
   calculateBetweenDistance() {
     if (this.priorityPlayer !== null) {
       this.distanceBetweenPlayer = Math.sqrt(
@@ -133,9 +135,11 @@ class Monster extends MovableObjectBase {
       //인식 범위보다 인식 끊기는 범위가 좀 더 넓어야 할 것이다.
       this.distanceBetweenPlayer = Infinity;
       this.priorityPlayer = null;
+      return true;
       //패킷을
     } else {
       this.distanceBetweenPlayer = distance;
+      return false;
     }
   }
 
