@@ -3,7 +3,7 @@ import { config } from '../../config/config.js';
 class User {
   constructor(socket) {
     this.socket = socket;
-    this.id = null; //클라이언트 접속시 id = null, 로그인했을때 id에 email 값 넣을 것임
+    this.id = null; //여기에 유니크 아이디
     this.email = null;
     this.roomId = null; // game이 room 안에 있으므로 여기서 찾을 수 있습니다!
     this.state = null; // 'lobby', 'room', 'playing' 등 현재 상태 체크용
@@ -65,6 +65,10 @@ class User {
 
   getRoomId() {
     return this.roomId;
+  }
+
+  getSocket() {
+    return this.socket;
   }
 }
 
