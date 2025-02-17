@@ -4,7 +4,7 @@ import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
 
 const gameStartHandler = ({ socket, payload }) => {
-  try {
+  
     const { monsters, objects } = payload; //좌표가 objects에 들어있고 그걸 서버에 저장
 
   const user = userSession.getUser(socket.id);

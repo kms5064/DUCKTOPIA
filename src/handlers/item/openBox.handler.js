@@ -1,8 +1,7 @@
 import CustomError from '../../utils/error/customError.js';
-import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
-import makePacket from '../../utils/packet/makePacket';
+import makePacket from '../../utils/packet/makePacket.js';
 
 const playerOpenBoxHandler = ({ socket, sequence, payload }) => {
   try {
@@ -64,13 +63,13 @@ const playerOpenBoxHandler = ({ socket, sequence, payload }) => {
    //    room.broadcast(notification);
    //  }
     //테스트용 패킷
-    const payload = {
+    const playerOpenBoxpayload = {
       playerId: player.id,
       itemBoxId: itemBoxId,
       itemData: itemBox.itemList,
     };
 
-    const notification = makePacket(config.packetType.S_PLAYER_OPEN_BOX_RESPONSE, payload);
+    const notification = makePacket(config.packetType.S_PLAYER_OPEN_BOX_RESPONSE, playerOpenBoxpayload);
     //이 유저가 열고 있다는거 브로드캐스트
 
     room.broadcast(notification);

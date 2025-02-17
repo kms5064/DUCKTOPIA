@@ -1,8 +1,7 @@
 import CustomError from '../../utils/error/customError.js';
-import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
-import makePacket from '../../utils/packet/makePacket';
+import makePacket from '../../utils/packet/makePacket.js';
 
 const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
   try {
@@ -44,12 +43,12 @@ const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
     }
 
     //테스트용 패킷
-    const payload = {
+    const playerCloseBoxpayload = {
       playerId: player.id,
       itemBoxId: itemBoxId,
     };
 
-    const notification = makePacket(config.packetType.S_PLAYER_CLOSE_BOX_RESPONSE, payload);
+    const notification = makePacket(config.packetType.S_PLAYER_CLOSE_BOX_RESPONSE, playerCloseBoxpayload);
     //이 유저가 닫는거 브로드캐스트
 
     room.broadcast(notification);

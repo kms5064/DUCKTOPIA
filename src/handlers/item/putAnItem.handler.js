@@ -1,8 +1,7 @@
 import CustomError from '../../utils/error/customError.js';
-import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
-import makePacket from "../../utils/packet/makePacket";
+import makePacket from "../../utils/packet/makePacket.js";
 
 
 const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
@@ -49,7 +48,7 @@ const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
 
     // const putAnItemRes = makePacket(config.packetType.PUT_AN_ITEM_RESPONSE, payload);
 
-    const payload ={
+    const playerPutAnItemPayload ={
       playerId:player.id,
       itemBoxId:itemBox.id,
       itemData:{
@@ -60,7 +59,7 @@ const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
       success:false
     };
 
-    const notification = makePacket(config.packetType.S_PLAYER_PUT_AN_ITEM_RESPONSE, payload);
+    const notification = makePacket(config.packetType.S_PLAYER_PUT_AN_ITEM_RESPONSE, playerPutAnItemPayload);
     //이 유저가 열고 있다는거 브로드캐스트
 
     room.broadcast(notification);

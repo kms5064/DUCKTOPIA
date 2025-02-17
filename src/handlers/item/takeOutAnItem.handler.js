@@ -1,8 +1,7 @@
 import CustomError from '../../utils/error/customError.js';
-import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
-import makePacket from "../../utils/packet/makePacket";
+import makePacket from "../../utils/packet/makePacket.js";
 
 
 const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
@@ -48,7 +47,7 @@ const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
     // const item = itemBox.takeOutAnItem(itemType,count, player);
 
     // 꺼내진 아이템을 success코드와 같이 브로드캐스트 해야한다.
-    const payload ={
+    const playerTakeOutAnItempayload = {
       playerId:player.id,
       itemBoxId:itemBox.id,
       itemData:{
@@ -59,7 +58,7 @@ const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
       success:false
     };
 
-    const notification = makePacket(config.packetType.S_PLAYER_TAKE_OUT_AN_ITEM_RESPONSE, payload);
+    const notification = makePacket(config.packetType.S_PLAYER_TAKE_OUT_AN_ITEM_RESPONSE, playerTakeOutAnItempayload);
     //이 유저가 열고 있다는거 브로드캐스트
 
     room.broadcast(notification);

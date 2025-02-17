@@ -294,17 +294,17 @@ message S2CCoreHpUpdateNotification { // 코어 체력 감소 알림
 }
 
 //아이템 박스
-message C2SOPlyaerpenBoxRequset{
+message C2SPlayerOpenBoxRequest{
     int32 itemBoxId =1;
 }
 
-message S2CPLayerOpenBoxNotification{
+message S2CPlayerOpenBoxNotification{
     int32 playerId =1;
     int32 itemBoxId =2;
     repeated itemData itemData =3;
 }
 
-message C2SPlayerTakeOutAnItemRequset{
+message C2SPlayerTakeOutAnItemRequest{
     int32 itemBoxId =1;
     int32 itemType =2;
     int32 count =3;
@@ -318,7 +318,7 @@ message S2CPlayerTakeOutAnItemNotification{
     bool success =5;
 }
 
-message C2SPlayerPutAnItemRequset{
+message C2SPlayerPutAnItemRequest{
     int32 itemBoxId =1;
     int32 itemType =2;
     int32 count =3;
@@ -332,19 +332,18 @@ message S2CPlayerPutAnItemNotification{
     bool success =5;
 }
 
-message C2SPlayerCloseBoxRequset{
+message C2SPlayerCloseBoxRequest{
     int32 itemBoxId =1;
 }
 
-message S2CPlayerCloseBoxNotifiacation{
+message S2CPlayerCloseBoxNotification{
     int32 playerId =1;
     int32 itemBoxId =2;
 }
 
 message S2CGameOverNotification {
-}
 
-message S2CGameOverNotification {}
+}
 
 // 에러
 message S2CErrorNotification {
