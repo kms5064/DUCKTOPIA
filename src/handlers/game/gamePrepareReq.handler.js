@@ -4,11 +4,11 @@ import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
 
 const gamePrepareReqHandler = ({ socket, payload }) => {
-    const user = userSession.getUser(socket.id);
-    const room = roomSession.getRoom(user.roomId);
-    if (!room) {
-      throw new Error('방 생성에 실패했습니다!');
-    }
+  const user = userSession.getUser(socket.id);
+  const room = roomSession.getRoom(user.roomId);
+  if (!room) {
+    throw new Error('방 생성에 실패했습니다!');
+  }
 
   const game = room.getGame();
   if (!game) {
@@ -21,7 +21,16 @@ const gamePrepareReqHandler = ({ socket, payload }) => {
   const GamePrepareResponse = makePacket(config.packetType.PREPARE_GAME_RESPONSE, {
     success: true,
     monsters: monsterData,
-    objects: [],
+    objects: [
+      {
+        objectId: 1,
+        objectCode: 2,
+        itemData: {
+          itemId: 1,
+          count: 2,
+        },
+      },
+    ],
   });
   //   message ObjectData {
   //     int32 objectId = 1; 고유 번호
@@ -34,8 +43,7 @@ const gamePrepareReqHandler = ({ socket, payload }) => {
     room: room.getRoomData(),
   });
 
-    room.broadcast(GamePrepareNotification);
-    
+  room.broadcast(GamePrepareNotification);
 };
 
 export default gamePrepareReqHandler;
