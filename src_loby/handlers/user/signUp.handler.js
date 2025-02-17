@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import Joi from 'joi';
-import { createUser } from '../../db/user/user.db.js';
+import { createUser } from '../../db/mysql/user/user.db.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
 import { config } from '../../config/config.js';

@@ -1,4 +1,4 @@
-import { findUserByEmail } from '../../db/user/user.db.js';
+import { findUserByEmail } from '../../db/mysql/user/user.db.js';
 import { userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
