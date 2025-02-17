@@ -60,6 +60,11 @@ message itemData {
     int32 count = 2;
 }
 
+message itemData {
+    int32 itemId =1;
+    int32 count = 2;
+}
+
 message ObjectData {
     int32 objectId = 1;
     int32 objectCode = 2;
@@ -291,6 +296,54 @@ message S2CMonsterHpUpdateNotification // 몬스터 체력 감소
 // 코어
 message S2CCoreHpUpdateNotification { // 코어 체력 감소 알림
   int32 hp = 2;
+}
+
+//아이템 박스
+message C2SOPlyaerpenBoxRequset{
+    int32 itemBoxId =1;
+}
+
+message S2CPLayerOpenBoxNotification{
+    int32 playerId =1;
+    int32 itemBoxId =2;
+    repeated itemData itemData =3;
+}
+
+message C2SPlayerTakeOutAnItemRequset{
+    int32 itemBoxId =1;
+    int32 itemType =2;
+    int32 count =3;
+}
+
+message S2CPlayerTakeOutAnItemNotification{
+    int32 playerId =1;
+    int32 itemBoxId =2;
+    itemData itemData =3;
+    int32 count =4;
+    bool success =5;
+}
+
+message C2SPlayerPutAnItemRequset{
+    int32 itemBoxId =1;
+    int32 itemType =2;
+    int32 count =3;
+}
+
+message S2CPlayerPutAnItemNotification{
+    int32 playerId =1;
+    int32 itemBoxId =2;
+    itemData itemData =3;
+    int32 count =4;
+    bool success =5;
+}
+
+message C2SPlayerCloseBoxRequset{
+    int32 itemBoxId =1;
+}
+
+message S2CPlayerCloseBoxNotifiacation{
+    int32 playerId =1;
+    int32 itemBoxId =2;
 }
 
 //아이템 박스
