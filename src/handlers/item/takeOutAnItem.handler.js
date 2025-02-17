@@ -5,9 +5,13 @@ import { config } from '../../config/config.js';
 import makePacket from "../../utils/packet/makePacket";
 
 
-const takeOutAnItemHandler = ({ socket, sequence, payload }) => {
+const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
+    
+    //const { itemBoxId, index , count} = payload;
+    const { itemBoxId, itemType , count} = payload; //index대신 아이템 종류
+    console.log(`takeOutAnItemHandler itemBoxId: ${itemBoxId},itemType: ${itemType},count: ${count}`);
 
-    const { itemBoxId, index } = payload;
+
 
     // 유저 객체 조회
     const user = userSession.getUser(socket);
@@ -41,13 +45,24 @@ const takeOutAnItemHandler = ({ socket, sequence, payload }) => {
 
     const itemBox = game.getItemBoxById(itemBoxId);
 
-    const item = itemBox.takeOutAnItem(index, player);
+    // const item = itemBox.takeOutAnItem(itemType,count, player);
 
-    // 패킷을 쏴줄 필요가 있나?
-    const takeOutAnItemRes = makePacket(config.packetType.TAKE_OUT_AN_ITEM_RESPONSE, payload);
+    // 꺼내진 아이템을 success코드와 같이 브로드캐스트 해야한다.
+    const payload ={
+      playerId:player.id,
+      itemBoxId:itemBox.id,
+      itemData:{
+        itemId:1,
+        count: count,
+      },
+      count:count,
+      success:false
+    };
 
-    socket.write(takeOutAnItemRes);
+    const notification = makePacket(config.packetType.S_PLAYER_TAKE_OUT_AN_ITEM_RESPONSE, payload);
+    //이 유저가 열고 있다는거 브로드캐스트
 
+    room.broadcast(notification);
 };
 
-export default takeOutAnItemHandler;
+export default playerTakeOutAnItemHandler;

@@ -43,6 +43,14 @@ export const PACKET_TYPE = {
   S_PLAYER_EAT_FOOD_RESPONSE: [4010, 'playerEatFoodResponse'],
   S_PLAYER_EQUIP_WEAPON_RESPONSE: [4011, 'playerEquipWeaponResponse'],
   S_PLAYER_DAMAGED_BY_MONSTER: [4012, 'playerDamagedByMonster'],
+  C_PLAYER_OPEN_BOX_REQUEST: [4013, 'playerOpenBoxRequest'],
+  S_PLAYER_OPEN_BOX_NOTIFICATION: [4014, 'playerOpenBoxNotification'],
+  C_PLAYER_TAKE_OUT_AN_ITEM_REQUEST: [4015, 'playerTakeOutAnItemRequest'],
+  S_PLAYER_TAKE_OUT_AN_ITEM_NOTIFICATION: [4016, 'playerTakeOutAnItemNotification'],
+  C_PLAYER_PUT_AN_ITEM_REQUEST: [4017, 'playerPutAnItemRequest'],
+  S_PLAYER_PUT_AN_ITEM_NOTIFICATION: [4018, 'playerPutAnItemNotification'],
+  C_PLAYER_CLOSE_BOX_REQUEST:[4019, 'playerCloseBoxRequest'],
+  S_PLAYER_CLOSE_BOX_NOTIFICATION:[4020, 'playerCloseBoxNotification'],
 
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],

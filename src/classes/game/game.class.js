@@ -12,7 +12,7 @@ class Game {
     this.monsterIndex = 1;
     this.monsters = new Map();
     this.itemBoxes = new Map();
-    this.map = []; //0과 1로 된 2차원배열?
+    this.map = []; // 0과 1로 된 2차원배열?
     this.coreHp = config.game.core.maxHP;
     this.corePosition = config.game.core.position;
     this.lastUpdate = 0;
@@ -265,28 +265,6 @@ class Game {
   }
 
 
-  getItemBoxById(itemBoxId){
-    return this.itemBoxes.get(itemBoxId);
-  }
-
-
-  checkSpawnArea(monsterCode, x, y) {
-    const distanceX = Math.abs(config.game.map.centerX - x);
-    const distanceY = Math.abs(config.game.map.centerY - y);
-
-    let area = 4; // 최대 구역 4
-    for (const zone of this.zone) {
-      if (distanceX <= zone.distance && distanceY <= zone.distance) {
-        area = zone.area;
-        return;
-      }
-    }
-    return this.monsterArea[area].includes(monsterCode);
-  }
-
-  /**************
-   * CORE
-   */
   coreDamaged(damage) {
     this.coreHp -= damage;
     if (this.coreHp <= 0) {

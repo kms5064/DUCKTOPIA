@@ -5,19 +5,21 @@ class ItemBox {
     this.id = id;
     this.x = x;
     this.y = y;
+    //this.hp = ITEM_BOX_HP;
     this.itemList = Array.from({ length: 8 }, () => null);
+    this.occupied = null; //점유중 플레이어아이디
   }
 
   getItemList() {
     return this.itemList;
   }
 
-  takeOutAnItem(index, player) {
-    const removedItem = this.itemList.splice(index, 1, null);
+  takeOutAnItem(itemType, player) {
+    //조회하는걸로 바꾸기
+    const removedItem = this.itemList.find((item)=>item.type === itemType);
     if(!removedItem){
       throw new CustomError(ErrorCode.ITEM_NOT_FOUND,'상자에서 아이템을 찾을 수 없습니다.');
     }
-
 
     player.addItem(removedItem);
     

@@ -2,13 +2,12 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
-import makePacket from "../../utils/packet/makePacket";
+import makePacket from '../../utils/packet/makePacket';
 
-
-const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
+const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
   try {
-    const { itemBoxId,itemType, count } = payload;
-    console.log(`putAnItemHandler itemBoxId: ${itemBoxId},itemType: ${itemType},count: ${count}`);
+    const { itemBoxId } = payload;
+    console.log(`playerCloseBoxHandler itemBoxId: ${itemBoxId}`);
 
     // 유저 객체 조회
     const user = userSession.getUser(socket);
@@ -39,35 +38,26 @@ const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
     if (!player) {
       throw new CustomError(ErrorCodes.PLAYER_NOT_FOUND, '플레이어를 찾을 수 없습니다');
     }
-
     const itemBox = game.getItemBoxById(itemBoxId);
+    if (!itemBox) {
+      throw new CustomError(ErrorCodes.ITEMBOX_NOT_FOUND, '상자를 찾을 수 없습니다');
+    }
 
-    // player.removeItem(item.id);
-    // const payload = itemBox.putAnItem(index, item);
-
-    // // 넣어진 아이템을 success코드와 같이 브로드캐스트 해야한다.
-
-    // const putAnItemRes = makePacket(config.packetType.PUT_AN_ITEM_RESPONSE, payload);
-
-    const payload ={
-      playerId:player.id,
-      itemBoxId:itemBox.id,
-      itemData:{
-        itemId:1,
-        count: count,
-      },
-      count:count,
-      success:false
+    //테스트용 패킷
+    const payload = {
+      playerId: player.id,
+      itemBoxId: itemBoxId,
     };
 
-    const notification = makePacket(config.packetType.S_PLAYER_PUT_AN_ITEM_RESPONSE, payload);
-    //이 유저가 열고 있다는거 브로드캐스트
+    const notification = makePacket(config.packetType.S_PLAYER_CLOSE_BOX_RESPONSE, payload);
+    //이 유저가 닫는거 브로드캐스트
 
     room.broadcast(notification);
+
   } catch (error) {
     console.error(error);
-    errorHandler(socket, error, config.packetType.S_PLAYER_PUT_AN_ITEM_RESPONSE);
+    errorHandler(socket, error, config.packetType.S_PLAYER_OPEN_BOX_RESPONSE);
   }
 };
 
-export default playerPutAnItemHandler;
+export default playerCloseBoxHandler;

@@ -23,6 +23,11 @@ const gamePrepareReqHandler = ({ socket, payload }) => {
     monsters: monsterData,
     objects: [],
   });
+  //   message ObjectData {
+  //     int32 objectId = 1; 고유 번호
+  //     int32 objectCode = 2; 종류 1은 코어 2는 박스
+  //     repeated itemData =3;
+  // }
   socket.write(GamePrepareResponse);
 
   const GamePrepareNotification = makePacket(config.packetType.PREPARE_GAME_NOTIFICATION, {

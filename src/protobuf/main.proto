@@ -55,16 +55,23 @@ message MonsterPositionData {
   float y = 4;
 }
 
+message itemData {
+    int32 itemId =1;
+    int32 count = 2;
+}
+
 message ObjectData {
-  int32 objectId = 1;
-  int32 objectCode = 2;
+    int32 objectId = 1;
+    int32 objectCode = 2;
+    repeated itemData =3;
 }
 
 message ObjectPositionData {
-  int32 objectId = 1;
-  int32 objectCode = 2;
-  float x = 3;
-  float y = 4;
+    int32 objectId = 1;
+    int32 objectCode = 2;
+    repeated itemData =3;
+    float x = 4;
+    float y = 5;
 }
 
 // 통신 Payload
@@ -280,9 +287,61 @@ message S2CMonsterHpUpdateNotification // 몬스터 체력 감소
   int32 hp = 2;
 }
 
+
 // 코어
 message S2CCoreHpUpdateNotification { // 코어 체력 감소 알림
   int32 hp = 2;
+}
+
+//아이템 박스
+message C2SOPlyaerpenBoxRequset{
+    int32 itemBoxId =1;
+}
+
+message S2CPLayerOpenBoxNotification{
+    int32 playerId =1;
+    int32 itemBoxId =2;
+    repeated itemData itemData =3;
+}
+
+message C2SPlayerTakeOutAnItemRequset{
+    int32 itemBoxId =1;
+    int32 itemType =2;
+    int32 count =3;
+}
+
+message S2CPlayerTakeOutAnItemNotification{
+    int32 playerId =1;
+    int32 itemBoxId =2;
+    itemData itemData =3;
+    int32 count =4;
+    bool success =5;
+}
+
+message C2SPlayerPutAnItemRequset{
+    int32 itemBoxId =1;
+    int32 itemType =2;
+    int32 count =3;
+}
+
+message S2CPlayerPutAnItemNotification{
+    int32 playerId =1;
+    int32 itemBoxId =2;
+    itemData itemData =3;
+    int32 count =4;
+    bool success =5;
+}
+
+message C2SPlayerCloseBoxRequset{
+    int32 itemBoxId =1;
+}
+
+message S2CPlayerCloseBoxNotifiacation{
+    int32 playerId =1;
+    int32 itemBoxId =2;
+}
+
+message S2CGameOverNotification {
 }
 
 message S2CGameOverNotification {}
@@ -331,6 +390,15 @@ message GamePacket {
     S2CPlayerEatFoodResponse playerEatFoodResponse = 30;
     S2CPlayerEquipWeaponResponse playerEquipWeaponResponse = 31;
     S2CPlayerDamagedByMonster playerDamagedByMonster = 45;
+    C2SPlayerOpenBoxRequest playerOpenBoxRequest = 46;
+    S2CPlayerOpenBoxNotifiacation playeropenBoxNotification = 47;
+    C2SPlayerTakeOutAnItemRequest playerTakeOutAnItemRequest = 48;
+    S2CPlayerTakeOutAnItemNotification playerTakeOutAnItemNotification = 49;
+    C2SPlayerPutAnItemRequest playerPutAnItemRequest = 50;
+    S2CPlayerPutAnItemNotification playerPutAnItemNotification = 51;
+    C2SPlayerCloseBoxRequest playerCloseBoxRequest = 46;
+    S2CPlayerCloseBoxNotification playerCloseBoxNotification = 47;
+    
 
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;
     C2SMonsterSpawnResponse monsterSpawnResponse = 33;
