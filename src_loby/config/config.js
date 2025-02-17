@@ -15,6 +15,7 @@ import {
   PAYLOAD_LENGTH_BYTE,
   VERSION_LENGTH_BYTE,
 } from './constants/header.js';
+import { REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, REDIS_USER } from './constants/env.js';
 
 export const config = {
   header: {
@@ -41,5 +42,11 @@ export const config = {
       host: DB_HOST,
       port: DB_PORT,
     },
+  },
+  redis: {
+    user: REDIS_USER,
+    password: REDIS_PASSWORD,
+    host: REDIS_HOST,
+    port: REDIS_PORT,
   },
 };
