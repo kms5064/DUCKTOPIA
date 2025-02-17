@@ -25,13 +25,13 @@ const playerDamagedByMonsterHandler = async ({ socket, payload }) => {
         packet = makePacket(config.packetType.S_PLAYER_DEATH_NOTIFICATION, deadPayload);
     } else {
         //동기화 패킷은 계속 보내지고 있을 터이니 그 쪽에서 처리하면 될 테고
-        console.log(player.hp);
+        console.log("현재채력:",player.hp);
 
         monsterAttackPayload = { playerId: playerId, hp: player.hp };
         packet = makePacket(config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION, monsterAttackPayload);
     }
 
-    game.notification(socket, packet);
+    game.broadcast(packet);
 }
 
 export default playerDamagedByMonsterHandler;

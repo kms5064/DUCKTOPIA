@@ -4,7 +4,7 @@ import Monster from './monster.class.js';
 import Player from './player.class.js';
 import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
-import { DayPhase, WaveState } from '../../config/constants/game.js';
+import { DayPhase, FRAME_PER_40, WaveState } from '../../config/constants/game.js';
 
 class Game {
   constructor(ownerId) {
@@ -48,13 +48,11 @@ class Game {
       return;
     }
     this.gameLoop = setInterval(() => {
-      //this.addMonster();
-      this.phaseCheck();
-      //this.addMonster();
+      // this.addMonster();
+      // this.phaseCheck();
       this.monsterUpdate();
-      //this.userUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
-    }, 1000);
+    }, FRAME_PER_40);
   }
 
   gameEnd() {
@@ -131,9 +129,9 @@ class Game {
         data.monsterCode,
         data.name,
         data.hp,
-        data.attack,
+        1,
         data.defence,
-        data.range,
+        20,
         data.speed,
         0,
         0,
@@ -204,63 +202,37 @@ class Game {
 
   //현재는 각각의 몬스터의 정보를 단일로 보내고 있지만 나중에는 리스트를 통해 보내는 걸 생각해 보도록 하자.
   monsterDisCovered() {
-    //const disCoveredMonsterList = [];
+    const monsterDiscoverPayload = [];
     for (const [monsterId, monster] of this.monsters) {
-      //몬스터가 등록되어 있지 않다면 체크 좀 하자
+      // 대상이 없는 몬스터만
       if (!monster.hasPriorityPlayer()) {
-
-        let distance = Infinity;
-        let inputPlayer = null;
-        let inputplayerId = null;
         for (const [playerId, player] of this.players) {
-          const betweenDistance = monster.returnCalculateDistance(player);
-          if (betweenDistance !== -1 && distance > betweenDistance) {
-            distance = betweenDistance;
-            inputPlayer = player;
-            inputplayerId = playerId;
+          // 대상 찾아보기
+          monster.setTargetPlayerByDistance(player);
+          if (monster.hasPriorityPlayer()) {
+            console.log('플레이어가 등록됨');
+            monsterDiscoverPayload.push({
+              monsterId: monsterId,
+              targetId: playerId,
+            });
           }
         }
-
-        if (inputPlayer === null || inputplayerId === null) {
-          continue;
-        }
-        monster.setTargetPlayer(inputPlayer);
-
-        const monsterDiscoverPayload = {
-          monsterId: monsterId,
-          targetId: inputplayerId,
-        };
-
-        //disCoveredMonsterList.push(monsterDiscoverPayload);
-
-
-        const packet = makePacket(
-          config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
-          monsterDiscoverPayload,
-        );
-        this.broadcast(packet);
-
-        //여기서부터 여러 몬스터 리스트에 보낸다는 전제
-
-        //여기까지 여러 몬스터 리스트에 보낸다는 전제
       }
       else {
-        //플레이어와 현재 몬스터의 거리를 확인하여 떨어질지 말지를 보내고 있다.
         if (monster.lostPlayer()) {
-          //이 패킷으로 플레이어 아이디를 초기화하는 방법도 있다.
-          const monsterLostPayload = {
+          monsterDiscoverPayload.push({
             monsterId: monsterId,
-            playerId: 0
-          }
-
-          const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, monsterLostPayload);
-          this.broadcast(packet);
-        }
-        else {
-          continue;
+            targetId: 0
+          })
         }
       }
     }
+    const packet = makePacket(
+      config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
+      { monsterTarget: monsterDiscoverPayload },
+    );
+    this.broadcast(packet);
+
   }
 
   //플레이어가 등록된 몬스터들만 위치 패킷을 전송하는 게 좋겠다.
