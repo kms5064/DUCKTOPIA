@@ -1,4 +1,4 @@
-import CustomError from "../../utils/error/customError";
+import CustomError from "../../utils/error/customError.js";
 
 class ItemBox {
   constructor(id, x, y) {
@@ -18,7 +18,7 @@ class ItemBox {
     //조회하는걸로 바꾸기
     const removedItem = this.itemList.find((item)=>item.type === itemType);
     if(!removedItem){
-      throw new CustomError(ErrorCode.ITEM_NOT_FOUND,'상자에서 아이템을 찾을 수 없습니다.');
+      throw new CustomError('상자에서 아이템을 찾을 수 없습니다.');
     }
 
     if(removedItem.stack>=count){
@@ -54,6 +54,8 @@ class ItemBox {
     [this.itemList[index1], this.itemList[index2]] = [this.itemList[index2], this.itemList[index1]];
   }
 }
+
+export default ItemBox;
 
 /*ItemBox라는 클래스를 갖는다. 파괴가능여부에 따라서 objectBase상속
 -고유id

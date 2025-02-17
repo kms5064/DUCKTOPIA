@@ -5,6 +5,7 @@ import Player from './player.class.js';
 import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
 import { DayPhase, WaveState } from '../../config/constants/game.js';
+import ItemBox from '../item/itemBox.class.js'; //테스트용
 
 class Game {
   constructor(ownerId) {
@@ -356,6 +357,13 @@ class Game {
       this.dayCounter = 0;
     }
   }
+
+  //테스트용 코드
+  addBox(){
+    const itemBox = new ItemBox(2,0,0);
+    this.itemBoxes.set(itemBox.id,itemBox);
+  }
+  /////////////////////////////////////
 }
 
 export default Game;
