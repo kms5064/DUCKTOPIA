@@ -42,7 +42,7 @@ export const PACKET_TYPE = {
   C_PLAYER_USE_ITEM_REQUEST: [4009, 'playerUseItemRequest'],
   S_PLAYER_EAT_FOOD_RESPONSE: [4010, 'playerEatFoodResponse'],
   S_PLAYER_EQUIP_WEAPON_RESPONSE: [4011, 'playerEquipWeaponResponse'],
-  S_PLAYER_DAMAGED_BY_MONSTER: [4012, 'playerDamagedByMonster'],
+  C_PLAYER_DAMAGED_BY_MONSTER_REQUEST: [4012, 'playerDamagedByMonsterRequest'],
 
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
@@ -57,8 +57,9 @@ export const PACKET_TYPE = {
   S_MONSTER_HP_UPDATE_NOTIFICATION: [5010, 'monsterHpUpdateNotification'],
 
   // 코어
-  S_CORE_HP_UPDATE_NOTIFICATION: [6001, 'coreHpUpdateNotification'],
-  S_GAME_OVER_NOTIFICATION: [6002, 'gameOverNotification'],
+  S_OBJECT_HP_UPDATE_NOTIFICATION: [6001, 'objectHpUpdateNotification'],
+  C_OBJECT_DAMAGED_BY_MONSTER_REQUEST: [6002, 'objectDamagedByMonsterRequest'],
+  S_GAME_OVER_NOTIFICATION: [6003, 'gameOverNotification'],
 
   // 에러
   S_ERROR_NOTIFICATION: [7001, 'errorNotification'],

@@ -11,6 +11,7 @@ class Game {
     this.players = new Map();
     this.monsterIndex = 1;
     this.monsters = new Map();
+    this.object = new Map();
     this.map = []; // 0과 1로 된 2차원배열?
     this.coreHp = config.game.core.maxHP;
     this.corePosition = config.game.core.position;
@@ -276,6 +277,14 @@ class Game {
   /**************
    * CORE
    */
+
+  createObjectData() {
+    const coreData = [{
+      objectId: 1,
+      objectCode: 1
+    }];
+    return coreData;
+  }
   coreDamaged(damage) {
     this.coreHp -= damage;
     if (this.coreHp <= 0) {

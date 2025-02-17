@@ -227,7 +227,7 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
   int32 playerId = 3;
 }
 
-message C2SPlayerDamagedByMonster {
+message C2SPlayerDamagedByMonsterRequest {
   int32 playerId = 1;
   int32 monsterId = 2;
 }
@@ -283,12 +283,13 @@ message S2CMonsterHpUpdateNotification // 몬스터 체력 감소
 
 // 코어
 
-message C2SObjectDamagedByMonster {
+message C2SObjectDamagedByMonsterRequest {
   int32 objectId = 1;
   int32 monsterId = 2;
 }
 
-message S2CCoreHpUpdateNotification { // 코어 체력 감소 알림
+message S2CObjectHpUpdateNotification { // 코어 Id=0;
+  int32 objectId = 1;
   int32 hp = 2;
 }
 
@@ -337,7 +338,7 @@ message GamePacket {
     C2SPlayerUseItemRequest playerUseItemRequest = 29;
     S2CPlayerEatFoodResponse playerEatFoodResponse = 30;
     S2CPlayerEquipWeaponResponse playerEquipWeaponResponse = 31;
-    S2CPlayerDamagedByMonster playerDamagedByMonster = 45;
+    C2SPlayerDamagedByMonsterRequest playerDamagedByMonsterRequest = 45;
 
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;
     C2SMonsterSpawnResponse monsterSpawnResponse = 33;
@@ -350,7 +351,8 @@ message GamePacket {
     S2CMonsterAttackNotification monsterAttackNotification = 40;
     S2CMonsterHpUpdateNotification monsterHpUpdateNotification = 41;
 
-    S2CCoreHpUpdateNotification coreHpUpdateNotification = 42;
+    S2CObjectHpUpdateNotification objectHpUpdateNotification = 42;
+    C2SObjectDamagedByMonsterRequest objectDamagedByMonsterRequest = 46;
     S2CGameOverNotification gameOverNotification = 43;
 
     S2CErrorNotification errorNotification = 44;
