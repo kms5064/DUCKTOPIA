@@ -222,8 +222,6 @@ class Game {
         if (inputPlayer === null) {
           continue;
         }
-
-        console.log(inputPlayer);
         monster.setTargetPlayer(inputPlayer);
         if (monster.hasPriorityPlayer()) {
           console.log('플레이어가 등록됨');
@@ -248,7 +246,6 @@ class Game {
       { monsterTarget: monsterDiscoverPayload },
     );
     this.broadcast(packet);
-
   }
 
   //플레이어가 등록된 몬스터들만 위치 패킷을 전송하는 게 좋겠다.
