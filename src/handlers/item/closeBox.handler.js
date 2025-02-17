@@ -2,6 +2,8 @@ import CustomError from '../../utils/error/customError.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
 import makePacket from '../../utils/packet/makePacket.js';
+import { userSession } from '../../sessions/session.js';
+import { roomSession } from '../../sessions/session.js';
 
 const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
   try {
@@ -17,7 +19,7 @@ const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
     // RoomId 조회
     const roomId = user.getRoomId();
     if (!roomId) {
-      throw new CustomError(ErrorCodes.ROOMID_NOT_FOUND, '유저에게서 roodId를 찾을 수 없습니다.');
+      throw new CustomError(ErrorCodes.ROOM_ID_NOT_FOUND, '유저에게서 roodId를 찾을 수 없습니다.');
     }
 
     // 룸 객체 조회
@@ -39,16 +41,16 @@ const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
     }
     const itemBox = game.getItemBoxById(itemBoxId);
     if (!itemBox) {
-      throw new CustomError(ErrorCodes.ITEMBOX_NOT_FOUND, '상자를 찾을 수 없습니다');
+      throw new CustomError(ErrorCodes.ITEM_BOX_NOT_FOUND, '상자를 찾을 수 없습니다');
     }
 
     //테스트용 패킷
-    const playerCloseBoxpayload = {
+    const notificationPayload = {
       playerId: player.id,
       itemBoxId: itemBoxId,
     };
 
-    const notification = makePacket(config.packetType.S_PLAYER_CLOSE_BOX_RESPONSE, playerCloseBoxpayload);
+    const notification = makePacket(config.packetType.S_PLAYER_CLOSE_BOX_NOTIFICATION, notificationPayload);
     //이 유저가 닫는거 브로드캐스트
 
     room.broadcast(notification);

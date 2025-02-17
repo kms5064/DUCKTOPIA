@@ -14,14 +14,18 @@ class ItemBox {
     return this.itemList;
   }
 
-  takeOutAnItem(itemType, player) {
+  takeOutAnItem(itemType,count, player) {
     //조회하는걸로 바꾸기
     const removedItem = this.itemList.find((item)=>item.type === itemType);
     if(!removedItem){
       throw new CustomError(ErrorCode.ITEM_NOT_FOUND,'상자에서 아이템을 찾을 수 없습니다.');
     }
 
-    player.addItem(removedItem);
+    if(removedItem.stack>=count){
+      removedItem.stack -= count;
+    }
+
+    player.addItem(removedItem.TypeNum,count);
     
     return removedItem;
   }

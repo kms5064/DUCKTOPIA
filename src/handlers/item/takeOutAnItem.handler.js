@@ -2,6 +2,8 @@ import CustomError from '../../utils/error/customError.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
 import makePacket from "../../utils/packet/makePacket.js";
+import { userSession } from '../../sessions/session.js';
+import { roomSession } from '../../sessions/session.js';
 
 
 const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
@@ -21,7 +23,7 @@ const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
     // RoomId 조회
     const roomId = user.getRoomId();
     if (!roomId) {
-      throw new CustomError(ErrorCodes.ROOMID_NOT_FOUND, '유저에게서 roodId를 찾을 수 없습니다.');
+      throw new CustomError(ErrorCodes.ROOM_ID_NOT_FOUND, '유저에게서 roodId를 찾을 수 없습니다.');
     }
 
     // 룸 객체 조회
@@ -47,7 +49,7 @@ const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
     // const item = itemBox.takeOutAnItem(itemType,count, player);
 
     // 꺼내진 아이템을 success코드와 같이 브로드캐스트 해야한다.
-    const playerTakeOutAnItempayload = {
+    const playerTakeOutAnItemPayload = {
       playerId:player.id,
       itemBoxId:itemBox.id,
       itemData:{
@@ -58,7 +60,7 @@ const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
       success:false
     };
 
-    const notification = makePacket(config.packetType.S_PLAYER_TAKE_OUT_AN_ITEM_RESPONSE, playerTakeOutAnItempayload);
+    const notification = makePacket(config.packetType.S_PLAYER_TAKE_OUT_AN_ITEM_NOTIFICATION, playerTakeOutAnItemPayload);
     //이 유저가 열고 있다는거 브로드캐스트
 
     room.broadcast(notification);
