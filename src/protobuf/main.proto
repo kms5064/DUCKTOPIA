@@ -38,6 +38,7 @@ enum PhaseType {
   DAY = 0;
   NIGHT = 1;
 }
+
 message GameStateData {
   PhaseType phaseType = 1;
   int64 nextPhaseAt = 2;
@@ -163,7 +164,6 @@ message S2CGameStartNotification { // 게임시작 알림
   repeated MonsterPositionData monsters = 3;
   repeated ObjectPositionData objects = 4;
 }
-
 // 이때 클라 서버 모두 몬스터, 장애물(오브젝트), 플레이어 정보를 가짐
 
 // 여기부터 인게임
@@ -227,7 +227,7 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
   int32 playerId = 3;
 }
 
-message S2CPlayerDamagedByMonster {
+message C2SPlayerDamagedByMonster {
   int32 playerId = 1;
   int32 monsterId = 2;
 }
@@ -266,7 +266,8 @@ message S2CMonsterMoveNotification { // 몬스터 이동 알림
 
 message C2SMonsterAttackRequest { // 몬스터 공격 알림
   int32 monsterId = 1;
-  int32 targetId = 2;
+  bool isPlayer =2;
+  int32 targetId = 3;
 }
 
 message S2CMonsterAttackNotification { // 몬스터 공격 모든 클라이언트에 알림
@@ -281,6 +282,12 @@ message S2CMonsterHpUpdateNotification // 몬스터 체력 감소
 }
 
 // 코어
+
+message C2SObjectDamagedByMonster {
+  int32 objectId = 1;
+  int32 monsterId = 2;
+}
+
 message S2CCoreHpUpdateNotification { // 코어 체력 감소 알림
   int32 hp = 2;
 }
