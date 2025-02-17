@@ -29,10 +29,9 @@ class Monster extends MovableObjectBase {
     this.attack = attack;
     this.defence = defence;
     this.name = name;
-    this.monsterCode = monsterCode;
+    this.monsterCode = 1;
     this.priorityPlayer = null;
     //몬스터가 여러 패턴을 가지고 있을 때 그 패턴들을 이 안에서 쿨타임을 관리한다.
-    this.patternInterval = null;
     this.distanceBetweenPlayer = Infinity;
     //드랍 아이템 숫자 확률을 이걸로 정해보자.
 
@@ -106,6 +105,11 @@ class Monster extends MovableObjectBase {
     }
   }
 
+  returnCalculateDistance(player) {
+    const distance = Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
+    return distance < this.awakeRange ? distance : -1;
+  }
+
   //플레이어를 쫒고 있는지 확인한다.
   hasPriorityPlayer() {
     return this.priorityPlayer !== null ? true : false;
@@ -173,7 +177,7 @@ class Monster extends MovableObjectBase {
       this.patternInterval = null;
     }, 5000);
   }
-  
+
   //몬스터가 사망했을 때의 데이터
   //이후 몬스터 사망 시 아이템 드롭도 해야 하나
 
@@ -185,8 +189,12 @@ class Monster extends MovableObjectBase {
     }
   }
 
-  //플레이어를 세팅할 때의 조건을 확인한다.
   setTargetPlayer(player) {
+    this.priorityPlayer = player;
+  }
+
+  //플레이어를 세팅할 때의 조건을 확인한다.
+  setTargetPlayerByDistance(player) {
     if (this.priorityPlayer === null) {
       const distance = Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
       if (distance <= this.awakeRange) {
@@ -195,7 +203,11 @@ class Monster extends MovableObjectBase {
         //패킷을 보내
       }
     } else {
-      if (player === this.priorityPlayer) {
+      if (player !== this.priorityPlayer) {
+        const distance = Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
+        if (this.distanceBetweenPlayer > distance) {
+          this.priorityPlayer = player;
+        }
         this.calculateBetweenDistance();
       }
     }
@@ -219,6 +231,9 @@ class Monster extends MovableObjectBase {
   getMonsterId() {
     return this.id;
   }
+
+  //현재 몬스터와 플레이어 사이에 얼마나 거리가 떨어져 있는지 보기
+
 }
 
 export default Monster;

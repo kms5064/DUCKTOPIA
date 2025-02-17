@@ -6,6 +6,8 @@ import CustomError from '../../utils/error/customError.js';
 const attackPlayerMonsterHandler = ({ socket, payload }) => {
   const { playerDirX, playerDirY, monsterId } = payload;
 
+  console.log("몬스터 데미지 실행")
+
   // 유저 객체 조회
   const user = userSession.getUser(socket.id);
   if (!user) {
@@ -37,19 +39,19 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
   }
 
   // Notification - 다른 플레이어들에게 전달
-  const motionPayload = { playerId: player.id, playerDirX, playerDirY };
+  const motionPayload = { playerId: user.id, playerDirX, playerDirY };
   let packet = makePacket(config.packetType.S_PLAYER_ATTACK_NOTIFICATION, motionPayload);
   game.notification(socket, packet);
 
   // 몬스터 조회
-  const monster = monster.getMonsterById(monsterId);
+  const monster = game.getMonsterById(monsterId);
   if (!monster) {
     throw new CustomError(`Monster ID : ${monsterId}는 존재하지 않습니다.`);
   }
 
   // 몬스터 HP 차감 처리
-  const damege = player.getPlayerAtkDamage();
-  let currHp = monster.setDamaged(damege);
+  const damage = player.getPlayerAtkDamage();
+  let currHp = monster.setDamaged(damage);
 
   if (currHp <= 0) {
     // 몬스터 사망 처리

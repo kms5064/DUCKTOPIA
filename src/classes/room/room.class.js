@@ -74,6 +74,15 @@ class Room {
       success: true,
     });
     this.broadcast(leaveRoomResponse);
+
+    // 인터벌 제거
+    if (this.game.gameLoop) this.game.gameEnd();
+
+    // 유저 상태 변경
+    for (const user of this.users) {
+      user.exitRoom();
+    }
+
     this.users = null;
     this.game = null;
   }
@@ -86,6 +95,7 @@ class Room {
   // 게임 시작
   startGame() {
     this.changeState(RoomStateType.INGAME);
+    this.game.gameLoopStart();
   }
 
   // 게임 종료

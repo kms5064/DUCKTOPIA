@@ -37,7 +37,7 @@ const attackPlayerHandler = ({ socket, payload }) => {
   }
 
   // Notification - 다른 플레이어들에게 전달
-  const motionPayload = { playerId: player.id, playerDirX, playerDirY };
+  const motionPayload = { playerId: user.id, playerDirX, playerDirY };
   const packet = makePacket(config.packetType.S_PLAYER_ATTACK_NOTIFICATION, motionPayload);
   game.notification(socket, packet);
 };
