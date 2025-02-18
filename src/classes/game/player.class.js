@@ -13,7 +13,7 @@ class Player {
 
     this.lv = 1;
     this.atk = atk;
-    this.inventory = [];
+    this.inventory = Array.from({ length: 16 }, () => null);
     this.equippedWeapon = 0;
     this.x = x;
     this.y = y;
@@ -110,7 +110,12 @@ class Player {
     return targetIndex;
   }
 
-  addItem(item) {
+  addItem(typeNum,count) {
+    //아이템 에셋에서 typeNum
+    const item = this.inventory.find((item)=>item.type === typeNum);
+    if(item){
+      
+    }
     this.inventory.push(item);
     return this.inventory;
   }

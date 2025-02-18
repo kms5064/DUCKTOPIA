@@ -6,12 +6,15 @@ import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
 import { DayPhase, FRAME_PER_40, WaveState } from '../../config/constants/game.js';
 import { MIN_COOLTIME_MONSTER_TRACKING, RANGE_COOLTIME_MONSTER_TRACKING } from '../../config/constants/monster.js';
+import ItemBox from '../item/itemBox.class.js';
 
 class Game {
   constructor(ownerId) {
     this.players = new Map();
     this.monsterIndex = 1;
     this.monsters = new Map();
+    this.itemBoxes = new Map();
+    this.object = new Map();
     this.map = []; // 0과 1로 된 2차원배열?
     this.coreHp = config.game.core.maxHP;
     this.corePosition = config.game.core.position;
@@ -308,7 +311,10 @@ class Game {
 
   }
 
+  getItemBoxById(itemBoxId){
+    return this.itemBoxes.get(itemBoxId);
   //여기까지 몬스터 영역
+  }
 
   checkSpawnArea(monsterCode, x, y) {
     const distanceX = Math.abs(config.game.map.centerX - x);
@@ -327,6 +333,16 @@ class Game {
   /**************
    * CORE
    */
+
+  createObjectData() {
+    const coreData = {
+      objectId: 1,
+      objectCode: 1,
+      itemData: []
+    };
+    return coreData;
+  }
+  
   coreDamaged(damage) {
     this.coreHp -= damage;
     if (this.coreHp <= 0) {
@@ -419,6 +435,13 @@ class Game {
       this.dayCounter = 0;
     }
   }
+
+  //테스트용 코드
+  addBox(){
+    const itemBox = new ItemBox(2,0,0);
+    this.itemBoxes.set(itemBox.id,itemBox);
+  }
+  /////////////////////////////////////
 }
 
 export default Game;

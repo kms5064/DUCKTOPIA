@@ -42,6 +42,8 @@ import {
   MIN_VALUE_Y,
 } from './constants/map.js';
 import { CharacterType } from './constants/character.js';
+import { VALID_DISTANCE_OF_BOX } from './constants/itemBox.js';
+
 import { DAY_TIME, NIGHT_TIME, DayPhase } from './constants/game.js';
 
 export const config = {
@@ -104,6 +106,9 @@ export const config = {
       startY: MIN_VALUE_Y,
       endX: MAX_VALUE_X,
       endY: MAX_VALUE_Y,
+    },
+    itemBox:{
+      validDistance: VALID_DISTANCE_OF_BOX,
       centerX: CENTER_X,
       centerY: CENTER_Y,
     },
