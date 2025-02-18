@@ -228,18 +228,9 @@ message Position {
 
 message Item {
   string id = 1;         // 아이템 고유 식별자 ID
-  ItemType type = 2;     // 아이템 타입
-  string name = 3;       // 아이템 이름
   Position position = 4; // 아이템 위치
   int32 code = 5; // assets에 정의된 아이템 코드 - 이 부분은 아이템 생성 방식에
                   // 따라 빠질 수 있음.
-
-  // 아이템 타입 정의
-  enum ItemType {
-    UNKNOWN = 0;
-    FOOD = 1;
-    WEAPON = 2;
-  }
 }
 
 // 아이템 습득 요청

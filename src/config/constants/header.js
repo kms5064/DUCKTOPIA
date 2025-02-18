@@ -43,6 +43,8 @@ export const PACKET_TYPE = {
   S_PLAYER_EQUIP_WEAPON_RESPONSE: [4011, 'playerEquipWeaponResponse'],
   S_PLAYER_DAMAGED_BY_MONSTER: [4012, 'playerDamagedByMonster'],
 
+  S_PLAYER_GET_ITEM_NOTIFICATION: [4013, 'playerGetItemNotification'],
+
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
   C_MONSTER_SPAWN_RESPONSE: [5002, 'monsterSpawnResponse'],

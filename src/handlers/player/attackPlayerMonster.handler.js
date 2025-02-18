@@ -54,6 +54,8 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
   let currHp = monster.setDamaged(damage);
 
   if (currHp <= 0) {
+    console.log(`[몬스터 사망] ID: ${monsterId}, 등급: ${monster.grade}`);
+
     // 몬스터 사망 처리
     game.removeMonster(monsterId);
 
@@ -63,7 +65,6 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
     });
     game.broadcast(packet);
 
-    // 아이템 드롭 처리
     // 기존 아이템 드롭 처리 주석
     /*
     const monsterPosition = monster.getMonsterPos();
@@ -80,13 +81,29 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
 
     // 테스트용 코드: 아이템을 바로 플레이어 인벤토리에 추가
     const items = game.itemManager.createDropItems(monster.grade, monster.getMonsterPos());
+    console.log(`[아이템 생성] 몬스터(${monsterId})로부터 ${items.length}개의 아이템 생성됨`);
+
     if (items.length > 0) {
+      console.log('[생성된 아이템 목록]');
       items.forEach((item) => {
+        console.log(`- ID: ${item.id}, 이름: ${item.name}, 코드: ${item.code}`);
         // 아이템 습득 처리
         item.pickup();
         // 플레이어 인벤토리에 추가
         player.addItem(item);
       });
+
+      console.log(`[인벤토리 추가] 플레이어(${player.id})의 인벤토리에 아이템 추가 완료`);
+
+      // 인벤토리 현재 상태 출력
+      const inventory = player.getInventory();
+      console.log('\n[인벤토리 현재 상태]');
+      console.log(`총 보유 아이템 수: ${inventory.length}개`);
+      console.log('보유 아이템 목록:');
+      inventory.forEach((item, index) => {
+        console.log(`${index + 1}. ID: ${item.id}, 이름: ${item.name}, 코드: ${item.code}`);
+      });
+      console.log(''); // 빈 줄 추가
 
       // 아이템 획득 알림
       packet = makePacket(config.packetType.S_PLAYER_GET_ITEM_NOTIFICATION, {
@@ -95,6 +112,9 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
         items: items,
       });
       socket.write(packet);
+      console.log('[패킷 전송] S_PLAYER_GET_ITEM_NOTIFICATION 전송 완료');
+    } else {
+      console.log(`[아이템 미생성] 몬스터(${monsterId})로부터 아이템이 생성되지 않음`);
     }
   } else {
     // 몬스터 HP 업데이트 알림
