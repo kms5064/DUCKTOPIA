@@ -199,25 +199,15 @@ const customTest = async (client_count = 1) => {
       // 로그인 이후 사용할 메서드 적용
       console.log('#1');
       await client.loginRequest();
-      await client.delay(1000);
-      console.log('#2');
-      await client.createRoomRequest();
-      await client.delay(1000);
-      console.log('#3');
-      await client.prepareRequest();
+      // await client.delay(1000);
+      // console.log('#2');
+      // await client.createRoomRequest();
+      // await client.delay(1000);
+      // console.log('#3');
+      // await client.prepareRequest();
 
-      await client.end();
-
-      // 게임 서버 연결
-      const gameClient = new Client(
-        id,
-        password,
-        name,
-        gameServerPacket.host,
-        gameServerPacket.port,
-      );
-
-      await gameClient.joinRequest();
+      // await client.end();
+      // await gameClient.joinRequest();
     }),
   );
 };
