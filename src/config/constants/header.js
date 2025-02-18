@@ -3,7 +3,6 @@ export const VERSION_LENGTH_BYTE = 1;
 export const PAYLOAD_LENGTH_BYTE = 4;
 
 export const PACKET_TYPE = {
-
   // 유저 회원가입,로그인
   REGISTER_REQUEST: [1001, 'registerRequest'],
   REGISTER_RESPONSE: [1002, 'registerResponse'],
@@ -49,8 +48,8 @@ export const PACKET_TYPE = {
   S_PLAYER_TAKE_OUT_AN_ITEM_NOTIFICATION: [4016, 'playerTakeOutAnItemNotification'],
   C_PLAYER_PUT_AN_ITEM_REQUEST: [4017, 'playerPutAnItemRequest'],
   S_PLAYER_PUT_AN_ITEM_NOTIFICATION: [4018, 'playerPutAnItemNotification'],
-  C_PLAYER_CLOSE_BOX_REQUEST:[4019, 'playerCloseBoxRequest'],
-  S_PLAYER_CLOSE_BOX_NOTIFICATION:[4020, 'playerCloseBoxNotification'],
+  C_PLAYER_CLOSE_BOX_REQUEST: [4019, 'playerCloseBoxRequest'],
+  S_PLAYER_CLOSE_BOX_NOTIFICATION: [4020, 'playerCloseBoxNotification'],
 
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
@@ -71,4 +70,7 @@ export const PACKET_TYPE = {
 
   // 에러
   S_ERROR_NOTIFICATION: [7001, 'errorNotification'],
+
+  // 낮 밤 전환
+  S_GAME_PHASE_UPDATE_NOTIFICATION: [8001, 'gamePhaseUpdateNotification'],
 };
