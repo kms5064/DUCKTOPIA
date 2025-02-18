@@ -253,7 +253,7 @@ class Game {
           }
         }
 
-        if (inputPlayer === null) continue;
+        if (inputPlayer === null || inputPlayer.hp <= 0) continue;
 
         monster.setTargetPlayer(inputPlayer);
         monster.setMonsterTrackingTime(5000);
@@ -378,7 +378,7 @@ class Game {
   // 웨이브 몬스터 생성
   addWaveMonster() {
     const monstersData = [];
-    for (let i = 1; i <= config.game.monster.waveMaxMonsterCount - this.monsters.size; i++) {
+    for (let i = 1; i <= config.game.monster.waveMaxMonsterCount; i++) {
       const monsterId = this.monsterIndex;
 
       // 몬스터 데이터 뽑기
