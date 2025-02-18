@@ -19,7 +19,7 @@ class RoomSession {
 
   // 방 지우기
   removeRoom(room) {
-    room.deleteRoom()
+    room.deleteRoom();
     this.rooms.delete(room.id);
   }
 

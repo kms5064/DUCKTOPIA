@@ -16,7 +16,7 @@ const updateLocationHandler = ({ socket, payload }) => {
   const updatePositionNotification = player.calculatePosition(x, y);
   // payload 인코딩
   const notification = makePacket(config.packetType.S_PLAYER_POSITION_UPDATE_NOTIFICATION, {
-    playerPositions : [updatePositionNotification],
+    playerPositions: [updatePositionNotification],
   });
 
   // 룸 내 인원에게 브로드캐스트

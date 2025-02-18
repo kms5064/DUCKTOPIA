@@ -1,5 +1,10 @@
 import { config } from '../../config/config.js';
-import { MIN_COOLTIME_MONSTER_AWAKING, MIN_COOLTIME_MONSTER_TRACKING, RANGE_COOLTIME_MONSTER_AWAKING, RANGE_COOLTIME_MONSTER_TRACKING } from '../../config/constants/monster.js';
+import {
+  MIN_COOLTIME_MONSTER_AWAKING,
+  MIN_COOLTIME_MONSTER_TRACKING,
+  RANGE_COOLTIME_MONSTER_AWAKING,
+  RANGE_COOLTIME_MONSTER_TRACKING,
+} from '../../config/constants/monster.js';
 import MovableObjectBase from '../base/objectBase.class.js';
 
 class Monster extends MovableObjectBase {
@@ -110,7 +115,6 @@ class Monster extends MovableObjectBase {
     this.monsterTrackingTime = time;
   }
 
-
   calculateBetweenDistance() {
     if (this.priorityPlayer !== null) {
       const playerPos = this.priorityPlayer.getPlayerPos();
@@ -122,7 +126,9 @@ class Monster extends MovableObjectBase {
 
   returnCalculateDistance(player) {
     const playerPos = player.getPlayerPos();
-    const distance = Math.sqrt(Math.pow(this.x - playerPos.x, 2) + Math.pow(this.y - playerPos.y, 2));
+    const distance = Math.sqrt(
+      Math.pow(this.x - playerPos.x, 2) + Math.pow(this.y - playerPos.y, 2),
+    );
     //console.log(`몬스터 ${this.id}:  ${distance} : ${this.awakeRange}`);
     return this.awakeRange > distance ? distance : Infinity;
   }
@@ -156,7 +162,7 @@ class Monster extends MovableObjectBase {
       Math.pow(playerPos.x - this.x, 2) + Math.pow(playerPos.y - this.y, 2),
     );
 
-    //플레이어가 죽었는지 확인하고 죽었다면 타겟팅 해제하기 
+    //플레이어가 죽었는지 확인하고 죽었다면 타겟팅 해제하기
     const targetHp = this.priorityPlayer.getPlayerHp();
     if (distance > this.awakeRange + 2 || targetHp <= 0) {
       //인식 범위보다 인식 끊기는 범위가 좀 더 넓어야 할 것이다.
@@ -169,7 +175,6 @@ class Monster extends MovableObjectBase {
       return false;
     }
   }
-
 
   //몬스터가 죽거나 할 때 아이템 드롭할 아이템의 숫자를 제공한다.
   dropItemCount() {
@@ -207,12 +212,14 @@ class Monster extends MovableObjectBase {
     if (this.monsterAwakeCoolTime > 0) {
       this.monsterAwakeCoolTime -= deltaTime;
     }
-    
+
     if (this.hasPriorityPlayer() && this.monsterTrackingTime > 0) {
       this.monsterTrackingTime -= deltaTime;
 
       if (this.monsterTrackingTime <= 0) {
-        this.monsterAwakeCoolTime = Math.floor(Math.random() * RANGE_COOLTIME_MONSTER_AWAKING + MIN_COOLTIME_MONSTER_AWAKING);
+        this.monsterAwakeCoolTime = Math.floor(
+          Math.random() * RANGE_COOLTIME_MONSTER_AWAKING + MIN_COOLTIME_MONSTER_AWAKING,
+        );
         this.priorityPlayer = null;
       }
     }
@@ -222,7 +229,7 @@ class Monster extends MovableObjectBase {
   //이후 몬스터 사망 시 아이템 드롭도 해야 하나
 
   monsterDeath() {
-    return this.hp <= 0 ? true : false
+    return this.hp <= 0 ? true : false;
   }
 
   setTargetPlayer(player) {
@@ -233,7 +240,9 @@ class Monster extends MovableObjectBase {
   setTargetPlayerByDistance(player) {
     if (this.priorityPlayer === null) {
       const playerPos = player.getPlayerPos();
-      const distance = Math.sqrt(Math.pow(this.x - playerPos.x, 2) + Math.pow(this.y - playerPos.y, 2));
+      const distance = Math.sqrt(
+        Math.pow(this.x - playerPos.x, 2) + Math.pow(this.y - playerPos.y, 2),
+      );
       if (distance <= this.awakeRange) {
         this.distanceBetweenPlayer = distance;
         this.priorityPlayer = player;
@@ -242,7 +251,9 @@ class Monster extends MovableObjectBase {
     } else {
       if (player !== this.priorityPlayer) {
         const playerPos = this.priorityPlayer.getPlayerPos();
-        const distance = Math.sqrt(Math.pow(this.x - playerPos.x, 2) + Math.pow(this.y - playerPos.y, 2));
+        const distance = Math.sqrt(
+          Math.pow(this.x - playerPos.x, 2) + Math.pow(this.y - playerPos.y, 2),
+        );
         if (this.distanceBetweenPlayer > distance) {
           this.priorityPlayer = player;
         }
@@ -271,7 +282,6 @@ class Monster extends MovableObjectBase {
   }
 
   //현재 몬스터와 플레이어 사이에 얼마나 거리가 떨어져 있는지 보기
-
 }
 
 export default Monster;

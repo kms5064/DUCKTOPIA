@@ -1,4 +1,4 @@
-import CustomError from "../../utils/error/customError.js";
+import CustomError from '../../utils/error/customError.js';
 
 class ItemBox {
   constructor(id, x, y) {
@@ -14,39 +14,37 @@ class ItemBox {
     return this.itemList;
   }
 
-  takeOutAnItem(itemType,count, player) {
+  takeOutAnItem(itemType, count, player) {
     //조회하는걸로 바꾸기
-    const removedItem = this.itemList.find((item)=>item.type === itemType);
-    if(!removedItem){
+    const removedItem = this.itemList.find((item) => item.type === itemType);
+    if (!removedItem) {
       throw new CustomError('상자에서 아이템을 찾을 수 없습니다.');
     }
 
-    if(removedItem.stack>=count){
+    if (removedItem.stack >= count) {
       removedItem.stack -= count;
     }
 
-    player.addItem(removedItem.TypeNum,count);
-    
+    player.addItem(removedItem.TypeNum, count);
+
     return removedItem;
   }
 
   putAnItem(item) {
-
-    const checkRoom = (ele) => ele ===null;
+    const checkRoom = (ele) => ele === null;
     const emptyIndex = this.itemList.findIndex(checkRoom);
 
-    if(emptyRoom !== -1){
+    if (emptyRoom !== -1) {
       this.itemList.splice(emptyIndex, 1, item);
       player.removeItem(item.id);
       return true;
-    } else{
+    } else {
       return false;
     }
-
   }
 
-  calculateDistance(px,py){
-    const distance = Math.sqrt(Math.pow((px-this.x),2) + Math.pow((py-this.y),2));
+  calculateDistance(px, py) {
+    const distance = Math.sqrt(Math.pow(px - this.x, 2) + Math.pow(py - this.y, 2));
     return distance;
   }
 

@@ -228,7 +228,13 @@ class Game {
       if (!monster.hasPriorityPlayer()) {
         //플레이어를 쫒다가 시간 되어 풀렸을 때 쿨타임이 걸리고
         //인식 쿨타임이 남아 있는 몬스터는 체크 제외
-        if (!monster.AwakeCoolTimeCheck()) continue;
+        if (!monster.AwakeCoolTimeCheck()) {
+          monsterDiscoverPayload.push({
+          monsterId: monsterId,
+          targetId: 0,
+          })
+          continue;
+          };
 
         //몬스터가 죽었을 때, hp가 0인데 반응이 나올 수 있으니 체크
         if (monster.monsterDeath()) {
@@ -255,7 +261,6 @@ class Game {
           monsterId: monsterId,
           targetId: inputId,
         });
-
       } else if (monster.lostPlayer()) {
         monsterDiscoverPayload.push({
           monsterId: monsterId,
@@ -267,7 +272,7 @@ class Game {
     const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, {
       monsterTarget: monsterDiscoverPayload,
     });
-    
+
     this.broadcast(packet);
   }
 
@@ -300,7 +305,7 @@ class Game {
     for (const [monsterId, monster] of this.monsters) {
       const now = Date.now();
       const deltaTime = now - this.monsterLastUpdate;
-      monster.CoolTimeCheck(deltaTime)
+      monster.CoolTimeCheck(deltaTime);
     }
   }
 
@@ -328,7 +333,7 @@ class Game {
    */
 
   getCoreHp() {
-    const coreHp = this.coreHp
+    const coreHp = this.coreHp;
     return coreHp;
   }
 
@@ -380,7 +385,7 @@ class Game {
       const codeIdx =
         Math.floor(
           Math.random() *
-          (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
+            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
         ) + config.game.monster.waveMonsterMinCode;
 
       this.monsterIndex++; //Index 증가
