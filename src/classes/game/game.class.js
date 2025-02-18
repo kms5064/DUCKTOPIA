@@ -355,6 +355,15 @@ class Game {
   changePhase() {
     if (this.dayPhase === DayPhase.DAY) this.dayPhase = DayPhase.NIGHT;
     else this.dayPhase = DayPhase.DAY;
+
+    const changePhasePacket = makePacket(config.packetType.S_GAME_PHASE_UPDATE_NOTIFICATION, {
+      gameState: {
+        phaseType: this.dayPhase,
+        nextPhaseAt: this.lastUpdate + config.game.phaseCount[this.dayPhase],
+      },
+    });
+
+    this.broadcast(changePhasePacket);
   }
 
   setWaveState(state) {
@@ -433,11 +442,11 @@ class Game {
 
     // 현재 phase 에 따라 기준 다르게 받기
     if (this.dayCounter >= config.game.phaseCount[this.dayPhase]) {
+      this.changePhase();
+
       if (this.dayPhase === DayPhase.DAY) {
         this.addWaveMonster();
       }
-
-      this.changePhase();
 
       this.dayCounter = 0;
     }
