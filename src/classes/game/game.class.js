@@ -92,7 +92,7 @@ class Game {
    * PLAYER
    */
   addPlayer(user) {
-    const player = new Player(user, 0, 0, 0);
+    const player = new Player(user, 100, 0, 0);
     this.players.set(user.id, player);
   }
 
@@ -142,7 +142,7 @@ class Game {
         data.hp,
         data.attack,
         data.defence,
-        15,
+        data.range,
         data.speed,
         0,
         0,
@@ -228,7 +228,13 @@ class Game {
       if (!monster.hasPriorityPlayer()) {
         //플레이어를 쫒다가 시간 되어 풀렸을 때 쿨타임이 걸리고
         //인식 쿨타임이 남아 있는 몬스터는 체크 제외
-        if (!monster.AwakeCoolTimeCheck()) continue;
+        if (!monster.AwakeCoolTimeCheck()) {
+          monsterDiscoverPayload.push({
+          monsterId: monsterId,
+          targetId: 0,
+          })
+          continue;
+          };
 
         //몬스터가 죽었을 때, hp가 0인데 반응이 나올 수 있으니 체크
         if (monster.monsterDeath()) {
@@ -247,7 +253,7 @@ class Game {
           }
         }
 
-        if (inputPlayer === null) continue;
+        if (inputPlayer === null || inputPlayer.hp <= 0) continue;
 
         monster.setTargetPlayer(inputPlayer);
         monster.setMonsterTrackingTime(5000);
@@ -255,15 +261,11 @@ class Game {
           monsterId: monsterId,
           targetId: inputId,
         });
-
-      } else {
-        if (monster.lostPlayer()) {
-          //console.log("플레이어가 떨어짐");
-          monsterDiscoverPayload.push({
-            monsterId: monsterId,
-            targetId: 0,
-          });
-        }
+      } else if (monster.lostPlayer()) {
+        monsterDiscoverPayload.push({
+          monsterId: monsterId,
+          targetId: 0,
+        });
       }
     }
 
@@ -330,6 +332,11 @@ class Game {
    * CORE
    */
 
+  getCoreHp() {
+    const coreHp = this.coreHp;
+    return coreHp;
+  }
+
   createObjectData() {
     const coreData = {
       objectId: 1,
@@ -371,14 +378,14 @@ class Game {
   // 웨이브 몬스터 생성
   addWaveMonster() {
     const monstersData = [];
-    for (let i = 1; i <= config.game.monster.waveMaxMonsterCount - this.monsters.size; i++) {
+    for (let i = 1; i <= config.game.monster.waveMaxMonsterCount; i++) {
       const monsterId = this.monsterIndex;
 
       // 몬스터 데이터 뽑기
       const codeIdx =
         Math.floor(
           Math.random() *
-          (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
+            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
         ) + config.game.monster.waveMonsterMinCode;
 
       this.monsterIndex++; //Index 증가
@@ -440,7 +447,7 @@ class Game {
     if (this.dayCounter >= config.game.phaseCount[this.dayPhase]) {
       this.changePhase();
 
-      if (this.dayPhase === DayPhase.DAY) {
+      if (this.dayPhase === DayPhase.NIGHT) {
         this.addWaveMonster();
       }
 
