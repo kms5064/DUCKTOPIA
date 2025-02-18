@@ -32,6 +32,20 @@ class Room {
     return true;
   }
 
+  getUser() {
+    return this.users;
+  }
+
+  getUserIds() {
+    const userIds = [];
+
+    this.users.forEach((user) => {
+      userIds.push(user.id);
+    });
+
+    return userIds;
+  }
+
   // 유저 삭제
   removeUser(user) {
     // 유저 삭제

@@ -24,6 +24,21 @@ redisClient.on('error', (err) => {
   console.error('Redis 연결 오류:', err);
 });
 
-redisClient.connect().then();
+await redisClient.connect();
 
-export default redisClient;
+export const setRedisToRoom = async (roomInfo) => {
+  const key = 'Room:' + roomInfo.roomId;
+  const serializedObj = JSON.stringify(roomInfo);
+
+  await redisClient.set(key, serializedObj);
+  await redisClient.disconnect();
+  return key;
+};
+
+export const getRedisRoomInfo = async (key) => {
+  const data = await redisClient.get(key);
+  await redisClient.disconnect();
+
+  const parseData = JSON.parse(data);
+  return parseData;
+};

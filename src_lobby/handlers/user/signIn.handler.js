@@ -8,6 +8,8 @@ import { config } from '../../config/config.js';
 const signInHandler = async ({ socket, payload }) => {
   const { email, password } = payload;
 
+  console.log('email : ', email, ' password : ', password);
+
   // 1. 사용자 존재 여부 DB에서 확인
   const userData = await findUserByEmail(email);
   if (!userData) {
