@@ -250,24 +250,27 @@ class Game {
         if (inputPlayer === null) continue;
 
         monster.setTargetPlayer(inputPlayer);
-        monster.setMonsterTrackingTime(MIN_COOLTIME_MONSTER_TRACKING);
+        monster.setMonsterTrackingTime(5000);
         monsterDiscoverPayload.push({
           monsterId: monsterId,
           targetId: inputId,
         });
 
-      } else if (monster.lostPlayer()) {
-        monsterDiscoverPayload.push({
-          monsterId: monsterId,
-          targetId: 0,
-        });
+      } else {
+        if (monster.lostPlayer()) {
+          //console.log("플레이어가 떨어짐");
+          monsterDiscoverPayload.push({
+            monsterId: monsterId,
+            targetId: 0,
+          });
+        }
       }
     }
 
     const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, {
       monsterTarget: monsterDiscoverPayload,
     });
-    
+
     this.broadcast(packet);
   }
 
@@ -300,7 +303,7 @@ class Game {
     for (const [monsterId, monster] of this.monsters) {
       const now = Date.now();
       const deltaTime = now - this.monsterLastUpdate;
-      monster.CoolTimeCheck(deltaTime)
+      monster.CoolTimeCheck(deltaTime);
     }
   }
 

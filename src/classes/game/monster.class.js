@@ -147,7 +147,6 @@ class Monster extends MovableObjectBase {
   //외부 측에서 타겟 플레이어가 있는지 체크한다.
   lostPlayer() {
     if (this.priorityPlayer === null) {
-      //console.log("왜 여기 접근됐지? lost player");
       return true;
     }
 
@@ -156,10 +155,18 @@ class Monster extends MovableObjectBase {
       Math.pow(playerPos.x - this.x, 2) + Math.pow(playerPos.y - this.y, 2),
     );
 
-    //플레이어가 죽었는지 확인하고 죽었다면 타겟팅 해제하기 
+
+
+    //플레이어가 죽었는지 확인하고 죽었다면 타겟팅 해제하기
+    //1. 거리 체크
+    //2. 타겟 플레이어 hp 체크
+    //3. 플레이어를 추적하는 시간이 다 되었을 때
     const targetHp = this.priorityPlayer.getPlayerHp();
-    if (distance > this.awakeRange + 2 || targetHp <= 0) {
+    if (distance > this.awakeRange + 2 || targetHp <= 0 || this.monsterTrackingTime <= 0) {
       //인식 범위보다 인식 끊기는 범위가 좀 더 넓어야 할 것이다.
+      if (this.monsterTrackingTime > 0) {
+        this.monsterTrackingTime = 0;
+      }
       this.distanceBetweenPlayer = Infinity;
       this.priorityPlayer = null;
       return true;
@@ -207,13 +214,12 @@ class Monster extends MovableObjectBase {
     if (this.monsterAwakeCoolTime > 0) {
       this.monsterAwakeCoolTime -= deltaTime;
     }
-    
-    if (this.hasPriorityPlayer() && this.monsterTrackingTime > 0) {
+
+    if (this.monsterTrackingTime > 0) {
       this.monsterTrackingTime -= deltaTime;
 
       if (this.monsterTrackingTime <= 0) {
         this.monsterAwakeCoolTime = Math.floor(Math.random() * RANGE_COOLTIME_MONSTER_AWAKING + MIN_COOLTIME_MONSTER_AWAKING);
-        this.priorityPlayer = null;
       }
     }
   }
