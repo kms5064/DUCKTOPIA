@@ -57,7 +57,7 @@ message MonsterPositionData {
 }
 
 message itemData {
-  int32 itemId = 1;
+  int32 itemCode = 1; //itemId => itemCode로 이름 변경
   int32 count = 2;
 }
 
@@ -316,7 +316,7 @@ message S2CPlayerOpenBoxNotification{
 
 message C2SPlayerTakeOutAnItemRequest{
   int32 itemBoxId =1;
-  int32 itemType =2;
+  int32 itemCode =2;
   int32 count =3;
 }
 
@@ -330,7 +330,7 @@ message S2CPlayerTakeOutAnItemNotification{
 
 message C2SPlayerPutAnItemRequest{
   int32 itemBoxId =1;
-  int32 itemType =2;
+  int32 itemCode =2;
   int32 count =3;
 }
 

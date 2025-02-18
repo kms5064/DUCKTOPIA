@@ -1,4 +1,4 @@
-import CustomError from "../../utils/error/customError.js";
+import CustomError from '../../utils/error/customError.js';
 
 class ItemBox {
   constructor(id, x, y) {
@@ -14,39 +14,37 @@ class ItemBox {
     return this.itemList;
   }
 
-  takeOutAnItem(itemType,count, player) {
-    //조회하는걸로 바꾸기
-    const removedItem = this.itemList.find((item)=>item.type === itemType);
-    if(!removedItem){
+  //플레이어가 박스에서 꺼내기
+  takeOutAnItem(player,itemCode, count,emptyIndex) {
+    //temType을 기반으로 박스에 아이템 조회
+    const removedItem = this.itemList.find((item) => item.code === itemCode);
+    const removedItemIndex = this.itemList.findindex((item) => item.code === code);
+    if (!removedItem) {
       throw new CustomError('상자에서 아이템을 찾을 수 없습니다.');
     }
 
-    if(removedItem.stack>=count){
+    //보유량이 더 많으면 갯수만 줄이기
+    if (removedItem.stack >= count) {
       removedItem.stack -= count;
+    } else {
+      //아이템을 제거하고 stack만큼만 아이템을 반환하도록
+      count = removedItem.stack;
+      this.itemList.splice(removedItemIndex, 1, null);
+      const item = player.addItem(itemCode, count,emptyIndex);
     }
-
-    player.addItem(removedItem.TypeNum,count);
-    
-    return removedItem;
+    //player 인벤토리에 추가된 item반환
+    return item;
+  }
+  //플레이어가 박스에 넣기
+  putAnItem(player,itemCode, count,emptyIndex) {
+    const item = { itemCode: count };
+    this.itemList.splice(emptyIndex, 1, item);
+    player.removeItem(itemCode);
+    return item;
   }
 
-  putAnItem(item) {
-
-    const checkRoom = (ele) => ele ===null;
-    const emptyIndex = this.itemList.findIndex(checkRoom);
-
-    if(emptyRoom !== -1){
-      this.itemList.splice(emptyIndex, 1, item);
-      player.removeItem(item.id);
-      return true;
-    } else{
-      return false;
-    }
-
-  }
-
-  calculateDistance(px,py){
-    const distance = Math.sqrt(Math.pow((px-this.x),2) + Math.pow((py-this.y),2));
+  calculateDistance(px, py) {
+    const distance = Math.sqrt(Math.pow(px - this.x, 2) + Math.pow(py - this.y, 2));
     return distance;
   }
 

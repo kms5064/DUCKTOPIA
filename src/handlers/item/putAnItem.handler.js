@@ -6,8 +6,7 @@ import { userSession } from '../../sessions/session.js';
 import { roomSession } from '../../sessions/session.js';
 
 const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
-  try {
-    const { itemBoxId,itemType, count } = payload;
+    const { itemBoxId,itemCode, count } = payload;
     console.log(`putAnItemHandler itemBoxId: ${itemBoxId},itemType: ${itemType},count: ${count}`);
 
     // 유저 객체 조회
@@ -41,33 +40,33 @@ const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
     }
 
     const itemBox = game.getItemBoxById(itemBoxId);
+    if (!itemBox) {
+      throw new CustomError( '상자를 찾을 수 없습니다');
+    }
+    //상자에 빈공간이 있는지
+    const checkRoom = (ele) => ele ===null;
+    const emptyIndex = itemBox.itemList.findIndex(checkRoom);
 
-    // player.removeItem(item.id);
-    // const payload = itemBox.putAnItem(index, item);
+    if(emptyIndex !== -1){
+      const item = itemBox.putAnItem(player,itemCode,count,emptyIndex);
+    
+      const playerPutAnItemPayload = {
+        playerId: player.user.id,
+        itemBoxId: itemBoxId,
+        itemData: {
+          itemType: Object.keys(item)[0], //{code:count}
+          count: Object.values(item)[0],
+        },
+        count: item.itemCode,
+        success: true,
+      };
+  
+      const notification = makePacket(config.packetType.S_PLAYER_PUT_AN_ITEM_NOTIFICATION, playerPutAnItemPayload);
+  
+      room.broadcast(notification);
+    }
 
-    // // 넣어진 아이템을 success코드와 같이 브로드캐스트 해야한다.
 
-    // const putAnItemRes = makePacket(config.packetType.PUT_AN_ITEM_RESPONSE, payload);
-
-    const playerPutAnItemPayload ={
-      playerId:player.user.id,
-      itemBoxId: 2,
-      itemData:{
-        itemId: itemType,
-        count: count,
-      },
-      count:count,
-      success:false
-    };
-
-    const notification = makePacket(config.packetType.S_PLAYER_PUT_AN_ITEM_NOTIFICATION, playerPutAnItemPayload);
-    //이 유저가 열고 있다는거 브로드캐스트
-
-    room.broadcast(notification);
-  } catch (error) {
-    console.error(error);
-    errorHandler(socket, error, config.packetType.S_PLAYER_PUT_AN_ITEM_NOTIFICATION);
-  }
 };
 
 export default playerPutAnItemHandler;
