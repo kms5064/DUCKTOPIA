@@ -250,9 +250,9 @@ message C2SPlayerGetItemRequest {
 
 // 아이템 습득 응답
 message S2CPlayerGetItemNotification {
-  bool success = 1;   // 습득 성공 여부
-  string message = 2; // 결과 메시지
-  Item item = 3;      // 습득한 아이템 정보
+  bool success = 1;        // 습득 성공 여부
+  string message = 2;      // 결과 메시지
+  repeated Item items = 3; // 습득한 아이템 목록
 }
 
 // 아이템 생성 알림 (몬스터 사망 시)

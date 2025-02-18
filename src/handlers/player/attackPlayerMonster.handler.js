@@ -64,15 +64,37 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
     game.broadcast(packet);
 
     // 아이템 드롭 처리
+    // 기존 아이템 드롭 처리 주석
+    /*
     const monsterPosition = monster.getMonsterPos();
     const droppedItems = game.itemManager.createDropItems(monster.grade, monsterPosition);
-
+    
     if (droppedItems.length > 0) {
       // 아이템 생성 알림
       packet = makePacket(config.packetType.S_ITEM_SPAWN_NOTIFICATION, {
         items: droppedItems,
       });
       game.broadcast(packet);
+    }
+    */
+
+    // 테스트용 코드: 아이템을 바로 플레이어 인벤토리에 추가
+    const items = game.itemManager.createDropItems(monster.grade, monster.getMonsterPos());
+    if (items.length > 0) {
+      items.forEach((item) => {
+        // 아이템 습득 처리
+        item.pickup();
+        // 플레이어 인벤토리에 추가
+        player.addItem(item);
+      });
+
+      // 아이템 획득 알림
+      packet = makePacket(config.packetType.S_PLAYER_GET_ITEM_NOTIFICATION, {
+        success: true,
+        message: '아이템을 획득했습니다.',
+        items: items,
+      });
+      socket.write(packet);
     }
   } else {
     // 몬스터 HP 업데이트 알림
