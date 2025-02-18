@@ -147,6 +147,11 @@ class Player {
   getUser() {
     return this.user;
   }
+
+  getPlayerHp() {
+    return this.hp;
+  }
+
 }
 
 export default Player;

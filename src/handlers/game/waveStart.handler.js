@@ -17,7 +17,6 @@ const waveStartHandler = ({ socket, payload }) => {
 
   // 2. 게임 찾기
   const game = roomSession.getRoom(user.getRoomId()).getGame();
-
   if (!game) {
     new CustomError('게임이 존재하지 않습니다.');
   }
