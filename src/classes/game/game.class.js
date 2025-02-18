@@ -332,6 +332,11 @@ class Game {
    * CORE
    */
 
+  getCoreHp() {
+    const coreHp = this.coreHp
+    return coreHp;
+  }
+
   createObjectData() {
     const coreData = {
       objectId: 1,
@@ -411,7 +416,7 @@ class Game {
 
       const data = monsterAsset.data.find((asset) => asset.monsterCode === monster.monsterCode);
 
-      console.log(monsterAsset.data);
+      //console.log(monsterAsset.data);
 
       // 몬스터 생성
       const spawnMonster = new Monster(
@@ -444,7 +449,7 @@ class Game {
     if (this.dayCounter >= config.game.phaseCount[this.dayPhase]) {
       this.changePhase();
 
-      if (this.dayPhase === DayPhase.DAY) {
+      if (this.dayPhase === DayPhase.NIGHT) {
         this.addWaveMonster();
       }
 
