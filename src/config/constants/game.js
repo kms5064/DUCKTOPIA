@@ -12,3 +12,4 @@ Object.freeze(WaveState);
 
 export const DAY_TIME = 10000; // 임시 10초 
 export const NIGHT_TIME = 10000; // 임시 10초
+export const FRAME_PER_40 = 1000 / 40; // 40프레임
