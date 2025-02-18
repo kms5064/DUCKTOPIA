@@ -256,7 +256,7 @@ class Game {
         if (inputPlayer === null) continue;
 
         monster.setTargetPlayer(inputPlayer);
-        monster.setMonsterTrackingTime(MIN_COOLTIME_MONSTER_TRACKING);
+        monster.setMonsterTrackingTime(5000);
         monsterDiscoverPayload.push({
           monsterId: monsterId,
           targetId: inputId,
