@@ -11,7 +11,6 @@ const waveStartHandler = ({ socket, payload }) => {
   // 1. 유저 찾기
   const user = userSession.getUser(socket.id);
 
-
   if (!user) {
     new CustomError('유저가 존재하지 않습니다.');
   }
@@ -24,11 +23,7 @@ const waveStartHandler = ({ socket, payload }) => {
   }
 
   // 3. 게임에 반영하기
-  for (const item of monsters) {
-    const monster = game.getMonsterById(item.monsterId);
-
-    monster.setPosition(item.x, item.y);
-  }
+  game.spawnWaveMonster(monsters);
 
   // 4. 웨이브 상태 변경
   game.setWaveState(WaveState.INWAVE);
