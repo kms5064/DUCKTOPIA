@@ -5,7 +5,7 @@ import onError from './onError.js';
 //import { onData } from './onData.js';
 
 const onConnection = async (socket) => {
-  console.log('클라이언트가 연결되었습니다:', socket.remoteAddress, socket.remotePort);
+  console.log('게이트웨이서버와 연결되었습니다:', socket.remoteAddress, socket.remotePort);
 
   socket.buffer = Buffer.alloc(0);
 

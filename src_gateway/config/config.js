@@ -15,6 +15,7 @@ import {
   PAYLOAD_LENGTH_BYTE,
   VERSION_LENGTH_BYTE,
 } from './constants/header.js';
+import { LOBBY_SERVER, GAME_SERVER } from './constants/server.js';
 
 export const config = {
   header: {
@@ -28,6 +29,8 @@ export const config = {
   server: {
     host: HOST,
     port: PORT,
+    lobbyServer: LOBBY_SERVER,
+    gameServer: GAME_SERVER,
   },
   client: {
     version: CLIENT_VERSION,

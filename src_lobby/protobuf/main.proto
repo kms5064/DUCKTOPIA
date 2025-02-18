@@ -325,7 +325,7 @@ message GamePacket {
     S2CLeaveRoomNotification leaveRoomNotification = 14;
 
     C2SGamePrepareRequest gamePrepareRequest = 15;
-    S2CGamePrepareResponse gamePrepareResponse = 16;
+    S2SGamePrepareResponse gamePrepareResponse = 16;
     S2CGamePrepareNotification gamePrepareNotification = 17;
     C2SGameStartRequest gameStartRequest = 18;
     S2CGameStartResponse gameStartResponse = 19;
