@@ -142,7 +142,7 @@ class Game {
         data.hp,
         data.attack,
         data.defence,
-        data.range,
+        15,
         data.speed,
         0,
         0,
@@ -228,9 +228,7 @@ class Game {
       if (!monster.hasPriorityPlayer()) {
         //플레이어를 쫒다가 시간 되어 풀렸을 때 쿨타임이 걸리고
         //인식 쿨타임이 남아 있는 몬스터는 체크 제외
-        if (!monster.AwakeCoolTimeCheck()) {
-          continue;
-        }
+        if (!monster.AwakeCoolTimeCheck()) continue;
 
         //몬스터가 죽었을 때, hp가 0인데 반응이 나올 수 있으니 체크
         if (monster.monsterDeath()) {
@@ -240,39 +238,36 @@ class Game {
 
         for (const [playerId, player] of this.players) {
           // 대상 찾아보기
-          const calculedDistance = monster.returnCalculateDistance(player);
-          if (distance <= calculedDistance) {
-            continue;
+          const calculatedDistance = monster.returnCalculateDistance(player);
+
+          if (distance > calculatedDistance) {
+            distance = calculatedDistance;
+            inputId = playerId;
+            inputPlayer = player;
           }
-
-          distance = calculedDistance;
-          inputId = playerId;
-          inputPlayer = player;
         }
 
-        if (inputPlayer === null) {
-          continue;
-        }
+        if (inputPlayer === null) continue;
+
         monster.setTargetPlayer(inputPlayer);
-        monster.getMonsterTrackingTime(MIN_COOLTIME_MONSTER_TRACKING);
-        if (monster.hasPriorityPlayer()) {
-          monsterDiscoverPayload.push({
-            monsterId: monsterId,
-            targetId: inputId,
-          });
-        }
-      } else {
-        if (monster.lostPlayer()) {
-          monsterDiscoverPayload.push({
-            monsterId: monsterId,
-            targetId: 0,
-          });
-        }
+        monster.setMonsterTrackingTime(MIN_COOLTIME_MONSTER_TRACKING);
+        monsterDiscoverPayload.push({
+          monsterId: monsterId,
+          targetId: inputId,
+        });
+
+      } else if (monster.lostPlayer()) {
+        monsterDiscoverPayload.push({
+          monsterId: monsterId,
+          targetId: 0,
+        });
       }
     }
+
     const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, {
       monsterTarget: monsterDiscoverPayload,
     });
+    
     this.broadcast(packet);
   }
 
@@ -302,19 +297,11 @@ class Game {
   }
 
   monsterTimeCheck() {
-    const monsterTimeCheckPayload = [];
     for (const [monsterId, monster] of this.monsters) {
       const now = Date.now();
       const deltaTime = now - this.monsterLastUpdate;
-      if (monster.CoolTimeCheck(deltaTime)) {
-        monsterTimeCheckPayload.push({ monsterId: monsterId, targetId: 0 });
-      }
+      monster.CoolTimeCheck(deltaTime)
     }
-
-    const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, {
-      monsterTarget: monsterTimeCheckPayload,
-    });
-    this.broadcast(packet);
   }
 
   getItemBoxById(itemBoxId) {
@@ -372,7 +359,7 @@ class Game {
   // 웨이브 몬스터 생성
   addWaveMonster() {
     const monstersData = [];
-    for (let i = 1; i <= config.game.monster.waveMaxMonsterCount; i++) {
+    for (let i = 1; i <= config.game.monster.waveMaxMonsterCount - this.monsters.size; i++) {
       const monsterId = this.monsterIndex;
 
       // 몬스터 데이터 뽑기
@@ -418,7 +405,7 @@ class Game {
         data.hp,
         data.attack,
         data.defence,
-        data.range,
+        5,
         data.speed,
         monster.x,
         monster.y,
