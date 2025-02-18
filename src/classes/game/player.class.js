@@ -14,7 +14,8 @@ class Player {
     this.lv = 1;
     this.atk = atk;
     this.inventory = Array.from({ length: 16 }, () => null);
-    this.equippedWeapon = 0;
+    // 임시 값
+    this.equippedWeapon = { atk: 5 };
     this.x = x;
     this.y = y;
     this.isAlive = true;
@@ -147,6 +148,11 @@ class Player {
   getUser() {
     return this.user;
   }
+
+  getPlayerHp() {
+    return this.hp;
+  }
+
 }
 
 export default Player;
