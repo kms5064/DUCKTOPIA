@@ -18,7 +18,7 @@ class Game {
     this.map = []; // 0과 1로 된 2차원배열?
     this.coreHp = config.game.core.maxHP;
     this.corePosition = config.game.core.position;
-    this.lastUpdate = 0;
+    this.lastUpdate = Date.now();
     this.gameLoop = null;
     this.highLatency = 120;
     this.ownerId = ownerId;
@@ -59,7 +59,7 @@ class Game {
       this.phaseCheck();
       this.monsterUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
-    }, 100);
+    }, 1000);
   }
 
   gameEnd() {
@@ -136,9 +136,9 @@ class Game {
         data.monsterCode,
         data.name,
         data.hp,
-        1,
+        data.attack,
         data.defence,
-        5,
+        data.range,
         data.speed,
         0,
         0,
@@ -215,9 +215,6 @@ class Game {
   monsterDisCovered() {
     const monsterDiscoverPayload = [];
     for (const [monsterId, monster] of this.monsters) {
-      if (monster.isWave()) {
-        continue;
-      }
       // 대상이 없는 몬스터만
       let distance = Infinity;
       let inputId = 0;
@@ -239,10 +236,16 @@ class Game {
           continue;
         }
         monster.setTargetPlayer(inputPlayer);
-        monster.getMonsterTrackingTime(Math.floor(Math.random()
-          * RANGE_COOLTIME_MONSTER_TRACKING + MIN_COOLTIME_MONSTER_TRACKING));
+
+        if (monster.isWave()) {
+          monster.getMonsterTrackingTime(10000);
+        }
+        else {
+          monster.getMonsterTrackingTime(Math.floor(Math.random()
+            * RANGE_COOLTIME_MONSTER_TRACKING + MIN_COOLTIME_MONSTER_TRACKING));
+        }
+
         if (monster.hasPriorityPlayer()) {
-          console.log('플레이어가 등록됨');
           monsterDiscoverPayload.push({
             monsterId: monsterId,
             targetId: inputId,
@@ -251,7 +254,6 @@ class Game {
       }
       else {
         if (monster.lostPlayer()) {
-          console.log(`${monsterId}가 플레이어를 잃음`)
           monsterDiscoverPayload.push({
             monsterId: monsterId,
             targetId: 0
@@ -310,13 +312,11 @@ class Game {
       { monsterTarget: monsterTimeCheckPayload },
     );
     this.broadcast(packet);
-
-
   }
 
-  getItemBoxById(itemBoxId){
+  getItemBoxById(itemBoxId) {
     return this.itemBoxes.get(itemBoxId);
-  //여기까지 몬스터 영역
+    //여기까지 몬스터 영역
   }
 
   checkSpawnArea(monsterCode, x, y) {
@@ -345,7 +345,7 @@ class Game {
     };
     return coreData;
   }
-  
+
   coreDamaged(damage) {
     this.coreHp -= damage;
     if (this.coreHp <= 0) {
@@ -440,9 +440,9 @@ class Game {
   }
 
   //테스트용 코드
-  addBox(){
-    const itemBox = new ItemBox(2,0,0);
-    this.itemBoxes.set(itemBox.id,itemBox);
+  addBox() {
+    const itemBox = new ItemBox(2, 0, 0);
+    this.itemBoxes.set(itemBox.id, itemBox);
   }
   /////////////////////////////////////
 }
