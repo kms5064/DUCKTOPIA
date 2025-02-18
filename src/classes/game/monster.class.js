@@ -219,6 +219,7 @@ class Monster extends MovableObjectBase {
         return false;
       }
     }
+    return false;
   }
 
   //몬스터가 사망했을 때의 데이터
