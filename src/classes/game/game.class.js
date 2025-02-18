@@ -21,7 +21,7 @@ class Game {
     this.map = []; // 0과 1로 된 2차원배열?
     this.coreHp = config.game.core.maxHP;
     this.corePosition = config.game.core.position;
-    this.lastUpdate = Date.now();
+    this.lastUpdate = 0;
     this.gameLoop = null;
     this.highLatency = 120;
     this.ownerId = ownerId;
