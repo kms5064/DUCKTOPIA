@@ -38,6 +38,7 @@ enum PhaseType {
   DAY = 0;
   NIGHT = 1;
 }
+
 message GameStateData {
   PhaseType phaseType = 1;
   int64 nextPhaseAt = 2;
@@ -55,16 +56,23 @@ message MonsterPositionData {
   float y = 4;
 }
 
+message itemData {
+  int32 itemId = 1;
+  int32 count = 2;
+}
+
 message ObjectData {
   int32 objectId = 1;
   int32 objectCode = 2;
+  repeated itemData itemData = 3;
 }
 
 message ObjectPositionData {
   int32 objectId = 1;
   int32 objectCode = 2;
-  float x = 3;
-  float y = 4;
+  repeated itemData itemData = 3;
+  float x = 4;
+  float y = 5;
 }
 
 // 통신 Payload
@@ -163,7 +171,6 @@ message S2CGameStartNotification { // 게임시작 알림
   repeated MonsterPositionData monsters = 3;
   repeated ObjectPositionData objects = 4;
 }
-
 // 이때 클라 서버 모두 몬스터, 장애물(오브젝트), 플레이어 정보를 가짐
 
 // 여기부터 인게임
@@ -227,7 +234,7 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
   int32 playerId = 3;
 }
 
-message S2CPlayerDamagedByMonster {
+message C2SPlayerDamagedByMonsterRequest {
   int32 playerId = 1;
   int32 monsterId = 2;
 }
@@ -266,12 +273,14 @@ message S2CMonsterMoveNotification { // 몬스터 이동 알림
 
 message C2SMonsterAttackRequest { // 몬스터 공격 알림
   int32 monsterId = 1;
-  int32 targetId = 2;
+  bool isPlayer = 2;
+  int32 targetId = 3;
 }
 
 message S2CMonsterAttackNotification { // 몬스터 공격 모든 클라이언트에 알림
   int32 monsterId = 1;
-  int32 targetId = 2;
+  bool isPlayer = 2;
+  int32 targetId = 3;
 }
 
 message S2CMonsterHpUpdateNotification // 몬스터 체력 감소
@@ -280,12 +289,71 @@ message S2CMonsterHpUpdateNotification // 몬스터 체력 감소
   int32 hp = 2;
 }
 
+
 // 코어
-message S2CCoreHpUpdateNotification { // 코어 체력 감소 알림
+
+message C2SObjectDamagedByMonsterRequest {
+  int32 objectId = 1;
+  int32 monsterId = 2;
+}
+
+message S2CObjectHpUpdateNotification { // 코어 Id=0;
+  int32 objectId = 1;
   int32 hp = 2;
 }
 
-message S2CGameOverNotification {}
+
+//아이템 박스
+message C2SPlayerOpenBoxRequest{
+  int32 itemBoxId =1;
+}
+
+message S2CPlayerOpenBoxNotification{
+  int32 playerId =1;
+  int32 itemBoxId =2;
+  repeated itemData itemData =3;
+}
+
+message C2SPlayerTakeOutAnItemRequest{
+  int32 itemBoxId =1;
+  int32 itemType =2;
+  int32 count =3;
+}
+
+message S2CPlayerTakeOutAnItemNotification{
+  int32 playerId =1;
+  int32 itemBoxId =2;
+  itemData itemData=3;
+  int32 count =4;
+  bool success =5;
+}
+
+message C2SPlayerPutAnItemRequest{
+  int32 itemBoxId =1;
+  int32 itemType =2;
+  int32 count =3;
+}
+
+message S2CPlayerPutAnItemNotification{
+  int32 playerId =1;
+  int32 itemBoxId =2;
+  itemData itemData=3;
+  int32 count =4;
+  bool success =5;
+}
+
+message C2SPlayerCloseBoxRequest{
+  int32 itemBoxId =1;
+}
+
+message S2CPlayerCloseBoxNotification{
+  int32 playerId =1;
+  int32 itemBoxId =2;
+}
+
+message S2CGameOverNotification {
+
+}
 
 // 에러
 message S2CErrorNotification {
@@ -330,7 +398,15 @@ message GamePacket {
     C2SPlayerUseItemRequest playerUseItemRequest = 29;
     S2CPlayerEatFoodResponse playerEatFoodResponse = 30;
     S2CPlayerEquipWeaponResponse playerEquipWeaponResponse = 31;
-    S2CPlayerDamagedByMonster playerDamagedByMonster = 45;
+    C2SPlayerDamagedByMonsterRequest playerDamagedByMonsterRequest = 45;
+    C2SPlayerOpenBoxRequest playerOpenBoxRequest = 46;
+    S2CPlayerOpenBoxNotification playerOpenBoxNotification = 47;
+    C2SPlayerTakeOutAnItemRequest playerTakeOutAnItemRequest = 48;
+    S2CPlayerTakeOutAnItemNotification playerTakeOutAnItemNotification = 49;
+    C2SPlayerPutAnItemRequest playerPutAnItemRequest = 50;
+    S2CPlayerPutAnItemNotification playerPutAnItemNotification = 51;
+    C2SPlayerCloseBoxRequest playerCloseBoxRequest = 52;
+    S2CPlayerCloseBoxNotification playerCloseBoxNotification = 53;
 
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;
     C2SMonsterSpawnResponse monsterSpawnResponse = 33;
@@ -343,7 +419,8 @@ message GamePacket {
     S2CMonsterAttackNotification monsterAttackNotification = 40;
     S2CMonsterHpUpdateNotification monsterHpUpdateNotification = 41;
 
-    S2CCoreHpUpdateNotification coreHpUpdateNotification = 42;
+    S2CObjectHpUpdateNotification objectHpUpdateNotification = 42;
+    C2SObjectDamagedByMonsterRequest objectDamagedByMonsterRequest = 54;
     S2CGameOverNotification gameOverNotification = 43;
 
     S2CErrorNotification errorNotification = 44;
