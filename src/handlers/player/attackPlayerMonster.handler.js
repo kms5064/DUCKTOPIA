@@ -6,7 +6,7 @@ import CustomError from '../../utils/error/customError.js';
 const attackPlayerMonsterHandler = ({ socket, payload }) => {
   const { playerDirX, playerDirY, monsterId } = payload;
 
-  console.log("몬스터 데미지 실행")
+  console.log('몬스터 데미지 실행');
 
   // 유저 객체 조회
   const user = userSession.getUser(socket.id);
@@ -56,16 +56,32 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
   if (currHp <= 0) {
     // 몬스터 사망 처리
     game.removeMonster(monsterId);
+
+    // 몬스터 사망 알림
+    packet = makePacket(config.packetType.S_MONSTER_DEATH_NOTIFICATION, {
+      monsterId,
+    });
+    game.broadcast(packet);
+
+    // 아이템 드롭 처리
+    const monsterPosition = monster.getMonsterPos();
+    const droppedItems = game.itemManager.createDropItems(monster.grade, monsterPosition);
+
+    if (droppedItems.length > 0) {
+      // 아이템 생성 알림
+      packet = makePacket(config.packetType.S_ITEM_SPAWN_NOTIFICATION, {
+        items: droppedItems,
+      });
+      game.broadcast(packet);
+    }
+  } else {
+    // 몬스터 HP 업데이트 알림
+    packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
+      monsterId,
+      hp: currHp,
+    });
+    game.broadcast(packet);
   }
-
-  // 패킷 생성
-  packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
-    monsterId,
-    hp: currHp,
-  });
-
-  // broadcast - 모든 플레이어들에게 전달
-  game.broadcast(packet);
 
   // TODO : 검증 로직은 일단 주석 처리
   // 몬스터 목록 조회

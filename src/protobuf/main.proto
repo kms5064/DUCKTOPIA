@@ -8,11 +8,6 @@ message PlayerPositionData {
   float y = 3;
 }
 
-message MonsterTarget {
-  int32 monsterId = 1;
-  int32 targetId = 2;
-}
-
 message User { // User 닉네임
   string name = 1;
   int32 userId = 2;
@@ -160,8 +155,6 @@ message S2CGameStartResponse { // 게임시작 응답
 message S2CGameStartNotification { // 게임시작 알림
   GameStateData gameState = 1;
   repeated PlayerPositionData playerPositions = 2;
-  repeated MonsterPositionData monsters = 3;
-  repeated ObjectPositionData objects = 4;
 }
 
 // 이때 클라 서버 모두 몬스터, 장애물(오브젝트), 플레이어 정보를 가짐
@@ -205,31 +198,74 @@ message S2CPlayerDeathNotification { // 플레이어가 사망했을 때
   int32 playerId = 1;
 }
 
+// 기존 식량 관련 메시지는 아래 이유로 주석 처리
+// 1. itemId가 assets의 code를 참조하는 것으로 잘못 정의됨
+// 2. 게임 내 고유 아이템 식별을 위한 구조 부재
+// 3. 메시지 방향이 잘못 정의됨 (S2C -> C2S)
+/*
 message S2CPlayerGetItemRequest {
   int32 playerId = 1;
   int32 itemId = 2;
 }
 
-message C2SPlayerUseItemRequest { // 아이템 사용 요청
-  int32 itemId = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은 소모)
+message C2SPlayerUseItemRequest {
+  int32 itemId = 1;
 }
 
-message S2CPlayerEatFoodResponse { // 사용한 아이템이 식량일 때
+message S2CPlayerEatFoodResponse {
   bool success = 1;
   int32 itemId = 2;
   int32 playerId = 3;
   int32 hunger = 4;
 }
+*/
+
+//---- 새로운 아이템 관련 메시지 정의
+message Position {
+  float x = 1;
+  float y = 2;
+}
+
+message Item {
+  string id = 1;         // 아이템 고유 식별자 ID
+  ItemType type = 2;     // 아이템 타입
+  string name = 3;       // 아이템 이름
+  Position position = 4; // 아이템 위치
+  int32 code = 5; // assets에 정의된 아이템 코드 - 이 부분은 아이템 생성 방식에
+                  // 따라 빠질 수 있음.
+
+  // 아이템 타입 정의
+  enum ItemType {
+    UNKNOWN = 0;
+    FOOD = 1;
+    WEAPON = 2;
+  }
+}
+
+// 아이템 습득 요청
+message C2SPlayerGetItemRequest {
+  string itemId = 1;   // 습득할 아이템 식별자 ID
+  string playerId = 2; // 플레이어 ID
+}
+
+// 아이템 습득 응답
+message S2CPlayerGetItemNotification {
+  bool success = 1;   // 습득 성공 여부
+  string message = 2; // 결과 메시지
+  Item item = 3;      // 습득한 아이템 정보
+}
+
+// 아이템 생성 알림 (몬스터 사망 시)
+message S2CItemSpawnNotification {
+  repeated Item items = 1; // 생성된 아이템 목록
+}
+
+//---- 여기까지 추가됨
 
 message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
   bool success = 1;
   int32 itemId = 2;
   int32 playerId = 3;
-}
-
-message S2CPlayerDamagedByMonster {
-  int32 playerId = 1;
-  int32 monsterId = 2;
 }
 
 // 몬스터
@@ -242,13 +278,15 @@ message C2SMonsterSpawnResponse { // 몬스터 좌표를 찍어서 서버에 전
   repeated MonsterPositionData monsters = 1;
 }
 
-message S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
+message
+S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
   repeated MonsterPositionData monsters = 1;
 }
 
 message S2CMonsterAwakeNotification // 몬스터 깨어남
 {
-  repeated MonsterTarget monsterTarget = 1;
+  int32 monsterId = 1;
+  int32 targetId = 2;
 }
 
 message S2CMonsterDeathNotification // 몬스터 사망
@@ -257,11 +295,17 @@ message S2CMonsterDeathNotification // 몬스터 사망
 }
 
 message C2SMonsterMoveRequest { // 몬스터 이동
-  repeated MonsterPositionData monsterPositionData = 1;
+  int32 monsterId = 1;
+  int32 targetId = 2;
+  float x = 3;
+  float y = 4;
 }
 
 message S2CMonsterMoveNotification { // 몬스터 이동 알림
-  repeated MonsterPositionData monsterPositionData = 1;
+  int32 monsterId = 1;
+  int32 targetId = 2; // 몬스터 몸 방향을 위해 필요
+  float x = 3;
+  float y = 4;
 }
 
 message C2SMonsterAttackRequest { // 몬스터 공격 알림
@@ -293,6 +337,11 @@ message S2CErrorNotification {
   int64 timestamp = 2;
 }
 
+// 에러 응답 - 안씀 (훈제오리가 실수로 안지움)
+message S2CErrorResponse {
+  string errorMessage = 1;
+  int64 timestamp = 2;
+}
 
 message GamePacket {
   oneof payload {
@@ -326,21 +375,20 @@ message GamePacket {
     C2SPlayerAttackMonsterRequest playerAttackMonsterRequest = 25;
     S2CPlayerAttackNotification playerAttackNotification = 26;
     S2CPlayerDeathNotification playerDeathNotification = 27;
-    S2CPlayerGetItemRequest playerGetItemRequest = 28;
-    C2SPlayerUseItemRequest playerUseItemRequest = 29;
-    S2CPlayerEatFoodResponse playerEatFoodResponse = 30;
+    C2SPlayerGetItemRequest playerGetItemRequest = 28;
+    S2CPlayerGetItemNotification playerGetItemNotification = 29;
+    S2CItemSpawnNotification itemSpawnNotification = 30;
     S2CPlayerEquipWeaponResponse playerEquipWeaponResponse = 31;
-    S2CPlayerDamagedByMonster playerDamagedByMonster = 45;
 
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;
     C2SMonsterSpawnResponse monsterSpawnResponse = 33;
-    S2CMonsterWaveStartNotification monsterWaveStartNotification = 34;
+    S2CMonsterWaveStartNotification MonsterWaveStartNotification = 34;
     S2CMonsterAwakeNotification monsterAwakeNotification = 35;
     S2CMonsterDeathNotification monsterDeathNotification = 36;
     C2SMonsterMoveRequest monsterMoveRequest = 37;
     S2CMonsterMoveNotification monsterMoveNotification = 38;
     C2SMonsterAttackRequest monsterAttackRequest = 39;
-    S2CMonsterAttackNotification monsterAttackNotification = 40;
+    S2CMonsterAttackNotification MonsterAttackNotification = 40;
     S2CMonsterHpUpdateNotification monsterHpUpdateNotification = 41;
 
     S2CCoreHpUpdateNotification coreHpUpdateNotification = 42;

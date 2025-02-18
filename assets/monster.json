@@ -3,103 +3,204 @@
   "version": "1.0.0",
   "data": [
     {
-      "monsterCode": 1,
-      "name": "약골오리",
+      "code": 201,
+      "name": "초보 오리",
       "hp": 30,
       "attack": 10,
       "defence": 10,
       "range": 10,
-      "speed": 10
+      "speed": 10,
+      "grade": "D"
     },
     {
-      "monsterCode": 2,
-      "name": "강골오리",
+      "code": 202,
+      "name": "수련 오리",
       "hp": 50,
       "attack": 11,
       "defence": 11,
       "range": 11,
-      "speed": 10
+      "speed": 10,
+      "grade": "D"
     },
     {
-      "monsterCode": 3,
+      "code": 203,
       "name": "파이어덕",
       "hp": 70,
       "attack": 14,
       "defence": 12,
       "range": 12,
-      "speed": 10
+      "speed": 10,
+      "grade": "D"
     },
     {
-      "monsterCode": 4,
+      "code": 204,
       "name": "아이스덕",
       "hp": 90,
       "attack": 17,
       "defence": 13,
       "range": 13,
-      "speed": 10
+      "speed": 10,
+      "grade": "D"
     },
     {
-      "monsterCode": 5,
+      "code": 205,
       "name": "썬더덕",
       "hp": 130,
       "attack": 25,
       "defence": 15,
       "range": 14,
-      "speed": 10
+      "speed": 10,
+      "grade": "D"
     },
     {
-      "monsterCode": 6,
+      "code": 206,
       "name": "닌자덕",
       "hp": 180,
       "attack": 36,
       "defence": 17,
       "range": 15,
-      "speed": 10
+      "speed": 10,
+      "grade": "D"
     },
     {
-      "monsterCode": 7,
+      "code": 207,
       "name": "하이퍼덕",
       "hp": 250,
       "attack": 49,
       "defence": 19,
       "range": 25,
-      "speed": 10
+      "speed": 10,
+      "grade": "C"
     },
     {
-      "monsterCode": 8,
+      "code": 208,
       "name": "리얼닌자덕",
       "hp": 400,
       "attack": 64,
       "defence": 22,
       "range": 25,
-      "speed": 10
+      "speed": 10,
+      "grade": "C"
     },
     {
-      "monsterCode": 101,
-      "name": "약골오리",
-      "hp": 30,
-      "attack": 10,
-      "defence": 10,
+      "code": 209,
+      "name": "디펜더덕",
+      "hp": 500,
+      "attack": 45,
+      "defence": 35,
       "range": 10,
-      "speed": 10
+      "speed": 7,
+      "grade": "C"
     },
     {
-      "monsterCode": 102,
-      "name": "강골오리",
-      "hp": 50,
-      "attack": 11,
-      "defence": 11,
-      "range": 11,
-      "speed": 10
+      "code": 210,
+      "name": "스나이퍼덕",
+      "hp": 300,
+      "attack": 85,
+      "defence": 15,
+      "range": 30,
+      "speed": 9,
+      "grade": "C"
     },
     {
-      "monsterCode": 103,
-      "name": "파이어덕",
-      "hp": 70,
-      "attack": 14,
-      "defence": 12,
+      "code": 211,
+      "name": "메이지덕",
+      "hp": 250,
+      "attack": 100,
+      "defence": 10,
+      "range": 28,
+      "speed": 8,
+      "grade": "C"
+    },
+    {
+      "code": 212,
+      "name": "워리어덕",
+      "hp": 450,
+      "attack": 70,
+      "defence": 25,
       "range": 12,
-      "speed": 10
+      "speed": 8,
+      "grade": "B"
+    },
+    {
+      "code": 213,
+      "name": "어쌔신덕",
+      "hp": 280,
+      "attack": 95,
+      "defence": 12,
+      "range": 18,
+      "speed": 15,
+      "grade": "B"
+    },
+    {
+      "code": 214,
+      "name": "아처덕",
+      "hp": 320,
+      "attack": 88,
+      "defence": 18,
+      "range": 35,
+      "speed": 11,
+      "grade": "B"
+    },
+    {
+      "code": 215,
+      "name": "네크로맨서덕",
+      "hp": 400,
+      "attack": 110,
+      "defence": 25,
+      "range": 25,
+      "speed": 8,
+      "grade": "B"
+    },
+    {
+      "code": 216,
+      "name": "버서커덕",
+      "hp": 600,
+      "attack": 90,
+      "defence": 20,
+      "range": 15,
+      "speed": 12,
+      "grade": "A"
+    },
+    {
+      "code": 217,
+      "name": "다크나이트덕",
+      "hp": 700,
+      "attack": 80,
+      "defence": 40,
+      "range": 15,
+      "speed": 11,
+      "grade": "A"
+    },
+    {
+      "code": 218,
+      "name": "팔라딘덕",
+      "hp": 800,
+      "attack": 75,
+      "defence": 45,
+      "range": 12,
+      "speed": 9,
+      "grade": "A"
+    },
+    {
+      "code": 219,
+      "name": "드래곤덕",
+      "hp": 1000,
+      "attack": 120,
+      "defence": 50,
+      "range": 20,
+      "speed": 13,
+      "grade": "S"
+    },
+    {
+      "code": 220,
+      "name": "데몬로드덕",
+      "hp": 1200,
+      "attack": 150,
+      "defence": 60,
+      "range": 22,
+      "speed": 14,
+      "grade": "S"
     }
   ]
 }

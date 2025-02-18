@@ -16,6 +16,7 @@ class Monster extends MovableObjectBase {
     defence,
     range,
     speed,
+    grade,
     x = 0,
     y = 0,
     isWaveMonster = false,
@@ -29,7 +30,8 @@ class Monster extends MovableObjectBase {
     this.attack = attack;
     this.defence = defence;
     this.name = name;
-    this.monsterCode = 1;
+    this.monsterCode = monsterCode;
+    this.grade = grade;
     this.priorityPlayer = null;
     //몬스터가 여러 패턴을 가지고 있을 때 그 패턴들을 이 안에서 쿨타임을 관리한다.
     this.distanceBetweenPlayer = Infinity;
@@ -139,44 +141,45 @@ class Monster extends MovableObjectBase {
     }
   }
 
+  //---- 아이템 관리 클래스로 옮김
   //몬스터가 죽거나 할 때 아이템 드롭할 아이템의 숫자를 제공한다.
-  dropItemCount() {
-    const dropCount =
-      10 -
-      Math.floor(
-        Math.log(Math.ceil(Math.random() * config.game.monster.maxItemDropCount)) / Math.log(2),
-      );
+  // dropItemCount() {
+  //   const dropCount =
+  //     10 -
+  //     Math.floor(
+  //       Math.log(Math.ceil(Math.random() * config.game.monster.maxItemDropCount)) / Math.log(2),
+  //     );
 
-    switch (dropCount) {
-      case 0:
-      case 1:
-        return 0;
-        break;
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-        return 1;
-        break;
-      case 6:
-      case 7:
-      case 8:
-        return 2;
-        break;
-      case 9:
-      case 10:
-        return 3;
-        break;
-    }
-  }
+  //   switch (dropCount) {
+  //     case 0:
+  //     case 1:
+  //       return 0;
+  //       break;
+  //     case 2:
+  //     case 3:
+  //     case 4:
+  //     case 5:
+  //       return 1;
+  //       break;
+  //     case 6:
+  //     case 7:
+  //     case 8:
+  //       return 2;
+  //       break;
+  //     case 9:
+  //     case 10:
+  //       return 3;
+  //       break;
+  //   }
+  // }
 
-  setPatternInterval() {
-    this.patternInterval = setInterval(() => {
-      clearInterval(this.patternInterval);
-      console.log('패턴 인터벌 초기화함');
-      this.patternInterval = null;
-    }, 5000);
-  }
+  // setPatternInterval() {
+  //   this.patternInterval = setInterval(() => {
+  //     clearInterval(this.patternInterval);
+  //     console.log('패턴 인터벌 초기화함');
+  //     this.patternInterval = null;
+  //   }, 5000);
+  // }
 
   //몬스터가 사망했을 때의 데이터
   //이후 몬스터 사망 시 아이템 드롭도 해야 하나
@@ -233,7 +236,6 @@ class Monster extends MovableObjectBase {
   }
 
   //현재 몬스터와 플레이어 사이에 얼마나 거리가 떨어져 있는지 보기
-
 }
 
 export default Monster;

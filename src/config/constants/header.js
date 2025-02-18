@@ -3,7 +3,6 @@ export const VERSION_LENGTH_BYTE = 1;
 export const PAYLOAD_LENGTH_BYTE = 4;
 
 export const PACKET_TYPE = {
-
   // 유저 회원가입,로그인
   REGISTER_REQUEST: [1001, 'registerRequest'],
   REGISTER_RESPONSE: [1002, 'registerResponse'],
@@ -62,4 +61,7 @@ export const PACKET_TYPE = {
 
   // 에러
   S_ERROR_NOTIFICATION: [7001, 'errorNotification'],
+
+  // 아이템
+  S_ITEM_SPAWN_NOTIFICATION: [8001, 'itemSpawnNotification'],
 };
