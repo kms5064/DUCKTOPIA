@@ -38,6 +38,7 @@ const objectDamagedByMonsterHandler = async ({ socket, payload }) => {
 
   } else {
   }
+}
 };
 
 export default objectDamagedByMonsterHandler;
