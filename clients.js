@@ -1,18 +1,24 @@
 import net from 'net';
 import { loadProtos, getProtoMessages } from './src/init/loadProtos.js';
 import { config } from './src/config/config.js';
+import { getRedisRoomInfo } from './src_lobby/db/redis/redis.js';
+import { resolve } from 'path';
 
 // 더미 클라이언트
 
+let gameServerPacket;
+
 class Client {
-  constructor(id, password, name) {
+  constructor(id, password, name, host, port) {
     this.id = id;
     this.password = password;
     this.name = name;
     this.socket = new net.Socket();
     this.buffer = Buffer.alloc(0);
+    this.infos = {};
 
-    this.socket.connect(config.server.port, config.server.host, this.onConnection);
+    // this.socket.connect(config.server.port, config.server.host, this.onConnection);
+    this.socket.connect(port, host, this.onConnection);
     this.socket.on('data', this.onData);
   }
 
@@ -54,6 +60,14 @@ class Client {
 
         console.log('패킷 수신', packetType, payload);
         switch (packetType) {
+          case config.packetType.PREPARE_GAME_RESPONSE[0]:
+            const { redisKey, host, port, token } = payload;
+            const redisData = await getRedisRoomInfo(redisKey);
+            gameServerPacket = payload; // 저장
+            console.log(
+              `받아온 값! ${Object.values(payload)} 비교할 레디스 값! roomId: ${redisData.roomId} / tokens: ${Object.values(redisData.tokens)}`,
+            );
+            break;
         }
       } catch (e) {
         console.error(e);
@@ -97,10 +111,19 @@ class Client {
     this.socket.write(packet);
   }
 
+  async end() {
+    await this.delay(2000);
+    this.socket.end();
+  }
+
+  async delay(time) {
+    return new Promise((resolve) => setTimeout(() => resolve(), time));
+  }
+
   // 요청 메서드 모음
 
   async registerRequest() {
-    const payload = { email: this.id, password: this.password, name: this.name };
+    const payload = { email: this.id, password: this.password, nickname: this.name };
     this.sendPacket(config.packetType.REGISTER_REQUEST, payload);
   }
 
@@ -110,8 +133,23 @@ class Client {
   }
 
   async createRoomRequest() {
-    const payload = { name: this.id, maxUserNum: 2 };
+    const payload = { roomName: this.id, maxUserNum: 2 };
     this.sendPacket(config.packetType.CREATE_ROOM_REQUEST, payload);
+  }
+
+  async prepareRequest() {
+    const payload = {};
+    this.sendPacket(config.packetType.PREPARE_GAME_REQUEST, payload);
+  }
+
+  async joinRequest() {
+    // playerId 어떻게 가져올까요???
+    const payload = {
+      playerId: 100,
+      redisKey: gameServerPacket.redisKey,
+      token: gameServerPacket.token,
+    };
+    this.sendPacket(config.packetType.JOIN_SERVER_REQUEST, payload);
   }
 }
 
@@ -123,12 +161,14 @@ const registerTest = async (client_count = 1) => {
       const id = `test${idx}@email.com`;
       const password = '123456';
       const name = `test${idx}`;
-      const client = new Client(id, password, name);
+      const client = new Client(id, password, name, config.server.host, config.server.port);
 
       await client.registerRequest();
+      await client.end();
     }),
   );
 };
+
 // 로그인
 const loginTest = async (client_count = 1) => {
   await Promise.all(
@@ -136,29 +176,53 @@ const loginTest = async (client_count = 1) => {
       const id = `test${idx}@email.com`;
       const password = '123456';
       const name = `test${idx}`;
-      const client = new Client(id, password, name);
+      const client = new Client(id, password, name, config.server.host, config.server.port);
 
       await client.loginRequest();
+      await client.end();
     }),
   );
 };
+
 // 커스텀
 const customTest = async (client_count = 1) => {
   await Promise.all(
     Array.from({ length: client_count }, async (__, idx) => {
+      idx += 2;
       const id = `test${idx}@email.com`;
       const password = '123456';
       const name = `test${idx}`;
-      const client = new Client(id, password, name);
 
-      await client.loginRequest();
+      // Lobby 서버 연결
+      const client = new Client(id, password, name, '127.0.0.1', 5556);
+
       // 로그인 이후 사용할 메서드 적용
+      console.log('#1');
+      await client.loginRequest();
+      await client.delay(1000);
+      console.log('#2');
       await client.createRoomRequest();
+      await client.delay(1000);
+      console.log('#3');
+      await client.prepareRequest();
+
+      await client.end();
+
+      // 게임 서버 연결
+      const gameClient = new Client(
+        id,
+        password,
+        name,
+        gameServerPacket.host,
+        gameServerPacket.port,
+      );
+
+      await gameClient.joinRequest();
     }),
   );
 };
 
 // 테스트 실행문
 await loadProtos().then(() => {
-  registerTest(50);
+  customTest(1);
 });
