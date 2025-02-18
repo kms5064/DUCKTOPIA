@@ -93,7 +93,6 @@ class ItemManager {
       name: randomItem.name,
       position: randomPosition,
       code: randomItem.code,
-      grade: itemGrade,
     });
   }
 
@@ -112,3 +111,5 @@ class ItemManager {
     return Array.from(this.items.values());
   }
 }
+
+export default ItemManager;
