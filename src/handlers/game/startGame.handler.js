@@ -2,6 +2,7 @@ import { config } from '../../config/config.js';
 import { roomSession, userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
+import { DayPhase } from '../../config/constants/game.js';
 
 const gameStartHandler = ({ socket, payload }) => {
 
@@ -31,15 +32,14 @@ const gameStartHandler = ({ socket, payload }) => {
   });
 
   const GameStartNotification = makePacket(config.packetType.START_GAME_NOTIFICATION, {
-    gameState: { phaseType: 0, nextPhaseAt: 100000 }, //이삭님 코드에 이렇게돼있음!
+    gameState: { phaseType: 0, nextPhaseAt: config.game.phaseCount[DayPhase.DAY] + Date.now() }, //이삭님 코드에 이렇게돼있음!
     playerPositions: room.getUsersPositionData(),
     monsters: monsters,
     objects: objects,
   });
 
-
-  room.broadcast(GameStartNotification);
   room.startGame();
+  room.broadcast(GameStartNotification);
 };
 
 export default gameStartHandler;

@@ -57,7 +57,7 @@ class Monster extends MovableObjectBase {
     this.hp = hp;
     this.attack = attack;
     this.defence = defence;
-    console.log(`${this.hp}, ${this.attack}, ${this.defence}`);
+    //console.log(`${this.hp}, ${this.attack}, ${this.defence}`);
   }
 
   setName(name) {
@@ -128,6 +128,7 @@ class Monster extends MovableObjectBase {
   returnCalculateDistance(player) {
     const playerPos = player.getPlayerPos();
     const distance = Math.sqrt(Math.pow(this.x - playerPos.x, 2) + Math.pow(this.y - playerPos.y, 2));
+    //console.log(`몬스터 ${this.id}:  ${distance} : ${this.awakeRange}`);
     return distance < this.awakeRange ? distance : -1;
   }
 
@@ -151,16 +152,23 @@ class Monster extends MovableObjectBase {
   //외부 측에서 타겟 플레이어가 있는지 체크한다.
   lostPlayer() {
     if (this.priorityPlayer === null) {
-      console.log("왜 여기 접근됐지? lost player");
-      return;
+      //console.log("왜 여기 접근됐지? lost player");
+      return false;
     }
+
+
+
+
 
     const playerPos = this.priorityPlayer.getPlayerPos();
     const distance = Math.sqrt(
       Math.pow(playerPos.x - this.x, 2) + Math.pow(playerPos.y - this.y, 2),
     );
 
-    if (distance > this.awakeRange + 2) {
+
+    //플레이어가 죽었는지 확인하고 죽었다면 타겟팅 해제하기 
+    const playerstatus = this.priorityPlayer.getPlayerData();
+    if (distance > this.awakeRange + 2 || playerstatus.character.hp <= 0) {
       //인식 범위보다 인식 끊기는 범위가 좀 더 넓어야 할 것이다.
       this.distanceBetweenPlayer = Infinity;
       this.priorityPlayer = null;
@@ -170,6 +178,8 @@ class Monster extends MovableObjectBase {
       this.distanceBetweenPlayer = distance;
       return false;
     }
+
+
   }
 
 

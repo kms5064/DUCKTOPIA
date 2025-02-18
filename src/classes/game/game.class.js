@@ -4,8 +4,11 @@ import Monster from './monster.class.js';
 import Player from './player.class.js';
 import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
-import { DayPhase, FRAME_PER_40, WaveState } from '../../config/constants/game.js';
-import { MIN_COOLTIME_MONSTER_TRACKING, RANGE_COOLTIME_MONSTER_TRACKING } from '../../config/constants/monster.js';
+import { DayPhase, WaveState } from '../../config/constants/game.js';
+import {
+  MIN_COOLTIME_MONSTER_TRACKING,
+  RANGE_COOLTIME_MONSTER_TRACKING,
+} from '../../config/constants/monster.js';
 import ItemBox from '../item/itemBox.class.js';
 
 class Game {
@@ -60,6 +63,7 @@ class Game {
       this.monsterUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
     }, 1000);
+    this.lastUpdate = Date.now();
   }
 
   gameEnd() {
@@ -207,6 +211,8 @@ class Game {
     //this.monsterMove();
     this.monsterTimeCheck();
 
+    //몬스터의 사망 판정도 체크해 보도록 하자.
+
     //몬스터의 모든 업데이트가 monster업데이트 체크를 갱신하자.
     this.monsterLastUpdate = Date.now();
   }
@@ -219,11 +225,23 @@ class Game {
       let distance = Infinity;
       let inputId = 0;
       let inputPlayer = null;
-      if (!monster.hasPriorityPlayer() && monster.AwakeCoolTimeCheck()) {
+      if (!monster.hasPriorityPlayer()) {
+        //플레이어를 쫒다가 시간 되어 풀렸을 때 쿨타임이 걸리고
+        //인식 쿨타임이 남아 있는 몬스터는 체크 제외
+        if (!monster.AwakeCoolTimeCheck()) {
+          continue;
+        }
+
+        //몬스터가 죽었을 때, hp가 0인데 반응이 나올 수 있으니 체크
+        if (monster.monsterDeath()) {
+          this.monsters.delete(monsterId);
+          continue;
+        }
+
         for (const [playerId, player] of this.players) {
           // 대상 찾아보기
           const calculedDistance = monster.returnCalculateDistance(player);
-          if (calculedDistance === -1 || distance < calculedDistance) {
+          if (distance <= calculedDistance) {
             continue;
           }
 
@@ -236,35 +254,25 @@ class Game {
           continue;
         }
         monster.setTargetPlayer(inputPlayer);
-
-        if (monster.isWave()) {
-          monster.getMonsterTrackingTime(10000);
-        }
-        else {
-          monster.getMonsterTrackingTime(Math.floor(Math.random()
-            * RANGE_COOLTIME_MONSTER_TRACKING + MIN_COOLTIME_MONSTER_TRACKING));
-        }
-
+        monster.getMonsterTrackingTime(MIN_COOLTIME_MONSTER_TRACKING);
         if (monster.hasPriorityPlayer()) {
           monsterDiscoverPayload.push({
             monsterId: monsterId,
             targetId: inputId,
           });
         }
-      }
-      else {
+      } else {
         if (monster.lostPlayer()) {
           monsterDiscoverPayload.push({
             monsterId: monsterId,
-            targetId: 0
-          })
+            targetId: 0,
+          });
         }
       }
     }
-    const packet = makePacket(
-      config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
-      { monsterTarget: monsterDiscoverPayload },
-    );
+    const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, {
+      monsterTarget: monsterDiscoverPayload,
+    });
     this.broadcast(packet);
   }
 
@@ -282,19 +290,15 @@ class Game {
         monsterId: monsterId,
         targetId: targetId,
         x: monsterPos.x,
-        y: monsterPos.y
+        y: monsterPos.y,
       };
 
       monsterMoveList.push(monsterMoverPayload);
-
-
     }
     const packet = makePacket(config.packetType.S_MONSTER_MOVE_NOTIFICATION, monsterMoveList);
 
     //이런 식으로 게임에서 notification을 보내보도록 하자.
     game.broadcast(packet);
-
-
   }
 
   monsterTimeCheck() {
@@ -307,10 +311,9 @@ class Game {
       }
     }
 
-    const packet = makePacket(
-      config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
-      { monsterTarget: monsterTimeCheckPayload },
-    );
+    const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, {
+      monsterTarget: monsterTimeCheckPayload,
+    });
     this.broadcast(packet);
   }
 
@@ -341,7 +344,7 @@ class Game {
     const coreData = {
       objectId: 1,
       objectCode: 1,
-      itemData: []
+      itemData: [],
     };
     return coreData;
   }
@@ -371,40 +374,20 @@ class Game {
     const monstersData = [];
     for (let i = 1; i <= config.game.monster.waveMaxMonsterCount; i++) {
       const monsterId = this.monsterIndex;
-      // Monster Asset 조회
-      const { monster: monsterAsset } = getGameAssets();
+
       // 몬스터 데이터 뽑기
       const codeIdx =
         Math.floor(
           Math.random() *
           (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
         ) + config.game.monster.waveMonsterMinCode;
-      const data = monsterAsset.data[0];
-
-      // 몬스터 생성
-      const monster = new Monster(
-        monsterId,
-        data.monsterCode,
-        data.name,
-        data.hp,
-        data.attack,
-        data.defence,
-        data.range,
-        data.speed,
-        0,
-        0,
-        true,
-      );
-
-      this.monsters.set(monsterId, monster);
-      this.waveMonsters.set(monsterId, monster);
 
       this.monsterIndex++; //Index 증가
 
       // 몬스터 id와 code 저장
       monstersData.push({
         monsterId,
-        monsterCode: monster.monsterCode,
+        monsterCode: codeIdx,
       });
     }
 
@@ -418,6 +401,33 @@ class Game {
     owner.user.socket.write(monsterSpawnRequestPacket);
 
     this.setWaveState(WaveState.INWAVE);
+  }
+
+  spawnWaveMonster(monsters) {
+    for (const monster of monsters) {
+      // Monster Asset 조회
+      const { monster: monsterAsset } = getGameAssets();
+
+      const data = monsterAsset.data.find((asset) => asset.monsterCode === monster.monsterCode);
+
+      // 몬스터 생성
+      const spawnMonster = new Monster(
+        monster.monsterId,
+        monster.monsterCode,
+        data.name,
+        data.hp,
+        data.attack,
+        data.defence,
+        data.range,
+        data.speed,
+        monster.x,
+        monster.y,
+        true,
+      );
+
+      this.monsters.set(monster.monsterId, spawnMonster);
+      this.waveMonsters.set(monster.monsterId, spawnMonster);
+    }
   }
 
   phaseCheck() {
