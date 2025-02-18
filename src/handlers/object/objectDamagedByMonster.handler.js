@@ -15,8 +15,8 @@ const objectDamagedByMonsterHandler = async ({ socket, payload }) => {
   let coreHp = game.getCoreHp();
 
   if (objectId === 1 && coreHp > 0) {
-    console.log(`코어가 ${monster.getAttack()}의 데미지를 받았습니다! HP: ${coreHp}`);
     coreHp = game.coreDamaged(monster.getAttack());
+    console.log(`코어가 ${monster.getAttack()}의 데미지를 받았습니다! HP: ${coreHp}`);
     const payload = { objectId: objectId, hp: coreHp };
     packet = makePacket(config.packetType.S_OBJECT_HP_UPDATE_NOTIFICATION, payload);
     game.broadcast(packet);

@@ -92,7 +92,7 @@ class Game {
    * PLAYER
    */
   addPlayer(user) {
-    const player = new Player(user, 0, 0, 0);
+    const player = new Player(user, 100, 0, 0);
     this.players.set(user.id, player);
   }
 
@@ -140,9 +140,9 @@ class Game {
         data.monsterCode,
         data.name,
         data.hp,
-        1,
+        data.attack,
         data.defence,
-        5,
+        data.range,
         data.speed,
         0,
         0,
