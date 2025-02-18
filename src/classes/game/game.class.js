@@ -56,7 +56,7 @@ class Game {
       this.phaseCheck();
       this.monsterUpdate();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
-    }, 1000);
+    }, 100);
   }
 
   gameEnd() {
@@ -212,6 +212,9 @@ class Game {
   monsterDisCovered() {
     const monsterDiscoverPayload = [];
     for (const [monsterId, monster] of this.monsters) {
+      if (monster.isWave()) {
+        continue;
+      }
       // 대상이 없는 몬스터만
       let distance = Infinity;
       let inputId = 0;

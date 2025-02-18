@@ -143,6 +143,10 @@ class Monster extends MovableObjectBase {
     this.y = y;
   }
 
+  isWave() {
+    return this.isWaveMonster;
+  }
+
   //몬스터의 플레이어 추적을 잃게 만든다.
   //외부 측에서 타겟 플레이어가 있는지 체크한다.
   lostPlayer() {
@@ -219,6 +223,8 @@ class Monster extends MovableObjectBase {
         return false;
       }
     }
+
+    return false;
   }
 
   //몬스터가 사망했을 때의 데이터
