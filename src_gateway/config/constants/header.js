@@ -1,6 +1,6 @@
 export const PACKET_TYPE_BYTE = 2;
 export const VERSION_LENGTH_BYTE = 1;
-export const PLAYER_ID_LENGTH_BYTE = 1;
+export const USER_ID_LENGTH_BYTE = 1;
 export const PAYLOAD_LENGTH_BYTE = 4;
 
 export const PACKET_TYPE = {
@@ -9,6 +9,7 @@ export const PACKET_TYPE = {
   REGISTER_RESPONSE: [1002, 'registerResponse'],
   LOGIN_REQUEST: [1003, 'loginRequest'],
   LOGIN_RESPONSE: [1004, 'loginResponse'],
+  LOGIN_CAST: [1005, 'loginCast'],
 
   // 분산 서버 이동
   PREPARE_GAME_RESPONSE: [1501, 'gamePrepareResponse'],

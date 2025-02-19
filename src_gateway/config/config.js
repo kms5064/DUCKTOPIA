@@ -13,7 +13,7 @@ import {
   PACKET_TYPE,
   PACKET_TYPE_BYTE,
   PAYLOAD_LENGTH_BYTE,
-  PLAYER_ID_LENGTH_BYTE,
+  USER_ID_LENGTH_BYTE,
   VERSION_LENGTH_BYTE,
 } from './constants/header.js';
 import { LOBBY_SERVER, GAME_SERVER } from './constants/server.js';
@@ -23,7 +23,7 @@ export const config = {
     packetTypeByte: PACKET_TYPE_BYTE,
     versionLengthByte: VERSION_LENGTH_BYTE,
     payloadLengthByte: PAYLOAD_LENGTH_BYTE,
-    playerIdLengthByte: PLAYER_ID_LENGTH_BYTE,
+    userIdLengthByte: USER_ID_LENGTH_BYTE,
   },
   packetType: {
     ...PACKET_TYPE,

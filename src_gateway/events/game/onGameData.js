@@ -17,9 +17,16 @@ const onGameData = (socket) => async (data) => {
   while (socket.buffer.length >= defaultLength) {
     try {
       // 가변 길이 확인
+      // versionLength를 읽음
       versionByte = socket.buffer.readUInt8(packetTypeByte);
-      payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
-      const headerLength = defaultLength + versionByte + payloadLengthByte;
+      // userIdLength를 읽음
+      userIdByte = socket.buffer.readUInt8(defaultLength + versionByte);
+      // payloadLength를 읽음
+      payloadByte = socket.buffer.readUInt32BE(
+        defaultLength + versionByte + userIdLengthByte + userIdByte,
+      );
+      const headerLength =
+        defaultLength + versionByte + userIdLengthByte + userIdByte + payloadLengthByte;
 
       // buffer의 길이가 충분한 동안 실행
       if (socket.buffer.length < headerLength + payloadByte) continue;
@@ -30,15 +37,33 @@ const onGameData = (socket) => async (data) => {
       // 값 추출 및 버전 검증
       const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
       if (version !== config.client.version) continue;
+
+      const userId = packet.toString(
+        'utf8',
+        defaultLength + versionByte + userIdLengthByte,
+        defaultLength + versionByte + userIdLengthByte + userIdByte,
+      );
+
       const packetType = packet.readUInt16BE(0);
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
       const proto = getProtoMessages().GamePacket;
-      const handler = handlers[packetType];
       const gamePacket = proto.decode(payloadBuffer);
       const payload = gamePacket[gamePacket.payload];
 
-      // handler({ socket, payload });
+      const user = userSession.getUserByID(+userId);
+      if (!user) continue;
+
+      if (packetType === config.packetType.S_GAME_OVER_NOTIFICATION) {
+        user.setGameState(false);
+      }
+
+      // 클라이언트 패킷 전달
+      const packetInfo = Object.values(config.packetType).find(
+        ([type, name]) => type === packetType,
+      );
+      const resPacket = makePacket(packetInfo, payload);
+      user.socket.write(resPacket);
     } catch (error) {
       errorHandler(socket, error);
     }

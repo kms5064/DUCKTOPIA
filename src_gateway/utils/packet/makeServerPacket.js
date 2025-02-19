@@ -1,7 +1,7 @@
 import { config } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 
-function makePacket([packetType, packetTypeName], payload, playerId) {
+function makeServerPacket([packetType, packetTypeName], payload, userId) {
   const proto = getProtoMessages().GamePacket;
   let message = null;
   let payloadBuffer = null;
@@ -13,7 +13,7 @@ function makePacket([packetType, packetTypeName], payload, playerId) {
   } catch (e) {
     console.error(e);
   }
-  
+
   // header 생성
   const packetTypeBuffer = Buffer.alloc(2);
   packetTypeBuffer.writeUInt16BE(packetType);
@@ -23,10 +23,10 @@ function makePacket([packetType, packetTypeName], payload, playerId) {
   const versionLengthBuffer = Buffer.alloc(1);
   versionLengthBuffer.writeUInt8(versionBuffer.length);
 
-  const playerIdBuffer = Buffer.from(playerId);
+  const userIdBuffer = Buffer.from('' + userId);
 
-  const playerIdLengthBuffer = Buffer.alloc(1);
-  playerIdLengthBuffer.writeUInt8(playerIdBuffer.length);
+  const userIdLengthBuffer = Buffer.alloc(1);
+  userIdLengthBuffer.writeUInt8(userIdBuffer.length);
 
   const payloadLengthBuffer = Buffer.alloc(4);
   payloadLengthBuffer.writeUInt32BE(payloadBuffer.length);
@@ -35,12 +35,12 @@ function makePacket([packetType, packetTypeName], payload, playerId) {
     packetTypeBuffer,
     versionLengthBuffer,
     versionBuffer,
-    playerIdLengthBuffer,
-    playerIdBuffer,
+    userIdLengthBuffer,
+    userIdBuffer,
     payloadLengthBuffer,
     payloadBuffer,
   ]);
   return packet;
 }
 
-export default makePacket;
+export default makeServerPacket;
