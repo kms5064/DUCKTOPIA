@@ -72,7 +72,7 @@ class Monster extends MovableObjectBase {
   }
 
   setDamaged(damage) {
-    if (damage - this.defence < 0) {
+    if (damage - this.defence < 2) {
       this.hp -= 1;
     } else {
       this.hp -= damage - this.defence;
@@ -80,14 +80,6 @@ class Monster extends MovableObjectBase {
 
     if (this.hp < 0) this.hp = 0;
     return this.hp;
-  }
-
-  getDirectByPlayer() {
-    const playerPos = this.priorityPlayer.getPlayerPos();
-    const vectorX = Math.acos((playerPos.x - this.x) / distance); //+, -를 구분지어서 할 수 있을 듯
-    const vectorY = Math.asin((playerPos.y - this.y) / distance);
-
-    return { x: vectorX, y: vectorY };
   }
 
   getSpeed() {
@@ -137,10 +129,6 @@ class Monster extends MovableObjectBase {
   setPosition(x, y) {
     this.x = x;
     this.y = y;
-  }
-
-  isWave() {
-    return this.isWaveMonster;
   }
 
   //몬스터의 플레이어 추적을 잃게 만든다.
@@ -219,7 +207,12 @@ class Monster extends MovableObjectBase {
       this.monsterTrackingTime -= deltaTime;
 
       if (this.monsterTrackingTime <= 0) {
-        this.monsterAwakeCoolTime = Math.floor(Math.random() * RANGE_COOLTIME_MONSTER_AWAKING + MIN_COOLTIME_MONSTER_AWAKING);
+        if (this.isWaveMonster) {
+          this.monsterAwakeCoolTime = Math.floor(5000);
+        }
+        else {
+          this.monsterAwakeCoolTime = Math.floor(Math.random() * RANGE_COOLTIME_MONSTER_AWAKING + MIN_COOLTIME_MONSTER_AWAKING);
+        }
       }
     }
   }
@@ -276,7 +269,9 @@ class Monster extends MovableObjectBase {
     return this.id;
   }
 
-  //현재 몬스터와 플레이어 사이에 얼마나 거리가 떨어져 있는지 보기
+  isWave() {
+    return this.isWaveMonster;
+  }
 
 }
 
