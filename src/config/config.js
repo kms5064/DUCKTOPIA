@@ -45,6 +45,7 @@ import { CharacterType } from './constants/character.js';
 import { VALID_DISTANCE_OF_BOX } from './constants/itemBox.js';
 
 import { DAY_TIME, NIGHT_TIME, DayPhase } from './constants/game.js';
+import { OBJECT_MAX_HP } from './constants/object.js';
 
 export const config = {
   header: {
@@ -80,6 +81,9 @@ export const config = {
     core: {
       maxHP: CORE_MAX_HP,
       position: CORE_POSITION,
+    },
+    object: {
+      maxHP: OBJECT_MAX_HP,
     },
     player: {
       atkPerLv: ATK_PER_LV,
