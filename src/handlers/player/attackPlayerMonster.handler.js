@@ -76,6 +76,8 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
       });
       game.broadcast(packet);
     }
+  } else {
+    console.log('이게 왜됌?')
   }
 };
 
