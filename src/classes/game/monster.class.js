@@ -136,7 +136,7 @@ class Monster extends MovableObjectBase {
 
 
     const targetHp = this.priorityPlayer.getPlayerHp();
-    if (distance > this.awakeRange + 2 || targetHp <= 0) {
+    if (distance > this.awakeRange || targetHp <= 0) {
       //인식 범위보다 인식 끊기는 범위가 좀 더 넓어야 할 것이다.
       // if (this.monsterTrackingTime > 0) {
       //   this.monsterTrackingTime = 0;
