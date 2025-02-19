@@ -5,8 +5,12 @@ import Player from './player.class.js';
 import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../config/constants/header.js';
 import { DayPhase, FRAME_PER_40, WaveState } from '../../config/constants/game.js';
-import { MIN_COOLTIME_MONSTER_TRACKING, RANGE_COOLTIME_MONSTER_TRACKING } from '../../config/constants/monster.js';
+import {
+  MIN_COOLTIME_MONSTER_TRACKING,
+  RANGE_COOLTIME_MONSTER_TRACKING,
+} from '../../config/constants/monster.js';
 import ItemBox from '../item/itemBox.class.js';
+import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
 
 class Game {
   constructor(ownerId) {
@@ -236,8 +240,11 @@ class Game {
           continue;
         }
         monster.setTargetPlayer(inputPlayer);
-        monster.getMonsterTrackingTime(Math.floor(Math.random()
-          * RANGE_COOLTIME_MONSTER_TRACKING + MIN_COOLTIME_MONSTER_TRACKING));
+        monster.getMonsterTrackingTime(
+          Math.floor(
+            Math.random() * RANGE_COOLTIME_MONSTER_TRACKING + MIN_COOLTIME_MONSTER_TRACKING,
+          ),
+        );
         if (monster.hasPriorityPlayer()) {
           console.log('플레이어가 등록됨');
           monsterDiscoverPayload.push({
@@ -245,21 +252,19 @@ class Game {
             targetId: inputId,
           });
         }
-      }
-      else {
+      } else {
         if (monster.lostPlayer()) {
-          console.log(`${monsterId}가 플레이어를 잃음`)
+          console.log(`${monsterId}가 플레이어를 잃음`);
           monsterDiscoverPayload.push({
             monsterId: monsterId,
-            targetId: 0
-          })
+            targetId: 0,
+          });
         }
       }
     }
-    const packet = makePacket(
-      config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
-      { monsterTarget: monsterDiscoverPayload },
-    );
+    const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, {
+      monsterTarget: monsterDiscoverPayload,
+    });
     this.broadcast(packet);
   }
 
@@ -277,19 +282,15 @@ class Game {
         monsterId: monsterId,
         targetId: targetId,
         x: monsterPos.x,
-        y: monsterPos.y
+        y: monsterPos.y,
       };
 
       monsterMoveList.push(monsterMoverPayload);
-
-
     }
     const packet = makePacket(config.packetType.S_MONSTER_MOVE_NOTIFICATION, monsterMoveList);
 
     //이런 식으로 게임에서 notification을 보내보도록 하자.
     game.broadcast(packet);
-
-
   }
 
   monsterTimeCheck() {
@@ -302,18 +303,15 @@ class Game {
       }
     }
 
-    const packet = makePacket(
-      config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
-      { monsterTarget: monsterTimeCheckPayload },
-    );
+    const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, {
+      monsterTarget: monsterTimeCheckPayload,
+    });
     this.broadcast(packet);
-
-
   }
 
-  getItemBoxById(itemBoxId){
+  getItemBoxById(itemBoxId) {
     return this.itemBoxes.get(itemBoxId);
-  //여기까지 몬스터 영역
+    //여기까지 몬스터 영역
   }
 
   checkSpawnArea(monsterCode, x, y) {
@@ -338,11 +336,11 @@ class Game {
     const coreData = {
       objectId: 1,
       objectCode: 1,
-      itemData: []
+      itemData: [],
     };
     return coreData;
   }
-  
+
   coreDamaged(damage) {
     this.coreHp -= damage;
     if (this.coreHp <= 0) {
@@ -374,7 +372,7 @@ class Game {
       const codeIdx =
         Math.floor(
           Math.random() *
-          (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
+            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
         ) + config.game.monster.waveMonsterMinCode;
       const data = monsterAsset.data[0];
 
@@ -437,9 +435,27 @@ class Game {
   }
 
   //테스트용 코드
-  addBox(){
-    const itemBox = new ItemBox(2,0,0);
-    this.itemBoxes.set(itemBox.id,itemBox);
+  addBox() {
+    const x = Math.floor(Math.random() * 20);
+    const y = Math.floor(Math.random() * 20);
+
+    const itemBox = new ItemBox(x, y);
+    this.itemBoxes.set(itemBox.id, itemBox);
+  }
+
+  createItemBoxData() {
+    const itemBoxData = [];
+
+    for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
+      let itemBox = this.addBox();
+      itemBoxData.push({
+        itemBoxId: itemBox.id,
+        x: itemBox.x,
+        y: itemBox.y,
+        itemData: [{ itemCode: 1, count: 2 }],
+      });
+    }
+    return itemBoxData;
   }
   /////////////////////////////////////
 }

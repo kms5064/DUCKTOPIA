@@ -1,10 +1,12 @@
 import CustomError from '../../utils/error/customError.js';
 
+let idCount = 1;
 class ItemBox {
-  constructor(id, x, y) {
-    this.id = id;
+  constructor(x, y) {
+    this.id = idCount++;
     this.x = x;
     this.y = y;
+    //this.type = type;
     //this.hp = ITEM_BOX_HP;
     this.itemList = Array.from({ length: 8 }, () => null);
     this.occupied = null; //점유중 플레이어아이디
@@ -37,7 +39,7 @@ class ItemBox {
   }
   //플레이어가 박스에 넣기
   putAnItem(player,itemCode, count,emptyIndex) {
-    const item = { itemCode: count };
+    const item = { itemCode: itemCode ,count: count };
     this.itemList.splice(emptyIndex, 1, item);
     player.removeItem(itemCode);
     return item;
@@ -51,6 +53,8 @@ class ItemBox {
   changeItemPos(index1, index2) {
     [this.itemList[index1], this.itemList[index2]] = [this.itemList[index2], this.itemList[index1]];
   }
+
+
 }
 
 export default ItemBox;

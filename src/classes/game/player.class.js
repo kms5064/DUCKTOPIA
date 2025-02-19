@@ -116,7 +116,8 @@ class Player {
       item.stack += count;
     } else {
       //없으면 새로 만들어서 push
-      item = { itemCode: count };
+      const item = { itemCode: itemCode ,count: count };
+
       this.inventory.splice(emptyIndex,1,item);
     }
     return item;
