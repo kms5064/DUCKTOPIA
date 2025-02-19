@@ -31,17 +31,15 @@ class Monster extends MovableObjectBase {
     this.targetPlayer = null;
     //몬스터가 여러 패턴을 가지고 있을 때 그 패턴들을 이 안에서 쿨타임을 관리한다.
     this.distanceBetweenPlayer = Infinity;
-    //드랍 아이템 숫자 확률을 이걸로 정해보자.
 
     this.startPoint_x = 0;
     this.startPoint_y = 0;
 
     // 웨이브 몬스터 여부
     this.isWaveMonster = isWaveMonster;
-    // 몬스터 코드 다르게 하기
+
+    // 몬스터의 인식 쿨타임 여부
     this.monsterAwakeCoolTime = 0;
-    // this.monsterTrackingTime = 0;
-    // 초기 설정을 베이스로 => 플레이어 타입이랑 베이스랑 같이 넣을 수 있나?
   }
 
   setName(name) {
@@ -83,10 +81,6 @@ class Monster extends MovableObjectBase {
     return this.hp;
   }
 
-  getSpeed() {
-    return this.speed;
-  }
-
   getPosition() {
     return { x: this.x, y: this.y };
   }
@@ -99,6 +93,7 @@ class Monster extends MovableObjectBase {
     return this.targetPlayer;
   }
 
+  /**타겟이 지정되어 있을 때 거리를 구하는 함수 */
   calculateBetweenDistance() {
     if (this.targetPlayer !== null) {
       const playerPos = this.targetPlayer.getPlayerPos();
@@ -189,18 +184,6 @@ class Monster extends MovableObjectBase {
     if (this.monsterAwakeCoolTime > 0) {
       this.monsterAwakeCoolTime -= deltaTime;
     }
-    // if (this.monsterTrackingTime > 0) {
-    //   this.monsterTrackingTime -= deltaTime;
-
-    //   if (this.monsterTrackingTime <= 0) {
-    //     if (this.isWaveMonster) {
-    //       this.monsterAwakeCoolTime = Math.floor(5000);
-    //     }
-    //     else {
-    //       this.monsterAwakeCoolTime = Math.floor(Math.random() * RANGE_COOLTIME_MONSTER_AWAKING + MIN_COOLTIME_MONSTER_AWAKING);
-    //     }
-    //   }
-    // }
   }
   monsterDeath() {
     return this.hp <= 0 ? true : false;
