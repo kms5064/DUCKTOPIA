@@ -14,6 +14,8 @@ const monsterMoveNotificationHandler = async ({ socket, payload }) => {
   for (let i = 0; i < monsterPositionData.length; i++) {
     const monster = game.getMonsterById(monsterPositionData[i].monsterId);
     if (!monster) continue;
+
+
     monster.setPosition(monsterPositionData[i].x, monsterPositionData[i].y);
   }
 
