@@ -37,8 +37,8 @@ class Monster extends MovableObjectBase {
     // 웨이브 몬스터 여부
     this.isWaveMonster = isWaveMonster;
     // 몬스터 코드 다르게 하기
-    this.monsterAwakeCoolTime = 0;
-    this.monsterTrackingTime = 0;
+    // this.monsterAwakeCoolTime = 0;
+    // this.monsterTrackingTime = 0;
     // 초기 설정을 베이스로 => 플레이어 타입이랑 베이스랑 같이 넣을 수 있나?
   }
 
@@ -55,11 +55,12 @@ class Monster extends MovableObjectBase {
     return this.attack;
   }
 
-  AwakeCoolTimeCheck() {
-    return this.monsterAwakeCoolTime <= 0 ? true : false;
-  }
+  // AwakeCoolTimeCheck() {
+  //   return this.monsterAwakeCoolTime <= 0 ? true : false;
+  // }
 
   getDistanceByPlayer() {
+    this.calculateBetweenDistance();
     return this.distanceBetweenPlayer;
   }
 
@@ -90,9 +91,9 @@ class Monster extends MovableObjectBase {
     return this.priorityPlayer;
   }
 
-  setMonsterTrackingTime(time = MIN_COOLTIME_MONSTER_TRACKING) {
-    this.monsterTrackingTime = time;
-  }
+  // setMonsterTrackingTime(time = MIN_COOLTIME_MONSTER_TRACKING) {
+  //   this.monsterTrackingTime = time;
+  // }
 
   /** 몬스터의 이동 거리 체크*/
 
@@ -135,16 +136,23 @@ class Monster extends MovableObjectBase {
 
 
     const targetHp = this.priorityPlayer.getPlayerHp();
-    if (distance > this.awakeRange + 2 || targetHp <= 0 || this.monsterTrackingTime <= 0) {
+    if (distance > this.awakeRange + 2 || targetHp <= 0) {
       //인식 범위보다 인식 끊기는 범위가 좀 더 넓어야 할 것이다.
-      if (this.monsterTrackingTime > 0) {
-        this.monsterTrackingTime = 0;
-      }
+      // if (this.monsterTrackingTime > 0) {
+      //   this.monsterTrackingTime = 0;
+      // }
       this.distanceBetweenPlayer = Infinity;
       this.priorityPlayer = null;
       return true;
       //패킷을
     } else {
+      // if (this.monsterTrackingTime <= 0)
+      // {
+      //   this.distanceBetweenPlayer = Infinity;
+      //   this.priorityPlayer = null;
+      //   return true;
+      // }
+
       this.distanceBetweenPlayer = distance;
       return false;
     }
@@ -182,24 +190,24 @@ class Monster extends MovableObjectBase {
   }
 
   //일단 몬스터가 벗어났을 때 3~8초 동안은 벗어나게 하기
-  CoolTimeCheck(deltaTime) {
-    if (this.monsterAwakeCoolTime > 0) {
-      this.monsterAwakeCoolTime -= deltaTime;
-    }
+  // CoolTimeCheck(deltaTime) {
+  //   if (this.monsterAwakeCoolTime > 0) {
+  //     this.monsterAwakeCoolTime -= deltaTime;
+  //   }
 
-    if (this.monsterTrackingTime > 0) {
-      this.monsterTrackingTime -= deltaTime;
+  //   if (this.monsterTrackingTime > 0) {
+  //     this.monsterTrackingTime -= deltaTime;
 
-      if (this.monsterTrackingTime <= 0) {
-        if (this.isWaveMonster) {
-          this.monsterAwakeCoolTime = Math.floor(5000);
-        }
-        else {
-          this.monsterAwakeCoolTime = Math.floor(Math.random() * RANGE_COOLTIME_MONSTER_AWAKING + MIN_COOLTIME_MONSTER_AWAKING);
-        }
-      }
-    }
-  }
+  //     if (this.monsterTrackingTime <= 0) {
+  //       if (this.isWaveMonster) {
+  //         this.monsterAwakeCoolTime = Math.floor(5000);
+  //       }
+  //       else {
+  //         this.monsterAwakeCoolTime = Math.floor(Math.random() * RANGE_COOLTIME_MONSTER_AWAKING + MIN_COOLTIME_MONSTER_AWAKING);
+  //       }
+  //     }
+  //   }
+  // }
 
   //몬스터가 사망했을 때의 데이터
   //이후 몬스터 사망 시 아이템 드롭도 해야 하나
@@ -211,6 +219,8 @@ class Monster extends MovableObjectBase {
   setTargetPlayer(player) {
     this.priorityPlayer = player;
   }
+
+
 
   //플레이어를 세팅할 때의 조건을 확인한다.
   setTargetPlayerByDistance(player) {
