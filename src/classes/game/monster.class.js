@@ -95,7 +95,7 @@ class Monster extends MovableObjectBase {
     return this.id;
   }
 
-  gettargetPlayer() {
+  getTargetPlayer() {
     return this.targetPlayer;
   }
 
