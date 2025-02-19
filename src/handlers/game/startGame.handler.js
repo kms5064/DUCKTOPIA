@@ -27,6 +27,7 @@ const gameStartHandler = ({ socket, payload }) => {
     //   );
     // }
     // 몬스터 : 클라에서 생성된 좌표 값으로 변경
+    game.getMonsterById(monster.monsterId).setStartPosition(monster.x, monster.y);
     game.getMonsterById(monster.monsterId).setPosition(monster.x, monster.y);
   });
 
