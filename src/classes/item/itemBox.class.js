@@ -22,7 +22,7 @@ class ItemBox {
     const removedItem = this.itemList.find((item) => item.code === itemCode);
     const removedItemIndex = this.itemList.findindex((item) => item.code === code);
     if (!removedItem) {
-      throw new CustomError('상자에서 아이템을 찾을 수 없습니다.');
+      throw new CustomError('상자에서 아이템을 찾을 수 없습니다.z');
     }
 
     //보유량이 더 많으면 갯수만 줄이기
