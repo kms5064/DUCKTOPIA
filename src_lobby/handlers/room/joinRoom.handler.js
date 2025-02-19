@@ -3,11 +3,11 @@ import { roomSession, userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
 
-const joinRoomHandler = ({ socket, payload }) => {
+const joinRoomHandler = ({ socket, payload, userId }) => {
   const { roomId } = payload;
 
   // 1. 유저 찾기
-  const user = userSession.getUser(socket.id);
+  const user = userSession.getUser(+userId);
   if (!user) {
     throw new CustomError('유저를 찾지 못했습니다.');
   }
@@ -25,17 +25,24 @@ const joinRoomHandler = ({ socket, payload }) => {
   }
 
   // 5. response 전송
-  const joinRoomResponse = makePacket(config.packetType.JOIN_ROOM_RESPONSE, {
-    success: true,
-    room: room.getRoomData(),
-  });
+  const joinRoomResponse = [
+    config.packetType.JOIN_ROOM_RESPONSE,
+    {
+      success: true,
+      room: room.getRoomData(),
+      userId,
+    },
+  ];
 
-  socket.write(joinRoomResponse);
+  user.sendPacket(joinRoomResponse);
 
   // 6. notification 전송
-  const joinRoomNotification = makePacket(config.packetType.JOIN_ROOM_NOTIFICATION, {
-    user: user.getUserData(),
-  });
+  const joinRoomNotification = [
+    config.packetType.JOIN_ROOM_NOTIFICATION,
+    {
+      user: user.getUserData(),
+    },
+  ];
 
   room.notification(user.id, joinRoomNotification); // 브로드캐스트
 };

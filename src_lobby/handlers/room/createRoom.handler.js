@@ -11,14 +11,14 @@ const roomNameSchema = Joi.string().max(25).required().messages({
 });
 
 // 방 생성 핸들러
-const createRoomHandler = async ({ socket, payload }) => {
+const createRoomHandler = async ({ socket, payload, userId }) => {
   const { roomName, maxUserNum } = payload;
 
   // 1. 방 이름 유효성 검사
   await roomNameSchema.validateAsync(roomName);
 
   // 2. 유저 찾기
-  const user = userSession.getUser(socket.id);
+  const user = userSession.getUser(userId);
   if (!user) {
     throw new CustomError('유저가 존재하지 않습니다!');
   }
@@ -32,15 +32,18 @@ const createRoomHandler = async ({ socket, payload }) => {
   // 5. 유저 방에 추가
   room.addUser(user);
 
-  // console.log(`${name} 방이 생성되었습니다.`);
+  console.log(`${room.name} 방이 생성되었습니다.`);
 
   // 6. 패킷 전송
-  const createRoomResponse = makePacket(config.packetType.CREATE_ROOM_RESPONSE, {
-    success: true,
-    room: room.getRoomData(),
-  });
+  const createRoomResponse = [
+    config.packetType.CREATE_ROOM_RESPONSE,
+    {
+      success: true,
+      room: room.getRoomData(),
+    },
+  ];
 
-  socket.write(createRoomResponse);
+  user.sendPacket(createRoomResponse);
 };
 
 export default createRoomHandler;

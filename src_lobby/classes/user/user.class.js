@@ -1,13 +1,13 @@
 import { config } from '../../config/config.js';
+import makePacket from '../../utils/packet/makePacket.js';
 
 class User {
-  constructor(socket) {
+  constructor(userId, userName, socket) {
     this.socket = socket;
-    this.id = null; //여기에 유니크 아이디
-    this.email = null;
-    this.roomId = null; // game이 room 안에 있으므로 여기서 찾을 수 있습니다!
+    this.id = userId; //여기에 유니크 아이디
+    this.name = userName;
     this.state = null; // 'lobby', 'room', 'playing' 등 현재 상태 체크용
-    this.name = null;
+    this.roomId = null; // game이 room 안에 있으므로 여기서 찾을 수 있습니다!
   }
 
   getUserData() {
@@ -17,25 +17,9 @@ class User {
     };
   }
 
-  getFakeUserData() {
-    return {
-      playerId: this.id,
-      nickname: this.name,
-      character: {
-        characterType: config.game.characterType.RED,
-        hp: 0,
-        weapon: 0,
-        atk: 0,
-      },
-    };
-  }
-
-  // 로그인
-  login(id, email, name) {
-    this.id = id;
-    this.email = email;
-    this.name = name;
-    this.state = 'lobby';
+  sendPacket([packetType, payload]) {
+    const packet = makePacket(packetType, payload, this.id);
+    this.socket.write(packet);
   }
 
   // 방 입장
@@ -49,15 +33,12 @@ class User {
     this.state = 'playing';
   }
 
-  // 로그 아웃
-  logout() {
-    this.id = null;
-  }
   // 방 퇴장
   exitRoom() {
     this.roomId = null;
     this.state = 'lobby';
   }
+
   //게임 종료
   gameEnd() {
     this.state = 'lobby';
@@ -65,10 +46,6 @@ class User {
 
   getRoomId() {
     return this.roomId;
-  }
-
-  getSocket() {
-    return this.socket;
   }
 }
 

@@ -10,7 +10,7 @@ Object.freeze(RoomStateType);
 
 class Room {
   constructor(id, name, ownerId, maxUserNum) {
-    this.users = new Set();
+    this.users = new Map();
     this.id = id; // 숫자
     this.maxUserAmount = maxUserNum;
     this.name = name; // room name
@@ -24,7 +24,7 @@ class Room {
     // 방 인원 검사
     if (this.users.size >= this.maxUserAmount) return false;
     // 유저 추가
-    this.users.add(user);
+    this.users.set(user.id, user);
     // 플레이어 추가
     // this.game.addPlayer(user);
     user.enterRoom(this.id);
@@ -47,9 +47,9 @@ class Room {
   }
 
   // 유저 삭제
-  removeUser(user) {
+  removeUser(userId) {
     // 유저 삭제
-    this.users.delete(user);
+    this.users.delete(userId);
     // 플레이어 삭제
     // this.game.removePlayer(user.id);
     user.exitRoom();
@@ -70,7 +70,7 @@ class Room {
   getUsersData() {
     const usersData = [];
 
-    for (const user of this.users) {
+    for (const [id, user] of this.users) {
       usersData.push(user.getUserData());
     }
 
@@ -78,13 +78,16 @@ class Room {
   }
 
   deleteRoom() {
-    const leaveRoomResponse = makePacket(config.packetType.LEAVE_ROOM_RESPONSE, {
-      success: true,
-    });
+    const leaveRoomResponse = [
+      config.packetType.LEAVE_ROOM_RESPONSE,
+      {
+        success: true,
+      },
+    ];
     this.broadcast(leaveRoomResponse);
 
     // 유저 상태 변경
-    for (const user of this.users) {
+    for (const [id, user] of this.users) {
       user.exitRoom();
     }
 
@@ -102,16 +105,16 @@ class Room {
   }
 
   // 전체 공지(본인 제외)
-  notification(id, packet) {
+  notification(id, packetInfos) {
     this.users.forEach((user) => {
-      if (user.id !== id) user.socket.write(packet);
+      if (user.id !== id) user.sendPacket(packetInfos);
     });
   }
 
   // 전체 공지(본인 포함)
-  broadcast(packet) {
+  broadcast(packetInfos) {
     this.users.forEach((user) => {
-      user.socket.write(packet);
+      user.sendPacket(packetInfos);
     });
   }
 }

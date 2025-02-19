@@ -3,9 +3,9 @@ import { roomSession, userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
 
-const leaveRoomHandler = ({ socket, payload }) => {
+const leaveRoomHandler = ({ socket, payload, userId }) => {
   // 1. 유저 찾기
-  const user = userSession.getUser(socket.id);
+  const user = userSession.getUser(userId);
   if (!user) {
     throw new CustomError('유저가 존재하지 않습니다.');
   }
@@ -29,17 +29,24 @@ const leaveRoomHandler = ({ socket, payload }) => {
     room.removeUser(user);
 
     // 5. response 전송
-    const leaveRoomResponse = makePacket(config.packetType.LEAVE_ROOM_RESPONSE, {
-      success: true,
-    });
+    const leaveRoomResponse = [
+      config.packetType.LEAVE_ROOM_RESPONSE,
+      {
+        success: true,
+      },
+    ];
 
-    socket.write(leaveRoomResponse);
+    user.sendPacket(leaveRoomResponse);
+
     // 6. notification 전송
-    const leaveRoomNotification = makePacket(config.packetType.LEAVE_ROOM_NOTIFICATION, {
-      user: user.getUserData(),
-    });
+    const leaveRoomNotification = [
+      config.packetType.LEAVE_ROOM_NOTIFICATION,
+      {
+        user: user.getUserData(),
+      },
+    ];
 
-    room.notification(socket, leaveRoomNotification);
+    room.notification(user.id, leaveRoomNotification);
   } else {
     roomSession.removeRoom(room);
   }
