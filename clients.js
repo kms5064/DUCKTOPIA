@@ -60,13 +60,8 @@ class Client {
 
         console.log('패킷 수신', packetType, payload);
         switch (packetType) {
-          case config.packetType.PREPARE_GAME_RESPONSE[0]:
-            const { redisKey, host, port, token } = payload;
-            const redisData = await getRedisRoomInfo(redisKey);
-            gameServerPacket = payload; // 저장
-            console.log(
-              `받아온 값! ${Object.values(payload)} 비교할 레디스 값! roomId: ${redisData.roomId} / tokens: ${Object.values(redisData.tokens)}`,
-            );
+          case config.packetType.LOGIN_RESPONSE:
+            // await this.createRoomRequest();
             break;
         }
       } catch (e) {
@@ -158,10 +153,10 @@ class Client {
 const registerTest = async (client_count = 1) => {
   await Promise.all(
     Array.from({ length: client_count }, async (__, idx) => {
-      const id = `test${idx}@email.com`;
+      const id = `dummy${idx}@email.com`;
       const password = '123456';
-      const name = `test${idx}`;
-      const client = new Client(id, password, name, config.server.host, config.server.port);
+      const name = `dummy${idx}`;
+      const client = new Client(id, password, name, config.server.host, 5556);
 
       await client.registerRequest();
       await client.end();
@@ -173,10 +168,10 @@ const registerTest = async (client_count = 1) => {
 const loginTest = async (client_count = 1) => {
   await Promise.all(
     Array.from({ length: client_count }, async (__, idx) => {
-      const id = `test${idx}@email.com`;
+      const id = `dummy${idx}@email.com`;
       const password = '123456';
-      const name = `test${idx}`;
-      const client = new Client(id, password, name, config.server.host, config.server.port);
+      const name = `dummy${idx}`;
+      const client = new Client(id, password, name, config.server.host, 5556);
 
       await client.loginRequest();
       await client.end();
@@ -188,10 +183,9 @@ const loginTest = async (client_count = 1) => {
 const customTest = async (client_count = 1) => {
   await Promise.all(
     Array.from({ length: client_count }, async (__, idx) => {
-      idx += 2;
-      const id = `test${idx}@email.com`;
+      const id = `dummy${idx}@email.com`;
       const password = '123456';
-      const name = `test${idx}`;
+      const name = `dummy${idx}`;
 
       // Lobby 서버 연결
       const client = new Client(id, password, name, '127.0.0.1', 5556);
@@ -199,13 +193,13 @@ const customTest = async (client_count = 1) => {
       // 로그인 이후 사용할 메서드 적용
       console.log('#1');
       await client.loginRequest();
-      // await client.delay(1000);
-      // console.log('#2');
-      // await client.createRoomRequest();
-      // await client.delay(1000);
-      // console.log('#3');
-      // await client.prepareRequest();
-
+      await client.delay(1000);
+      console.log('#2');
+      await client.createRoomRequest();
+      await client.delay(1000);
+      console.log('#3');
+      await client.prepareRequest();
+      console.log('#4');
       // await client.end();
       // await gameClient.joinRequest();
     }),
@@ -214,5 +208,6 @@ const customTest = async (client_count = 1) => {
 
 // 테스트 실행문
 await loadProtos().then(() => {
+  // registerTest(10);
   customTest(1);
 });
