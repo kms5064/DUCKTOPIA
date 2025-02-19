@@ -41,6 +41,6 @@ const createRoomHandler = async ({ socket, payload }) => {
   });
 
   socket.write(createRoomResponse);
-  }
+};
 
 export default createRoomHandler;

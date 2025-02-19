@@ -107,7 +107,7 @@ export const config = {
       endX: MAX_VALUE_X,
       endY: MAX_VALUE_Y,
     },
-    itemBox:{
+    itemBox: {
       validDistance: VALID_DISTANCE_OF_BOX,
       centerX: CENTER_X,
       centerY: CENTER_Y,

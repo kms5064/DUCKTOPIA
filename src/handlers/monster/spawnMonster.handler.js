@@ -6,8 +6,7 @@ import { config } from '../../config/config.js';
 // 이거 지금 안쓰는데요?
 
 const spawnMonsterHandler = ({ socket, payload }) => {
-
-  const { monsters } = payload
+  const { monsters } = payload;
 
   // 유저 객체 조회
   const user = userSession.getUser(socket);

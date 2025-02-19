@@ -6,7 +6,7 @@ import CustomError from '../../utils/error/customError.js';
 const attackPlayerMonsterHandler = ({ socket, payload }) => {
   const { playerDirX, playerDirY, monsterId } = payload;
 
-  console.log("몬스터 데미지 실행")
+  // console.log("몬스터 데미지 실행")
 
   // 유저 객체 조회
   const user = userSession.getUser(socket.id);
@@ -51,12 +51,9 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
 
   // 몬스터 HP 차감 처리
   const damage = player.getPlayerAtkDamage();
-  let currHp = monster.setDamaged(damage);
+  const currHp = monster.setDamaged(damage);
 
-  if (currHp <= 0) {
-    // 몬스터 사망 처리
-    game.removeMonster(monsterId);
-  }
+  // console.log(monsterId, ' HP: ', currHp);
 
   // 패킷 생성
   packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
@@ -66,7 +63,18 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
 
   // broadcast - 모든 플레이어들에게 전달
   game.broadcast(packet);
-  
+
+  if (currHp <= 0) {
+    // 몬스터 사망 처리
+    game.removeMonster(monsterId);
+
+    console.log(monsterId, ' 번 몬스터 죽음');
+
+    packet = makePacket(config.packetType.S_MONSTER_DEATH_NOTIFICATION, {
+      monsterId,
+    });
+    game.broadcast(packet);
+  }
 };
 
 export default attackPlayerMonsterHandler;
