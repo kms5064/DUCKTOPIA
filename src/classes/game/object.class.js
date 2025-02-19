@@ -1,7 +1,9 @@
+import { config } from '../../config/config.js';
+
 class Object {
   constructor(id) {
     this.id = id;
-    this.hp = 100;
+    this.hp = config.game.object.maxHP;
     this.x = 0;
     this.y = 0;
   }
@@ -20,3 +22,5 @@ class Object {
     }
   }
 }
+
+export default Object;

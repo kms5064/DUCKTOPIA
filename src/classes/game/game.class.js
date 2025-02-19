@@ -10,6 +10,7 @@ import {
   RANGE_COOLTIME_MONSTER_TRACKING,
 } from '../../config/constants/monster.js';
 import ItemBox from '../item/itemBox.class.js';
+import Object from './object.class.js';
 
 class Game {
   constructor(ownerId) {
@@ -31,6 +32,9 @@ class Game {
     this.waveState = WaveState.NONE;
     this.dayCounter = 0;
     this.waveMonsters = new Map();
+
+    // 오브젝트
+    this.objectId = 2;
 
     // Zone
     this.zone = [
@@ -230,11 +234,11 @@ class Game {
         //인식 쿨타임이 남아 있는 몬스터는 체크 제외
         if (!monster.AwakeCoolTimeCheck()) {
           monsterDiscoverPayload.push({
-          monsterId: monsterId,
-          targetId: 0,
-          })
+            monsterId: monsterId,
+            targetId: 0,
+          });
           continue;
-          };
+        }
 
         //몬스터가 죽었을 때, hp가 0인데 반응이 나올 수 있으니 체크
         if (monster.monsterDeath()) {
@@ -337,14 +341,76 @@ class Game {
     return coreHp;
   }
 
-  createObjectData() {
+  // 초기 오브젝트 생성
+  initObjectData() {
+    let objectData = [];
+
+    // 1. 코어 추가
     const coreData = {
       objectId: 1,
       objectCode: 1,
-      itemData: [],
     };
-    return coreData;
+
+    objectData.push(coreData);
+
+    // 2. 장애물 추가
+    objectData.push(...this.createObstacle());
+
+    return objectData;
   }
+
+  // 장애물 생성
+  createObstacle() {
+    let obstacleData = [];
+
+    // 장애물 5개 생성
+    for (let i = 0; i < 5; i++) {
+      obstacleData.push({
+        objectId: this.objectId,
+        objectCode: 2,
+      });
+
+      const object = new Object(this.objectId);
+
+      this.object.set(this.objectId, object);
+
+      this.objectId += 1;
+    }
+
+    return obstacleData;
+  }
+
+  // 장애물 위치 지정
+  setObjectPositions(objectPositions) {
+    for (const pos of objectPositions) {
+      const obj = this.object.get(pos.objectId);
+
+      if (!obj) continue;
+
+      obj.setPosition(pos.x, pos.y);
+    }
+  }
+
+  // 아이템 박스 생성
+  // createItemBox() {
+  //   let itemBoxData = [];
+
+  //   // 아이템 박스 5개 생성
+  //   for (let i = 0; i < 5; i++) {
+  //     obstacleData.push({
+  //       objectId: this.objectId,
+  //       objectCode: 2,
+  //       itemData: {
+  //         itemId: 1,
+  //         count: 2,
+  //       },
+  //     });
+
+  //     this.objectId += 1;
+  //   }
+
+  //   return itemBoxData;
+  // }
 
   coreDamaged(damage) {
     this.coreHp -= damage;
