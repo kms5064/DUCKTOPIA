@@ -18,6 +18,7 @@ import {
   PACKET_TYPE_BYTE,
   PAYLOAD_LENGTH_BYTE,
   VERSION_LENGTH_BYTE,
+  USER_ID_LENGTH_BYTE,
 } from './constants/header.js';
 import { CORE_MAX_HP, CORE_POSITION } from './constants/core.js';
 import {
@@ -53,6 +54,7 @@ export const config = {
     packetTypeByte: PACKET_TYPE_BYTE,
     versionLengthByte: VERSION_LENGTH_BYTE,
     payloadLengthByte: PAYLOAD_LENGTH_BYTE,
+    userIdLengthByte: USER_ID_LENGTH_BYTE,
   },
   packetType: {
     ...PACKET_TYPE,

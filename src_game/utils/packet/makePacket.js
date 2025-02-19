@@ -1,7 +1,7 @@
 import { config } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 
-function makePacket([packetType, packetTypeName], payload) {
+function makePacket([packetType, packetTypeName], payload, userId) {
   const proto = getProtoMessages().GamePacket;
   let message = null;
   let payloadBuffer = null;
@@ -23,6 +23,11 @@ function makePacket([packetType, packetTypeName], payload) {
   const versionLengthBuffer = Buffer.alloc(1);
   versionLengthBuffer.writeUInt8(versionBuffer.length);
 
+  const userIdBuffer = Buffer.from('' + userId);
+
+  const userIdLengthBuffer = Buffer.alloc(1);
+  userIdLengthBuffer.writeUInt8(userIdBuffer.length);
+
   const payloadLengthBuffer = Buffer.alloc(4);
   payloadLengthBuffer.writeUInt32BE(payloadBuffer.length);
 
@@ -30,6 +35,8 @@ function makePacket([packetType, packetTypeName], payload) {
     packetTypeBuffer,
     versionLengthBuffer,
     versionBuffer,
+    userIdLengthBuffer,
+    userIdBuffer,
     payloadLengthBuffer,
     payloadBuffer,
   ]);

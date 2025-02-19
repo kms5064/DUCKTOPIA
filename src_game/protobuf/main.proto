@@ -92,6 +92,12 @@ message S2CLoginResponse // 로그인 응답
   User user = 2;
 }
 
+message S2SLoginCast // 로그인 응답
+{
+  bool success = 1;
+  User user = 2;
+}
+
 message C2SCreateRoomRequest { // 방생성 요청
   string roomName = 1;
   int32 maxUserNum = 2;
@@ -139,12 +145,12 @@ message C2SGamePrepareRequest { // 게임준비 요청
 }
 
 message S2SGamePrepareResponse { // 게임준비 응답 to 호스트클라이언트
-  string redisKey = 1;
+  bool success = 1;
+  RoomData room = 2;
 }
 
 message S2SGameServerJoinRequest { // 게임 서버에 접속하여 데이터 체크
-  string redisKey = 1;
-  string playerId = 2;
+  RoomData room = 1;
 }
 
 message S2CGamePrepareNotification { // 게임준비 알림
@@ -361,5 +367,6 @@ message GamePacket {
     S2CPlayerDamagedByMonster playerDamagedByMonster = 45;
     S2SGameServerJoinRequest gameServerJoinRequest = 46;
     S2CGameInfosRequest gameInfosRequest = 48;
+    S2SLoginCast loginCast = 49;
   }
 }
