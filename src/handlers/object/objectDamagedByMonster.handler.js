@@ -9,6 +9,7 @@ const objectDamagedByMonsterHandler = async ({ socket, payload }) => {
   const game = roomSession.getRoom(user.getRoomId()).getGame();
   //const object = game.getObject(objectId);
   const monster = game.getMonsterById(monsterId);
+  const room = getRoom(user.roomId);
 
   let packet;
   let gameOverPacket;
@@ -25,6 +26,7 @@ const objectDamagedByMonsterHandler = async ({ socket, payload }) => {
       const gameOverPayload = {};
       gameOverPacket = makePacket(config.packetType.S_GAME_OVER_NOTIFICATION, gameOverPayload);
       game.broadcast(gameOverPacket);
+      roomSession.removeRoom(room.id);
     }
   } else {
   }
