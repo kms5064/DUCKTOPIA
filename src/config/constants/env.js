@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const PORT = process.env.PORT || 5555;
-export const HOST = process.env.HOST || '0.0.0.0';
+export const HOST = process.env.HOST || '127.0.0.1';
 export const CLIENT_VERSION = process.env.CLIENT_VERSION || '1.0.0';
 // 클라에서 0.2초마다 이동요청 패킷을 보냄
 export const LOCATION_REQ_TIME_TERM = process.env.LOCATION_REQ_TIME_TERM || 2000;
