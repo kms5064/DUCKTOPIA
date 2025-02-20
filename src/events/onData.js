@@ -5,8 +5,10 @@ import { errorHandler } from '../utils/error/errorHandler.js';
 import onEnd from './onEnd.js';
 
 const onData = (socket) => async (data) => {
-  if (socket.stack > 5) onEnd(socket)();
-  console.log(data);
+  if (socket.stack > 5) {
+    console.error('잘못된 접근 제거');
+    onEnd(socket)();
+  }
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
@@ -19,8 +21,14 @@ const onData = (socket) => async (data) => {
   while (socket.buffer.length >= defaultLength) {
     try {
       // 가변 길이 확인
-      versionByte = socket.buffer.readUInt8(packetTypeByte);
-      payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
+      try {
+        versionByte = socket.buffer.readUInt8(packetTypeByte);
+        payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
+      } catch (err) {
+        console.error('잘못된 패킷 제거');
+        socket.stack += 1;
+        socket.buffer = Buffer.alloc(0);
+      }
       const headerLength = defaultLength + versionByte + payloadLengthByte;
 
       // buffer의 길이가 충분한 동안 실행
@@ -31,11 +39,12 @@ const onData = (socket) => async (data) => {
 
       // 값 추출 및 버전 검증
       const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
-        if (version !== config.client.version) {
-        socket.stack += 1
+      if (version !== config.client.version) {
+        console.error('너니?');
+        socket.stack += 1;
         socket.buffer = Buffer.alloc(0);
         break;
-        };
+      }
       const packetType = packet.readUInt16BE(0);
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
