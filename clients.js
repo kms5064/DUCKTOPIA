@@ -1,12 +1,11 @@
 import net from 'net';
-import { loadProtos, getProtoMessages } from './src/init/loadProtos.js';
-import { config } from './src/config/config.js';
-import { getRedisRoomInfo } from './src_lobby/db/redis/redis.js';
-import { resolve } from 'path';
+import { loadProtos, getProtoMessages } from './0.src/init/loadProtos.js';
+import { config } from './0.src/config/config.js';
 
 // 더미 클라이언트
 
 let gameServerPacket;
+let monsters;
 
 class Client {
   constructor(id, password, name, host, port) {
@@ -60,8 +59,16 @@ class Client {
 
         console.log('패킷 수신', packetType, payload);
         switch (packetType) {
-          case config.packetType.LOGIN_RESPONSE:
+          case config.packetType.LOGIN_RESPONSE[0]:
             // await this.createRoomRequest();
+            break;
+          case config.packetType.GAME_INFOS_REQUEST[0]:
+            monsters = payload.monsters;
+            monsters.forEach((monster) => {
+              monster.x = 5;
+              monster.y = 10;
+            });
+            await this.gameStart(monsters, payload.objects);
             break;
         }
       } catch (e) {
@@ -137,6 +144,12 @@ class Client {
     this.sendPacket(config.packetType.PREPARE_GAME_REQUEST, payload);
   }
 
+  async gameStart(monsters, objects) {
+    console.log('#5');
+    const payload = { monsters, objects };
+    this.sendPacket(config.packetType.START_GAME_REQUEST, payload);
+  }
+
   async joinRequest() {
     // playerId 어떻게 가져올까요???
     const payload = {
@@ -200,6 +213,7 @@ const customTest = async (client_count = 1) => {
       console.log('#3');
       await client.prepareRequest();
       console.log('#4');
+      // await client.gameStart();
       // await client.end();
       // await gameClient.joinRequest();
     }),
