@@ -5,11 +5,13 @@ import makePacket from '../../utils/packet/makePacket.js';
 const objectDamagedByMonsterHandler = async ({ socket, payload }) => {
   const { objectId, monsterId } = payload;
 
+  
   const user = userSession.getUser(socket.id);
-  const game = roomSession.getRoom(user.getRoomId()).getGame();
+  const room = roomSession.getRoom(user.roomId);
+  const game = room.getGame();
   //const object = game.getObject(objectId);
   const monster = game.getMonsterById(monsterId);
-  const room = getRoom(user.roomId);
+  
 
   let packet;
   let gameOverPacket;
