@@ -54,7 +54,9 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
   let currHp = monster.setDamaged(damage);
 
   if (currHp <= 0) {
-    console.log(`[몬스터 사망] ID: ${monsterId}, 등급: ${monster.grade}`);
+    console.log(
+      `[몬스터 사망] ID: ${monsterId}, 등급: ${monster.grade}, 위치: (${monster.getMonsterPos().x}, ${monster.getMonsterPos().y})`,
+    );
 
     // 몬스터 사망 처리
     game.removeMonster(monsterId);
@@ -66,15 +68,30 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
     game.broadcast(packet);
 
     // 아이템 드롭 처리
+    console.log(`[아이템 드롭 시도] 몬스터 등급: ${monster.grade}`);
     const monsterPosition = monster.getMonsterPos();
+    console.log(`[아이템 드롭 위치] x: ${monsterPosition.x}, y: ${monsterPosition.y}`);
+
     const droppedItems = game.itemManager.createDropItems(monster.grade, monsterPosition);
+    console.log(`[아이템 드롭 결과] 생성된 아이템 수: ${droppedItems.length}`);
 
     if (droppedItems.length > 0) {
+      console.log('[드롭된 아이템 목록]');
+      droppedItems.forEach((item, index) => {
+        console.log(
+          `${index + 1}. ID: ${item.id}, 타입: ${item.type}, 이름: ${item.name}, 코드: ${item.code}`,
+        );
+        console.log(`   위치: (${item.position.x}, ${item.position.y})`);
+      });
+
       // 아이템 생성 알림
       packet = makePacket(config.packetType.S_ITEM_SPAWN_NOTIFICATION, {
         items: droppedItems,
       });
+      console.log('[패킷 전송] S_ITEM_SPAWN_NOTIFICATION 전송');
       game.broadcast(packet);
+    } else {
+      console.log('[아이템 미생성] 드롭 확률에 실패하여 아이템이 생성되지 않음');
     }
   } else {
     // 몬스터 HP 업데이트 알림
