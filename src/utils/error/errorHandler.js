@@ -1,5 +1,5 @@
 import makePacket from '../packet/makePacket.js';
-import { PACKET_TYPE } from '../../config/constants/header.js';
+import { config } from '../../config/config.js';
 import CustomError from './customError.js';
 
 /**
@@ -43,7 +43,7 @@ export const errorHandler = (socket, error) => {
   console.log(`에러 메시지: ${message}`);
 
   // 에러 응답 패킷 생성 및 전송
-  const errorResponse = makePacket(PACKET_TYPE.S_ERROR_NOTIFICATION, {
+  const errorResponse = makePacket(config.packetType.S_ERROR_NOTIFICATION, {
     errorMessage: message,
     timestamp: Date.now(),
   });

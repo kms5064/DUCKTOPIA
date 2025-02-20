@@ -2,9 +2,10 @@ import { config } from '../../config/config.js';
 import { roomSession, userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
+import { DayPhase } from '../../config/constants/game.js';
 
 const gameStartHandler = ({ socket, payload }) => {
-  const { monsters, objects } = payload;
+  const { monsters, objects } = payload; //좌표가 objects에 들어있고 그걸 서버에 저장
 
   const user = userSession.getUser(socket.id);
   const room = roomSession.getRoom(user.roomId);
@@ -26,11 +27,12 @@ const gameStartHandler = ({ socket, payload }) => {
     //   );
     // }
     // 몬스터 : 클라에서 생성된 좌표 값으로 변경
+    game.getMonsterById(monster.monsterId).setStartPosition(monster.x, monster.y);
     game.getMonsterById(monster.monsterId).setPosition(monster.x, monster.y);
   });
 
   const GameStartNotification = makePacket(config.packetType.START_GAME_NOTIFICATION, {
-    gameState: { phaseType: 0, nextPhaseAt: 100000 }, //이삭님 코드에 이렇게돼있음!
+    gameState: { phaseType: 0, nextPhaseAt: config.game.phaseCount[DayPhase.DAY] + Date.now() }, //이삭님 코드에 이렇게돼있음!
     playerPositions: room.getUsersPositionData(),
     monsters: monsters,
     objects: objects,

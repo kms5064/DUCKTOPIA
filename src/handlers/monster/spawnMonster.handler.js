@@ -1,10 +1,13 @@
 import { userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
-import { PACKET_TYPE } from '../../config/constants/header.js';
 import CustomError from '../../utils/error/customError.js';
 import { config } from '../../config/config.js';
 
+// 이거 지금 안쓰는데요?
+
 const spawnMonsterHandler = ({ socket, payload }) => {
+  const { monsters } = payload;
+
   // 유저 객체 조회
   const user = userSession.getUser(socket);
   if (!user) {
@@ -29,15 +32,13 @@ const spawnMonsterHandler = ({ socket, payload }) => {
     throw new Error(`Room ID(${roomId}): Game 정보가 없습니다.`);
   }
 
-  payload.forEach((monster) => {
+  for (const monster of monsters) {
     if (!game.checkSpawnArea(monster.monsterCode, monster.x, monster.y)) {
       throw new CustomError(
         `Monster ID: ${monster.monsterId} Monster Code : ${monster.monsterCode} 의 생성 구역이 적합하지 않습니다. (${monster.x},${monster.y})`,
       );
     }
-    // 몬스터 위치 적용
-    game.getMonsterById(monster.monsterId).setPosition(monster.x, monster.y);
-  });
+  }
 
   // TODO : NOTI용 패킷 추가 해야함.
   const packet = makePacket(config.packetType.S_MONSTER_SPAWN_NOTIFICATION, payload);

@@ -1,8 +1,8 @@
 import { roomSession, userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
 
-const attackByMonsterReqHandler = ({ socket, payload}) => {
-  const { monsterId, targetId } = payload
+const attackByMonsterReqHandler = ({ socket, payload }) => {
+  const { monsterId, targetId } = payload;
   const user = userSession.getUser(socket.id);
   const room = roomSession.getRoom(user.roomId);
 

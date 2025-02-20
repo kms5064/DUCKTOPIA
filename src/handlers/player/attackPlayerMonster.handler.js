@@ -6,7 +6,7 @@ import CustomError from '../../utils/error/customError.js';
 const attackPlayerMonsterHandler = ({ socket, payload }) => {
   const { playerDirX, playerDirY, monsterId } = payload;
 
-  console.log("몬스터 데미지 실행")
+  // console.log("몬스터 데미지 실행")
 
   // 유저 객체 조회
   const user = userSession.getUser(socket.id);
@@ -49,79 +49,36 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
     throw new CustomError(`Monster ID : ${monsterId}는 존재하지 않습니다.`);
   }
 
-  // 몬스터 HP 차감 처리
-  const damage = player.getPlayerAtkDamage();
-  let currHp = monster.setDamaged(damage);
+  if (monster && player) {
+    // 몬스터 HP 차감 처리
+    const damage = player.getPlayerAtkDamage();
+    const currHp = monster.setDamaged(damage);
 
-  if (currHp <= 0) {
-    // 몬스터 사망 처리
-    game.removeMonster(monsterId);
+    // console.log(monsterId, ' HP: ', currHp);
+
+    // 패킷 생성
+    packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
+      monsterId,
+      hp: currHp,
+    });
+
+    // broadcast - 모든 플레이어들에게 전달
+    game.broadcast(packet);
+
+    if (currHp <= 0) {
+      // 몬스터 사망 처리
+      game.removeMonster(monsterId);
+
+      console.log(monsterId, ' 번 몬스터 죽음');
+
+      packet = makePacket(config.packetType.S_MONSTER_DEATH_NOTIFICATION, {
+        monsterId,
+      });
+      game.broadcast(packet);
+    }
+  } else {
+    console.log('이게 왜됌?')
   }
-
-  // 패킷 생성
-  packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
-    monsterId,
-    hp: currHp,
-  });
-
-  // broadcast - 모든 플레이어들에게 전달
-  game.broadcast(packet);
-
-  // TODO : 검증 로직은 일단 주석 처리
-  // 몬스터 목록 조회
-  // const monsterList = game.getAllMonster();
-  //
-  // // 몬스터 리스트 순회
-  // monsterList.forEach((monster) => {
-  //   // 몬스터 정보 조회
-  //   const { id: monsterId, x: monsterX, y: monsterY } = monster.monsterDataSend();
-  //
-  //   //대상(몬스터)의 거리 계산
-  //   const distance = calculateDistance(playerX, playerY, monsterX, monsterY);
-  //
-  //   // 공격 범위 내에 몬스터가 있으면
-  //   if (distance <= player.getRange()) {
-  //     // 각도 계산
-  //     const angleToMonster = calculateAngle(
-  //       playerX,
-  //       playerY,
-  //       playerDirX,
-  //       playerDirY,
-  //       monsterX,
-  //       monsterY,
-  //     );
-  //
-  //     // 공격 각도 내에 몬스터가 있으면
-  //     if (angleToMonster <= player.getAngle() / 2) {
-  //       // TODO : 테스트 로그
-  //       console.log(`MONSTER ID: ${monster.getMonsterId()} (${monsterX}, ${monsterY}) ATTACK`);
-  //
-  //       // 몬스터 HP 차감 처리
-  //       const damege = player.getPlayerAtkDamage();
-  //       const currHp = monster.setDamaged(damege);
-  //
-  //       if (currHp <= 0) {
-  //         // 몬스터 사망 처리
-  //         game.removeMonster(monsterId);
-  //       }
-  //
-  //       // 패킷 생성
-  //       const packet = makePacket(PACKET_TYPE.MONSTER_HP_UPDATE_NOTIFICATION, {
-  //         monsterId,
-  //         damege,
-  //       });
-  //
-  //       // broadcast - 모든 플레이어들에게 전달
-  //       game.broadcast(packet);
-  //     } else {
-  //       // TODO : 테스트 로그
-  //       console.log(`MONSTER ID: ${monster.getMonsterId()} (${monsterX}, ${monsterY}) ANGLE OUT`);
-  //     }
-  //   } else {
-  //     // TODO : 테스트 로그
-  //     console.log(`MONSTER ID: ${monster.getMonsterId()} (${monsterX}, ${monsterY}) RANGE OUT`);
-  //   }
-  // });
 };
 
 export default attackPlayerMonsterHandler;
