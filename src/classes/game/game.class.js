@@ -434,7 +434,7 @@ class Game {
     }
   }
 
-  //테스트용 코드
+  //테스트용 코드 test
   addBox() {
     const x = Math.floor(Math.random() * 20);
     const y = Math.floor(Math.random() * 20);
