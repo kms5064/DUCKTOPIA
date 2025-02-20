@@ -193,6 +193,13 @@ class Monster extends MovableObjectBase {
   setTargetPlayer(player) {
     this.targetPlayer = player;
   }
+
+  //몬스터가 죽었을 때의 값들을 여기서 처리할 수 있도록 한다.
+  death() {
+    const dropcount = this.dropItemCount();
+
+    return dropcount;
+  }
 }
 
 export default Monster;

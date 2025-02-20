@@ -1,5 +1,6 @@
 import { config } from '../../config/config.js';
 import makePacket from '../../utils/packet/makePacket.js';
+import logger from '../../utils/winstonSetting.js';
 import Game from '../game/game.class.js';
 
 const RoomStateType = {
@@ -94,6 +95,7 @@ class Room {
 
   // 게임 시작
   startGame() {
+    logger.info("startGame Check");
     this.changeState(RoomStateType.INGAME);
     setTimeout(() => {
       this.game.gameLoopStart();
