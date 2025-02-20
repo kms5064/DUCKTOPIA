@@ -40,7 +40,7 @@ const onData = (socket) => async (data) => {
       // 값 추출 및 버전 검증
       const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
       if (version !== config.client.version) {
-        console.error('너니?');
+        console.error('잘못된 패킷 제거');
         socket.stack += 1;
         socket.buffer = Buffer.alloc(0);
         break;
