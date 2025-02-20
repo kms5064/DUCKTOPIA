@@ -226,10 +226,6 @@ class Game {
       let inputId = 0;
       let inputPlayer = null;
       if (!monster.hasTargetPlayer()) {
-        //플레이어를 쫒다가 시간 되어 풀렸을 때 쿨타임이 걸리고
-        //인식 쿨타임이 남아 있는 몬스터는 체크 제외
-        //if (!monster.AwakeCoolTimeCheck()) continue;
-
         //몬스터가 죽었을 때, hp가 0인데 반응이 나올 수 있으니 체크
         if (monster.monsterDeath()) {
           this.monsters.delete(monsterId);
