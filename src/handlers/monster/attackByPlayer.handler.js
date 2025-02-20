@@ -15,7 +15,7 @@ const AttackByPlayerHandler = async ({ socket, payload }) => {
     game.notification(socket, packet);
   }
   catch (err) {
-    logger.error("에러 발생!", { error: new Error(err) });
+    logger.error("에러 발생! AttackByPlayerHandler", { error: new Error(err) });
   }
   //몬스터가 플레이어를 때렸을 때 [1] : 우선 몬스터의 정보를 가져온다.
 

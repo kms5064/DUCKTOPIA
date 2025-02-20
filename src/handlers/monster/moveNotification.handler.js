@@ -34,7 +34,7 @@ const monsterMoveNotificationHandler = async ({ socket, payload }) => {
     game.notification(socket, packet);
   }
   catch (err) {
-    logger.error("에러 발생!", { error: new Error(err) });
+    logger.error("에러 발생! monsterMoveNotificationHandler", { error: new Error(err) });
   }
 
 };

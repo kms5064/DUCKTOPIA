@@ -35,7 +35,7 @@ const playerDamagedByMonsterHandler = async ({ socket, payload }) => {
     game.broadcast(packet);
   }
   catch (err) {
-    logger.error("에러 발생!", { error: new Error(err) });
+    logger.error("에러 발생! playerDamagedByMonsterHandler", { error: new Error(err) });
   }
 
 };
