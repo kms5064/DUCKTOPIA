@@ -3,29 +3,101 @@
 // 게임 내 모든 아이템의 생성과 관리에 대한 책임이 있는 클래스임
 
 import Item from './item.class.js';
+import ItemBox from './itemBox.class.js';
 import { getGameAssets } from '../../init/assets.js';
 
 class ItemManager {
   constructor() {
     this.items = new Map(); // 현재 필드에 존재하는 아이템들
-    const { dropTable, food } = getGameAssets();
+    this.itemBoxes = new Map(); // 현재 존재하는 아이템 박스들 - 유민님이 알아서 삭제하세욧.
+    const { dropTable, food, weapon } = getGameAssets();
     this.dropTable = dropTable.data;
     this.foodData = food.data;
+    this.weaponData = weapon.data;
     this.lastItemId = 0; // 마지막으로 생성된 아이템의 ID
-  }
+    this.lastBoxId = 0; // 마지막으로 생성된 박스의 ID
 
-  //---- 아이템 박스
-  // count, type, 좌표를 가지고 만들거임
-  // 사과3개 우유 2개 - 스택이라는게 갯수 {사과: 3, 우유: 2} {사과: 2, 우유: 2}
-  // 아이템 박스에 아이템 몇개 생성 가능/??? - 일단 상자는 8칸 - 갯수 제한은 없다
-  // 일단 상자라서 아이템 Min 값은 1개 이상으로 고정.
-  // 모든 아이템 중에 랜덤으로 무조건 생성되게. - 일단!!!
-  // 스택 최대값은 5개???
+    // 아이템 박스 관련 상수 - 유민님이 알아서 삭제하세욧.
+    this.BOX_MAX_SLOTS = 8; // 박스 최대 슬롯 수
+    this.ITEM_MIN_COUNT = 1; // 아이템 최소 개수
+    this.ITEM_MAX_STACK = 5; // 아이템 최대 스택
+  }
 
   // 아이템 ID 생성
   createItemId() {
     this.lastItemId += 1;
     return this.lastItemId.toString();
+  }
+
+  // 박스 ID 생성
+  createBoxId() {
+    this.lastBoxId += 1;
+    return this.lastBoxId;
+  }
+
+  // 아이템 박스 생성
+  createItemBox(position) {
+    const boxId = this.createBoxId();
+    const itemBox = new ItemBox(boxId, position.x, position.y);
+
+    // 랜덤 아이템 생성 및 박스에 추가
+    const items = this.generateRandomItems();
+    items.forEach((item, index) => {
+      itemBox.itemList[index] = {
+        id: item.id,
+        type: item.type,
+        name: item.name,
+        code: item.code,
+        stack: item.stack,
+      };
+    });
+
+    this.itemBoxes.set(boxId, itemBox);
+
+    // 디버깅용 로그
+    console.log(`[아이템 박스 생성] ID: ${boxId}, 위치: (${position.x}, ${position.y})`);
+    console.log('[생성된 아이템 목록]');
+    items.forEach((item, index) => {
+      console.log(`${index + 1}. 아이템: ${item.name}, 개수: ${item.stack}`);
+    });
+
+    return itemBox;
+  }
+
+  // 랜덤 아이템 생성
+  generateRandomItems() {
+    const items = [];
+    const slotCount = Math.floor(Math.random() * this.BOX_MAX_SLOTS) + 1; // 최소 1개
+
+    for (let i = 0; i < slotCount; i++) {
+      // 아이템 타입 결정 (무기 또는 음식)
+      const isWeapon = Math.random() < 0.3; // 30% 확률로 무기 생성
+
+      if (isWeapon) {
+        // 무기 아이템 생성
+        const randomWeapon = this.weaponData[Math.floor(Math.random() * this.weaponData.length)];
+        items.push({
+          id: this.createItemId(),
+          type: Item.Type.WEAPON,
+          name: randomWeapon.name,
+          code: randomWeapon.code,
+          stack: 1, // 무기는 항상 1개만
+        });
+      } else {
+        // 음식 아이템 생성
+        const randomFood = this.foodData[Math.floor(Math.random() * this.foodData.length)];
+        const stack = Math.floor(Math.random() * this.ITEM_MAX_STACK) + this.ITEM_MIN_COUNT;
+        items.push({
+          id: this.createItemId(),
+          type: Item.Type.FOOD,
+          name: randomFood.name,
+          code: randomFood.code,
+          stack: stack,
+        });
+      }
+    }
+
+    return items;
   }
 
   // 몬스터 사망 시 아이템 생성
@@ -82,26 +154,43 @@ class ItemManager {
 
   // 아이템 생성
   createItem(itemGrade, position) {
-    // 현재는 식량 아이템만 구현
-    const availableitems = this.foodData.filter((food) => food.grade === itemGrade);
-    if (availableitems.length === 0) return null;
+    // 무기 또는 음식 결정 (30% 확률로 무기)
+    const isWeapon = Math.random() < 0.3;
 
-    const randomItem = availableitems[Math.floor(Math.random() * availableitems.length)];
+    if (isWeapon) {
+      const availableWeapons = this.weaponData.filter((weapon) => weapon.grade === itemGrade);
+      if (availableWeapons.length === 0) return null;
 
-    // 아이템 위치에 랜덤성 추가
+      const randomWeapon = availableWeapons[Math.floor(Math.random() * availableWeapons.length)];
+      return new Item({
+        id: this.createItemId(),
+        type: Item.Type.WEAPON,
+        name: randomWeapon.name,
+        position: this.addRandomOffset(position),
+        code: randomWeapon.code,
+      });
+    } else {
+      const availableFoods = this.foodData.filter((food) => food.grade === itemGrade);
+      if (availableFoods.length === 0) return null;
+
+      const randomFood = availableFoods[Math.floor(Math.random() * availableFoods.length)];
+      return new Item({
+        id: this.createItemId(),
+        type: Item.Type.FOOD,
+        name: randomFood.name,
+        position: this.addRandomOffset(position),
+        code: randomFood.code,
+      });
+    }
+  }
+
+  // 아이템 위치에 랜덤성 추가
+  addRandomOffset(position) {
     const randomOffset = 0.5;
-    const randomPosition = {
+    return {
       x: position.x + (Math.random() - 0.5) * randomOffset,
       y: position.y + (Math.random() - 0.5) * randomOffset,
     };
-
-    return new Item({
-      id: this.createItemId(),
-      type: Item.Type.FOOD,
-      name: randomItem.name,
-      position: randomPosition,
-      code: randomItem.code,
-    });
   }
 
   // 아이템 제거

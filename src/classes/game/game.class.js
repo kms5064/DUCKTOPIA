@@ -17,7 +17,7 @@ class Game {
     this.players = new Map();
     this.monsterIndex = 1;
     this.monsters = new Map();
-    this.itemBoxes = new Map();
+    // this.itemBoxes = new Map();
     this.object = new Map();
     this.map = []; // 0과 1로 된 2차원배열?
     this.coreHp = config.game.core.maxHP;

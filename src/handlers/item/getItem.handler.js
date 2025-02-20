@@ -95,6 +95,7 @@ const getItemHandler = ({ socket, payload }) => {
       success: true,
       message: '아이템을 습득했습니다.',
       items: [item],
+      playerId,
     });
     game.broadcast(successPacket);
   }

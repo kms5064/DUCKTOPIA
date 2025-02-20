@@ -74,11 +74,17 @@ message Item {
   ItemData itemData = 3; // 아이템 정보
 }
 
+message itemBoxData {
+  int32 itemBoxId = 1;
+  float x = 2;
+  float y = 3;
+  repeated itemData itemData = 4;
+}
+
 // 오브젝트 관련 기본 구조체
 message ObjectData {
   int32 objectId = 1;
   int32 objectCode = 2;
-  repeated ItemData itemData = 3;
 }
 
 message ObjectPositionData {
@@ -164,6 +170,7 @@ message S2CGamePrepareResponse { // 게임준비 응답 to 호스트클라이언
   bool success = 1;
   repeated MonsterData monsters = 2;
   repeated ObjectData objects = 3;
+  repeated ItemBoxData itemBoxData = 4;
 }
 
 message S2CGamePrepareNotification { // 게임준비 알림
@@ -307,6 +314,7 @@ message S2CPlayerGetItemNotification {
   bool success = 1;        // 습득 성공 여부
   string message = 2;      // 결과 메시지
   repeated Item items = 3; // 습득한 아이템 목록
+  int32 playerId = 4;      // 플레이어 ID
 }
 
 // 아이템 사용
@@ -314,14 +322,14 @@ message C2SPlayerUseItemRequest {
   int32 itemId = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은 소모)
 }
 
-message S2CPlayerEatFoodResponse {
+message S2CPlayerEatFoodResponse { // 사용한 아이템이 식량일 때
   bool success = 1;
   int32 itemId = 2;
   int32 playerId = 3;
   int32 hunger = 4;
 }
 
-message S2CPlayerEquipWeaponResponse {
+message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
   bool success = 1;
   int32 itemId = 2;
   int32 playerId = 3;
@@ -346,7 +354,6 @@ message S2CPlayerTakeOutAnItemNotification {
   int32 playerId = 1;
   int32 itemBoxId = 2;
   ItemData itemData = 3;
-  int32 count = 4;
   bool success = 5;
 }
 
@@ -360,7 +367,6 @@ message S2CPlayerPutAnItemNotification {
   int32 playerId = 1;
   int32 itemBoxId = 2;
   ItemData itemData = 3;
-  int32 count = 4;
   bool success = 5;
 }
 
