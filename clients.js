@@ -182,15 +182,20 @@ const customTest = async (client_count = 1) => {
       const name = `dummy${idx}`;
 
       // Lobby 서버 연결
-      const client = new Client(id, password, name, '127.0.0.1', 5555);
+      const client = new Client(id, password, name, '43.200.174.138', 5555);
 
-      await client.socket.write("456378453");
+      await client.registerRequest();
+      await client.delay(3);
+      await client.loginRequest();
+      await client.delay(3);
+      await client.createRoomRequest();
 
+      await client.end();
     }),
   );
 };
 
 // 테스트 실행문
 await loadProtos().then(() => {
-  customTest(100);
+  customTest(300);
 });
