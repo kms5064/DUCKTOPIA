@@ -452,7 +452,7 @@ class Game {
         itemBoxId: itemBox.id,
         x: itemBox.x,
         y: itemBox.y,
-        itemData: [{ itemCode: 1, count: 2 }],
+        itemData: [{ itemCode: 1, count: 2 }],//하드코딩된 임시 아이템
       });
     }
     return itemBoxData;
