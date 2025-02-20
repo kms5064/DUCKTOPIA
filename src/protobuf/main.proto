@@ -100,6 +100,12 @@ message S2CLoginResponse // 로그인 응답
   User user = 2;
 }
 
+message S2SLoginCast // 로그인 응답
+{
+  bool success = 1;
+  User user = 2;
+}
+
 message C2SCreateRoomRequest { // 방생성 요청
   string roomName = 1;
   int32 maxUserNum = 2;
@@ -141,18 +147,31 @@ message S2CLeaveRoomNotification { // 방나감 알림
   User user = 1;
 }
 
+// 분산 서버 변경 구조 시작
+
 message C2SGamePrepareRequest { // 게임준비 요청
 }
 
-message S2CGamePrepareResponse { // 게임준비 응답 to 호스트클라이언트
+message S2SGamePrepareResponse { // 게임준비 응답 to 호스트클라이언트
   bool success = 1;
-  repeated MonsterData monsters = 2;
-  repeated ObjectData objects = 3;
+  RoomData room = 2;
+}
+
+message S2SGameServerJoinRequest { // 게임 서버에 접속하여 데이터 체크
+  RoomData room = 1;
 }
 
 message S2CGamePrepareNotification { // 게임준비 알림
   RoomData room = 1;
 }
+
+message S2CGameInfosRequest { // 게임준비 응답 to 호스트클라이언트
+  bool success = 1;
+  repeated MonsterData monsters = 2;
+  repeated ObjectData objects = 3;
+}
+
+// 분산 서버 변경 구조 끝
 
 message C2SGameStartRequest { // 게임시작 요청
   repeated MonsterPositionData monsters = 1;
@@ -160,7 +179,6 @@ message C2SGameStartRequest { // 게임시작 요청
 }
 
 // 이때 game을 만들고, player 생성, 몬스터, 오브젝트 정보 만들기
-
 message S2CGameStartResponse { // 게임시작 응답
   bool success = 1;
 }
@@ -388,7 +406,7 @@ message GamePacket {
 
     // 게임 시작
     C2SGamePrepareRequest gamePrepareRequest = 15;
-    S2CGamePrepareResponse gamePrepareResponse = 16;
+    S2SGamePrepareResponse gamePrepareResponse = 16;
     S2CGamePrepareNotification gamePrepareNotification = 17;
     C2SGameStartRequest gameStartRequest = 18;
     S2CGameStartResponse gameStartResponse = 19;
@@ -416,7 +434,7 @@ message GamePacket {
     C2SPlayerCloseBoxRequest playerCloseBoxRequest = 52;
     S2CPlayerCloseBoxNotification playerCloseBoxNotification = 53;
 
-    // 몬스터
+
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;
     C2SMonsterSpawnResponse monsterSpawnResponse = 33;
     S2CMonsterWaveStartNotification monsterWaveStartNotification = 34;
@@ -440,5 +458,9 @@ message GamePacket {
 
     // 낮 밤 전환
     S2CGamePhaseUpdateNotification gamePhaseUpdateNotification = 101;
+    S2CPlayerDamagedByMonster playerDamagedByMonster = 45;
+    S2SGameServerJoinRequest gameServerJoinRequest = 46;
+    S2CGameInfosRequest gameInfosRequest = 48;
+    S2SLoginCast loginCast = 49;
   }
 }
