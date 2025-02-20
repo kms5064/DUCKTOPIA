@@ -261,7 +261,6 @@ class Game {
         }
         distance = monster.getDistanceByPlayer();
 
-
         for (const [playerId, player] of this.players) {
           // 대상 찾아보기
           const calculatedDistance = monster.returnCalculateDistance(player);
