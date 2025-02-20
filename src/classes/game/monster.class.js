@@ -138,7 +138,7 @@ class Monster extends MovableObjectBase {
     //2. 타겟 플레이어의 hp가 0이 되었을 때 
     //3. 시작 위치에서 일정 이상의 거리를 벗어나게 되었을 때
     const targetHp = this.targetPlayer.getPlayerHp();
-    if (distance > this.awakeRange || targetHp <= 0 || distanceFromStartPoint > 20) {
+    if (distance > this.awakeRange || targetHp <= 0 || distanceFromStartPoint > 10 + this.awakeRange) {
       this.distanceBetweenPlayer = Infinity;
       this.targetPlayer = null;
       return true;
