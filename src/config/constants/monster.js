@@ -4,7 +4,7 @@ export const MAX_SPAWN_COUNT = 100;
 
 export const NORMAL_MONSTER_MAX_CODE = 8;
 
-export const WAVE_MAX_MONSTER_COUNT = 20;
+export const WAVE_MAX_MONSTER_COUNT = 0;
 
 export const WAVE_MONSTER_MIN_CODE = 101;
 export const WAVE_MONSTER_MAX_CODE = 103;
