@@ -20,7 +20,7 @@ const onData = (socket) => async (data) => {
 
   try {
     while (socket.buffer.length >= defaultLength) {
-      console.log(idx++);
+      console.log(idx++, 'bufer Leng:', socket.buffer.length);
       try {
         versionByte = socket.buffer.readUInt8(packetTypeByte);
         payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
