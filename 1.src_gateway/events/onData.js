@@ -3,10 +3,11 @@ import handlers from '../handlers/index.js';
 import { getProtoMessages } from '../init/loadProtos.js';
 import { errorHandler } from '../utils/error/errorHandler.js';
 import onEnd from './onEnd.js';
+import { formatDate } from '../utils/dateFormatter.js';
 
 const onData = (socket) => async (data) => {
   // console.log(`[클라이언트] 데이터 수신 ${socket.id} 패킷 ${data}, `);
-  console.log(`[클라이언트] 데이터 수신 ${socket.id} 패킷`);
+  console.log(`${formatDate(new Date())} [클라이언트] 데이터 수신 ${socket.id} 패킷`);
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
