@@ -81,7 +81,6 @@ message Position {
 }
 
 message Item {
-  int32 id = 1;          // 아이템 고유 식별자 ID
   Position position = 2; // 아이템 위치
   ItemData itemData = 3; // 아이템 정보
 }
@@ -357,7 +356,7 @@ message S2CItemSpawnNotification {
 }
 
 message C2SPlayerGetItemRequest {
-  int32 itemId = 1;   // 습득할 아이템 식별자 ID
+  Position position = 1;   // 습득할 아이템 식별자 ID
   int32 playerId = 2; // 플레이어 ID
 }
 
