@@ -25,7 +25,7 @@ const monsterMoveNotificationHandler = async ({ socket, payload, userId }) => {
   const monsterMoveNotification = [config.packetType.S_MONSTER_MOVE_NOTIFICATION, payload];
 
   //이런 식으로 게임에서 notification을 보내보도록 하자.
-  game.notification(userId, monsterMoveNotification);
+  // game.notification(userId, monsterMoveNotification);
 };
 
 export default monsterMoveNotificationHandler;

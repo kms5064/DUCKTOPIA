@@ -33,7 +33,7 @@ const playerDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
     ];
   }
 
-  // game.broadcast(packet);
+  game.broadcast(packet);
 };
 
 export default playerDamagedByMonsterHandler;
