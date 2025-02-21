@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon ./src/server.js",
-    "lobby": "npx nodemon src_lobby/server.js",
-    "game": "npx nodemon ./src_game/server.js"
+    "start": "node 1.src_gateway/server.js",
+    "lobby": "node 2.src_lobby/server.js",
+    "game": "node 3.src_game/server.js"
   },
   "keywords": [],
   "author": "",
