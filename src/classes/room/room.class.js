@@ -71,10 +71,16 @@ class Room {
   }
 
   deleteRoom() {
-    const leaveRoomResponse = makePacket(config.packetType.LEAVE_ROOM_RESPONSE, {
+    let packet
+    if (this.game.state === RoomStateType.INGAME) {
+      packet = makePacket(config.packetType.S_GAME_OVER_NOTIFICATION, {});
+      this.broadcast(packet);
+    } 
+    const LeaveRoomResponse = makePacket(config.packetType.LEAVE_ROOM_RESPONSE, {
       success: true,
     });
-    this.broadcast(leaveRoomResponse);
+
+    this.broadcast(LeaveRoomResponse);
 
     // 인터벌 제거
     if (this.game.gameLoop) this.game.gameEnd();

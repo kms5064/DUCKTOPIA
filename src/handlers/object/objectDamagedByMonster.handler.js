@@ -5,10 +5,13 @@ import makePacket from '../../utils/packet/makePacket.js';
 const objectDamagedByMonsterHandler = async ({ socket, payload }) => {
   const { objectId, monsterId } = payload;
 
+  
   const user = userSession.getUser(socket.id);
-  const game = roomSession.getRoom(user.getRoomId()).getGame();
+  const room = roomSession.getRoom(user.roomId);
+  const game = room.getGame();
   //const object = game.getObject(objectId);
   const monster = game.getMonsterById(monsterId);
+  
 
   let packet;
   let gameOverPacket;
@@ -25,6 +28,7 @@ const objectDamagedByMonsterHandler = async ({ socket, payload }) => {
       const gameOverPayload = {};
       gameOverPacket = makePacket(config.packetType.S_GAME_OVER_NOTIFICATION, gameOverPayload);
       game.broadcast(gameOverPacket);
+      roomSession.removeRoom(room.id);
     }
   } else {
   }
