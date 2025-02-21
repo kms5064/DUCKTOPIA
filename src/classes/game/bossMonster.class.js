@@ -99,7 +99,7 @@ class bossMonster extends Monster {
 
 
     death() {
-        super.death();
+
     }
 
     setTargetPlayer(player) {

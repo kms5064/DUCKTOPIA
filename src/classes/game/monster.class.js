@@ -133,12 +133,35 @@ class Monster extends MovableObjectBase {
       Math.pow(playerPos.x - this.startPoint_x, 2) + Math.pow(playerPos.y - this.startPoint_y, 2),
     );
 
+    let lostDistance = 1;
+
+    switch (this.monsterCode) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+        lostDistance = 5;
+        break;
+      case 5:
+        lostDistance = 6;
+        break;
+      case 6:
+        lostDistance = 7;
+        break;
+      case 7:
+        lostDistance = 8;
+        break;
+      case 8:
+        lostDistance = 9;
+        break;
+    }
+
     /** 몬스터가 플레이어를 잃는 조건 */
     //1. 몬스터와 플레이어 간의 거리가 인식 범위를 넘어갔을 때
     //2. 타겟 플레이어의 hp가 0이 되었을 때 
     //3. 시작 위치에서 일정 이상의 거리를 벗어나게 되었을 때
     const targetHp = this.targetPlayer.getPlayerHp();
-    if (distance > this.awakeRange + 5 || targetHp <= 0 || distanceFromStartPoint > 10 + this.awakeRange) {
+    if (distance > this.awakeRange + lostDistance || targetHp <= 0 || distanceFromStartPoint > lostDistance * 2 + this.awakeRange) {
       this.monsterAwakeCoolTime = 1000;
       this.distanceBetweenPlayer = Infinity;
       this.targetPlayer = null;

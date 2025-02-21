@@ -74,13 +74,6 @@ message Item {
   ItemData itemData = 3; // 아이템 정보
 }
 
-message itemBoxData{
-  int32 itemBoxId =1;
-  float x = 2;
-  float y = 3;
-  repeated itemData itemData = 4;
-}
-
 // 오브젝트 관련 기본 구조체
 message ObjectData {
   int32 objectId = 1;
@@ -88,11 +81,10 @@ message ObjectData {
 }
 
 message ObjectPositionData {
-  int32 objectId = 1;
-  int32 objectCode = 2;
-  repeated ItemData itemData = 3;
-  float x = 4;
-  float y = 5;
+  ObjectData objectData = 1;
+  repeated ItemData itemData = 2;
+  float x = 3;
+  float y = 4;
 }
 
 // 인증 관련
@@ -170,7 +162,6 @@ message S2CGamePrepareResponse { // 게임준비 응답 to 호스트클라이언
   bool success = 1;
   repeated MonsterData monsters = 2;
   repeated ObjectData objects = 3;
-  repeated ItemBoxData itemBoxData =4;
 }
 
 message S2CGamePrepareNotification { // 게임준비 알림
@@ -248,8 +239,7 @@ message C2SMonsterSpawnResponse { // 몬스터 좌표를 찍어서 서버에 전
   repeated MonsterPositionData monsters = 1;
 }
 
-message
-S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
+message S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
   repeated MonsterPositionData monsters = 1;
 }
 
@@ -322,7 +312,6 @@ message C2SPlayerUseItemRequest {
   int32 itemId = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은 소모)
 }
 
-// 아이템 사용
 message S2CPlayerEatFoodResponse { // 사용한 아이템이 식량일 때
   bool success = 1;
   int32 itemId = 2;
@@ -334,6 +323,11 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
   bool success = 1;
   int32 itemId = 2;
   int32 playerId = 3;
+}
+
+message C2SPlayerDamagedByMonsterRequest {
+  int32 playerId = 1;
+  int32 monsterId = 2;
 }
 
 // 아이템 박스 시스템
