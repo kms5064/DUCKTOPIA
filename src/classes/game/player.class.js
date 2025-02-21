@@ -119,6 +119,7 @@ class Player {
         //   hunger: this.hunger,
         // })
 
+        // this.user.getSocket().write(decreaseHungerPacket);
       } else {
         // 체력 감소
 
