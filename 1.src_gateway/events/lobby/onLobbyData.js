@@ -8,7 +8,7 @@ import makePacket from '../../utils/packet/makePacket.js';
 import makeServerPacket from '../../utils/packet/makeServerPacket.js';
 
 const onLobbyData = (socket) => async (data) => {
-  console.log('로비서버 데이터 수신');
+  // console.log('로비서버 데이터 수신');
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;

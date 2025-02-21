@@ -6,7 +6,7 @@ import { errorHandler } from '../../utils/error/errorHandler.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
 const onGameData = (socket) => async (data) => {
-  console.log('게임서버 데이터 수신');
+  // console.log('게임서버 데이터 수신');
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
