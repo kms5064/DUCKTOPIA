@@ -47,6 +47,7 @@ class Game {
     };
 
     //몬스터 쿨타임
+    //보스 몬스터까지 이걸 이용해 관리하면 될 듯 하다.
     this.monsterLastUpdate = Date.now();
   }
 
@@ -61,9 +62,11 @@ class Game {
       // this.addMonster();
       this.phaseCheck();
       this.monsterUpdate();
+      this.CoolTimeCheck();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
     }, 1000);
     this.lastUpdate = Date.now();
+    this.monsterLastUpdate = Date.now();
   }
 
   gameEnd() {
@@ -209,7 +212,7 @@ class Game {
     this.monsterDisCovered();
     //몬스터y가 플레이어를 가지고 있을 경우 움직인다.
     //this.monsterMove();
-    //this.monsterTimeCheck();
+    this.monsterTimeCheck();
 
     //몬스터의 사망 판정도 체크해 보도록 하자.
 
@@ -221,6 +224,7 @@ class Game {
   monsterDisCovered() {
     const monsterDiscoverPayload = [];
     for (const [monsterId, monster] of this.monsters) {
+      if (monster.AwakeCoolTimeCheck()) continue;
       // 대상이 없는 몬스터만
       let distance = Infinity;
       let inputId = 0;

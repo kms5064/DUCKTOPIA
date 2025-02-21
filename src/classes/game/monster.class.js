@@ -139,6 +139,7 @@ class Monster extends MovableObjectBase {
     //3. 시작 위치에서 일정 이상의 거리를 벗어나게 되었을 때
     const targetHp = this.targetPlayer.getPlayerHp();
     if (distance > this.awakeRange + 5 || targetHp <= 0 || distanceFromStartPoint > 10 + this.awakeRange) {
+      this.monsterAwakeCoolTime = 1000;
       this.distanceBetweenPlayer = Infinity;
       this.targetPlayer = null;
       return true;
