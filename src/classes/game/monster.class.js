@@ -13,6 +13,7 @@ class Monster extends MovableObjectBase {
     monsterCode,
     name,
     hp,
+    grade,
     attack,
     defence,
     range,
@@ -27,6 +28,7 @@ class Monster extends MovableObjectBase {
     this.hp = hp;
     this.attack = attack
     this.defence = defence;
+    this.grade = grade;
     this.name = name;
     this.targetPlayer = null;
     //몬스터가 여러 패턴을 가지고 있을 때 그 패턴들을 이 안에서 쿨타임을 관리한다.

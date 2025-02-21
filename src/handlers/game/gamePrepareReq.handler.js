@@ -29,10 +29,10 @@ const gamePrepareReqHandler = ({ socket, payload }) => {
       {
         objectId: 2,
         objectCode: 2,
-        itemData: {
+        itemData: [{
           itemId: 1,
           count: 2,
-        },
+        }],
       },
     ],
   });
