@@ -78,15 +78,13 @@ message Item {
 message ObjectData {
   int32 objectId = 1;
   int32 objectCode = 2;
-  repeated itemData itemData = 3;
 }
 
 message ObjectPositionData {
-  int32 objectId = 1;
-  int32 objectCode = 2;
-  repeated ItemData itemData = 3;
-  float x = 4;
-  float y = 5;
+  ObjectData ObjectData =1;
+  repeated ItemData itemData = 2;
+  float x = 3;
+  float y = 4;
 }
 
 // 인증 관련
@@ -164,7 +162,6 @@ message S2CGamePrepareResponse { // 게임준비 응답 to 호스트클라이언
   bool success = 1;
   repeated MonsterData monsters = 2;
   repeated ObjectData objects = 3;
-  repeated ItemBoxData itemBoxData =4;
 }
 
 message S2CGamePrepareNotification { // 게임준비 알림
@@ -242,8 +239,7 @@ message C2SMonsterSpawnResponse { // 몬스터 좌표를 찍어서 서버에 전
   repeated MonsterPositionData monsters = 1;
 }
 
-message
-S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
+message S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
   repeated MonsterPositionData monsters = 1;
 }
 

@@ -17,8 +17,7 @@ class Game {
     this.players = new Map();
     this.monsterIndex = 1;
     this.monsters = new Map();
-    this.itemBoxes = new Map();
-    this.object = new Map();
+    this.objects = new Map();
     this.map = []; // 0과 1로 된 2차원배열?
     this.coreHp = config.game.core.maxHP;
     this.corePosition = config.game.core.position;
@@ -333,12 +332,20 @@ class Game {
    */
 
   createObjectData() {
+    const objectData =[];
     const coreData = {
-      objectId: 1,
-      objectCode: 1,
+      ObjectData: { objectId: 1, objectCode: 1 },
       itemData: [],
+      x:0,
+      y:0,
     };
-    return coreData;
+
+    objectData.push(coreData);
+    for(let i=0;i<MAX_NUMBER_OF_ITEM_BOX;i++){
+      const itemBox = this.createItemBox();
+      objectData.push(itemBox);
+    }
+    return objectData;
   }
 
   coreDamaged(damage) {
@@ -434,30 +441,35 @@ class Game {
     }
   }
 
-  //테스트용 코드 test
-  addBox() {
-    const x = Math.floor(Math.random() * 20);
-    const y = Math.floor(Math.random() * 20);
+  // 아이템 박스 생성
+  createItemBox() {
+    const boxId = this.itemManager.createBoxId();
+    const itemBox = new ItemBox(boxId);
 
-    const itemBox = new ItemBox(x, y);
-    this.itemBoxes.set(itemBox.id, itemBox);
+    // 랜덤 아이템 생성 및 박스에 추가
+    const items = this.itemManager.generateRandomItems();
+    items.forEach((item,index) => {
+      itemBox.itemList.splice(index,1,{itemCode:item.code, count:item.stack});
+    });
+
+    const data = {
+      ObjectData: { objectId: itemBox.id, objectCode: 2 },
+      itemData: itemBox.itemList,
+      x: itemBox.x,
+      y: itemBox.y,
+    };
+
+    this.objects.set(data.ObjectData.objectId, data);
+
+    // 디버깅용 로그
+    console.log(`[아이템 박스 생성] ID: ${boxId}, 위치: (${position.x}, ${position.y})`);
+    console.log('[생성된 아이템 목록]');
+    itemBox.itemList.forEach((item) => {
+      console.log( `아이템코드: ${item.code}, 개수: ${item.count}`);
+    });
+
+    return data;
   }
-
-  createItemBoxData() {
-    const itemBoxData = [];
-
-    for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
-      let itemBox = this.addBox();
-      itemBoxData.push({
-        itemBoxId: itemBox.id,
-        x: itemBox.x,
-        y: itemBox.y,
-        itemData: [{ itemCode: 1, count: 2 }],//하드코딩된 임시 아이템
-      });
-    }
-    return itemBoxData;
-  }
-  /////////////////////////////////////
 }
 
 export default Game;
