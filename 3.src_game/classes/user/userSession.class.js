@@ -15,7 +15,7 @@ class UserSession {
 
   /* 나간 유저 세션에서 제거하는 메서드 */
   deleteUser(userId) {
-    this.users.delete(socket);
+    this.users.delete(userId);
   }
 
   /* 특정 유저 조회하는 메서드 */

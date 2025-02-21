@@ -14,6 +14,7 @@ class GameSession {
 
   // 게임 지우기
   removeGame(game) {
+    game.gameEnd();
     this.games.delete(game.id);
   }
 

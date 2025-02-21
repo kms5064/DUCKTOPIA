@@ -9,6 +9,7 @@ import {
   RANGE_COOLTIME_MONSTER_TRACKING,
 } from '../../config/constants/monster.js';
 import ItemBox from '../item/itemBox.class.js';
+import { userSession } from '../../sessions/session.js';
 
 class Game {
   constructor(gameId, ownerId) {
@@ -79,6 +80,9 @@ class Game {
   gameEnd() {
     clearInterval(this.gameLoop);
     this.gameLoop = null;
+    this.users.forEach((user) => {
+      userSession.deleteUser(user.id);
+    });
   }
 
   // 전체 공지(본인 제외)

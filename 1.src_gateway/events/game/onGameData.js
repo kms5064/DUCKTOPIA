@@ -1,7 +1,7 @@
 import { config } from '../../config/config.js';
 import handlers from '../../handlers/index.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
-import { userSession } from '../../sessions/session.js';
+import { serverSession, userSession } from '../../sessions/session.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
@@ -60,6 +60,9 @@ const onGameData = (socket) => async (data) => {
 
       if (packetType === config.packetType.S_GAME_OVER_NOTIFICATION[0]) {
         console.log(userId, '게임종료 확인');
+
+        const lobbyServerSocket = serverSession.getServerById(config.server.lobbyServer);
+        lobbyServerSocket.write(packet);
         user.setGameState(false);
       }
 

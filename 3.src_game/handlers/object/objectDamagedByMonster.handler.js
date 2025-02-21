@@ -26,6 +26,8 @@ const objectDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
       const gameOverPayload = {};
       const gameOverNotification = [config.packetType.S_GAME_OVER_NOTIFICATION, gameOverPayload];
       game.broadcast(gameOverNotification);
+
+      gameSession.removeGame(game);
     }
   }
 };
