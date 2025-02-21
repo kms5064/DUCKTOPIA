@@ -30,13 +30,13 @@ const onData = (socket) => async (data) => {
       const headerLength =
         defaultLength + versionByte + userIdLengthByte + userIdByte + payloadLengthByte;
       // buffer의 길이가 충분한 동안 실행
-      if (socket.buffer.length < headerLength + payloadByte) continue;
+      if (socket.buffer.length < headerLength + payloadByte) break;
       const packet = socket.buffer.subarray(0, headerLength + payloadByte);
       // 남은 패킷 buffer 재할당
       socket.buffer = socket.buffer.subarray(headerLength + payloadByte);
       // 값 추출 및 버전 검증
       const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
-      if (version !== config.client.version) continue;
+      if (version !== config.client.version) break;
       const userId = +packet.toString(
         'utf8',
         defaultLength + versionByte + userIdLengthByte,
