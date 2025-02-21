@@ -15,12 +15,12 @@ const monsterMoveNotificationHandler = async ({ socket, payload, userId }) => {
   const game = gameSession.getGame(user.getGameId());
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
 
-  for (let i = 0; i < monsterPositionData.length; i++) {
-    const monster = game.getMonsterById(monsterPositionData[i].monsterId);
-    if (!monster) continue;
-
-    monster.setPosition(monsterPositionData[i].x, monsterPositionData[i].y);
-  }
+  // for (let i = 0; i < monsterPositionData.length; i++) {
+  //   const monster = game.getMonsterById(monsterPositionData[i].monsterId);
+  //   if (!monster) continue;
+  //
+  //   monster.setPosition(monsterPositionData[i].x, monsterPositionData[i].y);
+  // }
 
   const monsterMoveNotification = [config.packetType.S_MONSTER_MOVE_NOTIFICATION, payload];
 
