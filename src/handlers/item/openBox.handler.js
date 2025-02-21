@@ -40,7 +40,6 @@ const playerOpenBoxHandler = ({ socket, sequence, payload }) => {
     if (!player) {
       throw new CustomError( '플레이어를 찾을 수 없습니다');
     }
-    game.addBox();//테스트용
 
     const itemBox = game.getItemBoxById(itemBoxId);
     if (!itemBox) {
@@ -68,6 +67,7 @@ const playerOpenBoxHandler = ({ socket, sequence, payload }) => {
       //이 유저가 열고 있다는거 브로드캐스트
 
       room.broadcast(notification);
+      console.log("상자를 열었다!");
     }
 
 };

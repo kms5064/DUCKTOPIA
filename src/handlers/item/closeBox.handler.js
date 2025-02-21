@@ -56,6 +56,8 @@ const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
 
     itemBox.occupied = null;//점유 해제
 
+    console.log("상자를 닫았다!");
+
   } catch (error) {
     console.error(error);
     errorHandler(socket, error, config.packetType.S_PLAYER_CLOSE_BOX_NOTIFICATION);
