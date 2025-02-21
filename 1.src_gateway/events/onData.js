@@ -49,6 +49,10 @@ const onData = (socket) => async (data) => {
         break;
       }
       const packetType = packet.readUInt16BE(0);
+      if (packetType === config.packetType.C_MONSTER_MOVE_REQUEST[0]) {
+        console.log(packetType, '강제 리턴');
+        break;
+      }
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
       const proto = getProtoMessages().GamePacket;
