@@ -1,5 +1,6 @@
 import { config } from '../../config/config.js';
 import { gameSession, userSession } from '../../sessions/session.js';
+import CustomError from '../../utils/error/customError.js';
 
 const objectDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
   const { objectId, monsterId } = payload;
