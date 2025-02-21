@@ -1,6 +1,6 @@
-import { config } from '../../config/config';
-import { roomSession, userSession } from '../../sessions/session';
-import makePacket from '../../utils/packet/makePacket';
+import { config } from '../../config/config.js';
+import { roomSession, userSession } from '../../sessions/session.js';
+import makePacket from '../../utils/packet/makePacket.js';
 
 const coreDamaged = ({ socket, payload }) => {
   const { damage } = payload.damage;
