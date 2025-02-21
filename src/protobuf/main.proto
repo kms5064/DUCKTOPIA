@@ -347,7 +347,6 @@ message S2CErrorNotification {
 }
 
 //---- 2025.02.21 추가 : 오누리
-
 // 아이템 스폰/습득
 message S2CItemSpawnNotification {
   repeated Item items = 1; // 생성된 아이템 목록
