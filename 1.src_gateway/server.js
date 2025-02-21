@@ -19,7 +19,7 @@ const startServer = async () => {
 };
 
 const connectToLobbyServer = () => {
-  const lobbyServer = net.createConnection({ host: '127.0.0.1', port: 5557 }, () => {
+  const lobbyServer = net.createConnection({ host: '15.164.234.36', port: 5556 }, () => {
     console.log('로비서버와 연결되었습니다.');
     onLobbyConnection(lobbyServer);
   });
@@ -28,7 +28,7 @@ const connectToLobbyServer = () => {
 };
 
 const connectToGameServer = () => {
-  const gameServer = net.createConnection({ host: '127.0.0.1', port: 5558 }, () => {
+  const gameServer = net.createConnection({ host: '43.201.105.88', port: 5557 }, () => {
     console.log('게임서버와 연결되었습니다.');
     onGameConnection(gameServer);
   });
