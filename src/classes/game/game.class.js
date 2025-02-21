@@ -308,9 +308,8 @@ class Game {
     this.broadcast(packet);
   }
 
-  getItemBoxById(itemBoxId) {
-    return this.itemBoxes.get(itemBoxId);
-    //여기까지 몬스터 영역
+  getItemBoxById(objectId) {
+    return this.objects.get(objectId);
   }
 
   checkSpawnArea(monsterCode, x, y) {

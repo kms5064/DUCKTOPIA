@@ -54,6 +54,11 @@ class ItemBox {
     [this.itemList[index1], this.itemList[index2]] = [this.itemList[index2], this.itemList[index1]];
   }
 
+  setPosition(x,y){
+    this.x=x;
+    this.y=y;
+  }
+
 
 }
 
