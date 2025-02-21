@@ -56,24 +56,24 @@ export const PACKET_TYPE = {
   //---- 추가 완료
 
   // 몬스터
-  S_MONSTER_SPAWN_REQUEST: [8001, 'monsterSpawnRequest'],
-  C_MONSTER_SPAWN_RESPONSE: [8002, 'monsterSpawnResponse'],
-  S_MONSTER_WAVE_START_NOTIFICATION: [8003, 'monsterWaveStartNotification'],
-  S_MONSTER_AWAKE_NOTIFICATION: [8004, 'monsterAwakeNotification'],
-  S_MONSTER_DEATH_NOTIFICATION: [8005, 'monsterDeathNotification'],
-  C_MONSTER_MOVE_REQUEST: [8006, 'monsterMoveRequest'],
-  S_MONSTER_MOVE_NOTIFICATION: [8007, 'monsterMoveNotification'],
-  C_MONSTER_ATTACK_REQUEST: [8008, 'monsterAttackRequest'],
-  S_MONSTER_ATTACK_NOTIFICATION: [8009, 'monsterAttackNotification'],
-  S_MONSTER_HP_UPDATE_NOTIFICATION: [8010, 'monsterHpUpdateNotification'],
+  S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
+  C_MONSTER_SPAWN_RESPONSE: [5002, 'monsterSpawnResponse'],
+  S_MONSTER_WAVE_START_NOTIFICATION: [5003, 'monsterWaveStartNotification'],
+  S_MONSTER_AWAKE_NOTIFICATION: [5004, 'monsterAwakeNotification'],
+  S_MONSTER_DEATH_NOTIFICATION: [5005, 'monsterDeathNotification'],
+  C_MONSTER_MOVE_REQUEST: [5006, 'monsterMoveRequest'],
+  S_MONSTER_MOVE_NOTIFICATION: [5007, 'monsterMoveNotification'],
+  C_MONSTER_ATTACK_REQUEST: [5008, 'monsterAttackRequest'],
+  S_MONSTER_ATTACK_NOTIFICATION: [5009, 'monsterAttackNotification'],
+  S_MONSTER_HP_UPDATE_NOTIFICATION: [5010, 'monsterHpUpdateNotification'],
 
   // 코어
-  S_OBJECT_HP_UPDATE_NOTIFICATION: [9001, 'objectHpUpdateNotification'],
-  C_OBJECT_DAMAGED_BY_MONSTER_REQUEST: [9002, 'objectDamagedByMonsterRequest'],
-  S_GAME_OVER_NOTIFICATION: [9003, 'gameOverNotification'],
+  S_OBJECT_HP_UPDATE_NOTIFICATION: [6001, 'objectHpUpdateNotification'],
+  C_OBJECT_DAMAGED_BY_MONSTER_REQUEST: [6002, 'objectDamagedByMonsterRequest'],
+  S_GAME_OVER_NOTIFICATION: [6003, 'gameOverNotification'],
 
   // 에러
-  S_ERROR_NOTIFICATION: [10001, 'errorNotification'],
+  S_ERROR_NOTIFICATION: [7001, 'errorNotification'],
 
   // 낮 밤 전환
   S_GAME_PHASE_UPDATE_NOTIFICATION: [8001, 'gamePhaseUpdateNotification'],
