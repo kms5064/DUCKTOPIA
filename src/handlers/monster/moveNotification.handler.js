@@ -1,7 +1,6 @@
 import { config } from '../../config/config.js';
 import { roomSession, userSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
-import logger from '../../utils/winstonSetting.js';
 
 //몬스터의 움직임을 동기화하는 핸들러.
 //호스트 클라이언트에서 받은 움직임 정보를 여기에서 처리를 해주도록 하자.
@@ -34,7 +33,6 @@ const monsterMoveNotificationHandler = async ({ socket, payload }) => {
     game.notification(socket, packet);
   }
   catch (err) {
-    logger.error("에러 발생! monsterMoveNotificationHandler", { error: new Error(err) });
   }
 
 };

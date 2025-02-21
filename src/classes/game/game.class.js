@@ -140,11 +140,12 @@ class Game {
       // 몬스터 생성
       const monster = new Monster(
         monsterId,
-        data.monsterCode,
+        data.code,
         data.name,
         data.hp,
         data.attack,
         data.defence,
+        data.grade,
         data.range,
         data.speed,
         0,
