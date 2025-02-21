@@ -5,7 +5,7 @@ import { errorHandler } from '../utils/error/errorHandler.js';
 import onEnd from './onEnd.js';
 
 const onData = (socket) => async (data) => {
-  console.log('[클라이언트] 데이터 수신');
+  console.log(`[클라이언트] 데이터 수신 ${socket.id} 패킷 ${data}, `);
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
