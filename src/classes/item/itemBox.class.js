@@ -1,11 +1,10 @@
 import CustomError from '../../utils/error/customError.js';
 
-let idCount = 1;
 class ItemBox {
-  constructor(x, y) {
-    this.id = idCount++;
-    this.x = x;
-    this.y = y;
+  constructor(boxId) {
+    this.id = boxId;
+    this.x = 0;
+    this.y = 0;
     //this.type = type;
     //this.hp = ITEM_BOX_HP;
     this.itemList = Array.from({ length: 8 }, () => null);
@@ -33,9 +32,10 @@ class ItemBox {
       count = removedItem.stack;
       this.itemList.splice(removedItemIndex, 1, null);
       const item = player.addItem(itemCode, count,emptyIndex);
+      return item;
     }
     //player 인벤토리에 추가된 item반환
-    return item;
+    return removedItem;
   }
   //플레이어가 박스에 넣기
   putAnItem(player,itemCode, count,emptyIndex) {
@@ -52,6 +52,11 @@ class ItemBox {
 
   changeItemPos(index1, index2) {
     [this.itemList[index1], this.itemList[index2]] = [this.itemList[index2], this.itemList[index1]];
+  }
+
+  setPosition(x,y){
+    this.x=x;
+    this.y=y;
   }
 
 
