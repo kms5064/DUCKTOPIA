@@ -27,7 +27,7 @@ class UserSession {
   /* 세션에 유저 추가시키는 메서드 */
   addUser(socket) {
     const newUser = new User(socket);
-    socket.id = this.id
+    socket.id = this.id;
     this.users.set(socket.id, newUser);
     console.log(`신규 유저 접속 : ${socket.remoteAddress}:${socket.remotePort}`);
     this.id += 1;
@@ -37,8 +37,8 @@ class UserSession {
   /* 나간 유저 세션에서 제거하는 메서드 */
   deleteUser(socket) {
     const user = this.users.get(socket);
-    this.users.delete(socket)
     this.logins.delete(user.email);
+    this.users.delete(socket);
   }
 
   /* 특정 유저 조회하는 메서드 */

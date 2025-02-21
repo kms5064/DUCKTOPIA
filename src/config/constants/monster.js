@@ -4,12 +4,12 @@ export const MAX_SPAWN_COUNT = 100;
 
 export const NORMAL_MONSTER_MAX_CODE = 8;
 
-export const WAVE_MAX_MONSTER_COUNT = 5;
+export const WAVE_MAX_MONSTER_COUNT = 20;
 
 export const WAVE_MONSTER_MIN_CODE = 101;
 export const WAVE_MONSTER_MAX_CODE = 103;
 
-export const MIN_COOLTIME_MONSTER_TRACKING = 5000;//추적 쿨타임 기본값
-export const MIN_COOLTIME_MONSTER_AWAKING = 5000;//인식 쿨타임 기본값
-export const RANGE_COOLTIME_MONSTER_TRACKING = 4000;//추적 쿨타임의 범위
-export const RANGE_COOLTIME_MONSTER_AWAKING = 4000;//인식 쿨타임의 범위
+export const MIN_COOLTIME_MONSTER_TRACKING = 5000; //추적 쿨타임 기본값
+export const MIN_COOLTIME_MONSTER_AWAKING = 5000; //인식 쿨타임 기본값
+export const RANGE_COOLTIME_MONSTER_TRACKING = 4000; //추적 쿨타임의 범위
+export const RANGE_COOLTIME_MONSTER_AWAKING = 4000; //인식 쿨타임의 범위
