@@ -37,8 +37,8 @@ class UserSession {
   /* 나간 유저 세션에서 제거하는 메서드 */
   deleteUser(socket) {
     const user = this.users.get(socket);
-    this.users.delete(socket);
     this.logins.delete(user.email);
+    this.users.delete(socket);
   }
 
   /* 특정 유저 조회하는 메서드 */

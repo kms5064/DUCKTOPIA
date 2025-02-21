@@ -1,5 +1,5 @@
 import { config } from '../config/config.js';
-import attackPlayerHandler from './player/attackPlayer.handler.js';
+import attackPlayerHandler from './player/playerAttack.handler.js';
 import createRoomHandler from './room/createRoom.handler.js';
 import getRoomListHandler from './room/getRoomList.handler.js';
 import joinRoomHandler from './room/joinRoom.handler.js';
@@ -9,12 +9,12 @@ import signUpHandler from './user/signUp.handler.js';
 import gameStartHandler from './game/startGame.handler.js';
 import gamePrepareReqHandler from './game/gamePrepareReq.handler.js';
 import updateLocationHandler from './player/updateLocation.handler.js';
-import attackPlayerMonsterHandler from './player/attackPlayerMonster.handler.js';
+import attackPlayerMonsterHandler from './player/playerAttackMonster.handler.js';
 import waveStartHandler from './game/waveStart.handler.js';
-import AttackByPlayerHandler from './monster/attackByPlayer.handler.js';
+import monsterAttackHandler from './monster/monsterAttack.handler.js';
 import monsterMoveNotificationHandler from './monster/moveNotification.handler.js';
-import weaponPlayerHandler from './player/weaponPlayer.handler.js';
-import playerDamagedByMonsterHandler from './monster/playerDamagedByMonster.js';
+import weaponPlayerHandler from './player/equipWeapon.handler.js';
+import playerDamagedByMonsterHandler from './player/playerDamagedByMonster.js';
 import playerOpenBoxHandler from './item/openBox.handler.js';
 import playerTakeOutAnItemHandler from './item/takeOutAnItem.handler.js';
 import playerPutAnItemHandler from './item/putAnItem.handler.js';
@@ -34,7 +34,7 @@ const handlers = {
   [config.packetType.PREPARE_GAME_REQUEST[0]]: gamePrepareReqHandler,
   [config.packetType.C_PLAYER_ATTACK_MONSTER_REQUEST[0]]: attackPlayerMonsterHandler,
   [config.packetType.C_MONSTER_SPAWN_RESPONSE[0]]: waveStartHandler,
-  [config.packetType.C_MONSTER_ATTACK_REQUEST[0]]: AttackByPlayerHandler,
+  [config.packetType.C_MONSTER_ATTACK_REQUEST[0]]: monsterAttackHandler,
   [config.packetType.C_MONSTER_MOVE_REQUEST[0]]: monsterMoveNotificationHandler,
   [config.packetType.C_PLAYER_USE_ITEM_REQUEST[0]]: weaponPlayerHandler,
   [config.packetType.C_PLAYER_OPEN_BOX_REQUEST[0]]: playerOpenBoxHandler,

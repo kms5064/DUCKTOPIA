@@ -9,11 +9,20 @@ const monsterMoveNotificationHandler = async ({ socket, payload }) => {
 
   //플레이어가 어떤 게임에 속해 있는지 찾기
   const user = userSession.getUser(socket.id);
-  const game = roomSession.getRoom(user.getRoomId()).getGame();
+
+  /**게임이 사라지거나 했을 때는 인식하지 못하도록 한다. */
+  const findRoom = roomSession.getRoom(user.getRoomId());
+
+  if (!findRoom || findRoom === null) {
+    return;
+  }
+  const game = findRoom.getGame();
 
   for (let i = 0; i < monsterPositionData.length; i++) {
     const monster = game.getMonsterById(monsterPositionData[i].monsterId);
     if (!monster) continue;
+
+
     monster.setPosition(monsterPositionData[i].x, monsterPositionData[i].y);
   }
 

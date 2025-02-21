@@ -213,7 +213,7 @@ class Game {
     this.monsterDisCovered();
     //몬스터y가 플레이어를 가지고 있을 경우 움직인다.
     //this.monsterMove();
-    this.monsterTimeCheck();
+    //this.monsterTimeCheck();
 
     //몬스터의 사망 판정도 체크해 보도록 하자.
 
@@ -229,17 +229,7 @@ class Game {
       let distance = Infinity;
       let inputId = 0;
       let inputPlayer = null;
-      if (!monster.hasPriorityPlayer()) {
-        //플레이어를 쫒다가 시간 되어 풀렸을 때 쿨타임이 걸리고
-        //인식 쿨타임이 남아 있는 몬스터는 체크 제외
-        if (!monster.AwakeCoolTimeCheck()) {
-          monsterDiscoverPayload.push({
-            monsterId: monsterId,
-            targetId: 0,
-          });
-          continue;
-        }
-
+      if (!monster.hasTargetPlayer()) {
         //몬스터가 죽었을 때, hp가 0인데 반응이 나올 수 있으니 체크
         if (monster.monsterDeath()) {
           this.monsters.delete(monsterId);
@@ -260,17 +250,44 @@ class Game {
         if (inputPlayer === null || inputPlayer.hp <= 0) continue;
 
         monster.setTargetPlayer(inputPlayer);
-        monster.setMonsterTrackingTime(5000);
+        //monster.setMonsterTrackingTime(5000);
         monsterDiscoverPayload.push({
           monsterId: monsterId,
           targetId: inputId,
         });
-      } else if (monster.lostPlayer()) {
-        monsterDiscoverPayload.push({
-          monsterId: monsterId,
-          targetId: 0,
-        });
+      } else {
+        if (monster.lostPlayer()) {
+          monsterDiscoverPayload.push({
+            monsterId: monsterId,
+            targetId: 0,
+          });
+          continue;
+        }
+        distance = monster.getDistanceByPlayer();
+
+        for (const [playerId, player] of this.players) {
+          // 대상 찾아보기
+          const calculatedDistance = monster.returnCalculateDistance(player);
+
+          if (distance > calculatedDistance) {
+            distance = calculatedDistance;
+            inputId = playerId;
+            inputPlayer = player;
+          }
+        }
+
+        if (inputPlayer !== null) {
+          //타겟이 바뀌었을 때
+          monster.setTargetPlayer(inputPlayer);
+          monsterDiscoverPayload.push({
+            monsterId: monsterId,
+            targetId: inputId
+          })
+        }
+
+
       }
+
     }
 
     const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, {
@@ -288,7 +305,7 @@ class Game {
 
     for (const [monsterId, monster] of this.monsters) {
       const monsterPos = monster.getPosition();
-      const targetId = monster.getPriorityPlayer();
+      const targetId = monster.gettargetPlayer();
 
       const monsterMoverPayload = {
         monsterId: monsterId,
@@ -457,7 +474,7 @@ class Game {
       const codeIdx =
         Math.floor(
           Math.random() *
-            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
+          (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
         ) + config.game.monster.waveMonsterMinCode;
 
       this.monsterIndex++; //Index 증가

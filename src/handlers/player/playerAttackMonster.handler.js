@@ -49,31 +49,35 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
     throw new CustomError(`Monster ID : ${monsterId}는 존재하지 않습니다.`);
   }
 
-  // 몬스터 HP 차감 처리
-  const damage = player.getPlayerAtkDamage();
-  const currHp = monster.setDamaged(damage);
+  if (monster && player) {
+    // 몬스터 HP 차감 처리
+    const damage = player.getPlayerAtkDamage();
+    const currHp = monster.setDamaged(damage);
 
-  // console.log(monsterId, ' HP: ', currHp);
+    // console.log(monsterId, ' HP: ', currHp);
 
-  // 패킷 생성
-  packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
-    monsterId,
-    hp: currHp,
-  });
-
-  // broadcast - 모든 플레이어들에게 전달
-  game.broadcast(packet);
-
-  if (currHp <= 0) {
-    // 몬스터 사망 처리
-    game.removeMonster(monsterId);
-
-    console.log(monsterId, ' 번 몬스터 죽음');
-
-    packet = makePacket(config.packetType.S_MONSTER_DEATH_NOTIFICATION, {
+    // 패킷 생성
+    packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
       monsterId,
+      hp: currHp,
     });
+
+    // broadcast - 모든 플레이어들에게 전달
     game.broadcast(packet);
+
+    if (currHp <= 0) {
+      // 몬스터 사망 처리
+      game.removeMonster(monsterId);
+
+      console.log(monsterId, ' 번 몬스터 죽음');
+
+      packet = makePacket(config.packetType.S_MONSTER_DEATH_NOTIFICATION, {
+        monsterId,
+      });
+      game.broadcast(packet);
+    }
+  } else {
+    console.log('이게 왜됌?')
   }
 };
 
