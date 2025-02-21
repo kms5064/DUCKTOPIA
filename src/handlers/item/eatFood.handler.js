@@ -49,7 +49,7 @@ const eatFoodHandler = ({ socket, payload }) => {
   }
 
   // 7. 허기짐 스탯 증가 및 아이템 제거
-  player.changePlayerHunger(existingFood.hunger);
+  player.addPlayerHunger(existingFood.hunger);
   player.removeItem(itemId);
 
   // 8. 응답 패킷 전송
