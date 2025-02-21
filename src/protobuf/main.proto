@@ -297,7 +297,9 @@ message S2CObjectHpUpdateNotification { // 코어 Id=0;
 }
 
 // 아이템 박스
-message C2SPlayerOpenBoxRequest { int32 itemBoxId = 1; }
+message C2SPlayerOpenBoxRequest { 
+  int32 itemBoxId = 1; 
+}
 
 message S2CPlayerOpenBoxNotification {
   int32 playerId = 1;
@@ -362,25 +364,25 @@ message C2SPlayerGetItemRequest {
 message S2CPlayerGetItemNotification {
   bool success = 1;        // 습득 성공 여부
   string message = 2;      // 결과 메시지
-  Item item = 3; // 습득한 아이템 목록
+  Item item = 3; // 습득한 아이템 목록 
   int32 playerId = 4;      // 플레이어 ID
 }
 
 // 아이템 사용
 message C2SPlayerUseItemRequest {
-  ItemData ItemData = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은 소모)
+  ItemData ItemData = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은 소모) //itemid ->itemdata
 }
 
 message S2CPlayerEatFoodResponse { // 사용한 아이템이 식량일 때
   bool success = 1;
-  ItemData ItemData = 2;
+  ItemData ItemData = 2;//itemid ->itemdata
   int32 playerId = 3;
   int32 hunger = 4;
 }
 
 message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
   bool success = 1;
-  ItemData ItemData = 2;
+  ItemData ItemData = 2;//itemid ->itemdata
   int32 playerId = 3;
 }
 //---- 추가 완료
