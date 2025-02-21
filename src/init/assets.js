@@ -27,11 +27,11 @@ const readFileAsync = (filename) => {
 
 export const loadGameAssets = async () => {
   try {
-    const [food, dropTable, monster, weapon] = await Promise.all([
+    const [food, weapon,monster, dropTable] = await Promise.all([
       readFileAsync('food.json'),
       readFileAsync('weapon.json'),
-      readFileAsync('dropTable.json'),
       readFileAsync('monster.json'),
+      readFileAsync('dropTable.json'),
     ]);
     gameAssets = { food, dropTable, monster, weapon };
     return gameAssets;

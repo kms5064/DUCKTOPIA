@@ -81,10 +81,11 @@ message ObjectData {
 }
 
 message ObjectPositionData {
-  ObjectData objectData = 1;
-  repeated ItemData itemData = 2;
-  float x = 3;
-  float y = 4;
+  int32 objectId = 1;
+  int32 objectCode = 2;
+  repeated ItemData itemData = 3;
+  float x = 4;
+  float y = 5;
 }
 
 // 인증 관련
@@ -274,6 +275,12 @@ message S2CMonsterAttackNotification { // 몬스터 공격 모든 클라이언�
   int32 targetId = 3;
 }
 
+message C2SPlayerDamagedByMonsterRequest {
+  int32 playerId = 1;
+  int32 monsterId = 2;
+}
+
+
 message S2CMonsterHpUpdateNotification // 몬스터 체력 감소
 {
   int32 monsterId = 1;
@@ -324,11 +331,6 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
   bool success = 1;
   int32 itemId = 2;
   int32 playerId = 3;
-}
-
-message C2SPlayerDamagedByMonsterRequest {
-  int32 playerId = 1;
-  int32 monsterId = 2;
 }
 
 // 아이템 박스 시스템
