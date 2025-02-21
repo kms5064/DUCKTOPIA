@@ -16,8 +16,9 @@ const onData = (socket) => async (data) => {
   const payloadLengthByte = config.header.payloadLengthByte;
   let payloadByte = 0;
   const defaultLength = packetTypeByte + versionLengthByte;
-
+  let idx = 1;
   while (socket.buffer.length >= defaultLength) {
+    console.log(idx++);
     try {
       try {
         versionByte = socket.buffer.readUInt8(packetTypeByte);
