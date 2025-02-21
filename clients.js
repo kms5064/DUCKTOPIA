@@ -184,18 +184,12 @@ const customTest = async (client_count = 1) => {
       // Lobby 서버 연결
       const client = new Client(id, password, name, '43.200.174.138', 5555);
 
-      await client.registerRequest();
-      await client.delay(3);
-      await client.loginRequest();
-      await client.delay(3);
-      await client.createRoomRequest();
-
-      await client.end();
+      await client.socket.write(buffer);
     }),
   );
 };
 
 // 테스트 실행문
 await loadProtos().then(() => {
-  customTest(300);
+  customTest(1000);
 });
