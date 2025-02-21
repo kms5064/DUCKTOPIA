@@ -2,6 +2,7 @@ import { config } from '../config/config.js';
 import handlers from '../handlers/index.js';
 import { getProtoMessages } from '../init/loadProtos.js';
 import { errorHandler } from '../utils/error/errorHandler.js';
+import onEnd from './onEnd.js';
 
 const onData = (socket) => async (data) => {
   console.log('[클라이언트] 데이터 수신');
@@ -16,9 +17,16 @@ const onData = (socket) => async (data) => {
 
   while (socket.buffer.length >= defaultLength) {
     try {
+      try {
+        versionByte = socket.buffer.readUInt8(packetTypeByte);
+        payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
+      } catch(err) {
+        console.log("길이 오류 패킷 발생")
+        onEnd(socket)();
+        break
+      }
       // 가변 길이 확인
-      versionByte = socket.buffer.readUInt8(packetTypeByte);
-      payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
+
       const headerLength = defaultLength + versionByte + payloadLengthByte;
 
       // buffer의 길이가 충분한 동안 실행
@@ -29,7 +37,11 @@ const onData = (socket) => async (data) => {
 
       // 값 추출 및 버전 검증
       const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
-      if (version !== config.client.version) continue;
+      if (version !== config.client.version) {
+        console.log("형식 오류 패킷 발생")
+        onEnd(socket)();
+        break;
+      }
       const packetType = packet.readUInt16BE(0);
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
