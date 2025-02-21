@@ -448,7 +448,7 @@ class Game {
     // 랜덤 아이템 생성 및 박스에 추가
     const items = this.itemManager.generateRandomItems();
     items.forEach((item,index) => {
-      itemBox.itemList.splice(index,1,{itemCode:item.code, count:item.stack});
+      itemBox.itemList.splice(index,1,{itemCode:item.code,count:item.count});
     });
 
     const data = {
