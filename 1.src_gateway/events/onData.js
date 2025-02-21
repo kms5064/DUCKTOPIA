@@ -17,9 +17,10 @@ const onData = (socket) => async (data) => {
   let payloadByte = 0;
   const defaultLength = packetTypeByte + versionLengthByte;
   let idx = 1;
-  while (socket.buffer.length >= defaultLength) {
-    console.log(idx++);
-    try {
+
+  try {
+    while (socket.buffer.length >= defaultLength) {
+      console.log(idx++);
       try {
         versionByte = socket.buffer.readUInt8(packetTypeByte);
         payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
@@ -62,9 +63,9 @@ const onData = (socket) => async (data) => {
       const payload = gamePacket[gamePacket.payload];
 
       await handler({ socket, payload, packetType });
-    } catch (error) {
-      errorHandler(socket, error);
     }
+  } catch (e) {
+    errorHandler(socket, e);
   }
 };
 
