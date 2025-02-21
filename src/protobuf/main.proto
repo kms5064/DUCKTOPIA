@@ -1,7 +1,6 @@
 syntax = 'proto3';
 
 // 기본 구조
-
 message PlayerPositionData {
   int32 playerId = 1;
   float x = 2;
@@ -56,24 +55,37 @@ message MonsterPositionData {
   float y = 4;
 }
 
-message itemData {
-  int32 itemId = 1;
+message ItemData {
+  int32 itemCode = 1;
   int32 count = 2;
 }
 
 message ObjectData {
   int32 objectId = 1;
   int32 objectCode = 2;
-  repeated itemData itemData = 3;
+  repeated ItemData itemData = 3;
 }
 
 message ObjectPositionData {
   int32 objectId = 1;
   int32 objectCode = 2;
-  repeated itemData itemData = 3;
+  repeated ItemData itemData = 3;
   float x = 4;
   float y = 5;
 }
+
+//---- 2025.02.21 추가 : 오누리
+message Position {
+  float x = 1;
+  float y = 2;
+}
+
+message Item {
+  int32 id = 1;          // 아이템 고유 식별자 ID
+  Position position = 2; // 아이템 위치
+  ItemData itemData = 3; // 아이템 정보
+}
+//---- 추가 완료
 
 // 통신 Payload
 message C2SRegisterRequest // 회원가입
@@ -216,28 +228,6 @@ message S2CPlayerDeathNotification { // 플레이어가 사망했을 때
   int32 playerId = 1;
 }
 
-message S2CPlayerGetItemRequest {
-  int32 playerId = 1;
-  int32 itemId = 2;
-}
-
-message C2SPlayerUseItemRequest { // 아이템 사용 요청
-  int32 itemId = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은 소모)
-}
-
-message S2CPlayerEatFoodResponse { // 사용한 아이템이 식량일 때
-  bool success = 1;
-  int32 itemId = 2;
-  int32 playerId = 3;
-  int32 hunger = 4;
-}
-
-message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
-  bool success = 1;
-  int32 itemId = 2;
-  int32 playerId = 3;
-}
-
 message C2SPlayerDamagedByMonsterRequest {
   int32 playerId = 1;
   int32 monsterId = 2;
@@ -253,7 +243,8 @@ message C2SMonsterSpawnResponse { // 몬스터 좌표를 찍어서 서버에 전
   repeated MonsterPositionData monsters = 1;
 }
 
-message S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
+message
+S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
   repeated MonsterPositionData monsters = 1;
 }
 
@@ -293,7 +284,6 @@ message S2CMonsterHpUpdateNotification // 몬스터 체력 감소
   int32 hp = 2;
 }
 
-
 // 코어
 
 message C2SObjectDamagedByMonsterRequest {
@@ -306,58 +296,49 @@ message S2CObjectHpUpdateNotification { // 코어 Id=0;
   int32 hp = 2;
 }
 
+// 아이템 박스
+message C2SPlayerOpenBoxRequest { int32 itemBoxId = 1; }
 
-//아이템 박스
-message C2SPlayerOpenBoxRequest{
-  int32 itemBoxId =1;
+message S2CPlayerOpenBoxNotification {
+  int32 playerId = 1;
+  int32 itemBoxId = 2;
+  repeated ItemData itemData = 3;
 }
 
-message S2CPlayerOpenBoxNotification{
-  int32 playerId =1;
-  int32 itemBoxId =2;
-  repeated itemData itemData =3;
+message C2SPlayerTakeOutAnItemRequest {
+  int32 itemBoxId = 1;
+  int32 itemType = 2;
+  int32 count = 3;
 }
 
-message C2SPlayerTakeOutAnItemRequest{
-  int32 itemBoxId =1;
-  int32 itemType =2;
-  int32 count =3;
+message S2CPlayerTakeOutAnItemNotification {
+  int32 playerId = 1;
+  int32 itemBoxId = 2;
+  ItemData itemData = 3;
+  bool success = 4;
 }
 
-message S2CPlayerTakeOutAnItemNotification{
-  int32 playerId =1;
-  int32 itemBoxId =2;
-  itemData itemData=3;
-  int32 count =4;
-  bool success =5;
+message C2SPlayerPutAnItemRequest {
+  int32 itemBoxId = 1;
+  int32 itemType = 2;
+  int32 count = 3;
 }
 
-message C2SPlayerPutAnItemRequest{
-  int32 itemBoxId =1;
-  int32 itemType =2;
-  int32 count =3;
+message S2CPlayerPutAnItemNotification {
+  int32 playerId = 1;
+  int32 itemBoxId = 2;
+  ItemData itemData = 3;
+  bool success = 4;
 }
 
-message S2CPlayerPutAnItemNotification{
-  int32 playerId =1;
-  int32 itemBoxId =2;
-  itemData itemData=3;
-  int32 count =4;
-  bool success =5;
+message C2SPlayerCloseBoxRequest { int32 itemBoxId = 1; }
+
+message S2CPlayerCloseBoxNotification {
+  int32 playerId = 1;
+  int32 itemBoxId = 2;
 }
 
-message C2SPlayerCloseBoxRequest{
-  int32 itemBoxId =1;
-}
-
-message S2CPlayerCloseBoxNotification{
-  int32 playerId =1;
-  int32 itemBoxId =2;
-}
-
-message S2CGameOverNotification {
-
-}
+message S2CGameOverNotification {}
 
 // 에러
 message S2CErrorNotification {
@@ -365,6 +346,42 @@ message S2CErrorNotification {
   int64 timestamp = 2;
 }
 
+//---- 2025.02.21 추가 : 오누리
+// 아이템 스폰/습득
+message S2CItemSpawnNotification {
+  repeated Item items = 1; // 생성된 아이템 목록
+}
+
+message C2SPlayerGetItemRequest {
+  int32 itemId = 1;   // 습득할 아이템 식별자 ID
+  int32 playerId = 2; // 플레이어 ID
+}
+
+message S2CPlayerGetItemNotification {
+  bool success = 1;        // 습득 성공 여부
+  string message = 2;      // 결과 메시지
+  repeated Item items = 3; // 습득한 아이템 목록
+  int32 playerId = 4;      // 플레이어 ID
+}
+
+// 아이템 사용
+message C2SPlayerUseItemRequest {
+  int32 itemId = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은 소모)
+}
+
+message S2CPlayerEatFoodResponse { // 사용한 아이템이 식량일 때
+  bool success = 1;
+  int32 itemId = 2;
+  int32 playerId = 3;
+  int32 hunger = 4;
+}
+
+message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
+  bool success = 1;
+  int32 itemId = 2;
+  int32 playerId = 3;
+}
+//---- 추가 완료
 
 message GamePacket {
   oneof payload {
@@ -394,7 +411,7 @@ message GamePacket {
     S2CGameStartResponse gameStartResponse = 19;
     S2CGameStartNotification gameStartNotification = 20;
 
-    // 플레이어 
+    // 플레이어
     C2SPlayerPositionUpdateRequest playerPositionUpdateRequest = 21;
     S2CPlayerPositionUpdateNotification playerPositionUpdateNotification = 22;
     S2CPlayerHpUpdateNotification playerHpUpdateNotification = 23;
@@ -402,10 +419,6 @@ message GamePacket {
     C2SPlayerAttackMonsterRequest playerAttackMonsterRequest = 25;
     S2CPlayerAttackNotification playerAttackNotification = 26;
     S2CPlayerDeathNotification playerDeathNotification = 27;
-    S2CPlayerGetItemRequest playerGetItemRequest = 28;
-    C2SPlayerUseItemRequest playerUseItemRequest = 29;
-    S2CPlayerEatFoodResponse playerEatFoodResponse = 30;
-    S2CPlayerEquipWeaponResponse playerEquipWeaponResponse = 31;
     C2SPlayerDamagedByMonsterRequest playerDamagedByMonsterRequest = 45;
     C2SPlayerOpenBoxRequest playerOpenBoxRequest = 46;
     S2CPlayerOpenBoxNotification playerOpenBoxNotification = 47;
@@ -440,5 +453,14 @@ message GamePacket {
 
     // 낮 밤 전환
     S2CGamePhaseUpdateNotification gamePhaseUpdateNotification = 101;
+
+    //---- 2025.02.21 추가 : 오누리
+    S2CItemSpawnNotification itemSpawnNotification = 102;
+    C2SPlayerGetItemRequest playerGetItemRequest = 103;
+    S2CPlayerGetItemNotification playerGetItemNotification = 104;
+    C2SPlayerUseItemRequest playerUseItemRequest = 105;
+    S2CPlayerEatFoodResponse playerEatFoodResponse = 106;
+    S2CPlayerEquipWeaponResponse playerEquipWeaponResponse = 107;
+    //---- 추가 완료
   }
 }
