@@ -15,9 +15,9 @@ const onData = (socket) => async (data) => {
   let payloadByte = 0;
   const defaultLength = packetTypeByte + versionLengthByte;
 
-  let i = 0;
   while (socket.buffer.length >= defaultLength) {
     try {
+
       try {
         versionByte = socket.buffer.readUInt8(packetTypeByte);
         payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
@@ -33,6 +33,8 @@ const onData = (socket) => async (data) => {
       // buffer의 길이가 충분한 동안 실행
       if (socket.buffer.length < headerLength + payloadByte) continue;
       const packet = socket.buffer.subarray(0, headerLength + payloadByte);
+      console.log(`현재 ${packet.readUInt16BE(0)}의 packet 길이 ${headerLength + payloadByte} 입니다.`)
+
       // 남은 패킷 buffer 재할당
       socket.buffer = socket.buffer.subarray(headerLength + payloadByte);
 
@@ -44,7 +46,6 @@ const onData = (socket) => async (data) => {
         break;
       }
       const packetType = packet.readUInt16BE(0);
-      console.log(`현재 ${packetType}의 packet 길이 ${headerLength + payloadByte}가 ${i}번째 잘리는 중입니다.`)
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
       const proto = getProtoMessages().GamePacket;
@@ -53,7 +54,6 @@ const onData = (socket) => async (data) => {
       const payload = gamePacket[gamePacket.payload];
 
       await handler({ socket, payload, packetType });
-      i++ 
     } catch (error) {
       errorHandler(socket, error);
     }
