@@ -35,7 +35,7 @@ const onData = (socket) => async (data) => {
 
       // buffer의 길이가 충분한 동안 실행
       // console.log(idx++, 'bufer Leng:', socket.buffer.length);
-      if (socket.buffer.length < headerLength + payloadByte) continue;
+      if (socket.buffer.length < headerLength + payloadByte) break;
       const packet = socket.buffer.subarray(0, headerLength + payloadByte);
       console.log(
         `현재 ${packet.readUInt16BE(0)}의 packet 길이 ${headerLength + payloadByte} 입니다.`,
