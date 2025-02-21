@@ -353,7 +353,9 @@ class Game {
 
     objectData.push(coreData);
 
-    // 2. 장애물 추가
+    // TODO 2. 아이템 박스 추가
+
+    // 3. 장애물 추가
     objectData.push(...this.createObstacle());
 
     return objectData;
@@ -367,7 +369,7 @@ class Game {
     for (let i = 0; i < 5; i++) {
       obstacleData.push({
         objectId: this.objectId,
-        objectCode: 2,
+        objectCode: 3,
       });
 
       const object = new Object(this.objectId);
@@ -389,6 +391,10 @@ class Game {
 
       obj.setPosition(pos.x, pos.y);
     }
+  }
+
+  removeObject(id) {
+    this.object.delete(id);
   }
 
   // 아이템 박스 생성

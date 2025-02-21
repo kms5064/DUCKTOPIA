@@ -1,4 +1,5 @@
 import { config } from '../../config/config.js';
+import makePacket from '../../utils/packet/makePacket.js';
 
 class Object {
   constructor(id) {
@@ -13,12 +14,23 @@ class Object {
     this.y = y;
   }
 
-  takeDamage(damage) {
+  takeDamage(damage, game) {
     this.hp -= damage;
 
     if (this.hp <= 0) {
       this.hp = 0;
-      // TODO 오브젝트 제거 처리
+    }
+
+    const objectHpPacket = makePacket(config.packetType.S_OBJECT_HP_UPDATE_NOTIFICATION, {
+      objectId: this.id,
+      hp: this.hp,
+    });
+
+    game.broadcast(objectHpPacket);
+
+    // 오브젝트 제거 처리
+    if (this.hp === 0) {
+      game.removeObject(this.id);
     }
   }
 }
