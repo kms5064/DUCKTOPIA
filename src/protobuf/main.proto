@@ -358,10 +358,10 @@ message C2SPlayerGetItemRequest {
 }
 
 message S2CPlayerGetItemNotification {
-  bool success = 1;        // 습득 성공 여부
-  string message = 2;      // 결과 메시지
-  repeated Item items = 3; // 습득한 아이템 목록
-  int32 playerId = 4;      // 플레이어 ID
+  bool success = 1;   // 습득 성공 여부
+  string message = 2; // 결과 메시지
+  Item item = 3; // 습득한 아이템 (repeated items -> item으로 변경)
+  int32 playerId = 4; // 플레이어 ID
 }
 
 // 아이템 사용
