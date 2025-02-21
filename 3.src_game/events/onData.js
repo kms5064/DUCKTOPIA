@@ -2,6 +2,7 @@ import { config } from '../config/config.js';
 import handlers from '../handlers/index.js';
 import { getProtoMessages } from '../init/loadProtos.js';
 import { errorHandler } from '../utils/error/errorHandler.js';
+import { formatDate } from '../utils/dateFormatter.js';
 
 const onData = (socket) => async (data) => {
   console.log(`${formatDate(new Date())} [게이트웨이 -> 게임] 데이터 수신`);
