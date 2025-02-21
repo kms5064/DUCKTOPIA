@@ -11,13 +11,12 @@ import {
 } from '../../config/constants/monster.js';
 import ItemBox from '../item/itemBox.class.js';
 import ItemManager from '../item/itemManager.class.js';
-
 class Game {
   constructor(ownerId) {
     this.players = new Map();
     this.monsterIndex = 1;
     this.monsters = new Map();
-    // this.itemBoxes = new Map();
+    this.itemBoxes = new Map();
     this.object = new Map();
     this.map = []; // 0과 1로 된 2차원배열?
     this.coreHp = config.game.core.maxHP;
@@ -33,11 +32,25 @@ class Game {
     this.dayCounter = 0;
     this.waveMonsters = new Map();
 
-    // 아이템 관리
-    this.itemManager = new ItemManager();
+    // Zone
+    this.zone = [
+      { distance: 10.0, area: 1 }, // 중앙 근접 구역
+      { distance: 20.0, area: 2 }, // 두 번째 구역
+      { distance: 30.0, area: 3 }, // 세 번째 구역
+    ];
+
+    // 몬스터 스폰 구역
+    this.monsterArea = {
+      1: [1, 2, 3], // 중앙 근접 1
+      2: [4, 5, 6], // 중앙 근접 2
+      3: [7, 8], // 중앙 근접 3
+    };
 
     //몬스터 쿨타임
     this.monsterLastUpdate = Date.now();
+
+    // 아이템 관리 : 2025.02.21 추가
+    this.itemManager = new ItemManager();
   }
 
   /**************
@@ -87,8 +100,7 @@ class Game {
   }
 
   getPlayerBySocket(socket) {
-    const player = this.players.find((player) => player.user.socket === socket);
-    return player;
+    return this.players.find((player) => player.user.socket === socket);
   }
   removePlayer(userId) {
     this.players.delete(userId);
@@ -98,6 +110,15 @@ class Game {
     return this.players.get(userId);
   }
 
+  userUpdate() {
+    for (const player of this.players) {
+      //console.log(player.x, player.y);
+    }
+  }
+
+  /**************
+   * MONSTER
+   */
   createMonsterData() {
     const monsterData = [];
 
@@ -119,7 +140,7 @@ class Game {
       // 몬스터 생성
       const monster = new Monster(
         monsterId,
-        data.code,
+        data.monsterCode,
         data.name,
         data.hp,
         data.attack,
@@ -174,6 +195,8 @@ class Game {
     }
   }
 
+  //여기부터 몬스터 영역
+
   removeAllMonster() {
     this.monsters.clear();
     this.waveMonsters.clear();
@@ -185,8 +208,9 @@ class Game {
 
   monsterUpdate() {
     //몬스터가 플레이어의 거리를 구해서 발견한다.
+    //몬스터의 거리가 너무 멀어지면 id값을 0이나 -1을
     this.monsterDisCovered();
-    //몬스터가 플레이어를 가지고 있을 경우 움직인다.
+    //몬스터y가 플레이어를 가지고 있을 경우 움직인다.
     //this.monsterMove();
     //this.monsterTimeCheck();
 
@@ -196,9 +220,10 @@ class Game {
     this.monsterLastUpdate = Date.now();
   }
 
+  //현재는 각각의 몬스터의 정보를 단일로 보내고 있지만 나중에는 리스트를 통해 보내는 걸 생각해 보도록 하자.
   monsterDisCovered() {
     const monsterDiscoverPayload = [];
-    for (const [key, monster] of this.monsters) {
+    for (const [monsterId, monster] of this.monsters) {
       // 대상이 없는 몬스터만
       let distance = Infinity;
       let inputId = 0;
@@ -206,7 +231,7 @@ class Game {
       if (!monster.hasTargetPlayer()) {
         //몬스터가 죽었을 때, hp가 0인데 반응이 나올 수 있으니 체크
         if (monster.monsterDeath()) {
-          this.monsters.delete(key);
+          this.monsters.delete(monsterId);
           continue;
         }
 
@@ -226,13 +251,13 @@ class Game {
         monster.setTargetPlayer(inputPlayer);
         //monster.setMonsterTrackingTime(5000);
         monsterDiscoverPayload.push({
-          monsterId: key,
+          monsterId: monsterId,
           targetId: inputId,
         });
       } else {
         if (monster.lostPlayer()) {
           monsterDiscoverPayload.push({
-            monsterId: key,
+            monsterId: monsterId,
             targetId: 0,
           });
           continue;
@@ -254,7 +279,7 @@ class Game {
           //타겟이 바뀌었을 때
           monster.setTargetPlayer(inputPlayer);
           monsterDiscoverPayload.push({
-            monsterId: key,
+            monsterId: monsterId,
             targetId: inputId,
           });
         }
@@ -270,39 +295,27 @@ class Game {
 
   //플레이어가 등록된 몬스터들만 위치 패킷을 전송하는 게 좋겠다.
   //플레이어 타겟이 정해져 있지 않다면 무조건 코어 쪽으로 이동시키도록 한다.
+  //
   monsterMove() {
     const monsterMoveList = [];
 
     for (const [monsterId, monster] of this.monsters) {
-      if (!monster.hasPriorityPlayer()) {
-        const monsterPos = monster.getPosition();
-        const distanceFromCore = Math.sqrt(Math.pow(monsterPos.x, 2) + Math.pow(monsterPos.y, 2));
-        const direct_x = (monsterPos.x / distanceFromCore) * monster.getSpeed();
-        const direct_y = (monsterPos.y / distanceFromCore) * monster.getSpeed();
+      const monsterPos = monster.getPosition();
+      const targetId = monster.gettargetPlayer();
 
-        monsterMoveList.push({
-          monsterId,
-          targetId: 0,
-          x: direct_x,
-          y: direct_y,
-        });
-      } else {
-        const monsterPos = monster.getPosition();
-        const targetId = monster.getTargetPlayer();
+      const monsterMoverPayload = {
+        monsterId: monsterId,
+        targetId: targetId,
+        x: monsterPos.x,
+        y: monsterPos.y,
+      };
 
-        monsterMoveList.push({
-          monsterId,
-          targetId,
-          x: monsterPos.x,
-          y: monsterPos.y,
-        });
-      }
+      monsterMoveList.push(monsterMoverPayload);
     }
+    const packet = makePacket(config.packetType.S_MONSTER_MOVE_NOTIFICATION, monsterMoveList);
 
-    const packet = makePacket(config.packetType.S_MONSTER_MOVE_NOTIFICATION, {
-      monsters: monsterMoveList,
-    });
-    this.broadcast(packet);
+    //이런 식으로 게임에서 notification을 보내보도록 하자.
+    game.broadcast(packet);
   }
 
   monsterTimeCheck() {
@@ -313,12 +326,9 @@ class Game {
     }
   }
 
-  monsterLostPlayerCheck() {
-    for (const [key, monster] of this.monsters) {
-      if (monster.hasPriorityPlayer()) {
-        monster.lostPlayer();
-      }
-    }
+  getItemBoxById(itemBoxId) {
+    return this.itemBoxes.get(itemBoxId);
+    //여기까지 몬스터 영역
   }
 
   checkSpawnArea(monsterCode, x, y) {
@@ -329,7 +339,7 @@ class Game {
     for (const zone of this.zone) {
       if (distanceX <= zone.distance && distanceY <= zone.distance) {
         area = zone.area;
-        break;
+        return;
       }
     }
     return this.monsterArea[area].includes(monsterCode);
@@ -367,6 +377,15 @@ class Game {
   changePhase() {
     if (this.dayPhase === DayPhase.DAY) this.dayPhase = DayPhase.NIGHT;
     else this.dayPhase = DayPhase.DAY;
+
+    const changePhasePacket = makePacket(config.packetType.S_GAME_PHASE_UPDATE_NOTIFICATION, {
+      gameState: {
+        phaseType: this.dayPhase,
+        nextPhaseAt: this.lastUpdate + config.game.phaseCount[this.dayPhase],
+      },
+    });
+
+    this.broadcast(changePhasePacket);
   }
 
   setWaveState(state) {
@@ -402,7 +421,7 @@ class Game {
 
     const owner = this.getPlayerById(this.ownerId);
 
-    owner.socket.write(monsterSpawnRequestPacket);
+    owner.user.socket.write(monsterSpawnRequestPacket);
 
     this.setWaveState(WaveState.INWAVE);
   }
@@ -458,6 +477,7 @@ class Game {
     const itemBox = new ItemBox(2, 0, 0);
     this.itemBoxes.set(itemBox.id, itemBox);
   }
+  /////////////////////////////////////
 }
 
 export default Game;
