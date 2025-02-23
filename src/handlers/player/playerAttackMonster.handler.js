@@ -88,7 +88,7 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
         console.log('[드롭된 아이템 목록]');
         droppedItems.forEach((item, index) => {
           console.log(
-            `${index + 1}. ID: ${item.id}, 타입: ${item.type}, 이름: ${item.name}, 코드: ${item.code}`,
+            `${index + 1}. 아이템 코드: ${item.itemData.itemCode}, 개수: ${item.itemData.count}`,
           );
           console.log(`   위치: (${item.position.x}, ${item.position.y})`);
         });

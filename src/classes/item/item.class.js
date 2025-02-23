@@ -2,8 +2,7 @@
 // 아이템 상태, 아이템 관련 기본 동작 등 하나의 아이템 인스턴스만을 관리함
 
 class Item {
-  constructor({ id, type, name, position, code }) {
-    this.id = id; // 아이템 고유 식별자
+  constructor({ type, name, position, code }) {
     this.type = type; // 아이템 타입 (FOOD, WEAPON)
     this.name = name; // 아이템 이름
     this.position = position; // 아이템 위치
