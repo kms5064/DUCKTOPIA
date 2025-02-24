@@ -14,7 +14,7 @@ class Player {
     this.lv = 1;
     this.atk = atk;
     this.inventory = Array.from({ length: 16 }, () => 0);
-    this.equippedWeapon = { atk: 0 };
+    this.equippedWeapon = null;
     this.x = x;
     this.y = y;
     this.isAlive = true;
@@ -158,6 +158,8 @@ class Player {
 
   equipWeapon(itemCode) {
     const weapon = this.inventory.find((item) => item.itemCode === itemCode);
+    this.equippedWeapon = weapon;
+    return weapon;
   }
 
   //공격 사거리 변경
