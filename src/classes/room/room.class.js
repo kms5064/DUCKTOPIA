@@ -95,7 +95,10 @@ class Room {
   // 게임 시작
   startGame() {
     this.changeState(RoomStateType.INGAME);
-    this.game.gameLoopStart();
+    setTimeout(() => {
+      this.game.gameLoopStart();
+    }, 3000);
+
   }
 
   // 게임 종료
