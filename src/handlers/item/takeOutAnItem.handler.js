@@ -56,8 +56,8 @@ const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
       playerId: player.user.id,
       itemBoxId: itemBoxId,
       itemData: {
-        itemCode: Object.keys(item)[0], //{itemCode:count}
-        count: Object.values(item)[0],
+        itemCode: itemCode, //{itemCode:count}
+        count: count,
       },
       success: true,
     };
