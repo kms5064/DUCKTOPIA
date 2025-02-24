@@ -13,7 +13,7 @@ class ItemManager {
     this.dropTable = dropTable.data;
     this.foodData = food.data;
     this.weaponData = weapon.data;
-    this.lastBoxId = 0; // 마지막으로 생성된 박스의 ID
+    this.lastBoxId = 1; // 마지막으로 생성된 박스의 ID
 
     // 아이템 박스 관련 상수
     this.BOX_MAX_SLOTS = 8; // 박스 최대 슬롯 수
