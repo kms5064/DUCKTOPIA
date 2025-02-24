@@ -13,7 +13,7 @@ class Player {
 
     this.lv = 1;
     this.atk = atk;
-    this.inventory = Array.from({ length: 16 }, () => null);
+    this.inventory = Array.from({ length: 16 }, () => 0);
     this.equippedWeapon = { atk: 0 };
     this.x = x;
     this.y = y;
@@ -109,7 +109,7 @@ class Player {
   }
 
   addItem(itemCode, count, index) {
-    if (index === null) {
+    if (index === 0) {
       //아이템을 이미 갖고 있는지
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       //있다면 카운트만 증가
@@ -119,7 +119,7 @@ class Player {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
 
-        const checkRoom = (ele) => ele === null;
+        const checkRoom = (ele) => ele === 0;
         const emptyIndex = this.inventory.findIndex(checkRoom);
         this.inventory.splice(emptyIndex, 1, item);
       }
@@ -133,6 +133,7 @@ class Player {
         const item = { itemCode: itemCode, count: count };
         this.inventory.splice(index, 1, item);
       }
+      return item;
     }
   }
 
@@ -148,11 +149,15 @@ class Player {
       removedItem.stack -= count;
     } else {
       //아이템을 제거
-      this.inventory.splice(removedItemIndex, 1, null);
+      this.inventory.splice(removedItemIndex, 1, 0);
     }
     // const targetIndex = this.findItemIndex(itemCode);
-    // this.inventory.splice(targetIndex, 1,null);
+    // this.inventory.splice(targetIndex, 1,0);
     // return this.inventory;
+  }
+
+  equipWeapon(itemCode) {
+    const weapon = this.inventory.find((item) => item.itemCode === itemCode);
   }
 
   //공격 사거리 변경

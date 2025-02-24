@@ -45,7 +45,7 @@ const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
     throw new CustomError('상자를 찾을 수 없습니다');
   }
   //인벤토리에 빈공간이 있는지
-  const checkRoom = (ele) => ele === null;
+  const checkRoom = (ele) => ele === 0;
   const emptyIndex = player.inventory.findIndex(checkRoom);
 
   if (emptyIndex !== -1) {

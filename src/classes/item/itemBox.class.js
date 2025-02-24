@@ -3,9 +3,9 @@ import CustomError from '../../utils/error/customError.js';
 class ItemBox {
   constructor(boxId) {
     this.id = boxId;
+    this.objectCode = 2;
     this.x = 0;
     this.y = 0;
-    //this.type = type;
     //this.hp = ITEM_BOX_HP;
     this.itemList = Array.from({ length: 8 }, () => 0);
     this.occupied = null; //점유중 플레이어아이디
@@ -18,8 +18,8 @@ class ItemBox {
   //플레이어가 박스에서 꺼내기
   takeOutAnItem(player,itemCode, count,emptyIndex) {
     //temType을 기반으로 박스에 아이템 조회
-    const removedItem = this.itemList.find((item) => item.code === itemCode);
-    const removedItemIndex = this.itemList.findindex((item) => item.code === code);
+    const removedItem = this.itemList.find((item) => item.itemCode === itemCode);
+    const removedItemIndex = this.itemList.findindex((item) => item.itemCode === itemCode);
     if (!removedItem) {
       throw new CustomError('상자에서 아이템을 찾을 수 없습니다.');
     }
@@ -30,7 +30,7 @@ class ItemBox {
     } else {
       //아이템을 제거하고 stack만큼만 아이템을 반환하도록
       count = removedItem.stack;
-      this.itemList.splice(removedItemIndex, 1, null);
+      this.itemList.splice(removedItemIndex, 1, 0);
       const item = player.addItem(itemCode, count,emptyIndex);
       return item;
     }
