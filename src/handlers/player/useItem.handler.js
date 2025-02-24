@@ -35,7 +35,7 @@ const useItemHandler = ({ socket, payload }) => {
   }
 
   // 아이템 정보 조회
-  const player = game.getPlayer(user.getUserData().userId);
+  const player = game. getPlayerById(user.getUserData().userId);
   const itemIndex = player.findItemByCode(itemData.itemCode);
 
   if (itemIndex === -1) {
