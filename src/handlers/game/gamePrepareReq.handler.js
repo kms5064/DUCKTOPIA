@@ -21,6 +21,7 @@ const gamePrepareReqHandler = ({ socket, payload }) => {
   //초기 오브젝트 정보 생성
   const objectData = game.createObjectData();
 
+  console.log("건물" , JSON.stringify(objectData));
   const GamePrepareResponse = makePacket(config.packetType.PREPARE_GAME_RESPONSE, {
     success: true,
     monsters: monsterData,

@@ -163,7 +163,7 @@ message C2SGamePrepareRequest { // 게임준비 요청
 message S2CGamePrepareResponse { // 게임준비 응답 to 호스트클라이언트
   bool success = 1;
   repeated MonsterData monsters = 2;
-  repeated ObjectPositionData objects = 3; //ObjectData => ObjectPositionData
+  repeated ObjectPositionData objectsPositionData = 3; //ObjectData => ObjectPositionData
 }
 
 message S2CGamePrepareNotification { // 게임준비 알림
