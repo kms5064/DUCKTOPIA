@@ -37,15 +37,15 @@ const gameStartHandler = ({ socket, payload }) => {
 
   // [테스트] 인덱스 0, 1에 고정으로 아이템 추가
   game.players.forEach((player) => {
-    console.log('\n[아이템 추가 전] 플레이어 인벤토리:', player.inventory);
+    //console.log('\n[아이템 추가 전] 플레이어 인벤토리:', player.inventory);
 
     // 1번 아이템은 0번 인덱스에
     player.addItem(1, 1, 0);
-    console.log('[1번 아이템 추가 후] 인벤토리:', player.inventory);
+    //console.log('[1번 아이템 추가 후] 인벤토리:', player.inventory);
 
     // 101번 아이템은 1번 인덱스에
     player.addItem(101, 1, 1);
-    console.log('[101번 아이템 추가 후] 인벤토리:', player.inventory);
+    //console.log('[101번 아이템 추가 후] 인벤토리:', player.inventory);
   });
 
   // 기존 코드 주석 처리 - 찐코드

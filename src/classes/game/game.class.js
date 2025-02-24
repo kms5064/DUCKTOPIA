@@ -11,6 +11,7 @@ import {
 } from '../../config/constants/monster.js';
 import ItemBox from '../item/itemBox.class.js';
 import ItemManager from '../item/itemManager.class.js';
+import BossMonster from './bossMonster.class.js';
 
 
 class Game {
@@ -164,12 +165,30 @@ class Game {
     return monsterData;
   }
 
-  //몬스터의 숫자가 최대치보다 내려갔을 때 소환되도록 한다.
   createBossMonsterData() {
-    //몬스터의 숫자가 최대 숫자보다 크다면 보스 몬스터는 잠시 지연하도록 하자. 
+    //몬스터의 숫자가 최대 숫자보다 크다면 보스 몬스터는 잠시 지연하도록 
     if (config.game.monster.maxSpawnCount <= this.monsters.size) {
-      return false;
+      return;
     }
+
+    const monsterId = this.monsterIndex++;
+    const bossMonster = new BossMonster(
+      monsterId,
+      data.code,
+      data.name,
+      data.hp,
+      data.attack,
+      data.defence,
+      data.range,
+      data.speed,
+      data.grade,
+      0,
+      0,
+    )
+
+    this.monsters.set(monsterId, bossMonster);
+    //몬스터의 생성을 
+
   }
 
   updateMonsterPosition(monsterId, x, y) {
