@@ -132,19 +132,39 @@ class Monster extends MovableObjectBase {
     );
 
     const distanceFromStartPoint = Math.sqrt(
-      Math.pow(playerPos.x - this.startPoint_x, 2) + Math.pow(playerPos.y - this.startPoint_y, 2),
+      Math.pow(this.x - this.startPoint_x, 2) + Math.pow(this.y - this.startPoint_y, 2),
     );
+
+    let lostDistance = 1;
+
+    switch (this.code) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+        lostDistance = 5;
+        break;
+      case 5:
+        lostDistance = 6;
+        break;
+      case 6:
+        lostDistance = 7;
+        break;
+      case 7:
+        lostDistance = 8;
+        break;
+      case 8:
+        lostDistance = 9;
+        break;
+    }
 
     /** 몬스터가 플레이어를 잃는 조건 */
     //1. 몬스터와 플레이어 간의 거리가 인식 범위를 넘어갔을 때
     //2. 타겟 플레이어의 hp가 0이 되었을 때
     //3. 시작 위치에서 일정 이상의 거리를 벗어나게 되었을 때
     const targetHp = this.targetPlayer.getPlayerHp();
-    if (
-      distance > this.awakeRange ||
-      targetHp <= 0 ||
-      distanceFromStartPoint > 10 + this.awakeRange
-    ) {
+    if (distance > this.awakeRange + lostDistance || targetHp <= 0 || distanceFromStartPoint > lostDistance * 2 + this.awakeRange) {
+      this.monsterAwakeCoolTime = 1000;
       this.distanceBetweenPlayer = Infinity;
       this.targetPlayer = null;
       return true;
@@ -153,37 +173,6 @@ class Monster extends MovableObjectBase {
       return false;
     }
   }
-
-  //몬스터가 죽거나 할 때 아이템 드롭할 아이템의 숫자를 제공한다.
-  // dropItemCount() {
-  //   const dropCount =
-  //     10 -
-  //     Math.floor(
-  //       Math.log(Math.ceil(Math.random() * config.game.monster.maxItemDropCount)) / Math.log(2),
-  //     );
-
-  //   switch (dropCount) {
-  //     case 0:
-  //     case 1:
-  //       return 0;
-  //       break;
-  //     case 2:
-  //     case 3:
-  //     case 4:
-  //     case 5:
-  //       return 1;
-  //       break;
-  //     case 6:
-  //     case 7:
-  //     case 8:
-  //       return 2;
-  //       break;
-  //     case 9:
-  //     case 10:
-  //       return 3;
-  //       break;
-  //   }
-  // }
 
   //일단 몬스터가 벗어났을 때 3~8초 동안은 벗어나게 하기
   CoolTimeCheck(deltaTime) {
