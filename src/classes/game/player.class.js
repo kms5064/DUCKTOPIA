@@ -104,14 +104,14 @@ class Player {
   }
 
   findItemIndex(itemCode) {
-    const targetIndex = this.inventory.findIndex((item) => item.itemCode === itemCode);
+    const targetIndex = this.inventory.findIndex((item) => item && item.itemCode === itemCode);
     return targetIndex;
   }
 
   addItem(itemCode, count, index) {
     if (index === null) {
       //아이템을 이미 갖고 있는지
-      const item = this.inventory.find((item) => item &&item.itemCode === itemCode);
+      const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       //있다면 카운트만 증가
       if (item) {
         item.stack += count;
@@ -124,11 +124,11 @@ class Player {
         this.inventory.splice(emptyIndex, 1, item);
       }
       return item;
-    }else{
+    } else {
       const item = this.inventory[index];
-      if(item){
+      if (item) {
         item.count += count;
-      }else {
+      } else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
         this.inventory.splice(index, 1, item);
@@ -137,8 +137,8 @@ class Player {
   }
 
   removeItem(itemCode, count) {
-    const removedItem = this.inventory.find((item) => item.code === itemCode);
-    const removedItemIndex = this.inventory.findindex((item) => item.code === itemCode);
+    const removedItem = this.inventory.find((item) => item.itemCode === itemCode);
+    const removedItemIndex = this.inventory.findindex((item) => item.itemCode === itemCode);
     if (!removedItem) {
       throw new CustomError('인벤토리에서 아이템을 찾을 수 없습니다.');
     }
