@@ -107,7 +107,7 @@ class Player {
     this.hungerCounter += deltaTime;
     this.lastHungerUpdate = now;
 
-    if (hungerCounter >= config.game.player.playerHungerPeriod) {
+    if (this.hungerCounter >= config.game.player.playerHungerPeriod) {
       if (this.hunger > 0) {
         this.hunger -= config.game.player.playerHungerDecreaseAmount;
 
@@ -134,7 +134,9 @@ class Player {
         this.user.getSocket().write(decreaseHpPacket);
       }
 
-      hungerCounter = 0;
+      this.hungerCounter = 0;
+
+      // console.log('현재 아이디 : ', this.user.id, ', 현재 허기 : ', this.hunger, ', 현재 체력 : ', this.hp);
     }
   }
 

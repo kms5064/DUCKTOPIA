@@ -65,7 +65,7 @@ class Game {
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
     }, 1000);
     this.lastUpdate = Date.now();
-    initPlayersHunger();
+    this.initPlayersHunger();
   }
 
   gameEnd() {
