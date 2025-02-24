@@ -11,6 +11,7 @@ import {
 } from '../../config/constants/monster.js';
 import ItemBox from '../item/itemBox.class.js';
 import ItemManager from '../item/itemManager.class.js';
+
 class Game {
   constructor(ownerId) {
     this.players = new Map();
@@ -132,7 +133,6 @@ class Game {
       const monsterId = this.monsterIndex;
       // Monster Asset 조회
       const { monster: monsterAsset } = getGameAssets();
-
 
       // 몬스터 데이터 뽑기
       const codeIdx = Math.floor(Math.random() * 7);
@@ -477,6 +477,21 @@ class Game {
   addBox() {
     const itemBox = new ItemBox(2, 0, 0);
     this.itemBoxes.set(itemBox.id, itemBox);
+  }
+
+  // 초기 아이템 생성 - 테스트
+  createInitialItems() {
+    // 1번과 101번 아이템 고정으로 생성
+    return [
+      {
+        itemCode: 1,
+        count: 1,
+      },
+      {
+        itemCode: 101,
+        count: 1,
+      },
+    ];
   }
   /////////////////////////////////////
 }
