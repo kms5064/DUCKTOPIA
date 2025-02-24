@@ -14,6 +14,8 @@ const redisClient = redis.createClient({
     config.redis.port,
 });
 
+const subscriber = redisClient.duplicate();
+
 // 연결 성공 시
 redisClient.on('connect', () => {
   console.log('Redis 연결 성공!!');
@@ -26,19 +28,15 @@ redisClient.on('error', (err) => {
 
 await redisClient.connect();
 
-export const setRedisToRoom = async (roomInfo) => {
-  const key = 'Room:' + roomInfo.roomId;
-  const serializedObj = JSON.stringify(roomInfo);
+subscriber.on('connect', () => {
+  console.log('Redis 구독자 연결성공!!');
+});
 
-  await redisClient.set(key, serializedObj);
-  await redisClient.disconnect();
-  return key;
-};
+// 연결 실패 시 에러 출력
+subscriber.on('error', (err) => {
+  console.error('Redis 구독자 오류:', err);
+});
 
-export const getRedisRoomInfo = async (key) => {
-  const data = await redisClient.get(key);
-  await redisClient.disconnect();
+await subscriber.connect();
 
-  const parseData = JSON.parse(data);
-  return parseData;
-};
+export { redisClient, subscriber };
