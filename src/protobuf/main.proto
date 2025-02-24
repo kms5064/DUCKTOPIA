@@ -365,20 +365,20 @@ message S2CPlayerGetItemNotification {
 
 // 아이템 사용
 message C2SPlayerUseItemRequest {
-  ItemData ItemData = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은
+  ItemData itemData = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은
                          // 소모) //itemid ->itemdata
 }
 
 message S2CPlayerEatFoodResponse { // 사용한 아이템이 식량일 때
   bool success = 1;
-  ItemData ItemData = 2; // itemid ->itemdata
+  ItemData itemData = 2; // itemid ->itemdata
   int32 playerId = 3;
   int32 hunger = 4;
 }
 
 message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
   bool success = 1;
-  ItemData ItemData = 2; // itemid ->itemdata
+  ItemData itemData = 2; // itemid ->itemdata
   int32 playerId = 3;
 }
 //---- 추가 완료

@@ -5,7 +5,8 @@ import Item from '../../classes/item/item.class.js';
 import { getGameAssets } from '../../init/assets.js';
 
 const useItemHandler = ({ socket, payload }) => {
-  const { itemId } = payload;
+  console.log(payload);
+  const { itemData } = payload;
   console.log('[아이템 사용 요청]', payload);
 
   // 유저 객체 조회
@@ -34,7 +35,7 @@ const useItemHandler = ({ socket, payload }) => {
 
   // 아이템 정보 조회
   const player = game.getPlayer(user.getUserData().userId);
-  const itemIndex = player.findItemIndex(itemId);
+  const itemIndex = player.findItemByCode(itemData.itemCode);
 
   if (itemIndex === -1) {
     throw new Error('아이템을 찾을 수 없습니다.');
@@ -49,7 +50,7 @@ const useItemHandler = ({ socket, payload }) => {
     case Item.Type.FOOD: {
       // food.json에서 해당 아이템의 hunger 값을 가져옴
       const { food } = getGameAssets();
-      const foodData = food.data.find((f) => f.code === item.code);
+      const foodData = food.data.find((f) => f.code === item.itemData.itemCode);
 
       if (!foodData) {
         throw new Error('음식 데이터를 찾을 수 없습니다.');
@@ -62,7 +63,7 @@ const useItemHandler = ({ socket, payload }) => {
 
       packet = makePacket(config.packetType.S_PLAYER_EAT_FOOD_RESPONSE, {
         success: true,
-        itemId,
+        itemData: item.itemData,
         playerId,
         hunger: newHunger,
       });
@@ -71,11 +72,11 @@ const useItemHandler = ({ socket, payload }) => {
 
     case Item.Type.WEAPON: {
       // 무기 장착 처리
-      player.equipWeapon(item);
+      player.equipWeapon(item.itemData);
 
       packet = makePacket(config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE, {
         success: true,
-        itemId,
+        itemData: item.itemData,
         playerId,
       });
       break;
@@ -86,7 +87,7 @@ const useItemHandler = ({ socket, payload }) => {
   }
 
   // 아이템 사용 후 인벤토리에서 제거
-  player.removeItem(itemId);
+  player.removeItemByCode(item.itemData.itemCode, itemData.count);
 
   // 응답 전송
   game.broadcast(packet);

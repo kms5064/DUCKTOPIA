@@ -8,15 +8,14 @@ import { getGameAssets } from '../../init/assets.js';
 
 class ItemManager {
   constructor() {
-    // this.items = new Map(); // 현재 필드에 존재하는 아이템들 - id를 사용하지 않기 때문에 사용하지 않음.
-    this.itemBoxes = new Map(); // 현재 존재하는 아이템 박스들 - 유민님이 알아서 삭제하세욧.
+    this.itemBoxes = new Map(); // 현재 존재하는 아이템 박스들
     const { dropTable, food, weapon } = getGameAssets();
     this.dropTable = dropTable.data;
     this.foodData = food.data;
     this.weaponData = weapon.data;
     this.lastBoxId = 0; // 마지막으로 생성된 박스의 ID
 
-    // 아이템 박스 관련 상수 - 유민님이 알아서 삭제하세욧.
+    // 아이템 박스 관련 상수
     this.BOX_MAX_SLOTS = 8; // 박스 최대 슬롯 수
     this.ITEM_MIN_COUNT = 1; // 아이템 최소 개수
     this.ITEM_MAX_STACK = 5; // 아이템 최대 스택
@@ -68,22 +67,30 @@ class ItemManager {
       if (isWeapon) {
         // 무기 아이템 생성
         const randomWeapon = this.weaponData[Math.floor(Math.random() * this.weaponData.length)];
-        items.push({
-          type: Item.Type.WEAPON,
-          name: randomWeapon.name,
-          code: randomWeapon.code,
-          count: 1, // 무기는 항상 1개만
-        });
+        items.push(
+          new Item({
+            type: Item.Type.WEAPON,
+            itemData: {
+              itemCode: randomWeapon.code,
+              count: 1, // 무기는 항상 1개만
+            },
+            position: null,
+          }),
+        );
       } else {
         // 음식 아이템 생성
         const randomFood = this.foodData[Math.floor(Math.random() * this.foodData.length)];
         const count = Math.floor(Math.random() * this.ITEM_MAX_STACK) + this.ITEM_MIN_COUNT;
-        items.push({
-          type: Item.Type.FOOD,
-          name: randomFood.name,
-          code: randomFood.code,
-          count: count,
-        });
+        items.push(
+          new Item({
+            type: Item.Type.FOOD,
+            itemData: {
+              itemCode: randomFood.code,
+              count: count,
+            },
+            position: null,
+          }),
+        );
       }
     }
 
@@ -151,26 +158,28 @@ class ItemManager {
       if (availableWeapons.length === 0) return null;
 
       const randomWeapon = availableWeapons[Math.floor(Math.random() * availableWeapons.length)];
-      return {
-        position: this.addRandomOffset(position),
+      return new Item({
+        type: Item.Type.WEAPON,
         itemData: {
           itemCode: randomWeapon.code,
           count: 1,
         },
-      };
+        position: this.addRandomOffset(position),
+      });
     } else {
       const availableFoods = this.foodData.filter((food) => food.grade === itemGrade);
       if (availableFoods.length === 0) return null;
 
       const randomFood = availableFoods[Math.floor(Math.random() * availableFoods.length)];
       const count = Math.floor(Math.random() * this.ITEM_MAX_STACK) + this.ITEM_MIN_COUNT;
-      return {
-        position: this.addRandomOffset(position),
+      return new Item({
+        type: Item.Type.FOOD,
         itemData: {
           itemCode: randomFood.code,
           count: count,
         },
-      };
+        position: this.addRandomOffset(position),
+      });
     }
   }
 
