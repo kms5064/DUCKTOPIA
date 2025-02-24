@@ -104,14 +104,14 @@ class Player {
   }
 
   findItemIndex(itemCode) {
-    const targetIndex = this.inventory.findIndex((item) => item.code === itemCode);
+    const targetIndex = this.inventory.findIndex((item) => item.itemCode === itemCode);
     return targetIndex;
   }
 
   addItem(itemCode, count, index) {
     if (index === null) {
       //아이템을 이미 갖고 있는지
-      const item = this.inventory.find((item) => item.code === itemCode);
+      const item = this.inventory.find((item) => item &&item.itemCode === itemCode);
       //있다면 카운트만 증가
       if (item) {
         item.stack += count;
