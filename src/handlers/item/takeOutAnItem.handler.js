@@ -2,14 +2,13 @@ import CustomError from '../../utils/error/customError.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import { config } from '../../config/config.js';
 import makePacket from '../../utils/packet/makePacket.js';
-import makePacket from '../../utils/packet/makePacket.js';
 import { userSession } from '../../sessions/session.js';
 import { roomSession } from '../../sessions/session.js';
 
 const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
   //const { itemBoxId, index , count} = payload;
   const { itemBoxId, itemCode, count } = payload; //index대신 아이템 종류
-  console.log(`takeOutAnItemHandler itemBoxId: ${itemBoxId},itemType: ${itemType},count: ${count}`);
+  console.log(`takeOutAnItemHandler itemBoxId: ${itemBoxId},itemCode: ${itemCode},count: ${count}`);
 
   // 유저 객체 조회
   const user = userSession.getUser(socket.id);
@@ -57,10 +56,9 @@ const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
       playerId: player.user.id,
       itemBoxId: itemBoxId,
       itemData: {
-        itemType: Object.keys(item)[0], //{itemCode:count}
+        itemCode: Object.keys(item)[0], //{itemCode:count}
         count: Object.values(item)[0],
       },
-      count: item.itemCode,
       success: true,
     };
 

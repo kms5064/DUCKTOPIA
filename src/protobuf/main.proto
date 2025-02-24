@@ -68,17 +68,11 @@ message ItemData {
   int32 count = 2;    // 몇개인지
 }
 
-message Item {
-  int32 id = 1;          // 아이템 고유 식별자 ID
-  Position position = 2; // 아이템 위치
-  ItemData itemData = 3; // 아이템 정보
-}
 
 // 오브젝트 관련 기본 구조체
 message ObjectData {
   int32 objectId = 1;
   int32 objectCode = 2;
-  repeated ItemData itemData = 3;
 }
 
 message ObjectPositionData {
@@ -88,23 +82,6 @@ message ObjectPositionData {
   float y = 4;
 }
 
-//---- 2025.02.21 추가 : 오누리
-message Position {
-  float x = 1;
-  float y = 2;
-}
-
-message Item {
-  Position position = 2; // 아이템 위치
-  ItemData itemData = 3; // 아이템 정보
-}
-//---- 추가 완료
-
-//---- 2025.02.21 추가 : 오누리
-message Position {
-  float x = 1;
-  float y = 2;
-}
 
 message Item {
   Position position = 2; // 아이템 위치
@@ -186,7 +163,7 @@ message C2SGamePrepareRequest { // 게임준비 요청
 message S2CGamePrepareResponse { // 게임준비 응답 to 호스트클라이언트
   bool success = 1;
   repeated MonsterData monsters = 2;
-  repeated ObjectData objects = 3;
+  repeated ObjectPositionData objects = 3; //ObjectData => ObjectPositionData
 }
 
 message S2CGamePrepareNotification { // 게임준비 알림
@@ -324,42 +301,6 @@ message S2CObjectHpUpdateNotification { // 코어 Id=0;
   int32 hp = 2;
 }
 
-// 아이템 스폰/습득
-message S2CItemSpawnNotification {
-  repeated Item items = 1; // 생성된 아이템 목록
-}
-
-message C2SPlayerGetItemRequest {
-  int32 itemId = 1;   // 습득할 아이템 식별자 ID
-  int32 playerId = 2; // 플레이어 ID
-}
-
-message S2CPlayerGetItemNotification {
-  bool success = 1;        // 습득 성공 여부
-  string message = 2;      // 결과 메시지
-  repeated Item items = 3; // 습득한 아이템 목록
-  int32 playerId = 4;      // 플레이어 ID
-}
-
-// 아이템 사용
-message C2SPlayerUseItemRequest {
-  int32 itemId = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은 소모)
-}
-
-// 아이템 사용
-message S2CPlayerEatFoodResponse { // 사용한 아이템이 식량일 때
-  bool success = 1;
-  int32 itemId = 2;
-  int32 playerId = 3;
-  int32 hunger = 4;
-}
-
-message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
-  bool success = 1;
-  int32 itemId = 2;
-  int32 playerId = 3;
-}
-
 // 아이템 박스 시스템
 message C2SPlayerOpenBoxRequest { int32 itemBoxId = 1; }
 
@@ -481,7 +422,7 @@ message GamePacket {
     S2CGameStartResponse gameStartResponse = 19;
     S2CGameStartNotification gameStartNotification = 20;
 
-    // 플레이어 동작
+    // 플레이어
     C2SPlayerPositionUpdateRequest playerPositionUpdateRequest = 21;
     S2CPlayerPositionUpdateNotification playerPositionUpdateNotification = 22;
     S2CPlayerHpUpdateNotification playerHpUpdateNotification = 23;
@@ -532,24 +473,5 @@ message GamePacket {
     S2CPlayerEatFoodResponse playerEatFoodResponse = 106;
     S2CPlayerEquipWeaponResponse playerEquipWeaponResponse = 107;
     //---- 추가 완료
-    C2SObjectDamagedByMonsterRequest objectDamagedByMonsterRequest = 45;
-
-    // 아이템 박스 시스템
-    C2SPlayerOpenBoxRequest playerOpenBoxRequest = 46;
-    S2CPlayerOpenBoxNotification playerOpenBoxNotification = 47;
-    C2SPlayerTakeOutAnItemRequest playerTakeOutAnItemRequest = 48;
-    S2CPlayerTakeOutAnItemNotification playerTakeOutAnItemNotification = 49;
-    C2SPlayerPutAnItemRequest playerPutAnItemRequest = 50;
-    S2CPlayerPutAnItemNotification playerPutAnItemNotification = 51;
-    C2SPlayerCloseBoxRequest playerCloseBoxRequest = 52;
-    S2CPlayerCloseBoxNotification playerCloseBoxNotification = 53;
-
-    // 낮 밤 전환
-    S2CGamePhaseUpdateNotification gamePhaseUpdateNotification = 54;
-
-    // 아이템 스폰/습득
-    S2CItemSpawnNotification itemSpawnNotification = 55;
-    C2SPlayerGetItemRequest playerGetItemRequest = 56;
-    S2CPlayerGetItemNotification playerGetItemNotification = 57;
   }
 }

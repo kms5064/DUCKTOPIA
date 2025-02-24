@@ -21,39 +21,11 @@ class ItemManager {
     this.ITEM_MAX_STACK = 5; // 아이템 최대 스택
   }
 
-  // // 박스 ID 생성
-  // createBoxId() {
-  //   this.lastBoxId += 1;
-  //   return this.lastBoxId;
-  // }
-
-  // // 아이템 박스 생성
-  // createItemBox(position) {
-  //   const boxId = this.createBoxId();
-  //   const itemBox = new ItemBox(boxId, position.x, position.y);
-
-  //   // 랜덤 아이템 생성 및 박스에 추가
-  //   const items = this.generateRandomItems();
-  //   items.forEach((item, index) => {
-  //     itemBox.itemList[index] = {
-  //       itemData: {
-  //         itemCode: item.code,
-  //         count: item.count,
-  //       },
-  //     };
-  //   });
-
-  //   this.itemBoxes.set(boxId, itemBox);
-
-  //   // 디버깅용 로그
-  //   console.log(`[아이템 박스 생성] ID: ${boxId}, 위치: (${position.x}, ${position.y})`);
-  //   console.log('[생성된 아이템 목록]');
-  //   items.forEach((item, index) => {
-  //     console.log(`${index + 1}. 아이템 코드: ${item.code}, 개수: ${item.count}`);
-  //   });
-
-  //   return itemBox;
-  // }
+  // 박스 ID 생성
+  createBoxId() {
+    this.lastBoxId += 1;
+    return this.lastBoxId;
+  }
 
   // 랜덤 아이템 생성
   generateRandomItems() {

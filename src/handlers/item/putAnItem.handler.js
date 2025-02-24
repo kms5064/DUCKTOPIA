@@ -7,7 +7,7 @@ import { roomSession } from '../../sessions/session.js';
 
 const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
     const { itemBoxId,itemCode, count } = payload;
-    console.log(`putAnItemHandler itemBoxId: ${itemBoxId},itemType: ${itemType},count: ${count}`);
+    console.log(`putAnItemHandler itemBoxId: ${itemBoxId},itemCode: ${itemCode},count: ${count}`);
 
     // 유저 객체 조회
     const user = userSession.getUser(socket.id);
@@ -54,10 +54,9 @@ const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
         playerId: player.user.id,
         itemBoxId: itemBoxId,
         itemData: {
-          itemType: Object.keys(item)[0], //{code:count}
+          itemCode: Object.keys(item)[0], //{code:count}
           count: Object.values(item)[0],
         },
-        count: item.itemCode,
         success: true,
       };
   

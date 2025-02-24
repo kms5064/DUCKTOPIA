@@ -21,13 +21,10 @@ const gamePrepareReqHandler = ({ socket, payload }) => {
   //초기 오브젝트 정보 생성
   const objectData = game.createObjectData();
 
-  const itemBox = game.createItemBoxData();
-
   const GamePrepareResponse = makePacket(config.packetType.PREPARE_GAME_RESPONSE, {
     success: true,
     monsters: monsterData,
     objects:  objectData,
-    itemBoxes: itemBox,
   });
 
   socket.write(GamePrepareResponse);
