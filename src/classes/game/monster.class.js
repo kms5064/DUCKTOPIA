@@ -164,7 +164,7 @@ class Monster extends MovableObjectBase {
     //3. 시작 위치에서 일정 이상의 거리를 벗어나게 되었을 때
     const targetHp = this.targetPlayer.getPlayerHp();
     if (distance > this.awakeRange + lostDistance || targetHp <= 0 || distanceFromStartPoint > lostDistance * 2 + this.awakeRange) {
-      this.monsterAwakeCoolTime = 1000;
+      this.monsterAwakeCoolTime = 2000;//2초에서 3초 정도 인식을 하지 않도록 만든다.
       this.distanceBetweenPlayer = Infinity;
       this.targetPlayer = null;
       return true;
@@ -174,7 +174,7 @@ class Monster extends MovableObjectBase {
     }
   }
 
-  //일단 몬스터가 벗어났을 때 3~8초 동안은 벗어나게 하기
+  //0보다 큰 값의 시간 값들을 체크하기
   CoolTimeCheck(deltaTime) {
     if (this.monsterAwakeCoolTime > 0) {
       this.monsterAwakeCoolTime -= deltaTime;
