@@ -1,5 +1,19 @@
 import redis from 'redis';
 import { config } from '../../config/config.js';
+import os from 'os';
+
+// 프라이빗 IPv4 주소
+function getLocalIP() {
+  const interfaces = os.networkInterfaces();
+  for (let interfaceName in interfaces) {
+    for (let iface of interfaces[interfaceName]) {
+      // IPv4, 비공개 IP 제외
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+}
 
 // Redis 클라우드 인스턴스에 연결
 const redisClient = redis.createClient({
@@ -14,6 +28,8 @@ const redisClient = redis.createClient({
     config.redis.port,
 });
 
+const subscriber = redisClient.duplicate();
+
 // 연결 성공 시
 redisClient.on('connect', () => {
   console.log('Redis 연결 성공!!');
@@ -26,19 +42,51 @@ redisClient.on('error', (err) => {
 
 await redisClient.connect();
 
-export const setRedisToRoom = async (roomInfo) => {
-  const key = 'Room:' + roomInfo.roomId;
-  const serializedObj = JSON.stringify(roomInfo);
+subscriber.on('connect', () => {
+  console.log('Redis 구독자 연결성공!!');
+});
 
-  await redisClient.set(key, serializedObj);
-  await redisClient.disconnect();
-  return key;
+// 연결 실패 시 에러 출력
+subscriber.on('error', (err) => {
+  console.error('Redis 구독자 오류:', err);
+});
+
+await subscriber.connect();
+
+const initOnRedis = async () => {
+  const host = getLocalIP();
+  const hashData = {
+    address: host,
+    status: 1,
+    games: 0,
+  };
+
+  // 1. list에서 서버 조회
+  // 2. hashKey 생성 lobby2 lobby3 ...
+  // 3. 값 저장
+  // 4. Pub/Sub을 이용해서 서버오픈 알림
+
+  // 서버 상태 on
+  await redisClient.watch('Server:Lobby');
+  const serverList = await redisClient.lRange('Server:Lobby', 0, -1);
+  let index = serverList.indexOf(host);
+  if (index < 0) {
+    index = serverList.length;
+    const setReply = await redisClient
+      .multi()
+      .hSet('Server:Lobby:' + index, hashData)
+      .lPush('Server:Lobby', host)
+      .publish('ServerOn', 'Server:Lobby:' + index)
+      .exec();
+  } else {
+    const setReply = await redisClient
+      .multi()
+      .hSet('Server:Lobby:' + index, hashData)
+      .publish('ServerOn', 'Server:Lobby:' + index)
+      .exec();
+  }
+
+  console.log('Redis 서버 알림 성공');
 };
 
-export const getRedisRoomInfo = async (key) => {
-  const data = await redisClient.get(key);
-  await redisClient.disconnect();
-
-  const parseData = JSON.parse(data);
-  return parseData;
-};
+export { redisClient, subscriber, initOnRedis };

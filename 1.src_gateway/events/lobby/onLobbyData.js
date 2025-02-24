@@ -74,6 +74,8 @@ const onLobbyData = (socket) => async (data) => {
             serverPayload,
             user.id,
           );
+
+          // 로드 밸런싱 추가
           const gameServerSocket = serverSession.getServerById(config.server.gameServer);
           gameServerSocket.write(reqPacket);
         } else {
