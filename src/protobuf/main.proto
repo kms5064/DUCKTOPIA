@@ -242,8 +242,7 @@ message C2SMonsterSpawnResponse { // 몬스터 좌표를 찍어서 서버에 전
   repeated MonsterPositionData monsters = 1;
 }
 
-message
-S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
+message S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
   repeated MonsterPositionData monsters = 1;
 }
 

@@ -32,6 +32,7 @@ class Monster extends MovableObjectBase {
     this.targetPlayer = null;
     //몬스터가 여러 패턴을 가지고 있을 때 그 패턴들을 이 안에서 쿨타임을 관리한다.
     this.distanceBetweenPlayer = Infinity;
+    this.grade = grade;
 
     this.startPoint_x = 0;
     this.startPoint_y = 0;

@@ -8,6 +8,7 @@ const useItemHandler = ({ socket, payload }) => {
   console.log(payload);
   const { itemData } = payload;
   console.log('[아이템 사용 요청]', payload);
+  console.log('[아이템 사용 요청]', itemData);
 
   // 유저 객체 조회
   const user = userSession.getUser(socket.id);

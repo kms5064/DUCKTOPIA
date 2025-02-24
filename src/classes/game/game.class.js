@@ -133,6 +133,7 @@ class Game {
       // Monster Asset 조회
       const { monster: monsterAsset } = getGameAssets();
 
+
       // 몬스터 데이터 뽑기
       const codeIdx = Math.floor(Math.random() * 7);
       const data = monsterAsset.data[codeIdx];
@@ -140,23 +141,23 @@ class Game {
       // 몬스터 생성
       const monster = new Monster(
         monsterId,
-        data.monsterCode,
+        data.code,
         data.name,
         data.hp,
         data.attack,
         data.defence,
         data.range,
         data.speed,
+        data.grade,
         0,
         0,
       );
 
       this.monsters.set(monsterId, monster);
       this.monsterIndex++; //Index 증가
-
       monsterData.push({
         monsterId,
-        monsterCode: monster.monsterCode,
+        monsterCode: monster.code,
       });
     }
     return monsterData;
