@@ -1,6 +1,6 @@
 import net from 'net';
-import { loadProtos, getProtoMessages } from './0.src/init/loadProtos.js';
-import { config } from './0.src/config/config.js';
+import { loadProtos, getProtoMessages } from './src/init/loadProtos.js';
+import { config } from '.src/config/config.js';
 
 // 더미 클라이언트
 
