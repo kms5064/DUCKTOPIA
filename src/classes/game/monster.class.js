@@ -143,7 +143,7 @@ class Monster extends MovableObjectBase {
 
     let lostDistance = 1;
 
-    switch (this.monsterCode) {
+    switch (this.code) {
       case 1:
       case 2:
       case 3:

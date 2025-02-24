@@ -156,7 +156,7 @@ class Game {
 
       monsterData.push({
         monsterId,
-        monsterCode: monster.monsterCode,
+        monsterCode: monster.code,
       });
     }
     return monsterData;
@@ -196,7 +196,7 @@ class Game {
 
     monsterData.push({
       monsterId,
-      monsterCode: bossMonster.monsterCode,
+      monsterCode: bossMonster.code,
     });
   }
 
@@ -477,12 +477,12 @@ class Game {
       // Monster Asset 조회
       const { monster: monsterAsset } = getGameAssets();
 
-      const data = monsterAsset.data.find((asset) => asset.monsterCode === monster.monsterCode);
+      const data = monsterAsset.data.find((asset) => asset.code === monster.monsterCode);
 
       // 몬스터 생성
       const spawnMonster = new Monster(
         monster.monsterId,
-        monster.monsterCode,
+        monster.code,
         data.name,
         data.hp,
         data.attack,
