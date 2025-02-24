@@ -104,26 +104,43 @@ class Player {
   }
 
   findItemIndex(itemCode) {
-    const targetIndex = this.inventory.findIndex((item) => (item.code === itemCode));
+    const targetIndex = this.inventory.findIndex((item) => item.code === itemCode);
     return targetIndex;
   }
 
-  addItem(itemCode, count,emptyIndex) {
-    //아이템을 이미 갖고 있는지
-    const item = this.inventory.find((item) => item.code === itemCode);
-    //있다면 카운트만 증가
-    if (item) {
-      item.stack += count;
-    } else {
-      //없으면 새로 만들어서 push
-      const item = { itemCode: itemCode ,count: count };
-
-      this.inventory.splice(emptyIndex,1,item);
-    }
-    return item;
+  findEmptyIndex() {
+    const index = this.inventory.findIndex((item) => item === null);
+    return index;
   }
 
-  removeItem(itemCode,count) {
+  addItem(itemCode, count, index) {
+    if (index === null) {
+      //아이템을 이미 갖고 있는지
+      const item = this.inventory.find((item) => item.code === itemCode);
+      //있다면 카운트만 증가
+      if (item) {
+        item.stack += count;
+      } else {
+        //없으면 새로 만들어서 push
+        const item = { itemCode: itemCode, count: count };
+
+        const emptyIndex = this.findEmptyIndex();
+        this.inventory.splice(emptyIndex, 1, item);
+      }
+      return item;
+    }else{
+      const item = this.inventory[index];
+      if(item){
+        item.count += count;
+      }else {
+        //없으면 새로 만들어서 push
+        const item = { itemCode: itemCode, count: count };
+        this.inventory.splice(index, 1, item);
+      }
+    }
+  }
+
+  removeItem(itemCode, count) {
     const removedItem = this.inventory.find((item) => item.code === itemCode);
     const removedItemIndex = this.inventory.findindex((item) => item.code === itemCode);
     if (!removedItem) {
