@@ -30,12 +30,12 @@ const InitServer = async () => {
     };
 
     // 서버 상태 on
-    await redisClient.watch('Lobby');
-    const getReply = await redisClient.lRange('Lobby', 0, -1);
+    await redisClient.watch('Server:Lobby');
+    const getReply = await redisClient.lRange('Server:Lobby', 0, -1);
     await redisClient
       .multi()
       .hSet('Server:Lobby:' + getReply.length, hashData)
-      .lPush('Lobby', getLocalIP())
+      .lPush('Server:Lobby', getLocalIP())
       .publish('ServerOn', 'Server:Lobby:' + getReply.length)
       .exec();
   } catch (err) {
