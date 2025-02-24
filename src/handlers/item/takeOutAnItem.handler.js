@@ -7,8 +7,8 @@ import { roomSession } from '../../sessions/session.js';
 
 const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
   //const { itemBoxId, index , count} = payload;
-  const { itemBoxId, itemType, count } = payload; //index대신 아이템 종류
-  console.log(`takeOutAnItemHandler itemBoxId: ${itemBoxId},itemType: ${itemType},count: ${count}`);
+  const { itemBoxId, itemCode, count } = payload; //index대신 아이템 종류
+  console.log(`takeOutAnItemHandler itemBoxId: ${itemBoxId},itemCode: ${itemCode},count: ${count}`);
 
   // 유저 객체 조회
   const user = userSession.getUser(socket.id);
@@ -40,29 +40,35 @@ const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
     throw new CustomError('플레이어를 찾을 수 없습니다');
   }
 
-  // const itemBox = game.getItemBoxById(itemBoxId);
+  const itemBox = game.getItemBoxById(itemBoxId);
+  if (!itemBox) {
+    throw new CustomError('상자를 찾을 수 없습니다');
+  }
+  //인벤토리에 빈공간이 있는지
+  const checkRoom = (ele) => ele === 0;
+  const emptyIndex = player.inventory.findIndex(checkRoom);
 
-  // const item = itemBox.takeOutAnItem(itemType,count, player);
+  if (emptyIndex !== -1) {
+    const item = itemBox.takeOutAnItem(player, itemCode, count,emptyIndex);
 
-  // 꺼내진 아이템을 success코드와 같이 브로드캐스트 해야한다.
-  const playerTakeOutAnItemPayload = {
-    playerId: player.user.id,
-    itemBoxId: 2,
-    itemData: {
-      itemId: itemType,
-      count: count,
-    },
-    count: count,
-    success: false,
-  };
+    // 꺼내진 아이템을 success코드와 같이 브로드캐스트 해야한다.
+    const playerTakeOutAnItemPayload = {
+      playerId: player.user.id,
+      itemBoxId: itemBoxId,
+      itemData: {
+        itemCode: Object.keys(item)[0], //{itemCode:count}
+        count: Object.values(item)[0],
+      },
+      success: true,
+    };
 
-  const notification = makePacket(
-    config.packetType.S_PLAYER_TAKE_OUT_AN_ITEM_NOTIFICATION,
-    playerTakeOutAnItemPayload,
-  );
-  //이 유저가 열고 있다는거 브로드캐스트
+    const notification = makePacket(
+      config.packetType.S_PLAYER_TAKE_OUT_AN_ITEM_NOTIFICATION,
+      playerTakeOutAnItemPayload,
+    );
 
-  room.broadcast(notification);
+    room.broadcast(notification);
+  }
 };
 
 export default playerTakeOutAnItemHandler;

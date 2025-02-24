@@ -31,6 +31,12 @@ const gameStartHandler = ({ socket, payload }) => {
     game.getMonsterById(monster.monsterId).setPosition(monster.x, monster.y);
   });
 
+  objects.forEach((object) => {
+    if(object.ObjectData.objectCode ===2){
+    game.getItemBoxById(object.ObjectData.objectId).setPosition(object.x, object.y);
+    }
+  });
+
   //---- 2025.02.24 초기 아이템 생성 추가
   // 초기 아이템 생성
   const initialItems = game.createInitialItems();
@@ -55,13 +61,33 @@ const gameStartHandler = ({ socket, payload }) => {
   //   });
   // });
 
+  const startGameObject = [];
+   const coreData = {
+      ObjectData: { objectId: 1, objectCode: 1 },
+      itemData: [],
+      x:0,
+      y:0,
+    };
+    startGameObject.push(coreData);
+    game.objects.values().forEach(itemBoxobject => {
+      const itemBox = {
+        ObjectData: { objectId: itemBoxobject.id, objectCode: 2 },
+        itemData: itemBoxobject.itemList,
+        x:itemBoxobject.x,
+        y:itemBoxobject.y,
+      };
+      startGameObject.push(itemBox);
+    });
+
+
   const GameStartNotification = makePacket(config.packetType.START_GAME_NOTIFICATION, {
     gameState: { phaseType: 0, nextPhaseAt: config.game.phaseCount[DayPhase.DAY] + Date.now() }, //이삭님 코드에 이렇게돼있음!
     playerPositions: room.getUsersPositionData(),
     monsters: monsters,
-    objects: objects,
+    objects: startGameObject,
     items: initialItems, // 초기 아이템 추가
   });
+
 
   room.startGame();
   room.broadcast(GameStartNotification);

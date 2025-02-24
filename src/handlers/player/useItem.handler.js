@@ -85,7 +85,7 @@ const useItemHandler = ({ socket, payload }) => {
 
     case 'WEAPON': {
       // 무기 장착 처리
-      player.equipWeapon(item);
+      player.equipWeapon(item.itemCode);
 
       packet = makePacket(config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE, {
         success: true,
