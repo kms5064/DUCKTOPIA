@@ -186,7 +186,7 @@ message S2CGameStartNotification { // 게임시작 알림
   repeated PlayerPositionData playerPositions = 2;
   repeated MonsterPositionData monsters = 3;
   repeated ObjectPositionData objects = 4;
-  repeated ItemData items =5;
+  repeated ItemData items = 5;
 }
 // 이때 클라 서버 모두 몬스터, 장애물(오브젝트), 플레이어 정보를 가짐
 
@@ -249,8 +249,7 @@ message C2SMonsterSpawnResponse { // 몬스터 좌표를 찍어서 서버에 전
   repeated MonsterPositionData monsters = 1;
 }
 
-message
-S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
+message S2CMonsterWaveStartNotification { // 모든 클라이언트에게 몬스터 위치, 정보 알림
   repeated MonsterPositionData monsters = 1;
 }
 

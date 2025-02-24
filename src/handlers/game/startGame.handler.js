@@ -37,11 +37,36 @@ const gameStartHandler = ({ socket, payload }) => {
     }
   });
 
+  //---- 2025.02.24 초기 아이템 생성 추가
+  // 초기 아이템 생성
+  const initialItems = game.createInitialItems();
+
+  // [테스트] 인덱스 0, 1에 고정으로 아이템 추가
+  game.players.forEach((player) => {
+    console.log('\n[아이템 추가 전] 플레이어 인벤토리:', player.inventory);
+
+    // 1번 아이템은 0번 인덱스에
+    player.addItem(1, 1, 0);
+    console.log('[1번 아이템 추가 후] 인벤토리:', player.inventory);
+
+    // 101번 아이템은 1번 인덱스에
+    player.addItem(101, 1, 1);
+    console.log('[101번 아이템 추가 후] 인벤토리:', player.inventory);
+  });
+
+  // 기존 코드 주석 처리 - 찐코드
+  // game.players.forEach((player) => {
+  //   initialItems.forEach((item) => {
+  //     player.addItem(item.itemCode, item.count, null);
+  //   });
+  // });
+
   const GameStartNotification = makePacket(config.packetType.START_GAME_NOTIFICATION, {
     gameState: { phaseType: 0, nextPhaseAt: config.game.phaseCount[DayPhase.DAY] + Date.now() }, //이삭님 코드에 이렇게돼있음!
     playerPositions: room.getUsersPositionData(),
     monsters: monsters,
     objects: objects,
+    items: initialItems, // 초기 아이템 추가
   });
 
   room.startGame();

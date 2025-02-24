@@ -135,23 +135,23 @@ class Game {
       // 몬스터 생성
       const monster = new Monster(
         monsterId,
-        data.monsterCode,
+        data.code,
         data.name,
         data.hp,
         data.attack,
         data.defence,
         data.range,
         data.speed,
+        data.grade,
         0,
         0,
       );
 
       this.monsters.set(monsterId, monster);
       this.monsterIndex++; //Index 증가
-
       monsterData.push({
         monsterId,
-        monsterCode: monster.monsterCode,
+        monsterCode: monster.code,
       });
     }
     return monsterData;
@@ -404,7 +404,7 @@ class Game {
       const codeIdx =
         Math.floor(
           Math.random() *
-            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
+          (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
         ) + config.game.monster.waveMonsterMinCode;
 
       this.monsterIndex++; //Index 증가
@@ -433,12 +433,12 @@ class Game {
       // Monster Asset 조회
       const { monster: monsterAsset } = getGameAssets();
 
-      const data = monsterAsset.data.find((asset) => asset.monsterCode === monster.monsterCode);
+      const data = monsterAsset.data.find((asset) => asset.code === monster.code);
 
       // 몬스터 생성
       const spawnMonster = new Monster(
         monster.monsterId,
-        monster.monsterCode,
+        monster.code,
         data.name,
         data.hp,
         data.attack,
@@ -507,6 +507,21 @@ class Game {
     });
 
     return data;
+  }
+
+  // 초기 아이템 생성 - 테스트
+  createInitialItems() {
+    // 1번과 101번 아이템 고정으로 생성
+    return [
+      {
+        itemCode: 1,
+        count: 1,
+      },
+      {
+        itemCode: 101,
+        count: 1,
+      },
+    ];
   }
 }
 
