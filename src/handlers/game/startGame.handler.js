@@ -31,6 +31,12 @@ const gameStartHandler = ({ socket, payload }) => {
     game.getMonsterById(monster.monsterId).setPosition(monster.x, monster.y);
   });
 
+  objects.forEach((object) => {
+    if(object.ObjectData.objectCode ===2){
+    game.getItemBoxById(object.ObjectData.objectId).setPosition(object.x, object.y);
+    }
+  });
+
   const GameStartNotification = makePacket(config.packetType.START_GAME_NOTIFICATION, {
     gameState: { phaseType: 0, nextPhaseAt: config.game.phaseCount[DayPhase.DAY] + Date.now() }, //이삭님 코드에 이렇게돼있음!
     playerPositions: room.getUsersPositionData(),

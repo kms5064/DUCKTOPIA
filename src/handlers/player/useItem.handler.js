@@ -5,7 +5,8 @@ import Item from '../../classes/item/item.class.js';
 import { getGameAssets } from '../../init/assets.js';
 
 const useItemHandler = ({ socket, payload }) => {
-  const { itemCode } = payload;
+  console.log(payload);
+  const { itemData } = payload;
   console.log('[아이템 사용 요청]', payload);
 
   // 유저 객체 조회
@@ -34,60 +35,59 @@ const useItemHandler = ({ socket, payload }) => {
 
   // 아이템 정보 조회
   const player = game.getPlayer(user.getUserData().userId);
-  // const itemIndex = player.findItemIndex(itemId);
+  const itemIndex = player.findItemByCode(itemData.itemCode);
 
-  // if (itemIndex === -1) {
-  //   throw new Error('아이템을 찾을 수 없습니다.');
-  // }
+  if (itemIndex === -1) {
+    throw new Error('아이템을 찾을 수 없습니다.');
+  }
 
-  // const item = player.inventory[itemIndex];
+  const item = player.inventory[itemIndex];
   let packet;
-  // const playerId = user.getUserData().userId;
+  const playerId = user.getUserData().userId;
 
   // 아이템 타입에 따라 다른 처리
-  // switch (item.type) {
-  //   case Item.Type.FOOD: {
+  switch (item.type) {
+    case Item.Type.FOOD: {
       // food.json에서 해당 아이템의 hunger 값을 가져옴
-      // const { food } = getGameAssets();
-      // const foodData = food.data.find((f) => f.code === item.code);
+      const { food } = getGameAssets();
+      const foodData = food.data.find((f) => f.code === item.itemData.itemCode);
 
-      // if (!foodData) {
-      //   throw new Error('음식 데이터를 찾을 수 없습니다.');
-      // }
+      if (!foodData) {
+        throw new Error('음식 데이터를 찾을 수 없습니다.');
+      }
 
       // 식량 사용 처리 - changePlayerHunger 메서드 사용
-      // const currentHunger = player.hunger;
-      // const addHunger = Math.min(foodData.hunger, 100 - currentHunger); // 최대값을 넘지 않도록 계산
-      // const newHunger = player.changePlayerHunger(addHunger);
-      if(itemCode < 21){
-        packet = makePacket(config.packetType.S_PLAYER_EAT_FOOD_RESPONSE, {
-          success: true,
-          itemCode,
-          playerId: player.user.Id,
-          hunger: 100,
-        });
-      }
-    //   break;
-    // }
+      const currentHunger = player.hunger;
+      const addHunger = Math.min(foodData.hunger, 100 - currentHunger); // 최대값을 넘지 않도록 계산
+      const newHunger = player.changePlayerHunger(addHunger);
 
-    // case Item.Type.WEAPON: {
+      packet = makePacket(config.packetType.S_PLAYER_EAT_FOOD_RESPONSE, {
+        success: true,
+        itemData: item.itemData,
+        playerId,
+        hunger: newHunger,
+      });
+      break;
+    }
+
+    case Item.Type.WEAPON: {
       // 무기 장착 처리
-      // player.equipWeapon(item);
-      if(itemCode>21 && itemCode<300)
+      player.equipWeapon(item.itemData);
+
       packet = makePacket(config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE, {
         success: true,
-        itemCode,
-        playerId: player.user.Id,
+        itemData: item.itemData,
+        playerId,
       });
-  //     break;
-  //   }
+      break;
+    }
 
-  //   default:
-  //     throw new Error('알 수 없는 아이템 타입입니다.');
-  // }
+    default:
+      throw new Error('알 수 없는 아이템 타입입니다.');
+  }
 
   // 아이템 사용 후 인벤토리에서 제거
-  // player.removeItem(itemId);
+  player.removeItemByCode(item.itemData.itemCode, itemData.count);
 
   // 응답 전송
   game.broadcast(packet);

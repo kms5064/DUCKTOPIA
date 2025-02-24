@@ -3,13 +3,9 @@ import { getGameAssets } from '../../init/assets.js';
 import Monster from './monster.class.js';
 import Player from './player.class.js';
 import { config } from '../../config/config.js';
-import { PACKET_TYPE } from '../../config/constants/header.js';
 import { DayPhase, WaveState } from '../../config/constants/game.js';
-import {
-  MIN_COOLTIME_MONSTER_TRACKING,
-  RANGE_COOLTIME_MONSTER_TRACKING,
-} from '../../config/constants/monster.js';
 import ItemBox from '../item/itemBox.class.js';
+import ItemManager from '../item/itemManager.class.js'; import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
 import BossMonster from './bossMonster.class.js';
 
 class Game {
@@ -17,8 +13,7 @@ class Game {
     this.players = new Map();
     this.monsterIndex = 1;
     this.monsters = new Map();//보스 몬스터도 monsters 내부에 넣을 수 있다.
-    this.itemBoxes = new Map();
-    this.object = new Map();
+    this.objects = new Map();
     this.map = []; // 0과 1로 된 2차원배열?
     this.coreHp = config.game.core.maxHP;
     this.corePosition = config.game.core.position;
@@ -50,6 +45,9 @@ class Game {
     //몬스터 쿨타임
     //보스 몬스터까지 이걸 이용해 관리하면 될 듯 하다.
     this.monsterLastUpdate = Date.now();
+
+    // 아이템 관리 : 2025.02.21 추가
+    this.itemManager = new ItemManager();
   }
 
   /**************
@@ -144,7 +142,6 @@ class Game {
         data.code,
         data.name,
         data.hp,
-        'C',//여기가 grade 위치
         data.attack,
         data.defence,
         data.grade,
@@ -185,7 +182,6 @@ class Game {
       data.code,
       data.name,
       data.hp,
-      'S',//여기가 grade 위치
       data.attack,
       data.defence,
       data.grade,
@@ -323,13 +319,10 @@ class Game {
           monster.setTargetPlayer(inputPlayer);
           monsterDiscoverPayload.push({
             monsterId: monsterId,
-            targetId: inputId
-          })
+            targetId: inputId,
+          });
         }
-
-
       }
-
     }
 
     const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, {
@@ -372,9 +365,8 @@ class Game {
     }
   }
 
-  getItemBoxById(itemBoxId) {
-    return this.itemBoxes.get(itemBoxId);
-    //여기까지 몬스터 영역
+  getItemBoxById(objectId) {
+    return this.objects.get(objectId);
   }
 
   checkSpawnArea(monsterCode, x, y) {
@@ -401,12 +393,20 @@ class Game {
   }
 
   createObjectData() {
+    const objectData = [];
     const coreData = {
-      objectId: 1,
-      objectCode: 1,
+      ObjectData: { objectId: 1, objectCode: 1 },
       itemData: [],
+      x: 0,
+      y: 0,
     };
-    return coreData;
+
+    objectData.push(coreData);
+    for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
+      const itemBox = this.createItemBox();
+      objectData.push(itemBox);
+    }
+    return objectData;
   }
 
   coreDamaged(damage) {
@@ -518,12 +518,40 @@ class Game {
     }
   }
 
-  //테스트용 코드
-  addBox() {
-    const itemBox = new ItemBox(2, 0, 0);
-    this.itemBoxes.set(itemBox.id, itemBox);
+
+  // 아이템 박스 생성
+  createItemBox() {
+    const boxId = this.itemManager.createBoxId();
+    const itemBox = new ItemBox(boxId);
+
+    // 랜덤 아이템 생성 및 박스에 추가
+    const items = this.itemManager.generateRandomItems();
+    items.forEach((item, index) => {
+      itemBox.itemList.splice(index, 1, { itemCode: item.itemData.itemCode, count: item.itemData.count });
+    });
+
+    const data = {
+      ObjectData: { objectId: itemBox.id, objectCode: 2 },
+      itemData: itemBox.itemList,
+      x: itemBox.x,
+      y: itemBox.y,
+    };
+
+    this.objects.set(data.ObjectData.objectId, data);
+
+    // 디버깅용 로그
+    console.log(`[아이템 박스 생성] ID: ${boxId}, 위치: (${itemBox.x}, ${itemBox.y})`);
+    console.log('[생성된 아이템 목록]');
+    itemBox.itemList.forEach((item) => {
+      if (item !== null) {
+        console.log(`아이템: ${JSON.stringify(item)}`);
+        console.log(`아이템코드: ${item.itemCode}, 개수: ${item.count}`);
+      }
+
+    });
+
+    return data;
   }
-  /////////////////////////////////////
 }
 
 export default Game;

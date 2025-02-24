@@ -8,7 +8,7 @@
       "hp": 30,
       "attack": 10,
       "defence": 10,
-      "range": 5,
+      "range": 10,
       "speed": 10,
       "grade": "D"
     },
@@ -17,8 +17,8 @@
       "name": "썬더덕",
       "hp": 130,
       "attack": 25,
-      "defence": 7,
-      "range": 7,
+      "defence": 15,
+      "range": 14,
       "speed": 10,
       "grade": "D"
     },
@@ -28,7 +28,7 @@
       "hp": 400,
       "attack": 64,
       "defence": 22,
-      "range": 7,
+      "range": 25,
       "speed": 10,
       "grade": "C"
     },
@@ -38,7 +38,7 @@
       "hp": 250,
       "attack": 100,
       "defence": 10,
-      "range": 10,
+      "range": 28,
       "speed": 8,
       "grade": "C"
     },
@@ -48,7 +48,7 @@
       "hp": 450,
       "attack": 70,
       "defence": 25,
-      "range": 10,
+      "range": 12,
       "speed": 8,
       "grade": "B"
     },
@@ -58,7 +58,7 @@
       "hp": 400,
       "attack": 110,
       "defence": 25,
-      "range": 10,
+      "range": 25,
       "speed": 8,
       "grade": "B"
     },
@@ -68,7 +68,7 @@
       "hp": 700,
       "attack": 80,
       "defence": 40,
-      "range": 10,
+      "range": 15,
       "speed": 11,
       "grade": "A"
     },
@@ -78,7 +78,7 @@
       "hp": 1000,
       "attack": 120,
       "defence": 50,
-      "range": 10,
+      "range": 20,
       "speed": 13,
       "grade": "S"
     }

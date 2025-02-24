@@ -43,8 +43,8 @@ import {
 } from './constants/map.js';
 import { CharacterType } from './constants/character.js';
 import { VALID_DISTANCE_OF_BOX } from './constants/itemBox.js';
-
 import { DAY_TIME, NIGHT_TIME, DayPhase } from './constants/game.js';
+import { ITEM_PICKUP_RANGE } from './constants/item.js';
 
 export const config = {
   header: {
@@ -111,6 +111,9 @@ export const config = {
       validDistance: VALID_DISTANCE_OF_BOX,
       centerX: CENTER_X,
       centerY: CENTER_Y,
+    },
+    item: {
+      pickupRange: ITEM_PICKUP_RANGE,
     },
   },
 };
