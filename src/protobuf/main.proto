@@ -209,6 +209,7 @@ message S2CGameStartNotification { // 게임시작 알림
   repeated PlayerPositionData playerPositions = 2;
   repeated MonsterPositionData monsters = 3;
   repeated ObjectPositionData objects = 4;
+  repeated ItemData items =5;
 }
 // 이때 클라 서버 모두 몬스터, 장애물(오브젝트), 플레이어 정보를 가짐
 
@@ -374,11 +375,7 @@ message C2SPlayerTakeOutAnItemRequest {
   int32 count = 3;
 }
 
-message S2CPlayerTakeOutAnItemNotification {
-  int32 playerId = 1;
-  int32 itemBoxId = 2;
-  ItemData itemData = 3;
-  bool success = 4;
+
 message S2CPlayerTakeOutAnItemNotification {
   int32 playerId = 1;
   int32 itemBoxId = 2;
@@ -392,11 +389,7 @@ message C2SPlayerPutAnItemRequest {
   int32 count = 3;
 }
 
-message S2CPlayerPutAnItemNotification {
-  int32 playerId = 1;
-  int32 itemBoxId = 2;
-  ItemData itemData = 3;
-  bool success = 4;
+
 message S2CPlayerPutAnItemNotification {
   int32 playerId = 1;
   int32 itemBoxId = 2;
@@ -405,11 +398,9 @@ message S2CPlayerPutAnItemNotification {
 }
 
 message C2SPlayerCloseBoxRequest { int32 itemBoxId = 1; }
-message C2SPlayerCloseBoxRequest { int32 itemBoxId = 1; }
 
-message S2CPlayerCloseBoxNotification {
-  int32 playerId = 1;
-  int32 itemBoxId = 2;
+
+
 message S2CPlayerCloseBoxNotification {
   int32 playerId = 1;
   int32 itemBoxId = 2;
@@ -482,7 +473,6 @@ message GamePacket {
     S2CLeaveRoomResponse leaveRoomResponse = 13;
     S2CLeaveRoomNotification leaveRoomNotification = 14;
 
-    // 게임 시작
     // 게임 시작
     C2SGamePrepareRequest gamePrepareRequest = 15;
     S2CGamePrepareResponse gamePrepareResponse = 16;
