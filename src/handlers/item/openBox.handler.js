@@ -50,8 +50,8 @@ const playerOpenBoxHandler = ({ socket, sequence, payload }) => {
     //이 박스가 점유중이라면 컷
     //박스 오픈한채로 돌아다니면 박스 닫히게?
     if (
-      itemBox.calculateDistance <= config.game.VALID_DISTANCE_OF_BOX &&
-      itemBox.occupied !== null
+      //itemBox.calculateDistance <= config.game.VALID_DISTANCE_OF_BOX &&
+      itemBox.occupied === null
     ) {
       itemBox.occupied = player.id;
 

@@ -493,7 +493,7 @@ class Game {
       y: itemBox.y,
     };
 
-    this.objects.set(data.ObjectData.objectId, data);
+    this.objects.set(data.ObjectData.objectId, itemBox);
 
     // 디버깅용 로그
     console.log(`[아이템 박스 생성] ID: ${boxId}, 위치: (${itemBox.x}, ${itemBox.y})`);
