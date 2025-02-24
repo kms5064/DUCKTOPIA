@@ -120,6 +120,11 @@ class Monster extends MovableObjectBase {
     return this.targetPlayer !== null ? true : false;
   }
 
+  //보스 패턴이 발생했다는 의미
+  bossAlert(alert) {
+    return alert;
+  }
+
   //몬스터의 플레이어 추적을 잃게 만든다.
   //외부 측에서 타겟 플레이어가 있는지 체크한다.
   lostPlayer() {

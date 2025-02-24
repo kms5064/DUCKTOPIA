@@ -544,8 +544,14 @@ class Game {
     console.log('[생성된 아이템 목록]');
     itemBox.itemList.forEach((item) => {
       if (item !== null) {
-        console.log(`아이템: ${JSON.stringify(item)}`);
-        console.log(`아이템코드: ${item.itemCode}, 개수: ${item.count}`);
+        if (item.itemCode !== null) {
+          console.log(`아이템: ${JSON.stringify(item)}`);
+          console.log(`아이템코드: ${item.itemCode}, 개수: ${item.count}`);
+        }
+        else {
+          console.log(`아이템코드: null, 개수: ${item.count}`);
+        }
+
       }
 
     });
