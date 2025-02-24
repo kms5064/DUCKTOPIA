@@ -1,0 +1,186 @@
+{
+  "name": "weapon",
+  "version": "1.0.0",
+  "data": [
+    {
+      "code": 101,
+      "name": "나무 검",
+      "attack": 5,
+      "range": 5,
+      "speed": 10,
+      "grade": "COMMON",
+      "type": "sword"
+    },
+    {
+      "code": 102,
+      "name": "낡은 도끼",
+      "attack": 7,
+      "range": 4,
+      "speed": 8,
+      "grade": "COMMON",
+      "type": "axe"
+    },
+    {
+      "code": 103,
+      "name": "초보자의 활",
+      "attack": 4,
+      "range": 15,
+      "speed": 12,
+      "grade": "COMMON",
+      "type": "bow"
+    },
+    {
+      "code": 104,
+      "name": "견습 마법사의 지팡이",
+      "attack": 6,
+      "range": 12,
+      "speed": 9,
+      "grade": "COMMON",
+      "type": "staff"
+    },
+    {
+      "code": 105,
+      "name": "단단한 철검",
+      "attack": 8,
+      "range": 5,
+      "speed": 11,
+      "grade": "COMMON",
+      "type": "sword"
+    },
+    {
+      "code": 106,
+      "name": "사냥용 도끼",
+      "attack": 10,
+      "range": 4,
+      "speed": 9,
+      "grade": "COMMON",
+      "type": "axe"
+    },
+    {
+      "code": 107,
+      "name": "수련자의 활",
+      "attack": 7,
+      "range": 16,
+      "speed": 13,
+      "grade": "COMMON",
+      "type": "bow"
+    },
+    {
+      "code": 108,
+      "name": "마법 지팡이",
+      "attack": 9,
+      "range": 13,
+      "speed": 10,
+      "grade": "COMMON",
+      "type": "staff"
+    },
+    {
+      "code": 109,
+      "name": "미스릴 검",
+      "attack": 25,
+      "range": 6,
+      "speed": 12,
+      "grade": "RARE",
+      "type": "sword"
+    },
+    {
+      "code": 110,
+      "name": "버서커의 도끼",
+      "attack": 30,
+      "range": 5,
+      "speed": 9,
+      "grade": "RARE",
+      "type": "axe"
+    },
+    {
+      "code": 111,
+      "name": "엘프의 활",
+      "attack": 22,
+      "range": 20,
+      "speed": 14,
+      "grade": "RARE",
+      "type": "bow"
+    },
+    {
+      "code": 112,
+      "name": "얼음 지팡이",
+      "attack": 28,
+      "range": 15,
+      "speed": 11,
+      "grade": "RARE",
+      "type": "staff"
+    },
+    {
+      "code": 113,
+      "name": "용기사의 검",
+      "attack": 35,
+      "range": 6,
+      "speed": 13,
+      "grade": "RARE",
+      "type": "sword"
+    },
+    {
+      "code": 114,
+      "name": "번개의 활",
+      "attack": 32,
+      "range": 21,
+      "speed": 15,
+      "grade": "RARE",
+      "type": "bow"
+    },
+    {
+      "code": 115,
+      "name": "드래곤 슬레이어",
+      "attack": 45,
+      "range": 7,
+      "speed": 13,
+      "grade": "EPIC",
+      "type": "sword"
+    },
+    {
+      "code": 116,
+      "name": "천둥의 도끼",
+      "attack": 50,
+      "range": 6,
+      "speed": 10,
+      "grade": "EPIC",
+      "type": "axe"
+    },
+    {
+      "code": 117,
+      "name": "사신의 활",
+      "attack": 40,
+      "range": 22,
+      "speed": 15,
+      "grade": "EPIC",
+      "type": "bow"
+    },
+    {
+      "code": 118,
+      "name": "아크메이지의 지팡이",
+      "attack": 47,
+      "range": 17,
+      "speed": 12,
+      "grade": "EPIC",
+      "type": "staff"
+    },
+    {
+      "code": 119,
+      "name": "창세신의 검",
+      "attack": 70,
+      "range": 8,
+      "speed": 14,
+      "grade": "LEGENDARY",
+      "type": "sword"
+    },
+    {
+      "code": 120,
+      "name": "절대자의 지팡이",
+      "attack": 65,
+      "range": 20,
+      "speed": 13,
+      "grade": "LEGENDARY",
+      "type": "staff"
+    }
+  ]
+}

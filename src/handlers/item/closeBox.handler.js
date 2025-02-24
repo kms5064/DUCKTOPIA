@@ -13,25 +13,25 @@ const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
     // 유저 객체 조회
     const user = userSession.getUser(socket.id);
     if (!user) {
-      throw new CustomError( '유저를 찾을 수 없습니다.');
+      throw new CustomError('유저를 찾을 수 없습니다.');
     }
 
     // RoomId 조회
     const roomId = user.getRoomId();
     if (!roomId) {
-      throw new CustomError( '유저에게서 roodId를 찾을 수 없습니다.');
+      throw new CustomError('유저에게서 roodId를 찾을 수 없습니다.');
     }
 
     // 룸 객체 조회
     const room = roomSession.getRoom(roomId);
     if (!room) {
-      throw new CustomError( '방을 찾을 수 없습니다.');
+      throw new CustomError('방을 찾을 수 없습니다.');
     }
 
     // 게임 객체(세션) 조회
     const game = room.getGame();
     if (!game) {
-      throw new CustomError( '게임을 찾을 수 없습니다.');
+      throw new CustomError('게임을 찾을 수 없습니다.');
     }
 
     // 플레이어 객체 조회
@@ -49,7 +49,10 @@ const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
       itemBoxId: itemBoxId,
     };
 
-    const notification = makePacket(config.packetType.S_PLAYER_CLOSE_BOX_NOTIFICATION, notificationPayload);
+    const notification = makePacket(
+      config.packetType.S_PLAYER_CLOSE_BOX_NOTIFICATION,
+      notificationPayload,
+    );
     //이 유저가 닫는거 브로드캐스트
 
     room.broadcast(notification);

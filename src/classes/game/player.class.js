@@ -14,7 +14,7 @@ class Player {
     this.lv = 1;
     this.atk = atk;
     this.inventory = Array.from({ length: 16 }, () => null);
-    this.equippedWeapon = 0;
+    this.equippedWeapon = { atk: 0 };
     this.x = x;
     this.y = y;
     this.isAlive = true;
@@ -162,6 +162,10 @@ class Player {
 
   getUser() {
     return this.user;
+  }
+
+  getPlayerHp() {
+    return this.hp;
   }
 }
 
