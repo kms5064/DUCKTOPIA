@@ -12,6 +12,7 @@ import {
 import ItemBox from '../item/itemBox.class.js';
 import ItemManager from '../item/itemManager.class.js';
 
+
 class Game {
   constructor(ownerId) {
     this.players = new Map();
@@ -403,7 +404,7 @@ class Game {
       const codeIdx =
         Math.floor(
           Math.random() *
-            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
+          (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
         ) + config.game.monster.waveMonsterMinCode;
 
       this.monsterIndex++; //Index 증가
@@ -432,12 +433,12 @@ class Game {
       // Monster Asset 조회
       const { monster: monsterAsset } = getGameAssets();
 
-      const data = monsterAsset.data.find((asset) => asset.monsterCode === monster.monsterCode);
+      const data = monsterAsset.data.find((asset) => asset.code === monster.code);
 
       // 몬스터 생성
       const spawnMonster = new Monster(
         monster.monsterId,
-        monster.monsterCode,
+        monster.code,
         data.name,
         data.hp,
         data.attack,
