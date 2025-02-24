@@ -14,17 +14,10 @@ function getLocalIP() {
   }
 }
 
-// 큰 멀티
-// 작은 멀티
 // 1. list에서 서버 조회
 // 2. hashKey 생성 lobby2 lobby3 ...
 // 3. 값 저장
 // 4. Pub/Sub을 이용해서 서버오픈 알림
-
-const consoleSub = (message, channel) => {
-  console.log(message);
-  console.log(channel);
-};
 
 const InitServer = async () => {
   try {
