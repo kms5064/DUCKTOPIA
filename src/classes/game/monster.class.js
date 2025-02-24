@@ -42,6 +42,7 @@ class Monster extends MovableObjectBase {
 
     // 몬스터의 인식 쿨타임 여부
     this.monsterAwakeCoolTime = 0;
+    this.monsterTrackingTime = 0;
   }
 
   setName(name) {
@@ -132,7 +133,7 @@ class Monster extends MovableObjectBase {
     );
 
     const distanceFromStartPoint = Math.sqrt(
-      Math.pow(playerPos.x - this.startPoint_x, 2) + Math.pow(playerPos.y - this.startPoint_y, 2),
+      Math.pow(this.x - this.startPoint_x, 2) + Math.pow(this.y - this.startPoint_y, 2),
     );
 
     let lostDistance = 1;
@@ -163,8 +164,9 @@ class Monster extends MovableObjectBase {
     //2. 타겟 플레이어의 hp가 0이 되었을 때 
     //3. 시작 위치에서 일정 이상의 거리를 벗어나게 되었을 때
     const targetHp = this.targetPlayer.getPlayerHp();
-    if (distance > this.awakeRange + lostDistance || targetHp <= 0 || distanceFromStartPoint > lostDistance * 2 + this.awakeRange) {
+    if (distance > this.awakeRange + lostDistance || targetHp <= 0 || distanceFromStartPoint > lostDistance * 2 + this.awakeRange || this.monsterTrackingTime < 0) {
       this.monsterAwakeCoolTime = 1000;
+      this.monsterTrackingTime = 0;
       this.distanceBetweenPlayer = Infinity;
       this.targetPlayer = null;
       return true;
@@ -172,6 +174,10 @@ class Monster extends MovableObjectBase {
       this.distanceBetweenPlayer = distance;
       return false;
     }
+  }
+
+  isBossMonster() {
+    return false;
   }
 
   //몬스터가 죽거나 할 때 아이템 드롭할 아이템의 숫자를 제공한다.
@@ -210,6 +216,9 @@ class Monster extends MovableObjectBase {
     if (this.monsterAwakeCoolTime > 0) {
       this.monsterAwakeCoolTime -= deltaTime;
     }
+    else if (this.monsterTrackingTime > 0) {
+      this.monsterTrackingTime -= deltaTime;
+    }
   }
   monsterDeath() {
     return this.hp <= 0 ? true : false;
@@ -217,6 +226,7 @@ class Monster extends MovableObjectBase {
 
   //강제로 플레이어를 지정해줄 때 
   setTargetPlayer(player) {
+    this.monsterAwakeCoolTime = 30000;//일단 트래킹 시간 30초를 주자
     this.targetPlayer = player;
   }
 

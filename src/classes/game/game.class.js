@@ -10,12 +10,13 @@ import {
   RANGE_COOLTIME_MONSTER_TRACKING,
 } from '../../config/constants/monster.js';
 import ItemBox from '../item/itemBox.class.js';
+import BossMonster from './bossMonster.class.js';
 
 class Game {
   constructor(ownerId) {
     this.players = new Map();
     this.monsterIndex = 1;
-    this.monsters = new Map();
+    this.monsters = new Map();//보스 몬스터도 monsters 내부에 넣을 수 있다.
     this.itemBoxes = new Map();
     this.object = new Map();
     this.map = []; // 0과 1로 된 2차원배열?
@@ -143,6 +144,7 @@ class Game {
         data.code,
         data.name,
         data.hp,
+        'C',//여기가 grade 위치
         data.attack,
         data.defence,
         data.grade,
@@ -161,6 +163,45 @@ class Game {
       });
     }
     return monsterData;
+  }
+
+  //보스를 생성할 때는 별도로 보스 생성 함수를 사용하자.
+  createBossMonsterData() {
+    if (config.game.monster.maxSpawnCount <= this.monsters.size) {
+      return;
+    }
+
+    const monsterId = this.monsterIndex;
+    // Monster Asset 조회
+    const { monster: monsterAsset } = getGameAssets();
+
+    // 몬스터 데이터 뽑기
+    const codeIdx = Math.floor(Math.random() * 7);
+    const data = monsterAsset.data[codeIdx];
+
+    // 몬스터 생성
+    const bossMonster = new BossMonster(
+      monsterId,
+      data.code,
+      data.name,
+      data.hp,
+      'S',//여기가 grade 위치
+      data.attack,
+      data.defence,
+      data.grade,
+      data.range,
+      data.speed,
+      0,
+      0,
+    );
+
+    this.monsters.set(monsterId, bossMonster);
+    this.monsterIndex++; //Index 증가
+
+    monsterData.push({
+      monsterId,
+      monsterCode: bossMonster.monsterCode,
+    });
   }
 
   updateMonsterPosition(monsterId, x, y) {
