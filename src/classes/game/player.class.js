@@ -108,11 +108,6 @@ class Player {
     return targetIndex;
   }
 
-  findEmptyIndex() {
-    const index = this.inventory.findIndex((item) => item === null);
-    return index;
-  }
-
   addItem(itemCode, count, index) {
     if (index === null) {
       //아이템을 이미 갖고 있는지
@@ -124,7 +119,8 @@ class Player {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
 
-        const emptyIndex = this.findEmptyIndex();
+        const checkRoom = (ele) => ele === null;
+        const emptyIndex = this.inventory.findIndex(checkRoom);
         this.inventory.splice(emptyIndex, 1, item);
       }
       return item;

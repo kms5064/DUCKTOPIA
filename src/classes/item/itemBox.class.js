@@ -7,7 +7,7 @@ class ItemBox {
     this.y = 0;
     //this.type = type;
     //this.hp = ITEM_BOX_HP;
-    this.itemList = Array.from({ length: 8 }, () => null);
+    this.itemList = Array.from({ length: 8 }, () => ({itemCode:1,count:1}));
     this.occupied = null; //점유중 플레이어아이디
   }
 
