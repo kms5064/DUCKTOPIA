@@ -4,6 +4,7 @@
 // import { config } from '../../config/config.js';
 
 // // 이거 지금 안쓰는데요?
+// 이후 사용된다면 이걸 개조해서 보스 몬스터의 생성을 해보도록 하자.
 
 // const spawnMonsterHandler = ({ socket, payload }) => {
 //   const { monsters } = payload;

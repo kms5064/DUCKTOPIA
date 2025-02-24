@@ -78,6 +78,10 @@ class BossMonster extends Monster {
     //2. hatePointList 내에 해당 플레이어의 정보가 있는지 살핀다.
     //3. 보스 몬스터의 조건은 뭐가 있을까. 일단 어그로를 어떻게 관리할 것인가도 봐야겠다.
     lostPlayer() {
+        if (this.bossPatternTimeOut !== null) {
+            return false;
+        }
+
         const distanceFromStartPoint = Math.sqrt(
             Math.pow(this.x - this.startPoint_x, 2) + Math.pow(this.y - this.startPoint_y, 2),
         );
