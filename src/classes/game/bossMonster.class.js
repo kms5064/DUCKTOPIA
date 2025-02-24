@@ -24,8 +24,6 @@ class BossMonster extends Monster {
 
         //보스 몬스터의 어그로 수치 관리용
         this.hatePointList = new Map();
-
-
     }
 
     //보스는 생성과 동시에 스타트 포지션이 돌아오는 게 맞다고 생각된다.

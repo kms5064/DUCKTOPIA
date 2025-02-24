@@ -164,6 +164,14 @@ class Game {
     return monsterData;
   }
 
+  //몬스터의 숫자가 최대치보다 내려갔을 때 소환되도록 한다.
+  createBossMonsterData() {
+    //몬스터의 숫자가 최대 숫자보다 크다면 보스 몬스터는 잠시 지연하도록 하자. 
+    if (config.game.monster.maxSpawnCount <= this.monsters.size) {
+      return false;
+    }
+  }
+
   updateMonsterPosition(monsterId, x, y) {
     this.monsters.get(monsterId).setPosition(x, y);
   }
