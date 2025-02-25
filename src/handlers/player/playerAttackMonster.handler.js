@@ -51,10 +51,16 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
 
   if (monster && player) {
     // 몬스터 HP 차감 처리
-    const damage = player.getPlayerAtkDamage();
-    const currHp = monster.setDamaged(damage);
+    const equippedWeaponCode = player.equippedWeapon.itemCode;
+    const equippedWeapon = game.itemManager.weaponData.find(
+      (weapon) => weapon.code === equippedWeaponCode,
+    );
 
-    // console.log(monsterId, ' HP: ', currHp);
+    const damage = player.getPlayerAtkDamage(equippedWeapon.attack);
+    console.log('[Player Attack] 플레이어 공격력:', damage);
+    console.log('[무기 공격력]');
+
+    const currHp = monster.setDamaged(damage);
 
     // 패킷 생성
     packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
@@ -69,7 +75,7 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
       // 몬스터 사망 처리
       game.removeMonster(monsterId);
 
-      console.log(monsterId, ' 번 몬스터 죽음');
+      // console.log(monsterId, ' 번 몬스터 죽음');
 
       packet = makePacket(config.packetType.S_MONSTER_DEATH_NOTIFICATION, {
         monsterId,
@@ -79,7 +85,7 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
       // 아이템 드롭 처리
       console.log(`[아이템 드롭 시도] 몬스터 등급: ${monster.grade}`);
       const monsterPosition = monster.getMonsterPos();
-      console.log(`[아이템 드롭 위치] x: ${monsterPosition.x}, y: ${monsterPosition.y}`);
+      console.log(`[몬스터 사망 위치] x: ${monsterPosition.x}, y: ${monsterPosition.y}`);
 
       const droppedItems = game.itemManager.createDropItems(monster.grade, monsterPosition);
       console.log(`[아이템 드롭 결과] 생성된 아이템 수: ${droppedItems.length}`);

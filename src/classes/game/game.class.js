@@ -5,7 +5,8 @@ import Player from './player.class.js';
 import { config } from '../../config/config.js';
 import { DayPhase, WaveState } from '../../config/constants/game.js';
 import ItemBox from '../item/itemBox.class.js';
-import ItemManager from '../item/itemManager.class.js';import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
+import ItemManager from '../item/itemManager.class.js';
+import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
 
 class Game {
   constructor(ownerId) {
@@ -363,16 +364,16 @@ class Game {
   }
 
   createObjectData() {
-    const objectData =[];
+    const objectData = [];
     const coreData = {
       ObjectData: { objectId: 1, objectCode: 1 },
       itemData: [],
-      x:0,
-      y:0,
+      x: 0,
+      y: 0,
     };
 
     objectData.push(coreData);
-    for(let i=0;i<MAX_NUMBER_OF_ITEM_BOX;i++){
+    for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
       const itemBox = this.createItemBox();
       objectData.push(itemBox);
     }
@@ -488,7 +489,6 @@ class Game {
     }
   }
 
-
   // 아이템 박스 생성
   createItemBox() {
     const boxId = this.itemManager.createBoxId();
@@ -496,8 +496,11 @@ class Game {
 
     // 랜덤 아이템 생성 및 박스에 추가
     const items = this.itemManager.generateRandomItems();
-    items.forEach((item,index) => {
-      itemBox.itemList.splice(index,1,{itemCode:item.itemData.itemCode,count:item.itemData.count});
+    items.forEach((item, index) => {
+      itemBox.itemList.splice(index, 1, {
+        itemCode: item.itemData.itemCode,
+        count: item.itemData.count,
+      });
     });
 
     const data = {
@@ -510,15 +513,15 @@ class Game {
     this.objects.set(data.ObjectData.objectId, itemBox);
 
     // 디버깅용 로그
-    console.log(`[아이템 박스 생성] ID: ${boxId}, 위치: (${itemBox.x}, ${itemBox.y})`);
-    console.log('[생성된 아이템 목록]');
-    itemBox.itemList.forEach((item) => {
-      if(item !== null){
-        console.log( `아이템: ${JSON.stringify(item)}`);
-        console.log( `아이템코드: ${item.itemCode}, 개수: ${item.count}`);
-      }
+    // console.log(`[아이템 박스 생성] ID: ${boxId}, 위치: (${itemBox.x}, ${itemBox.y})`);
+    // console.log('[생성된 아이템 목록]');
+    // itemBox.itemList.forEach((item) => {
+    //   if(item !== null){
+    //     console.log( `아이템: ${JSON.stringify(item)}`);
+    //     console.log( `아이템코드: ${item.itemCode}, 개수: ${item.count}`);
+    //   }
 
-    });
+    // });
 
     return data;
   }

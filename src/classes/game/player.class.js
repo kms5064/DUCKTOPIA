@@ -89,7 +89,6 @@ class Player {
 
     return { playerId: this.user.id, x: this.x, y: this.y };
   };
-
   calculateLatency = () => {
     //레이턴시 구하기 => 수정할 것)각 클라마다 다른 레이턴시를 가지고 계산
     //레이턴시 속성명도 생각해볼 필요가 있다
@@ -167,8 +166,8 @@ class Player {
   /** end of Hunger System */
 
   //플레이어 어택은 데미지만 리턴하기
-  getPlayerAtkDamage() {
-    return this.atk + this.lv * config.game.player.atkPerLv + this.equippedWeapon.atk;
+  getPlayerAtkDamage(weaponAtk) {
+    return this.atk + this.lv * config.game.player.atkPerLv + weaponAtk;
   }
 
   playerDead() {
