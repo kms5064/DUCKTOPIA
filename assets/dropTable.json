@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "data": {
     "D": {
-      "dropRate": 20,
+      "dropRate": 100,
       "itemCount": {
         "min": 0,
         "max": 1
