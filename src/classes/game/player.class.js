@@ -139,7 +139,7 @@ class Player {
 
   removeItem(itemCode, count) {
     const removedItem = this.inventory.find((item) => item.itemCode === itemCode);
-    const removedItemIndex = this.inventory.findindex((item) => item.itemCode === itemCode);
+    const removedItemIndex = this.inventory.findIndex((item) => item.itemCode === itemCode);
     if (!removedItem) {
       throw new CustomError('인벤토리에서 아이템을 찾을 수 없습니다.');
     }
