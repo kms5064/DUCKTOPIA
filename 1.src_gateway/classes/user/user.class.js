@@ -6,6 +6,7 @@ class User {
     this.id = null; //여기에 유니크 아이디
     this.email = null;
     this.name = null;
+    this.gameServer = null;
     this.inGame = false; // 게임 진행 여부 확인
   }
 

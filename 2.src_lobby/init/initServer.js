@@ -1,10 +1,10 @@
-import { initOnRedis } from '../db/redis/redis.js';
 import { loadProtos } from './loadProtos.js';
+import serverOnRedis from './serverOnRedis.js';
 
 const InitServer = async () => {
   try {
     await loadProtos();
-    await initOnRedis();
+    await serverOnRedis();
   } catch (err) {
     console.error(err);
   }

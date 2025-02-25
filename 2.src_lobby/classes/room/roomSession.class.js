@@ -3,6 +3,7 @@ import Room from './room.class.js';
 class RoomSession {
   constructor() {
     this.rooms = new Map(); // key : roomId, value : room
+    this.name = null;
     this.newId = 1;
   }
 

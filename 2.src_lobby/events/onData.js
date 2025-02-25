@@ -43,7 +43,6 @@ const onData = (socket) => async (data) => {
       );
 
       const packetType = packet.readUInt16BE(0);
-      console.log('# packetType ', packetType);
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
       const proto = getProtoMessages().GamePacket;

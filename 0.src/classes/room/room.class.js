@@ -98,7 +98,6 @@ class Room {
     setTimeout(() => {
       this.game.gameLoopStart();
     }, 3000);
-
   }
 
   // 게임 종료

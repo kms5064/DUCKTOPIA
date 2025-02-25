@@ -1,7 +1,6 @@
 import { config } from '../../config/config.js';
-import handlers from '../../handlers/index.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
-import { serverSession, userSession } from '../../sessions/session.js';
+import { userSession } from '../../sessions/session.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
@@ -40,7 +39,7 @@ const onGameData = (socket) => async (data) => {
 
       // 값 추출 및 버전 검증
       const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
-      if (version !== config.client.version) continue;
+      if (version !== config.client.version) break;
 
       const userId = +packet.toString(
         'utf8',
@@ -58,14 +57,6 @@ const onGameData = (socket) => async (data) => {
 
       const user = userSession.getUserByID(userId);
       if (!user) continue;
-
-      if (packetType === config.packetType.S_GAME_OVER_NOTIFICATION[0]) {
-        console.log(userId, '게임종료 확인');
-
-        const lobbyServerSocket = serverSession.getServerById(config.server.lobbyServer);
-        lobbyServerSocket.write(packet);
-        user.setGameState(false);
-      }
 
       // 클라이언트 패킷 전달
       const packetInfo = Object.values(config.packetType).find(

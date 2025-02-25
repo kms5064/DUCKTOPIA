@@ -4,7 +4,6 @@ import CustomError from '../../utils/error/customError.js';
 import { config } from '../../config/config.js';
 
 const onGameServerHandler = ({ socket, payload, packetType }) => {
-  console.log('# packetType: ', packetType);
   // 유저 객체 조회
   const user = userSession.getUser(socket.id);
   if (!user || !user.id) {
@@ -17,8 +16,8 @@ const onGameServerHandler = ({ socket, payload, packetType }) => {
   const packetInfo = Object.values(config.packetType).find(([type, name]) => type === packetType);
   const packet = makeServerPacket(packetInfo, payload, user.id);
 
-  const gameSocket = serverSession.getServerById(config.server.gameServer);
-  gameSocket.write(packet);
+  const gameServer = serverSession.getServerById(user.gameServer);
+  gameServer.socket.write(packet);
 };
 
 export default onGameServerHandler;

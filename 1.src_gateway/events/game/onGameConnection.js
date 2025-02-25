@@ -1,17 +1,15 @@
 import { userSession } from '../../sessions/session.js';
-import onData from './onGameData.js';
-import onEnd from './onGameEnd.js';
-import onError from './onGameError.js';
+import onGameData from './onGameData.js';
+import onGameEnd from './onGameEnd.js';
+import onGameError from './onGameError.js';
 //import { onData } from './onData.js';
 
 const onGameConnection = async (socket) => {
   socket.buffer = Buffer.alloc(0);
 
-  socket.on('data', onData(socket));
-  socket.on('end', onEnd(socket));
-  socket.on('error', onError(socket));
-  // // id정보 없는 유저 생성
-  // userSession.addUser(socket);
+  socket.on('data', onGameData(socket));
+  socket.on('end', onGameEnd(socket));
+  socket.on('error', onGameError(socket));
 };
 
 export default onGameConnection;

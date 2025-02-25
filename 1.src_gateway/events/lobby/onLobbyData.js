@@ -1,5 +1,6 @@
 import { config } from '../../config/config.js';
 import handlers from '../../handlers/index.js';
+import gameStartHandler from '../../handlers/server/gameStart.handler.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import { serverSession, userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
@@ -34,8 +35,8 @@ const onLobbyData = (socket) => async (data) => {
       const headerLength =
         defaultLength + versionByte + userIdLengthByte + userIdByte + payloadLengthByte;
 
-      // buffer의 길이가 충분한 동안 실행
-      if (socket.buffer.length < headerLength + payloadByte) continue;
+      // buffer의 길이가 충분한 동안 실행 > 분할
+      if (socket.buffer.length < headerLength + payloadByte) break;
       const packet = socket.buffer.subarray(0, headerLength + payloadByte);
       // 남은 패킷 buffer 재할당
       socket.buffer = socket.buffer.subarray(headerLength + payloadByte);
@@ -60,34 +61,16 @@ const onLobbyData = (socket) => async (data) => {
       const user = userSession.getUserByID(userId);
       if (!user) continue;
 
-      if (packetType === config.packetType.PREPARE_GAME_SERVER[0]) {
-        // 게임 상태 동기화
-        for (const { name, userId: tempId } of payload.room.users) {
-          const tempUser = userSession.getUserByID(tempId);
-          tempUser.setGameState(payload.success);
-        }
-
-        if (payload.success) {
-          const serverPayload = { room: payload.room };
-          const reqPacket = makeServerPacket(
-            config.packetType.JOIN_SERVER_REQUEST,
-            serverPayload,
-            user.id,
-          );
-
-          // 로드 밸런싱 추가
-          const gameServerSocket = serverSession.getServerById(config.server.gameServer);
-          gameServerSocket.write(reqPacket);
-        } else {
-          throw CustomError('게임 시작 요청이 실패했습니다.');
-        }
-        continue;
-      }
-
       // 클라이언트 패킷 전달
       const packetInfo = Object.values(config.packetType).find(
         ([type, name]) => type === packetType,
       );
+
+      if (packetType === config.packetType.PREPARE_GAME_SERVER[0]) {
+        gameStartHandler({ socket, payload, userId });
+        // 서버 -> 서버 이므로 클라이언트에게 전송 X
+        continue;
+      }
 
       const resPacket = makePacket(packetInfo, payload);
       user.socket.write(resPacket);

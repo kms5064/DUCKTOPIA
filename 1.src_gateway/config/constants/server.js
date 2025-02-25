@@ -1,2 +1,2 @@
-export const LOBBY_SERVER = 'LOBBY_SERVER';
-export const GAME_SERVER = 'GAME_SERVER';
+export const LOBBY_SERVER = 'Server:Lobby:0';
+export const GAME_SERVER = 'Server:Game:0';

@@ -16,8 +16,8 @@ const onLobbyServerHandler = ({ socket, payload, packetType }) => {
 
   const packetInfo = Object.values(config.packetType).find(([type, name]) => type === packetType);
   const packet = makeServerPacket(packetInfo, payload, user.id);
-  const serverSocket = serverSession.getServerById(config.server.lobbyServer);
-  serverSocket.write(packet);
+  const lobbyServer = serverSession.getServerById(config.server.lobbyServer);
+  lobbyServer.socket.write(packet);
 };
 
 export default onLobbyServerHandler;

@@ -46,7 +46,7 @@ const signInHandler = async ({ socket, payload }) => {
   );
 
   const serverSocket = serverSession.getServerById(config.server.lobbyServer);
-  serverSocket.write(loginCast);
+  serverSocket.socket.write(loginCast);
 
   // 6. 패킷 전송
   const loginResponse = makePacket(config.packetType.LOGIN_RESPONSE, {

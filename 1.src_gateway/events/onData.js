@@ -7,7 +7,7 @@ import { formatDate } from '../utils/dateFormatter.js';
 
 const onData = (socket) => async (data) => {
   // console.log(`[클라이언트] 데이터 수신 ${socket.id} 패킷 ${data}, `);
-  console.log(`${formatDate(new Date())} [클라이언트] 데이터 수신 ${socket.id} 패킷`);
+  // console.log(`${formatDate(new Date())} [클라이언트] 데이터 수신 ${socket.id} 패킷`);
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
@@ -20,7 +20,6 @@ const onData = (socket) => async (data) => {
 
   try {
     while (socket.buffer.length >= defaultLength) {
-      console.log(idx++, 'bufer Leng:', socket.buffer.length);
       try {
         versionByte = socket.buffer.readUInt8(packetTypeByte);
         payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
@@ -37,9 +36,9 @@ const onData = (socket) => async (data) => {
       // console.log(idx++, 'bufer Leng:', socket.buffer.length);
       if (socket.buffer.length < headerLength + payloadByte) break;
       const packet = socket.buffer.subarray(0, headerLength + payloadByte);
-      console.log(
-        `현재 ${packet.readUInt16BE(0)}의 packet 길이 ${headerLength + payloadByte} 입니다.`,
-      );
+      // console.log(
+      //   `현재 ${packet.readUInt16BE(0)}의 packet 길이 ${headerLength + payloadByte} 입니다.`,
+      // );
 
       // 남은 패킷 buffer 재할당
       socket.buffer = socket.buffer.subarray(headerLength + payloadByte);
