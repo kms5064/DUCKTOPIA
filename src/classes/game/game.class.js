@@ -356,6 +356,15 @@ class Game {
         //일반 몬스터의 행동
       }
     }
+
+    for (const [monsterId, waveMonster] of this.waveMonsters) {
+      if (monster.isBossMonster()) {
+        waveMonster.setPattern();//웨이브 속의 보스 몬스터의 패턴
+      }
+      else {
+        //일반 웨이브 몬스터의 패턴
+      }
+    }
   }
 
   monsterTimeCheck() {
@@ -481,6 +490,8 @@ class Game {
         monstersData.push({
           monsterId,
           monsterCode: waveMonster.code,
+          x: monster.x,
+          y: monster.y
         });
       }
 
@@ -521,6 +532,7 @@ class Game {
       }
 
     }
+
     const waveMonsters = this.createWaveMonsterData(monsters);
 
     const packet = makePacket(config.packetType.C_MONSTER_SPAWN_RESPONSE, monsters);
