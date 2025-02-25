@@ -109,17 +109,18 @@ class Player {
 
     if (this.hungerCounter >= config.game.player.playerHungerPeriod) {
       if (this.hunger > 0) {
-        this.hunger -= config.game.player.playerHungerDecreaseAmount;
+        this.changePlayerHunger(-config.game.player.playerHungerDecreaseAmount);
 
-        if (this.hunger < 0) this.hunger = 0;
+        // 캐릭터 hunger 동기화 패킷 전송
+        const decreaseHungerPacket = makePacket(
+          config.packetType.S_PLAYER_HUNGER_UPDATE_NOTIFICATION,
+          {
+            playerId: this.id,
+            hunger: this.hunger,
+          },
+        );
 
-        // TODO 캐릭터 hunger 동기화 패킷 전송
-        // const decreaseHungerPacket = makePacket(, {
-        //   playerId: this.id,
-        //   hunger: this.hunger,
-        // })
-
-        // this.user.getSocket().write(decreaseHungerPacket);
+        this.user.getSocket().write(decreaseHungerPacket);
       } else {
         // 체력 감소
 
@@ -141,13 +142,15 @@ class Player {
   }
 
   // 허기 회복
-  addPlayerHunger(amount) {
+  changePlayerHunger(amount) {
     this.hunger += amount;
 
     if (this.hunger > this.maxHunger) {
       this.hunger = this.maxHunger;
       this.hungerCounter = 0;
       this.lastHungerUpdate = Date.now();
+    } else if (this.hunger < 0) {
+      this.hunger = 0;
     }
 
     return this.hunger;
