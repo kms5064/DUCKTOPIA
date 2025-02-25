@@ -1,4 +1,5 @@
 import { config } from '../../config/config.js';
+import CustomError from '../../utils/error/customError.js';
 
 class Player {
   constructor(user, atk, x, y) {
@@ -114,7 +115,7 @@ class Player {
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       //있다면 카운트만 증가
       if (item) {
-        item.stack += count;
+        item.count += count;
       } else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
@@ -139,14 +140,14 @@ class Player {
 
   removeItem(itemCode, count) {
     const removedItem = this.inventory.find((item) => item.itemCode === itemCode);
-    const removedItemIndex = this.inventory.findindex((item) => item.itemCode === itemCode);
+    const removedItemIndex = this.inventory.findIndex((item) => item.itemCode === itemCode);
     if (!removedItem) {
       throw new CustomError('인벤토리에서 아이템을 찾을 수 없습니다.');
     }
 
     //보유량이 더 많으면 갯수만 줄이기
-    if (removedItem.stack >= count) {
-      removedItem.stack -= count;
+    if (removedItem.count >= count) {
+      removedItem.count -= count;
     } else {
       //아이템을 제거
       this.inventory.splice(removedItemIndex, 1, 0);

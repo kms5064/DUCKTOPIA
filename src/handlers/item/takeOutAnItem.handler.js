@@ -50,6 +50,7 @@ const playerTakeOutAnItemHandler = ({ socket, sequence, payload }) => {
 
   if (emptyIndex !== -1) {
     const item = itemBox.takeOutAnItem(player, itemCode, count,emptyIndex);
+    console.log(`플레이어가 아이템을 꺼냈습니다 ${JSON.stringify(item)}`);
 
     // 꺼내진 아이템을 success코드와 같이 브로드캐스트 해야한다.
     const playerTakeOutAnItemPayload = {

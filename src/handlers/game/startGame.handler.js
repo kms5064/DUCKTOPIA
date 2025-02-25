@@ -69,12 +69,12 @@ const gameStartHandler = ({ socket, payload }) => {
       y:0,
     };
     startGameObject.push(coreData);
-    game.objects.values().forEach(itemBoxobject => {
+    [...game.objects.values()].forEach(itemBoxObject => {
       const itemBox = {
-        ObjectData: { objectId: itemBoxobject.id, objectCode: 2 },
-        itemData: itemBoxobject.itemList,
-        x:itemBoxobject.x,
-        y:itemBoxobject.y,
+        ObjectData: { objectId: itemBoxObject.id, objectCode: 2 },
+        itemData: itemBoxObject.itemList,
+        x:itemBoxObject.x,
+        y:itemBoxObject.y,
       };
       startGameObject.push(itemBox);
     });
