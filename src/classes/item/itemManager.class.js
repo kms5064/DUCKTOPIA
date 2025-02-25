@@ -5,6 +5,7 @@
 import Item from './item.class.js';
 import ItemBox from './itemBox.class.js';
 import { getGameAssets } from '../../init/assets.js';
+import { config } from '../../config/config.js';
 
 class ItemManager {
   constructor() {
@@ -16,11 +17,6 @@ class ItemManager {
     this.foodData = food.data;
     this.weaponData = weapon.data;
     this.lastBoxId = 1; // 마지막으로 생성된 박스의 ID
-
-    // 아이템 박스 관련 상수
-    this.BOX_MAX_SLOTS = 8; // 박스 최대 슬롯 수
-    this.ITEM_MIN_COUNT = 1; // 아이템 최소 개수
-    this.ITEM_MAX_STACK = 5; // 아이템 최대 스택
   }
 
   // 박스 ID 생성
@@ -37,7 +33,7 @@ class ItemManager {
   // 랜덤 아이템 생성
   generateRandomItems() {
     const items = [];
-    const slotCount = Math.floor(Math.random() * this.BOX_MAX_SLOTS) + 1; // 최소 1개
+    const slotCount = Math.floor(Math.random() * config.itemBox.boxMaxSlots) + 1; // 최소 1개
 
     for (let i = 0; i < slotCount; i++) {
       // 아이템 타입 결정 (무기 또는 음식)
@@ -58,7 +54,8 @@ class ItemManager {
       } else {
         // 음식 아이템 생성
         const randomFood = this.foodData[Math.floor(Math.random() * this.foodData.length)];
-        const count = Math.floor(Math.random() * this.ITEM_MAX_STACK) + this.ITEM_MIN_COUNT;
+        const count =
+          Math.floor(Math.random() * config.itemBox.itemMaxStack) + config.itemBox.itemMinCount;
         items.push(
           new Item({
             itemData: {
