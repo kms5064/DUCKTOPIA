@@ -45,7 +45,6 @@ const onData = (socket) => async (data) => {
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
       const proto = getProtoMessages().GamePacket;
-      console.log(packetType);
       const handler = handlers[packetType];
       const gamePacket = proto.decode(payloadBuffer);
       const payload = gamePacket[gamePacket.payload];

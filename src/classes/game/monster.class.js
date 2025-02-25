@@ -137,23 +137,24 @@ class Monster extends MovableObjectBase {
 
     let lostDistance = 1;
 
+
     switch (this.code) {
-      case 1:
-      case 2:
-      case 3:
-      case 4:
+      case 201:
+      case 202:
+      case 203:
+      case 204:
         lostDistance = 5;
         break;
-      case 5:
+      case 205:
         lostDistance = 6;
         break;
-      case 6:
+      case 206:
         lostDistance = 7;
         break;
-      case 7:
+      case 207:
         lostDistance = 8;
         break;
-      case 8:
+      case 208:
         lostDistance = 9;
         break;
     }

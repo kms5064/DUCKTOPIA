@@ -32,8 +32,8 @@ const gameStartHandler = ({ socket, payload }) => {
   });
 
   objects.forEach((object) => {
-    if(object.ObjectData.objectCode ===2){
-    game.getItemBoxById(object.ObjectData.objectId).setPosition(object.x, object.y);
+    if (object.ObjectData.objectCode === 2) {
+      game.getItemBoxById(object.ObjectData.objectId).setPosition(object.x, object.y);
     }
   });
 
@@ -62,22 +62,22 @@ const gameStartHandler = ({ socket, payload }) => {
   // });
 
   const startGameObject = [];
-   const coreData = {
-      ObjectData: { objectId: 1, objectCode: 1 },
-      itemData: [],
-      x:0,
-      y:0,
+  const coreData = {
+    ObjectData: { objectId: 1, objectCode: 1 },
+    itemData: [],
+    x: 0,
+    y: 0,
+  };
+  startGameObject.push(coreData);
+  Object.values(game.objects).forEach(itemBoxobject => {
+    const itemBox = {
+      ObjectData: { objectId: itemBoxobject.id, objectCode: 2 },
+      itemData: itemBoxobject.itemList,
+      x: itemBoxobject.x,
+      y: itemBoxobject.y,
     };
-    startGameObject.push(coreData);
-    game.objects.values().forEach(itemBoxobject => {
-      const itemBox = {
-        ObjectData: { objectId: itemBoxobject.id, objectCode: 2 },
-        itemData: itemBoxobject.itemList,
-        x:itemBoxobject.x,
-        y:itemBoxobject.y,
-      };
-      startGameObject.push(itemBox);
-    });
+    startGameObject.push(itemBox);
+  });
 
 
   const GameStartNotification = makePacket(config.packetType.START_GAME_NOTIFICATION, {
