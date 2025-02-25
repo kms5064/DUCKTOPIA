@@ -192,8 +192,14 @@ class Game {
       pos_y,
       isWave,
     )
+
+    if (isWave) {
+      bossMonster.setStartPosition(config.game.core.position.x, config.game.core.position.y);
+    }
     //몬스터의 생성을 
     this.waveMonsters.set(monsterId, bossMonster);
+
+
     //this.monsters.set(monsterId, bossMonster);
     return {
       monsterId,
@@ -358,7 +364,7 @@ class Game {
     }
 
     for (const [monsterId, waveMonster] of this.waveMonsters) {
-      if (monster.isBossMonster()) {
+      if (waveMonster.isBossMonster()) {
         waveMonster.setPattern();//웨이브 속의 보스 몬스터의 패턴
       }
       else {
@@ -482,6 +488,8 @@ class Game {
           true,
         );
 
+        waveMonster.setStartPosition(config.game.core.position.x, config.game.core.position.y);
+
         this.waveMonsters.set(monsterId, waveMonster);
         //this.monsters.set(monsterId, waveMonster);
 
@@ -535,7 +543,7 @@ class Game {
 
     const waveMonsters = this.createWaveMonsterData(monsters);
 
-    const packet = makePacket(config.packetType.C_MONSTER_SPAWN_RESPONSE, monsters);
+    const packet = makePacket(config.packetType.C_MONSTER_SPAWN_RESPONSE, waveMonsters);
 
     this.broadcast(packet);
   }
@@ -552,7 +560,7 @@ class Game {
       this.changePhase();
 
       if (this.dayPhase === DayPhase.NIGHT) {
-        this.addWaveMonster();
+        //this.spawnWaveMonster();
       }
 
       this.dayCounter = 0;
