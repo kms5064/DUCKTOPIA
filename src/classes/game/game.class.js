@@ -135,7 +135,7 @@ class Game {
       const codeIdx = Math.floor(Math.random() * monsterList.length);
       const data = monsterAsset.data[monsterList[codeIdx]];
 
-      if (i !== maxAmount) {
+      if (i < maxAmount) {
         const monster = new Monster(
           monsterId,
           data.code,
@@ -178,6 +178,7 @@ class Game {
     const data = monsterAsset.data[7];
 
     const monsterId = this.monsterIndex++;
+    console.log(monsterId);
     const bossMonster = new BossMonster(
       monsterId,
       208,
@@ -194,10 +195,14 @@ class Game {
     )
 
     if (isWave) {
-      bossMonster.setStartPosition(config.game.core.position.x, config.game.core.position.y);
+      //bossMonster.setStartPosition(config.game.core.position.x, config.game.core.position.y);
+      this.waveMonsters.set(monsterId, bossMonster);
+    }
+    else {
+      this.monsters.set(monsterId, bossMonster);
     }
     //몬스터의 생성을 
-    this.waveMonsters.set(monsterId, bossMonster);
+
 
 
     //this.monsters.set(monsterId, bossMonster);
@@ -280,9 +285,13 @@ class Game {
       let inputPlayer = null;
       if (!monster.hasTargetPlayer()) {
         //몬스터가 죽었을 때, hp가 0인데 반응이 나올 수 있으니 체크
-        if (monster.monsterDeath()) {
-          this.monsters.delete(monsterId);
-          continue;
+        // if (monster.monsterDeath()) {
+        //   this.monsters.delete(monsterId);
+        //   continue;
+        // }
+
+        if (monster.isBossMonster()) {
+          console.log("보스가 작동한다");
         }
 
         for (const [playerId, player] of this.players) {
