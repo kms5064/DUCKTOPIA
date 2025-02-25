@@ -154,8 +154,8 @@ class Monster extends MovableObjectBase {
       case 207:
         lostDistance = 3;
         break;
-      case 208:
-        lostDistance = 3.5;
+      case 208://보스 몬스터인데 혹시 보스가 아니게 될 수 있으니까.
+        lostDistance = 20;
         break;
     }
 
@@ -196,6 +196,14 @@ class Monster extends MovableObjectBase {
 
   getMonsterId() {
     return this.id;
+  }
+
+  waveMonsterCheck() {
+    return this.isWaveMonster;
+  }
+
+  isBossMonster() {
+    return false;
   }
 
   //현재 몬스터와 플레이어 사이에 얼마나 거리가 떨어져 있는지 보기

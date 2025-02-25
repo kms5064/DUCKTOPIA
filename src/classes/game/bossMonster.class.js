@@ -1,5 +1,6 @@
 import Monster from "./monster.class.js";
 
+//waveMonster 내부에서 처리하도록 함
 class BossMonster extends Monster {
     constructor(
         id,
@@ -147,11 +148,6 @@ class BossMonster extends Monster {
             default:
                 break;
         }
-    }
-
-    dropItemCount() {
-        const defaultdrop = super.dropItemCount() + 3;
-        return defaultdrop;
     }
 
 
