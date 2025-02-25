@@ -1,11 +1,14 @@
 import { config } from '../../config/config.js';
 import CustomError from '../../utils/error/customError.js';
+import { roomSession } from '../../sessions/session.js';
+import makePacket from '../../utils/packet/makePacket.js';
 
 class Player {
   constructor(user, atk, x, y) {
     this.user = user; // User Class
     this.maxHp = config.game.player.playerMaxHealth;
     this.hp = config.game.player.playerMaxHealth;
+    this.maxHunger = config.game.player.playerMaxHunger;
     this.hunger = config.game.player.playerMaxHunger;
     this.speed = config.game.player.playerSpeed;
     this.range = config.game.player.playerDefaultRange;
@@ -23,6 +26,10 @@ class Player {
     //위치 변경 요청 패킷간의 시간차
     this.packetTerm = 0;
     this.lastPosUpdateTime = Date.now();
+
+    // hunger
+    this.hungerCounter = 0;
+    this.lastHungerUpdate = 0;
   }
 
   changePlayerHp(damage) {
@@ -89,10 +96,76 @@ class Player {
     //player값 직접 바꾸는건 메서드로 만들어서 사용
   };
 
+  /** Hunger System */
+  // 허기 초기화
+  initHungerUpdate() {
+    this.lastHungerUpdate = Date.now();
+  }
+
+  // 허기 감소 카운팅 함수
+  hungerCheck() {
+    const now = Date.now();
+    const deltaTime = now - this.lastHungerUpdate;
+    this.hungerCounter += deltaTime;
+    this.lastHungerUpdate = now;
+
+    if (this.hungerCounter >= config.game.player.playerHungerPeriod) {
+      // game 접근
+      const game = roomSession.getRoom(this.user.getRoomId()).getGame();
+
+      if (this.hunger > 0) {
+        this.changePlayerHunger(-config.game.player.playerHungerDecreaseAmount);
+
+        // console.log('플레이어 아이디' + this.user.id);
+        // console.log('플레이어 배고품' + this.hunger);
+
+        // 캐릭터 hunger 동기화 패킷 전송
+        const decreaseHungerPacket = makePacket(
+          config.packetType.S_PLAYER_HUNGER_UPDATE_NOTIFICATION,
+          {
+            playerId: this.user.id,
+            hunger: this.hunger,
+          },
+        );
+
+        game.broadcast(decreaseHungerPacket);
+      } else {
+        // 체력 감소
+
+        this.hp -= config.game.player.playerHpDecreaseAmountByHunger;
+
+        // 캐릭터 hp 동기화 패킷 전송
+        const decreaseHpPacket = makePacket(config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION, {
+          playerId: this.user.id,
+          hp: this.hp,
+        });
+
+        game.broadcast(decreaseHpPacket);
+      }
+
+      this.hungerCounter = 0;
+
+      // console.log('현재 아이디 : ', this.user.id, ', 현재 허기 : ', this.hunger, ', 현재 체력 : ', this.hp);
+    }
+  }
+
+  // 허기 회복
   changePlayerHunger(amount) {
     this.hunger += amount;
+
+    if (this.hunger > this.maxHunger) {
+      this.hunger = this.maxHunger;
+      this.hungerCounter = 0;
+      this.lastHungerUpdate = Date.now();
+    } else if (this.hunger < 0) {
+      this.hunger = 0;
+    }
+
     return this.hunger;
   }
+
+  /** end of Hunger System */
+
   //플레이어 어택은 데미지만 리턴하기
   getPlayerAtkDamage() {
     return this.atk + this.lv * config.game.player.atkPerLv + this.equippedWeapon.atk;
