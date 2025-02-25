@@ -5,10 +5,6 @@ import { errorHandler } from '../utils/error/errorHandler.js';
 import onEnd from './onEnd.js';
 
 const onData = (socket) => async (data) => {
-  if (socket.stack > 5) {
-    console.error('잘못된 접근 제거');
-    onEnd(socket)();
-  }
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
@@ -25,9 +21,9 @@ const onData = (socket) => async (data) => {
         versionByte = socket.buffer.readUInt8(packetTypeByte);
         payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
       } catch (err) {
-        console.error('잘못된 패킷 제거');
-        socket.stack += 1;
+        console.error('잘못된 요청 제거');
         socket.buffer = Buffer.alloc(0);
+        onEnd(socket)();
       }
       const headerLength = defaultLength + versionByte + payloadLengthByte;
 
@@ -40,9 +36,9 @@ const onData = (socket) => async (data) => {
       // 값 추출 및 버전 검증
       const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
       if (version !== config.client.version) {
-        console.error('잘못된 패킷 제거');
-        socket.stack += 1;
+        console.error('형식 오류 요청 제거');
         socket.buffer = Buffer.alloc(0);
+        onEnd(socket)();
         break;
       }
       const packetType = packet.readUInt16BE(0);

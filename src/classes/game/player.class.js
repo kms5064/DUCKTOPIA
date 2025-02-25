@@ -15,8 +15,8 @@ class Player {
 
     this.lv = 1;
     this.atk = atk;
-    this.inventory = Array.from({ length: 16 }, () => null);
-    this.equippedWeapon = { atk: 0 };
+    this.inventory = Array.from({ length: 16 }, () => 0);
+    this.equippedWeapon = null;
     this.x = x;
     this.y = y;
     this.isAlive = true;
@@ -166,24 +166,63 @@ class Player {
     return this.isAlive;
   }
 
-  findItemIndex(itemId) {
-    const targetIndex = this.inventory.findIndex((item) => (item.id = itemId));
+  findItemIndex(itemCode) {
+    const targetIndex = this.inventory.findIndex((item) => item && item.itemCode === itemCode);
     return targetIndex;
   }
 
-  addItem(typeNum, count) {
-    //아이템 에셋에서 typeNum
-    const item = this.inventory.find((item) => item.type === typeNum);
-    if (item) {
+  addItem(itemCode, count, index) {
+    if (index === 0) {
+      //아이템을 이미 갖고 있는지
+      const item = this.inventory.find((item) => item && item.itemCode === itemCode);
+      //있다면 카운트만 증가
+      if (item) {
+        item.stack += count;
+      } else {
+        //없으면 새로 만들어서 push
+        const item = { itemCode: itemCode, count: count };
+
+        const checkRoom = (ele) => ele === 0;
+        const emptyIndex = this.inventory.findIndex(checkRoom);
+        this.inventory.splice(emptyIndex, 1, item);
+      }
+      return item;
+    } else {
+      const item = this.inventory[index];
+      if (item) {
+        item.count += count;
+      } else {
+        //없으면 새로 만들어서 push
+        const item = { itemCode: itemCode, count: count };
+        this.inventory.splice(index, 1, item);
+      }
+      return item;
     }
-    this.inventory.push(item);
-    return this.inventory;
   }
 
-  removeItem(itemId) {
-    const targetIndex = this.findItemIndex(itemId);
-    this.inventory.splice(targetIndex, 1);
-    return this.inventory;
+  removeItem(itemCode, count) {
+    const removedItem = this.inventory.find((item) => item.itemCode === itemCode);
+    const removedItemIndex = this.inventory.findindex((item) => item.itemCode === itemCode);
+    if (!removedItem) {
+      throw new CustomError('인벤토리에서 아이템을 찾을 수 없습니다.');
+    }
+
+    //보유량이 더 많으면 갯수만 줄이기
+    if (removedItem.stack >= count) {
+      removedItem.stack -= count;
+    } else {
+      //아이템을 제거
+      this.inventory.splice(removedItemIndex, 1, 0);
+    }
+    // const targetIndex = this.findItemIndex(itemCode);
+    // this.inventory.splice(targetIndex, 1,0);
+    // return this.inventory;
+  }
+
+  equipWeapon(itemCode) {
+    const weapon = this.inventory.find((item) => item.itemCode === itemCode);
+    this.equippedWeapon = weapon;
+    return weapon;
   }
 
   //공격 사거리 변경

@@ -29,7 +29,7 @@ export const PACKET_TYPE = {
   START_GAME_RESPONSE: [3005, 'gameStartResponse'],
   START_GAME_NOTIFICATION: [3006, 'gameStartNotification'],
 
-  // 플레이어
+  // 플레이어 기본 동작
   C_PLAYER_POSITION_UPDATE_REQUEST: [4001, 'playerPositionUpdateRequest'],
   S_PLAYER_POSITION_UPDATE_NOTIFICATION: [4002, 'playerPositionUpdateNotification'],
   S_PLAYER_HP_UPDATE_NOTIFICATION: [4003, 'playerHpUpdateNotification'],
@@ -37,7 +37,7 @@ export const PACKET_TYPE = {
   C_PLAYER_ATTACK_MONSTER_REQUEST: [4005, 'playerAttackMonsterRequest'],
   S_PLAYER_ATTACK_NOTIFICATION: [4006, 'playerAttackNotification'],
   S_PLAYER_DEATH_NOTIFICATION: [4007, 'playerDeathNotification'],
-  S_PLAYER_GET_ITEM_REQUEST: [4008, 'playerGetItemRequest'],
+  C_PLAYER_GET_ITEM_REQUEST: [4008, 'playerGetItemRequest'], // S_ -> C_로 변경
   C_PLAYER_USE_ITEM_REQUEST: [4009, 'playerUseItemRequest'],
   S_PLAYER_EAT_FOOD_RESPONSE: [4010, 'playerEatFoodResponse'],
   S_PLAYER_EQUIP_WEAPON_RESPONSE: [4011, 'playerEquipWeaponResponse'],
@@ -50,6 +50,10 @@ export const PACKET_TYPE = {
   S_PLAYER_PUT_AN_ITEM_NOTIFICATION: [4018, 'playerPutAnItemNotification'],
   C_PLAYER_CLOSE_BOX_REQUEST: [4019, 'playerCloseBoxRequest'],
   S_PLAYER_CLOSE_BOX_NOTIFICATION: [4020, 'playerCloseBoxNotification'],
+  //---- 2025.02.21 추가 : 오누리
+  S_ITEM_SPAWN_NOTIFICATION: [4021, 'itemSpawnNotification'],
+  S_PLAYER_GET_ITEM_NOTIFICATION: [4022, 'playerGetItemNotification'],
+  //---- 추가 완료
 
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],

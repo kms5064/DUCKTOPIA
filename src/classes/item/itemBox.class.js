@@ -1,12 +1,13 @@
 import CustomError from '../../utils/error/customError.js';
 
 class ItemBox {
-  constructor(id, x, y) {
-    this.id = id;
-    this.x = x;
-    this.y = y;
+  constructor(boxId) {
+    this.id = boxId;
+    this.objectCode = 2;
+    this.x = 0;
+    this.y = 0;
     //this.hp = ITEM_BOX_HP;
-    this.itemList = Array.from({ length: 8 }, () => null);
+    this.itemList = Array.from({ length: 8 }, () => 0);
     this.occupied = null; //점유중 플레이어아이디
   }
 
@@ -14,33 +15,34 @@ class ItemBox {
     return this.itemList;
   }
 
-  takeOutAnItem(itemType, count, player) {
-    //조회하는걸로 바꾸기
-    const removedItem = this.itemList.find((item) => item.type === itemType);
+  //플레이어가 박스에서 꺼내기
+  takeOutAnItem(player,itemCode, count,emptyIndex) {
+    //temType을 기반으로 박스에 아이템 조회
+    const removedItem = this.itemList.find((item) => item.itemCode === itemCode);
+    const removedItemIndex = this.itemList.findindex((item) => item.itemCode === itemCode);
     if (!removedItem) {
       throw new CustomError('상자에서 아이템을 찾을 수 없습니다.');
     }
 
+    //보유량이 더 많으면 갯수만 줄이기
     if (removedItem.stack >= count) {
       removedItem.stack -= count;
+    } else {
+      //아이템을 제거하고 stack만큼만 아이템을 반환하도록
+      count = removedItem.stack;
+      this.itemList.splice(removedItemIndex, 1, 0);
+      const item = player.addItem(itemCode, count,emptyIndex);
+      return item;
     }
-
-    player.addItem(removedItem.TypeNum, count);
-
+    //player 인벤토리에 추가된 item반환
     return removedItem;
   }
-
-  putAnItem(item) {
-    const checkRoom = (ele) => ele === null;
-    const emptyIndex = this.itemList.findIndex(checkRoom);
-
-    if (emptyRoom !== -1) {
-      this.itemList.splice(emptyIndex, 1, item);
-      player.removeItem(item.id);
-      return true;
-    } else {
-      return false;
-    }
+  //플레이어가 박스에 넣기
+  putAnItem(player,itemCode, count,emptyIndex) {
+    const item = { itemCode: itemCode ,count: count };
+    this.itemList.splice(emptyIndex, 1, item);
+    player.removeItem(itemCode);
+    return item;
   }
 
   calculateDistance(px, py) {
@@ -51,6 +53,13 @@ class ItemBox {
   changeItemPos(index1, index2) {
     [this.itemList[index1], this.itemList[index2]] = [this.itemList[index2], this.itemList[index1]];
   }
+
+  setPosition(x,y){
+    this.x=x;
+    this.y=y;
+  }
+
+
 }
 
 export default ItemBox;

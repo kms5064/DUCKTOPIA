@@ -3,21 +3,16 @@ import { getGameAssets } from '../../init/assets.js';
 import Monster from './monster.class.js';
 import Player from './player.class.js';
 import { config } from '../../config/config.js';
-import { PACKET_TYPE } from '../../config/constants/header.js';
 import { DayPhase, WaveState } from '../../config/constants/game.js';
-import {
-  MIN_COOLTIME_MONSTER_TRACKING,
-  RANGE_COOLTIME_MONSTER_TRACKING,
-} from '../../config/constants/monster.js';
 import ItemBox from '../item/itemBox.class.js';
+import ItemManager from '../item/itemManager.class.js';import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
 
 class Game {
   constructor(ownerId) {
     this.players = new Map();
     this.monsterIndex = 1;
     this.monsters = new Map();
-    this.itemBoxes = new Map();
-    this.object = new Map();
+    this.objects = new Map();
     this.map = []; // 0과 1로 된 2차원배열?
     this.coreHp = config.game.core.maxHP;
     this.corePosition = config.game.core.position;
@@ -48,6 +43,9 @@ class Game {
 
     //몬스터 쿨타임
     this.monsterLastUpdate = Date.now();
+
+    // 아이템 관리 : 2025.02.21 추가
+    this.itemManager = new ItemManager();
   }
 
   /**************
@@ -151,23 +149,23 @@ class Game {
       // 몬스터 생성
       const monster = new Monster(
         monsterId,
-        data.monsterCode,
+        data.code,
         data.name,
         data.hp,
         data.attack,
         data.defence,
         data.range,
         data.speed,
+        data.grade,
         0,
         0,
       );
 
       this.monsters.set(monsterId, monster);
       this.monsterIndex++; //Index 증가
-
       monsterData.push({
         monsterId,
-        monsterCode: monster.monsterCode,
+        monsterCode: monster.code,
       });
     }
     return monsterData;
@@ -337,9 +335,8 @@ class Game {
     }
   }
 
-  getItemBoxById(itemBoxId) {
-    return this.itemBoxes.get(itemBoxId);
-    //여기까지 몬스터 영역
+  getItemBoxById(objectId) {
+    return this.objects.get(objectId);
   }
 
   checkSpawnArea(monsterCode, x, y) {
@@ -366,12 +363,20 @@ class Game {
   }
 
   createObjectData() {
+    const objectData =[];
     const coreData = {
-      objectId: 1,
-      objectCode: 1,
+      ObjectData: { objectId: 1, objectCode: 1 },
       itemData: [],
+      x:0,
+      y:0,
     };
-    return coreData;
+
+    objectData.push(coreData);
+    for(let i=0;i<MAX_NUMBER_OF_ITEM_BOX;i++){
+      const itemBox = this.createItemBox();
+      objectData.push(itemBox);
+    }
+    return objectData;
   }
 
   coreDamaged(damage) {
@@ -442,12 +447,12 @@ class Game {
       // Monster Asset 조회
       const { monster: monsterAsset } = getGameAssets();
 
-      const data = monsterAsset.data.find((asset) => asset.monsterCode === monster.monsterCode);
+      const data = monsterAsset.data.find((asset) => asset.code === monster.code);
 
       // 몬스터 생성
       const spawnMonster = new Monster(
         monster.monsterId,
-        monster.monsterCode,
+        monster.code,
         data.name,
         data.hp,
         data.attack,
@@ -483,12 +488,55 @@ class Game {
     }
   }
 
-  //테스트용 코드
-  addBox() {
-    const itemBox = new ItemBox(2, 0, 0);
-    this.itemBoxes.set(itemBox.id, itemBox);
+
+  // 아이템 박스 생성
+  createItemBox() {
+    const boxId = this.itemManager.createBoxId();
+    const itemBox = new ItemBox(boxId);
+
+    // 랜덤 아이템 생성 및 박스에 추가
+    const items = this.itemManager.generateRandomItems();
+    items.forEach((item,index) => {
+      itemBox.itemList.splice(index,1,{itemCode:item.itemData.itemCode,count:item.itemData.count});
+    });
+
+    const data = {
+      ObjectData: { objectId: itemBox.id, objectCode: 2 },
+      itemData: itemBox.itemList,
+      x: itemBox.x,
+      y: itemBox.y,
+    };
+
+    this.objects.set(data.ObjectData.objectId, itemBox);
+
+    // 디버깅용 로그
+    console.log(`[아이템 박스 생성] ID: ${boxId}, 위치: (${itemBox.x}, ${itemBox.y})`);
+    console.log('[생성된 아이템 목록]');
+    itemBox.itemList.forEach((item) => {
+      if(item !== null){
+        console.log( `아이템: ${JSON.stringify(item)}`);
+        console.log( `아이템코드: ${item.itemCode}, 개수: ${item.count}`);
+      }
+
+    });
+
+    return data;
   }
-  /////////////////////////////////////
+
+  // 초기 아이템 생성 - 테스트
+  createInitialItems() {
+    // 1번과 101번 아이템 고정으로 생성
+    return [
+      {
+        itemCode: 1,
+        count: 1,
+      },
+      {
+        itemCode: 101,
+        count: 1,
+      },
+    ];
+  }
 }
 
 export default Game;

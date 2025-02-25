@@ -13,13 +13,14 @@ import attackPlayerMonsterHandler from './player/playerAttackMonster.handler.js'
 import waveStartHandler from './game/waveStart.handler.js';
 import monsterAttackHandler from './monster/monsterAttack.handler.js';
 import monsterMoveNotificationHandler from './monster/moveNotification.handler.js';
-import weaponPlayerHandler from './player/equipWeapon.handler.js';
+import useItemHandler from './player/useItem.handler.js';
 import playerDamagedByMonsterHandler from './player/playerDamagedByMonster.js';
 import playerOpenBoxHandler from './item/openBox.handler.js';
 import playerTakeOutAnItemHandler from './item/takeOutAnItem.handler.js';
 import playerPutAnItemHandler from './item/putAnItem.handler.js';
 import playerCloseBoxHandler from './item/closeBox.handler.js';
 import objectDamagedByMonsterHandler from './object/objectDamagedByMonster.handler.js';
+import getItemHandler from './item/getItem.handler.js';
 
 const handlers = {
   [config.packetType.REGISTER_REQUEST[0]]: signUpHandler,
@@ -36,13 +37,14 @@ const handlers = {
   [config.packetType.C_MONSTER_SPAWN_RESPONSE[0]]: waveStartHandler,
   [config.packetType.C_MONSTER_ATTACK_REQUEST[0]]: monsterAttackHandler,
   [config.packetType.C_MONSTER_MOVE_REQUEST[0]]: monsterMoveNotificationHandler,
-  [config.packetType.C_PLAYER_USE_ITEM_REQUEST[0]]: weaponPlayerHandler,
+  [config.packetType.C_PLAYER_USE_ITEM_REQUEST[0]]: useItemHandler, // 아이템 사용
   [config.packetType.C_PLAYER_OPEN_BOX_REQUEST[0]]: playerOpenBoxHandler,
   [config.packetType.C_PLAYER_TAKE_OUT_AN_ITEM_REQUEST[0]]: playerTakeOutAnItemHandler,
   [config.packetType.C_PLAYER_PUT_AN_ITEM_REQUEST[0]]: playerPutAnItemHandler,
   [config.packetType.C_PLAYER_CLOSE_BOX_REQUEST[0]]: playerCloseBoxHandler,
   [config.packetType.C_PLAYER_DAMAGED_BY_MONSTER_REQUEST[0]]: playerDamagedByMonsterHandler,
   [config.packetType.C_OBJECT_DAMAGED_BY_MONSTER_REQUEST[0]]: objectDamagedByMonsterHandler,
+  [config.packetType.C_PLAYER_GET_ITEM_REQUEST[0]]: getItemHandler,
   // [config.packetType.C_PLAYER_OPEN_BOX_REQUEST[0]]: playerOpenBoxHandler,
   // [config.packetType.C_PLAYER_TAKE_OUT_AN_ITEM_REQUEST[0]]: playerTakeOutAnItemHandler,
   // [config.packetType.C_PLAYER_PUT_AN_ITEM_REQUEST[0]]: playerPutAnItemHandler,

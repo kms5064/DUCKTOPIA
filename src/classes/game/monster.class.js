@@ -10,27 +10,29 @@ import MovableObjectBase from '../base/objectBase.class.js';
 class Monster extends MovableObjectBase {
   constructor(
     id,
-    monsterCode,
+    code, // monster.json의 monsterCode -> code로 변경됐으므로 이름 변경
     name,
     hp,
     attack,
     defence,
     range,
     speed,
+    grade,
     x = 0,
     y = 0,
     isWaveMonster = false,
   ) {
     //moveObject에서 id, 좌표값, 범위, 스피드를 가지고 있다.
     super(id, x, y, range, speed);
-    this.monsterCode = monsterCode;
+    this.code = code;
     this.hp = hp;
-    this.attack = attack
+    this.attack = attack;
     this.defence = defence;
     this.name = name;
     this.targetPlayer = null;
     //몬스터가 여러 패턴을 가지고 있을 때 그 패턴들을 이 안에서 쿨타임을 관리한다.
     this.distanceBetweenPlayer = Infinity;
+    this.grade = grade;
 
     this.startPoint_x = 0;
     this.startPoint_y = 0;
@@ -135,10 +137,14 @@ class Monster extends MovableObjectBase {
 
     /** 몬스터가 플레이어를 잃는 조건 */
     //1. 몬스터와 플레이어 간의 거리가 인식 범위를 넘어갔을 때
-    //2. 타겟 플레이어의 hp가 0이 되었을 때 
+    //2. 타겟 플레이어의 hp가 0이 되었을 때
     //3. 시작 위치에서 일정 이상의 거리를 벗어나게 되었을 때
     const targetHp = this.targetPlayer.getPlayerHp();
-    if (distance > this.awakeRange || targetHp <= 0 || distanceFromStartPoint > 10 + this.awakeRange) {
+    if (
+      distance > this.awakeRange ||
+      targetHp <= 0 ||
+      distanceFromStartPoint > 10 + this.awakeRange
+    ) {
       this.distanceBetweenPlayer = Infinity;
       this.targetPlayer = null;
       return true;
@@ -149,35 +155,35 @@ class Monster extends MovableObjectBase {
   }
 
   //몬스터가 죽거나 할 때 아이템 드롭할 아이템의 숫자를 제공한다.
-  dropItemCount() {
-    const dropCount =
-      10 -
-      Math.floor(
-        Math.log(Math.ceil(Math.random() * config.game.monster.maxItemDropCount)) / Math.log(2),
-      );
+  // dropItemCount() {
+  //   const dropCount =
+  //     10 -
+  //     Math.floor(
+  //       Math.log(Math.ceil(Math.random() * config.game.monster.maxItemDropCount)) / Math.log(2),
+  //     );
 
-    switch (dropCount) {
-      case 0:
-      case 1:
-        return 0;
-        break;
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-        return 1;
-        break;
-      case 6:
-      case 7:
-      case 8:
-        return 2;
-        break;
-      case 9:
-      case 10:
-        return 3;
-        break;
-    }
-  }
+  //   switch (dropCount) {
+  //     case 0:
+  //     case 1:
+  //       return 0;
+  //       break;
+  //     case 2:
+  //     case 3:
+  //     case 4:
+  //     case 5:
+  //       return 1;
+  //       break;
+  //     case 6:
+  //     case 7:
+  //     case 8:
+  //       return 2;
+  //       break;
+  //     case 9:
+  //     case 10:
+  //       return 3;
+  //       break;
+  //   }
+  // }
 
   //일단 몬스터가 벗어났을 때 3~8초 동안은 벗어나게 하기
   CoolTimeCheck(deltaTime) {
@@ -189,10 +195,20 @@ class Monster extends MovableObjectBase {
     return this.hp <= 0 ? true : false;
   }
 
-  //강제로 플레이어를 지정해줄 때 
+  //강제로 플레이어를 지정해줄 때
   setTargetPlayer(player) {
     this.targetPlayer = player;
   }
+
+  getMonsterPos() {
+    return { x: this.x, y: this.y };
+  }
+
+  getMonsterId() {
+    return this.id;
+  }
+
+  //현재 몬스터와 플레이어 사이에 얼마나 거리가 떨어져 있는지 보기
 }
 
 export default Monster;
