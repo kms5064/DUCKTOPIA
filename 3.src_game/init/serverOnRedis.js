@@ -21,6 +21,7 @@ const serverOnRedis = async () => {
     address: host,
     // 서버 상태
     status: 1,
+    check: 'new',
     games: 0,
   };
 
