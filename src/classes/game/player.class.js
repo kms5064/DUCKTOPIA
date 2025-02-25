@@ -111,11 +111,14 @@ class Player {
       if (this.hunger > 0) {
         this.changePlayerHunger(-config.game.player.playerHungerDecreaseAmount);
 
+        console.log("플레이어 아이디"+this.user.id);
+        console.log("플레이어 배고품"+this.hunger);
+
         // 캐릭터 hunger 동기화 패킷 전송
         const decreaseHungerPacket = makePacket(
           config.packetType.S_PLAYER_HUNGER_UPDATE_NOTIFICATION,
           {
-            playerId: this.id,
+            playerId: this.user.id,
             hunger: this.hunger,
           },
         );
@@ -128,7 +131,7 @@ class Player {
 
         // 캐릭터 hp 동기화 패킷 전송
         const decreaseHpPacket = makePacket(config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION, {
-          playerId: this.id,
+          playerId: this.user.id,
           hp: this.hp,
         });
 
