@@ -19,7 +19,7 @@ class ItemBox {
   takeOutAnItem(player,itemCode, count,emptyIndex) {
     //temType을 기반으로 박스에 아이템 조회
     const removedItem = this.itemList.find((item) => item.itemCode === itemCode);
-    const removedItemIndex = this.itemList.findindex((item) => item.itemCode === itemCode);
+    const removedItemIndex = this.itemList.findIndex((item) => item.itemCode === itemCode);
     if (!removedItem) {
       throw new CustomError('상자에서 아이템을 찾을 수 없습니다.');
     }
