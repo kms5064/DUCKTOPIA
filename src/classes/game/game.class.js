@@ -60,9 +60,11 @@ class Game {
       // this.addMonster();
       this.phaseCheck();
       this.monsterUpdate();
+      this.playersHungerCheck();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
     }, 1000);
     this.lastUpdate = Date.now();
+    this.initPlayersHunger();
   }
 
   gameEnd() {
@@ -109,6 +111,18 @@ class Game {
   userUpdate() {
     for (const player of this.players) {
       //console.log(player.x, player.y);
+    }
+  }
+
+  initPlayersHunger() {
+    for (const [id, player] of this.players) {
+      player.initHungerUpdate();
+    }
+  }
+
+  playersHungerCheck() {
+    for (const [id, player] of this.players) {
+      player.hungerCheck();
     }
   }
 

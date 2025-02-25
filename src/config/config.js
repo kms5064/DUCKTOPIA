@@ -24,6 +24,9 @@ import {
   PLAYER_MAX_HP,
   PLAYER_SPEED,
   VALID_DISTANCE,
+  PLAYER_HUNGER_PERIOD,
+  PLAYER_HUNGER_DECREASE_AMOUNT,
+  PLAYER_HP_DECREASE_AMOUNT_BY_HUNGER,
 } from './constants/player.js';
 import {
   MAX_DROP_ITEM_COUNT,
@@ -89,6 +92,9 @@ export const config = {
       playerMaxHealth: PLAYER_MAX_HP,
       playerSpeed: PLAYER_SPEED,
       validDistance: VALID_DISTANCE,
+      playerHungerPeriod: PLAYER_HUNGER_PERIOD,
+      playerHungerDecreaseAmount: PLAYER_HUNGER_DECREASE_AMOUNT,
+      playerHpDecreaseAmountByHunger: PLAYER_HP_DECREASE_AMOUNT_BY_HUNGER,
     },
     characterType: {
       ...CharacterType,

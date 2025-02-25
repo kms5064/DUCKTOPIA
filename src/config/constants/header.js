@@ -54,6 +54,7 @@ export const PACKET_TYPE = {
   S_ITEM_SPAWN_NOTIFICATION: [4021, 'itemSpawnNotification'],
   S_PLAYER_GET_ITEM_NOTIFICATION: [4022, 'playerGetItemNotification'],
   //---- 추가 완료
+  S_PLAYER_HUNGER_UPDATE_NOTIFICATION: [4023, 'playerHungerUpdateNotification'],
 
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
