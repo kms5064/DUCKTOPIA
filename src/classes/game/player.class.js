@@ -217,15 +217,21 @@ class Player {
       throw new CustomError('인벤토리에서 아이템을 찾을 수 없습니다.');
     }
 
-    //보유량이 더 많으면 갯수만 줄이기
-    if (removedItem.count >= count) {
+    // //보유량이 더 많으면 갯수만 줄이기
+    // if (removedItem.count >= count) {
+    //   removedItem.count -= count;
+    //   // count가 0이 되면 해당 슬롯을 0으로 초기화
+    //   if (removedItem.count === 0) {
+    //     this.inventory[removedItemIndex] = 0;
+    //   }
+    // } else {
+    //   throw new CustomError('아이템 개수가 부족합니다.');
+    // }
+    if (removedItem.count > count) {
       removedItem.count -= count;
-      // count가 0이 되면 해당 슬롯을 0으로 초기화
-      if (removedItem.count === 0) {
-        this.inventory[removedItemIndex] = 0;
-      }
     } else {
-      throw new CustomError('아이템 개수가 부족합니다.');
+      //아이템을 제거
+      this.inventory.splice(removedItemIndex, 1, 0);
     }
   }
 
