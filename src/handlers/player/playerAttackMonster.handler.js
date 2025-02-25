@@ -85,7 +85,7 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
       // 아이템 드롭 처리
       console.log(`[아이템 드롭 시도] 몬스터 등급: ${monster.grade}`);
       const monsterPosition = monster.getMonsterPos();
-      console.log(`[아이템 드롭 위치] x: ${monsterPosition.x}, y: ${monsterPosition.y}`);
+      console.log(`[몬스터 사망 위치] x: ${monsterPosition.x}, y: ${monsterPosition.y}`);
 
       const droppedItems = game.itemManager.createDropItems(monster.grade, monsterPosition);
       console.log(`[아이템 드롭 결과] 생성된 아이템 수: ${droppedItems.length}`);

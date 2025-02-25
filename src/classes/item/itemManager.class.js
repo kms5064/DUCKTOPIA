@@ -143,12 +143,11 @@ class ItemManager {
       if (availableFoods.length === 0) return null;
 
       const randomFood = availableFoods[Math.floor(Math.random() * availableFoods.length)];
-      const count = Math.floor(Math.random() * this.ITEM_MAX_STACK) + this.ITEM_MIN_COUNT;
       return new Item({
         type: Item.Type.FOOD,
         itemData: {
           itemCode: randomFood.code,
-          count: count,
+          count: 1, // 항상 1개씩 생성하도록 수정
         },
         position: this.addRandomOffset(position),
       });
