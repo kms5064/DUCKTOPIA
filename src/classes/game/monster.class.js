@@ -143,19 +143,19 @@ class Monster extends MovableObjectBase {
       case 202:
       case 203:
       case 204:
-        lostDistance = 5;
+        lostDistance = 1.5;
         break;
       case 205:
-        lostDistance = 6;
+        lostDistance = 2;
         break;
       case 206:
-        lostDistance = 7;
+        lostDistance = 2.5;
         break;
       case 207:
-        lostDistance = 8;
+        lostDistance = 3;
         break;
       case 208:
-        lostDistance = 9;
+        lostDistance = 3.5;
         break;
     }
 
