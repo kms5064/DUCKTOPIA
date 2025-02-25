@@ -211,8 +211,8 @@ class Player {
   }
 
   removeItem(itemCode, count) {
-    const removedItem = this.inventory.find((item) => item.itemCode === itemCode);
-    const removedItemIndex = this.inventory.findIndex((item) => item.itemCode === itemCode);
+    const removedItem = this.inventory.find((item) => item && item.itemCode === itemCode);
+    const removedItemIndex = this.inventory.findIndex((item) => item && item.itemCode === itemCode);
     if (!removedItem) {
       throw new CustomError('인벤토리에서 아이템을 찾을 수 없습니다.');
     }
@@ -220,13 +220,13 @@ class Player {
     //보유량이 더 많으면 갯수만 줄이기
     if (removedItem.count >= count) {
       removedItem.count -= count;
+      // count가 0이 되면 해당 슬롯을 0으로 초기화
+      if (removedItem.count === 0) {
+        this.inventory[removedItemIndex] = 0;
+      }
     } else {
-      //아이템을 제거
-      this.inventory.splice(removedItemIndex, 1, 0);
+      throw new CustomError('아이템 개수가 부족합니다.');
     }
-    // const targetIndex = this.findItemIndex(itemCode);
-    // this.inventory.splice(targetIndex, 1,0);
-    // return this.inventory;
   }
 
   equipWeapon(itemCode) {

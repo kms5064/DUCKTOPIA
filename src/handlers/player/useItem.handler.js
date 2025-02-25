@@ -67,6 +67,7 @@ const useItemHandler = ({ socket, payload }) => {
       const currentHunger = player.hunger;
       const addHunger = Math.min(foodData.hunger, 100 - currentHunger); // 허기 증가량 계산
       const newHunger = player.changePlayerHunger(addHunger);
+
       player.removeItem(item.itemCode, item.count);
 
       console.log(
