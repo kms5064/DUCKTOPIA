@@ -1,4 +1,5 @@
 import { config } from '../../config/config.js';
+import { roomSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
 class Player {
@@ -108,11 +109,14 @@ class Player {
     this.lastHungerUpdate = now;
 
     if (this.hungerCounter >= config.game.player.playerHungerPeriod) {
+      // game 접근
+      const game = roomSession.getRoom(this.user.getRoomId()).getGame();
+
       if (this.hunger > 0) {
         this.changePlayerHunger(-config.game.player.playerHungerDecreaseAmount);
 
-        console.log("플레이어 아이디"+this.user.id);
-        console.log("플레이어 배고품"+this.hunger);
+        // console.log('플레이어 아이디' + this.user.id);
+        // console.log('플레이어 배고품' + this.hunger);
 
         // 캐릭터 hunger 동기화 패킷 전송
         const decreaseHungerPacket = makePacket(
@@ -123,7 +127,7 @@ class Player {
           },
         );
 
-        this.user.getSocket().write(decreaseHungerPacket);
+        game.broadcast(decreaseHungerPacket);
       } else {
         // 체력 감소
 
@@ -135,7 +139,7 @@ class Player {
           hp: this.hp,
         });
 
-        this.user.getSocket().write(decreaseHpPacket);
+        game.broadcast(decreaseHpPacket);
       }
 
       this.hungerCounter = 0;
