@@ -112,7 +112,6 @@ class Game {
 
   userUpdate() {
     for (const player of this.players) {
-      //console.log(player.x, player.y);
     }
   }
 
@@ -492,12 +491,6 @@ class Game {
       }
     }
 
-    console.log(monstersData.length);
-    for (const data of monstersData) {
-      console.log(data);
-    }
-
-
     const waveMonsterSpawnRequestPacket = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, {
       monsters: monstersData,
     });
@@ -511,9 +504,7 @@ class Game {
     for (const monster of monsters) {
       // Monster Asset 조회
       const { monster: monsterAsset } = getGameAssets();
-      console.log(monster.monsterCode);
       const data = monsterAsset.data.find((asset) => asset.code === monster.monsterCode);
-      console.log(data);
 
       if (monster.monsterCode === 208) {
         const bossMonster = new BossMonster(
@@ -599,16 +590,6 @@ class Game {
 
     this.objects.set(data.ObjectData.objectId, itemBox);
 
-    // 디버깅용 로그
-    // console.log(`[아이템 박스 생성] ID: ${boxId}, 위치: (${itemBox.x}, ${itemBox.y})`);
-    // console.log('[생성된 아이템 목록]');
-    // itemBox.itemList.forEach((item) => {
-    //   if(item !== null){
-    //     console.log( `아이템: ${JSON.stringify(item)}`);
-    //     console.log( `아이템코드: ${item.itemCode}, 개수: ${item.count}`);
-    //   }
-
-    // });
 
     return data;
   }

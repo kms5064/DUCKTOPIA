@@ -55,9 +55,6 @@ class BossMonster extends Monster {
         super.setTargetPlayer(player);
     }
 
-    setDamaged(damage) {
-        super.setDamaged(damage);
-    }
 
     setPlayerList(players) {
         for (const player of players) {
@@ -84,6 +81,7 @@ class BossMonster extends Monster {
         );
 
         if (distanceFromStartPoint < this.awakeRange + 20) {
+            this.targetPlayer = null;
             return true;
         }
 
