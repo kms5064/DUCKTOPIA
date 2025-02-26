@@ -68,7 +68,8 @@ const useItemHandler = ({ socket, payload }) => {
       const addHunger = Math.min(foodData.hunger, player.maxHunger - currentHunger); // 허기 증가량 계산
       const newHunger = player.changePlayerHunger(addHunger);
 
-      player.removeItem(item.itemCode, item.count);
+      // 아이템 개수 감소 (1개만 사용)
+      player.removeItem(item.itemCode, 1);
 
       console.log(
         `[기존 허기]: ${currentHunger} / [허기 증가량]: ${addHunger} / [현재 허기]: ${newHunger}`,
@@ -83,7 +84,10 @@ const useItemHandler = ({ socket, payload }) => {
 
       packet = makePacket(config.packetType.S_PLAYER_EAT_FOOD_RESPONSE, {
         success: true,
-        itemData: item,
+        itemData: {
+          itemCode: item.itemCode,
+          count: 1, // 사용한 아이템 개수는 1개
+        },
         playerId,
         hunger: newHunger,
         playerHp: newHp,
