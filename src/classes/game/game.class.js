@@ -49,7 +49,7 @@ class Game {
     // 아이템 관리 : 2025.02.21 추가
     this.itemManager = new ItemManager();
     this.bossMonsterWaveCount = 20;
-    this.waveCoolTime = 30000;
+    this.waveCount = 3;
   }
 
   /**************
@@ -208,17 +208,7 @@ class Game {
       isWave,
     )
 
-    if (isWave) {
-      //bossMonster.setStartPosition(config.game.core.position.x, config.game.core.position.y);
-      this.waveMonsters.set(monsterId, bossMonster);
-    }
-    else {
-      this.monsters.set(monsterId, bossMonster);
-    }
-    //몬스터의 생성을 
-
-
-
+    this.monsters.set(monsterId, bossMonster);
     //this.monsters.set(monsterId, bossMonster);
     return {
       monsterId,
@@ -285,12 +275,6 @@ class Game {
 
     //몬스터의 사망 판정도 체크해 보도록 하자.
 
-    if (this.waveCoolTime < 0) {
-      this.waveCoolTime = 30000;
-      this.addWaveMonster();
-
-    }
-
     //몬스터의 모든 업데이트가 monster업데이트 체크를 갱신하자.
     this.monsterLastUpdate = Date.now();
   }
@@ -356,64 +340,6 @@ class Game {
       }
     }
 
-    for (const [monsterId, waveMonster] of this.waveMonsters) {
-      // 대상이 없는 몬스터만
-      let distance = Infinity;
-      let inputId = 0;
-      let inputPlayer = null;
-      if (!waveMonster.hasTargetPlayer()) {
-
-        for (const [playerId, player] of this.players) {
-          // 대상 찾아보기
-          const calculatedDistance = waveMonster.returnCalculateDistance(player);
-
-          if (distance > calculatedDistance) {
-            distance = calculatedDistance;
-            inputId = playerId;
-            inputPlayer = player;
-          }
-        }
-
-        if (inputPlayer === null || inputPlayer.hp <= 0) continue;
-
-        waveMonster.setTargetPlayer(inputPlayer);
-        //monster.setMonsterTrackingTime(5000);
-        monsterDiscoverPayload.push({
-          monsterId: monsterId,
-          targetId: inputId,
-        });
-      } else {
-        if (waveMonster.lostPlayer()) {
-          monsterDiscoverPayload.push({
-            monsterId: monsterId,
-            targetId: 0,
-          });
-          continue;
-        }
-        distance = waveMonster.getDistanceByPlayer();
-
-        for (const [playerId, player] of this.players) {
-          // 대상 찾아보기
-          const calculatedDistance = waveMonster.returnCalculateDistance(player);
-
-          if (distance > calculatedDistance) {
-            distance = calculatedDistance;
-            inputId = playerId;
-            inputPlayer = player;
-          }
-        }
-
-        if (inputPlayer !== null) {
-          //타겟이 바뀌었을 때
-          waveMonster.setTargetPlayer(inputPlayer);
-          monsterDiscoverPayload.push({
-            monsterId: monsterId,
-            targetId: inputId,
-          });
-        }
-      }
-    }
-
     const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, {
       monsterTarget: monsterDiscoverPayload,
     });
@@ -451,7 +377,6 @@ class Game {
     for (const [monsterId, monster] of this.monsters) {
       monster.CoolTimeCheck(deltaTime);
     }
-    this.waveCoolTime -= deltaTime;
   }
 
   getItemBoxById(objectId) {
@@ -532,8 +457,10 @@ class Game {
   addWaveMonster() {
     const monstersData = [];
     const { monster: monsterAsset } = getGameAssets();
+    const waveMonsterSize = Math.min(config.game.monster.waveMaxMonsterCount, this.waveCount);
+    this.waveCount += 2;
 
-    for (let i = 1; i <= config.game.monster.waveMaxMonsterCount; i++) {
+    for (let i = 1; i <= waveMonsterSize; i++) {
       const monsterId = this.monsterIndex++;
 
 
@@ -604,6 +531,7 @@ class Game {
           true,
         )
 
+        this.monsters.set(monster.monsterId, bossMonster);
         this.waveMonsters.set(monster.monsterId, bossMonster);
       }
       else {
@@ -623,7 +551,7 @@ class Game {
           true,
         );
 
-        //this.monsters.set(monster.monsterId, spawnMonster);
+        this.monsters.set(monster.monsterId, spawnMonster);
         this.waveMonsters.set(monster.monsterId, spawnMonster);
       }
     }
@@ -641,7 +569,7 @@ class Game {
       this.changePhase();
 
       if (this.dayPhase === DayPhase.NIGHT) {
-        //this.addWaveMonster();
+        this.addWaveMonster();
       }
 
       this.dayCounter = 0;
