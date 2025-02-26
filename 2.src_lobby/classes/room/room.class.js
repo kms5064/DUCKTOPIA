@@ -47,9 +47,9 @@ class Room {
   }
 
   // 유저 삭제
-  removeUser(userId) {
+  removeUser(user) {
     // 유저 삭제
-    this.users.delete(userId);
+    this.users.delete(user.id);
     // 플레이어 삭제
     // this.game.removePlayer(user.id);
     user.exitRoom();
