@@ -182,7 +182,8 @@ class Player {
   }
 
   addItem(itemCode, count, index) {
-    if (index === -1) { //0이면 안되지;
+    if (index === -1) {
+      //0이면 안되지;
       //아이템을 이미 갖고 있는지
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       //있다면 카운트만 증가
@@ -230,16 +231,16 @@ class Player {
   }
 
   equipWeapon(itemCode) {
-    if(this.equippedWeapon === null){
+    if (this.equippedWeapon === null) {
       const weapon = this.inventory.find((item) => item.itemCode === itemCode);
-      this.equippedWeapon = {itemCode:weapon.itemCode,count:1};
-      this.removeItem(itemCode,1);
-    }else{
+      this.equippedWeapon = { itemCode: weapon.itemCode, count: 1 };
+      this.removeItem(itemCode, 1);
+    } else {
       const temp = this.equippedWeapon;
       const weapon = this.inventory.find((item) => item.itemCode === itemCode);
-      this.equippedWeapon = {itemCode:weapon.itemCode,count:1};
-      this.removeItem(itemCode,1);
-      this.addItem(temp.itemCode, 1, -1)
+      this.equippedWeapon = { itemCode: weapon.itemCode, count: 1 };
+      this.removeItem(itemCode, 1);
+      this.addItem(temp.itemCode, 1, -1);
     }
 
     return this.equippedWeapon;

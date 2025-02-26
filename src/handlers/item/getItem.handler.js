@@ -102,6 +102,29 @@ const getItemHandler = ({ socket, payload }) => {
     return;
   }
 
+  // 인벤토리 공간 확인
+  const existingItem = player.inventory.find(
+    (item) => item && item.itemCode === nearestItem.itemData.itemCode,
+  );
+
+  // 같은 종류의 아이템이 없고, 빈 슬롯도 없는 경우
+  if (!existingItem) {
+    const checkRoom = (ele) => ele === 0;
+    const emptyIndex = player.inventory.findIndex(checkRoom);
+
+    if (emptyIndex === -1) {
+      console.log(`[아이템 습득 실패] 인벤토리 공간이 부족함`);
+      const failPacket = makePacket(config.packetType.S_PLAYER_GET_ITEM_NOTIFICATION, {
+        success: false,
+        message: '인벤토리 공간이 부족합니다.',
+        item: null,
+        playerId,
+      });
+      socket.write(failPacket);
+      return;
+    }
+  }
+
   // 아이템 습득 처리
   try {
     // 플레이어 인벤토리에 추가

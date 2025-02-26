@@ -33,7 +33,7 @@ class ItemManager {
   // 랜덤 아이템 생성
   generateRandomItems() {
     const items = [];
-    const slotCount = Math.floor(Math.random() * config.itemBox.boxMaxSlots) + 1; // 최소 1개
+    const slotCount = Math.floor(Math.random() * config.game.itemBox.boxMaxSlots) + 1; // 최소 1개
 
     for (let i = 0; i < slotCount; i++) {
       // 아이템 타입 결정 (무기 또는 음식)
@@ -55,7 +55,8 @@ class ItemManager {
         // 음식 아이템 생성
         const randomFood = this.foodData[Math.floor(Math.random() * this.foodData.length)];
         const count =
-          Math.floor(Math.random() * config.itemBox.itemMaxStack) + config.itemBox.itemMinCount;
+          Math.floor(Math.random() * config.game.itemBox.itemMaxStack) +
+          config.game.itemBox.itemMinCount;
         items.push(
           new Item({
             itemData: {
