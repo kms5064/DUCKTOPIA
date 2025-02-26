@@ -128,6 +128,7 @@ class BossMonster extends Monster {
             case 3:
                 this.bossPatternTimeOut = setTimeout(() => {
                     //보스 몬스터 내부에는 이런 식으로 
+                    console.log("패턴 1");
                     this.cancelPattern();
                 }, 1000);
                 break;
@@ -136,14 +137,14 @@ class BossMonster extends Monster {
             case 6:
             case 7:
                 this.bossPatternTimeOut = setTimeout(() => {
-
+                    console.log("패턴 2");
                 }, 4000);
                 break;
             case 8:
             case 9:
                 //전체 공격이라고 하자.
                 this.bossPatternTimeOut = setTimeout(() => {
-
+                    console.log("패턴 3 광역 패턴");
                 }, 5000);
                 break;
             default:
