@@ -389,6 +389,7 @@ message S2CPlayerEatFoodResponse { // 사용한 아이템이 식량일 때
   ItemData itemData = 2; // itemid ->itemdata
   int32 playerId = 3;
   int32 hunger = 4;
+  int32 playerHp = 5;
 }
 
 message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
