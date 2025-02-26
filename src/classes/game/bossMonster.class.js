@@ -30,7 +30,6 @@ class BossMonster extends Monster {
     //보스는 생성과 동시에 스타트 포지션이 돌아오는 게 맞다고 생각된다.
     setPosition(x, y) {
         super.setPosition(x, y);
-        super.setStartPosition(x, y);
     }
 
     cancelPattern() {
@@ -108,6 +107,8 @@ class BossMonster extends Monster {
 
     }
 
+
+
     //현재 보스 몬스터가 캠프에 가까이 와 있다면 한 번에 그 캠프를 파괴한다.
 
     setPattern() {
@@ -127,6 +128,7 @@ class BossMonster extends Monster {
             case 3:
                 this.bossPatternTimeOut = setTimeout(() => {
                     //보스 몬스터 내부에는 이런 식으로 
+                    console.log("패턴 1");
                     this.cancelPattern();
                 }, 1000);
                 break;
@@ -135,14 +137,14 @@ class BossMonster extends Monster {
             case 6:
             case 7:
                 this.bossPatternTimeOut = setTimeout(() => {
-
+                    console.log("패턴 2");
                 }, 4000);
                 break;
             case 8:
             case 9:
                 //전체 공격이라고 하자.
                 this.bossPatternTimeOut = setTimeout(() => {
-
+                    console.log("패턴 3 광역 패턴");
                 }, 5000);
                 break;
             default:
@@ -156,6 +158,7 @@ class BossMonster extends Monster {
     }
 
     setTargetPlayer(player) {
+        console.log("보스 몬스터 쪽의 이동");
         super.setTargetPlayer(player);
         this.setPattern();
     }
