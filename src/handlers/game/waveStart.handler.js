@@ -21,8 +21,6 @@ const waveStartHandler = ({ socket, payload }) => {
     new CustomError('게임이 존재하지 않습니다.');
   }
 
-  console.log("웨이브 핸들러 호출됨");
-
   // 3. 게임에 반영하기
   game.spawnWaveMonster(monsters);
 

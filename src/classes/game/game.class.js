@@ -49,7 +49,7 @@ class Game {
     // 아이템 관리 : 2025.02.21 추가
     this.itemManager = new ItemManager();
     this.bossMonsterWaveCount = 20;
-    this.waveCoolTime = 10000;
+    this.waveCoolTime = 30000;
   }
 
   /**************
@@ -272,8 +272,9 @@ class Game {
     //몬스터의 사망 판정도 체크해 보도록 하자.
 
     if (this.waveCoolTime < 0) {
-      this.waveCoolTime = 10000;
-      this.spawnWaveMonster();
+      this.waveCoolTime = 30000;
+      this.addWaveMonster();
+
     }
 
     //몬스터의 모든 업데이트가 monster업데이트 체크를 갱신하자.
@@ -289,11 +290,6 @@ class Game {
       let inputId = 0;
       let inputPlayer = null;
       if (!monster.hasTargetPlayer()) {
-        //몬스터가 죽었을 때, hp가 0인데 반응이 나올 수 있으니 체크
-        // if (monster.monsterDeath()) {
-        //   this.monsters.delete(monsterId);
-        //   continue;
-        // }
 
         for (const [playerId, player] of this.players) {
           // 대상 찾아보기
@@ -347,9 +343,60 @@ class Game {
     }
 
     for (const [monsterId, waveMonster] of this.waveMonsters) {
-      if (waveMonster.isBossMonster()) {
-        waveMonster.setPattern();
-        //여기서 보스 관련 체크
+      // 대상이 없는 몬스터만
+      let distance = Infinity;
+      let inputId = 0;
+      let inputPlayer = null;
+      if (!waveMonster.hasTargetPlayer()) {
+
+        for (const [playerId, player] of this.players) {
+          // 대상 찾아보기
+          const calculatedDistance = waveMonster.returnCalculateDistance(player);
+
+          if (distance > calculatedDistance) {
+            distance = calculatedDistance;
+            inputId = playerId;
+            inputPlayer = player;
+          }
+        }
+
+        if (inputPlayer === null || inputPlayer.hp <= 0) continue;
+
+        waveMonster.setTargetPlayer(inputPlayer);
+        //monster.setMonsterTrackingTime(5000);
+        monsterDiscoverPayload.push({
+          monsterId: monsterId,
+          targetId: inputId,
+        });
+      } else {
+        if (waveMonster.lostPlayer()) {
+          monsterDiscoverPayload.push({
+            monsterId: monsterId,
+            targetId: 0,
+          });
+          continue;
+        }
+        distance = waveMonster.getDistanceByPlayer();
+
+        for (const [playerId, player] of this.players) {
+          // 대상 찾아보기
+          const calculatedDistance = waveMonster.returnCalculateDistance(player);
+
+          if (distance > calculatedDistance) {
+            distance = calculatedDistance;
+            inputId = playerId;
+            inputPlayer = player;
+          }
+        }
+
+        if (inputPlayer !== null) {
+          //타겟이 바뀌었을 때
+          waveMonster.setTargetPlayer(inputPlayer);
+          monsterDiscoverPayload.push({
+            monsterId: monsterId,
+            targetId: inputId,
+          });
+        }
       }
     }
 
@@ -468,7 +515,7 @@ class Game {
 
   // 웨이브 몬스터 생성
   // 여기서는 데이터를 생성하지 않고 spawn을 통해 생성한다.
-  createWaveMonsterData() {
+  addWaveMonster() {
     const monstersData = [];
     const { monster: monsterAsset } = getGameAssets();
 
@@ -504,16 +551,28 @@ class Game {
       }
     }
 
-    return monstersData;
+    console.log(monstersData.length);
+    for (const data of monstersData) {
+      console.log(data);
+    }
+
+
+    const waveMonsterSpawnRequestPacket = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, {
+      monsters: monstersData,
+    });
+
+    const owner = this.getPlayerById(this.ownerId);
+    owner.user.socket.write(waveMonsterSpawnRequestPacket);
   }
 
   //웨이브 몬스터 생성1
   spawnWaveMonster(monsters) {
-    const { monster: monsterAsset } = getGameAssets();
     for (const monster of monsters) {
       // Monster Asset 조회
-
-      const data = monsterAsset.data.find((asset) => asset.monsterCode === monster.monsterCode);
+      const { monster: monsterAsset } = getGameAssets();
+      console.log(monster.monsterCode);
+      const data = monsterAsset.data.find((asset) => asset.code === monster.monsterCode);
+      console.log(data);
 
       if (monster.monsterCode === 208) {
         const bossMonster = new BossMonster(
@@ -553,8 +612,6 @@ class Game {
         //this.monsters.set(monster.monsterId, spawnMonster);
         this.waveMonsters.set(monster.monsterId, spawnMonster);
       }
-
-
     }
   }
 
@@ -570,7 +627,7 @@ class Game {
       this.changePhase();
 
       if (this.dayPhase === DayPhase.NIGHT) {
-        //this.spawnWaveMonster();
+        //this.addWaveMonster();
       }
 
       this.dayCounter = 0;
