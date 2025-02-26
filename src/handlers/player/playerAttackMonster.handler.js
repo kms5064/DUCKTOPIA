@@ -61,6 +61,7 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
     console.log('[무기 공격력]');
 
     const currHp = monster.setDamaged(damage);
+    console.log(`몬스터 ${monster.code}의 남은 체력 : ${currHp}`);
 
     // 패킷 생성
     packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {

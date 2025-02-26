@@ -39,10 +39,18 @@ class BossMonster extends Monster {
         }
     }
 
-    setDamaged(player, damage) {
-        const newAggro = Math.max(0, this.hatePointList.get(player) + damage);
-        this.hatePointList.set(player, newAggro);
-        return super.setDamaged(damage);
+    setDamaged(damage) {
+        if (damage - this.defence < 2) {
+            this.hp -= 1;
+        } else {
+            this.hp -= damage - this.defence;
+        }
+
+        if (this.hp < 0) this.hp = 0;
+
+        console.log("보스 몬스터 데미지");
+        console.log(`${this.hp}`);
+        return this.hp;
     }
 
     //어그로 수치를 풀 때 쓰임
@@ -55,9 +63,6 @@ class BossMonster extends Monster {
         super.setTargetPlayer(player);
     }
 
-    setDamaged(damage) {
-        super.setDamaged(damage);
-    }
 
     setPlayerList(players) {
         for (const player of players) {
@@ -84,6 +89,7 @@ class BossMonster extends Monster {
         );
 
         if (distanceFromStartPoint < this.awakeRange + 20) {
+            this.targetPlayer = null;
             return true;
         }
 
