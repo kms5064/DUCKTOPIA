@@ -1,6 +1,6 @@
 import { config } from '../config/config.js';
 import attackPlayerHandler from './player/attackPlayer.handler.js';
-import gameStartHandler from './game/startGame.handler.js';
+import startGameHandler from './game/startGame.handler.js';
 import updateLocationHandler from './player/updateLocation.handler.js';
 import attackPlayerMonsterHandler from './player/attackPlayerMonster.handler.js';
 import waveStartHandler from './game/waveStart.handler.js';
@@ -18,7 +18,7 @@ import createGameHandler from './game/createGame.handler.js';
 const handlers = {
   [config.packetType.JOIN_SERVER_REQUEST[0]]: createGameHandler,
   [config.packetType.C_PLAYER_ATTACK_REQUEST[0]]: attackPlayerHandler,
-  [config.packetType.START_GAME_REQUEST[0]]: gameStartHandler,
+  [config.packetType.START_GAME_REQUEST[0]]: startGameHandler,
   [config.packetType.C_PLAYER_POSITION_UPDATE_REQUEST[0]]: updateLocationHandler,
   [config.packetType.C_PLAYER_ATTACK_MONSTER_REQUEST[0]]: attackPlayerMonsterHandler,
   [config.packetType.C_MONSTER_SPAWN_RESPONSE[0]]: waveStartHandler,

@@ -3,7 +3,7 @@ import { gameSession, userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
 import { DayPhase } from '../../config/constants/game.js';
 
-const gameStartHandler = ({ socket, payload, userId }) => {
+const startGameHandler = ({ socket, payload, userId }) => {
   console.log('# gameStartHandler');
   const { monsters, objects } = payload; //좌표가 objects에 들어있고 그걸 서버에 저장
 
@@ -36,4 +36,4 @@ const gameStartHandler = ({ socket, payload, userId }) => {
   game.broadcast(GameStartNotification);
 };
 
-export default gameStartHandler;
+export default startGameHandler;
