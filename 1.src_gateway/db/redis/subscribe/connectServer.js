@@ -18,7 +18,7 @@ const connectServer = async (name) => {
   const server = serverSession.getServerById(name);
   if (server) return;
 
-  let port = portType[type][0];
+  const port = portType[type][0];
   // 테스트용
   // if (port === 5557 && name.split(':')[2] === '1') port = 5558;
   if (!port) {
@@ -28,6 +28,7 @@ const connectServer = async (name) => {
 
   const newServer = net.createConnection({ host: host, port: port }, () => {
     console.log(`${name}와 연결되었습니다.`);
+    // Type에 따라 onConnection 매핑
     portType[type][1](newServer);
   });
 
