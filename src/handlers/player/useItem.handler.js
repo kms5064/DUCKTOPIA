@@ -78,7 +78,7 @@ const useItemHandler = ({ socket, payload }) => {
       // 플레이어 체력 회복 처리
       const currentHp = player.hp;
       const addHp = Math.min(foodData.hp, player.maxHp - currentHp); // 체력 증가량 계산
-      const newHp = player.healPlayerHp(addHp);
+      const newHp = player.changePlayerHp(-addHp); // 음수로 변경하여 체력 회복
       console.log('[식량 사용 후 체력]', newHp);
 
       packet = makePacket(config.packetType.S_PLAYER_EAT_FOOD_RESPONSE, {

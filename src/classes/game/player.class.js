@@ -32,8 +32,16 @@ class Player {
     this.lastHungerUpdate = 0;
   }
 
-  changePlayerHp(damage) {
-    this.hp -= damage;
+  changePlayerHp(amount) {
+    // 플레이어 체력 감소 및 회복 (체력 회복은 음수로 보냄)
+    this.hp -= amount;
+
+    if (this.hp > this.maxHp) {
+      this.hp = this.maxHp;
+    } else if (this.hp < 0) {
+      this.hp = 0;
+    }
+
     return this.hp;
   }
 
@@ -164,20 +172,6 @@ class Player {
   }
 
   /** end of Hunger System */
-
-  // 플레이어 체력 회복 - 2025.02.26 추가
-  // changePlayerHunger 메서드 네이밍 변경하여 같이 합치고자 하였으나, 다른데서 이미 사용하고 있는 메서드라 그냥 새로 만듬
-  healPlayerHp(amount) {
-    this.hp += amount;
-
-    if (this.hp > this.maxHp) {
-      this.hp = this.maxHp;
-    } else if (this.hp < 0) {
-      this.hp = 0;
-    }
-
-    return this.hp;
-  }
 
   //플레이어 어택은 데미지만 리턴하기
   getPlayerAtkDamage(weaponAtk) {
