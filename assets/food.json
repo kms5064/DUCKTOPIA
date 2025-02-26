@@ -3,144 +3,164 @@
   "version": "1.0.0",
   "data": [
     {
-      "id": 1,
-      "name": "건조 라면",
-      "description": "조리하지 않은 라면. 배고플 때 간단히 먹을 수 있다.",
-      "hunger": 8,
-      "rarity": "COMMON"
-    },
-    {
-      "id": 2,
-      "name": "빵",
-      "description": "기본적인 식량. 허기를 조금 채워준다.",
-      "hunger": 10,
-      "rarity": "COMMON"
-    },
-    {
-      "id": 3,
-      "name": "영양 보충제",
-      "description": "응축된 영양분을 담은 알약. 간편하게 섭취 가능하다.",
-      "hunger": 15,
-      "rarity": "COMMON"
-    },
-    {
-      "id": 4,
+      "code": 1,
       "name": "사과",
-      "description": "신선한 사과. 달콤하고 영양가 있다.",
+      "description": "신선한 사과. 아삭한 식감이 좋다.",
+      "hp": 5,
+      "hunger": 8,
+      "grade": "COMMON"
+    },
+    {
+      "code": 2,
+      "name": "벌레 먹은 사과",
+      "description": "벌레가 조금 먹은 사과. 그래도 먹을 만하다.",
+      "hp": 5,
+      "hunger": 5,
+      "grade": "COMMON"
+    },
+    {
+      "code": 3,
+      "name": "생선",
+      "description": "신선한 생선. 요리하면 맛있을 것 같다.",
+      "hp": 10,
+      "hunger": 10,
+      "grade": "COMMON"
+    },
+    {
+      "code": 4,
+      "name": "토마토",
+      "description": "싱싱한 토마토. 상큼한 맛이 좋다.",
+      "hp": 6,
+      "hunger": 8,
+      "grade": "COMMON"
+    },
+    {
+      "code": 5,
+      "name": "감자",
+      "description": "구수한 감자. 다양한 요리에 활용할 수 있다.",
+      "hp": 7,
+      "hunger": 8,
+      "grade": "COMMON"
+    },
+    {
+      "code": 6,
+      "name": "바게트",
+      "description": "갓 구운 바게트. 부드럽고 향긋하다.",
+      "hp": 8,
+      "hunger": 12,
+      "grade": "COMMON"
+    },
+    {
+      "code": 7,
+      "name": "꿀",
+      "description": "달콤한 천연 꿀. 영양이 풍부하다.",
+      "hp": 10,
+      "hunger": 10,
+      "grade": "COMMON"
+    },
+    {
+      "code": 8,
+      "name": "계란 프라이",
+      "description": "노른자가 톡톡 터지는 계란 프라이. 든든한 한 끼가 된다.",
+      "hp": 20,
       "hunger": 15,
-      "rarity": "COMMON"
+      "grade": "RARE"
     },
     {
-      "id": 5,
-      "name": "생존 비스켓",
-      "description": "오래 보관 가능한 고영양 비스켓.",
+      "code": 9,
+      "name": "쿠키",
+      "description": "바삭하고 달콤한 쿠키. 간단한 간식으로 좋다.",
+      "hp": 15,
+      "hunger": 15,
+      "grade": "RARE"
+    },
+    {
+      "code": 10,
+      "name": "브라우니",
+      "description": "진한 초콜릿 맛의 브라우니. 달콤한 디저트다.",
+      "hp": 18,
+      "hunger": 18,
+      "grade": "RARE"
+    },
+    {
+      "code": 11,
+      "name": "와플",
+      "description": "따뜻하고 달콤한 와플. 부드러운 식감이 일품이다.",
+      "hp": 20,
       "hunger": 20,
-      "rarity": "COMMON"
+      "grade": "RARE"
     },
     {
-      "id": 6,
-      "name": "통조림 스프",
-      "description": "오래 보관된 스프. 따뜻하게 데워 먹으면 좋다.",
+      "code": 12,
+      "name": "치즈",
+      "description": "잘 숙성된 치즈. 고소한 맛이 일품이다.",
+      "hp": 25,
       "hunger": 20,
-      "rarity": "COMMON"
+      "grade": "RARE"
     },
     {
-      "id": 7,
-      "name": "에너지 바",
-      "description": "고농축 영양분이 들어있는 비상식량. 휴대하기 좋다.",
-      "hunger": 25,
-      "rarity": "COMMON"
+      "code": 13,
+      "name": "맥주",
+      "description": "시원한 생맥주. 갈증해소에 좋다.",
+      "hp": 10,
+      "hunger": 15,
+      "grade": "RARE"
     },
     {
-      "id": 8,
-      "name": "단백질 쉐이크",
-      "description": "고단백 영양 쉐이크. 운동 후 회복에 좋다.",
-      "hunger": 25,
-      "rarity": "RARE"
+      "code": 14,
+      "name": "달빛술",
+      "description": "달빛 아래서 숙성된 술. 은은한 향이 매력적이다.",
+      "hp": 12,
+      "hunger": 18,
+      "grade": "RARE"
     },
     {
-      "id": 9,
-      "name": "오리 고기",
-      "description": "오리로부터 얻은 고기. 높은 포만감을 제공한다.",
-      "hunger": 30,
-      "rarity": "RARE"
-    },
-    {
-      "id": 10,
-      "name": "영양죽",
-      "description": "여러 재료를 넣어 끓인 죽. 소화가 잘 된다.",
-      "hunger": 30,
-      "rarity": "RARE"
-    },
-    {
-      "id": 11,
-      "name": "단짠 에너지바",
-      "description": "달콤하고 짭짤한 맛의 고칼로리 에너지바.",
-      "hunger": 30,
-      "rarity": "RARE"
-    },
-    {
-      "id": 12,
-      "name": "말린 고기",
-      "description": "오래 보관할 수 있도록 건조시킨 고기.",
+      "code": 15,
+      "name": "스테이크",
+      "description": "완벽하게 구운 스테이크. 육즙이 풍부하다.",
+      "hp": 35,
       "hunger": 35,
-      "rarity": "RARE"
+      "grade": "EPIC"
     },
     {
-      "id": 13,
-      "name": "생선 구이",
-      "description": "신선한 생선을 구운 요리. 영양이 풍부하다.",
-      "hunger": 35,
-      "rarity": "RARE"
+      "code": 16,
+      "name": "위스키",
+      "description": "오크통에서 숙성된 위스키. 깊은 풍미가 있다.",
+      "hp": 15,
+      "hunger": 25,
+      "grade": "EPIC"
     },
     {
-      "id": 14,
-      "name": "허니머스타드 샌드위치",
-      "description": "허니머스타드로 만든 특별한 샌드위치. 오리들이 싫어하는 냄새가 난다.",
+      "code": 17,
+      "name": "와인",
+      "description": "오래 숙성된 레드와인. 깊은 풍미가 있다.",
+      "hp": 18,
+      "hunger": 25,
+      "grade": "EPIC"
+    },
+    {
+      "code": 18,
+      "name": "꿀벌집",
+      "description": "신선한 꿀이 가득한 벌집. 최상급 영양식이다.",
+      "hp": 40,
       "hunger": 40,
-      "rarity": "EPIC"
+      "grade": "EPIC"
     },
     {
-      "id": 15,
-      "name": "비상 식량 키트",
-      "description": "다양한 비상식량이 포함된 세트.",
-      "hunger": 45,
-      "rarity": "EPIC"
-    },
-    {
-      "id": 16,
-      "name": "특제 영양식",
-      "description": "마지막 허니머스타드 공장에서 특별 제작된 영양식. 포만감이 매우 높다.",
-      "hunger": 50,
-      "rarity": "EPIC"
-    },
-    {
-      "id": 17,
-      "name": "허니머스타드 파워젤",
-      "description": "허니머스타드 농축액으로 만든 에너지젤. 강력한 포만감을 제공한다.",
+      "code": 19,
+      "name": "드래곤 과일",
+      "description": "전설의 드래곤 과일. 신비한 효과가 있다고 한다.",
+      "hp": 60,
       "hunger": 60,
-      "rarity": "EPIC"
+      "grade": "LEGENDARY"
     },
     {
-      "id": 18,
-      "name": "허니머스타드 에너지드링크",
-      "description": "허니머스타드 추출물이 들어간 에너지 음료. 강력한 효과를 제공한다.",
-      "hunger": 70,
-      "rarity": "LEGENDARY"
-    },
-    {
-      "id": 19,
-      "name": "허니머스타드 스테이크",
-      "description": "허니머스타드 소스를 곁들인 최고급 스테이크. 최상의 포만감을 제공한다.",
-      "hunger": 80,
-      "rarity": "LEGENDARY"
-    },
-    {
-      "id": 20,
-      "name": "허니머스타드 울트라밀",
-      "description": "최첨단 기술로 개발된 허니머스타드 완전식품. 최고의 영양을 제공한다.",
+      "code": 20,
+      "name": "황금 훈제 오리",
+      "description": "전설의 오리를 황금 연기로 훈제한 요리. 신비한 향과 맛이 난다.",
+      "hp": 100,
       "hunger": 100,
-      "rarity": "LEGENDARY"
+      "grade": "LEGENDARY"
     }
   ]
 }
