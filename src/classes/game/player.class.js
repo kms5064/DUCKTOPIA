@@ -182,15 +182,17 @@ class Player {
   }
 
   addItem(itemCode, count, index) {
-    if (index === 0) {
+    if (index === -1) { //0이면 안되지;
       //아이템을 이미 갖고 있는지
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       //있다면 카운트만 증가
       if (item) {
         item.count += count;
+        console.log(`아이템 이미 있어서 count만 증가`);
       } else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
+        console.log(`아이템 없어서 count만 증가`);
 
         const checkRoom = (ele) => ele === 0;
         const emptyIndex = this.inventory.findIndex(checkRoom);
@@ -198,13 +200,15 @@ class Player {
       }
       return item;
     } else {
-      const item = this.inventory[index];
+      const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       if (item) {
         item.count += count;
+        console.log(`아이템 이미 있어서 count만 증가`);
       } else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
         this.inventory.splice(index, 1, item);
+        console.log(`아이템 없어서 새로 만듦`);
       }
       return item;
     }
@@ -217,16 +221,6 @@ class Player {
       throw new CustomError('인벤토리에서 아이템을 찾을 수 없습니다.');
     }
 
-    // //보유량이 더 많으면 갯수만 줄이기
-    // if (removedItem.count >= count) {
-    //   removedItem.count -= count;
-    //   // count가 0이 되면 해당 슬롯을 0으로 초기화
-    //   if (removedItem.count === 0) {
-    //     this.inventory[removedItemIndex] = 0;
-    //   }
-    // } else {
-    //   throw new CustomError('아이템 개수가 부족합니다.');
-    // }
     if (removedItem.count > count) {
       removedItem.count -= count;
     } else {
@@ -236,9 +230,19 @@ class Player {
   }
 
   equipWeapon(itemCode) {
-    const weapon = this.inventory.find((item) => item.itemCode === itemCode);
-    this.equippedWeapon = weapon;
-    return weapon;
+    if(this.equippedWeapon === null){
+      const weapon = this.inventory.find((item) => item.itemCode === itemCode);
+      this.equippedWeapon = {itemCode:weapon.itemCode,count:1};
+      this.removeItem(itemCode,1);
+    }else{
+      const temp = this.equippedWeapon;
+      const weapon = this.inventory.find((item) => item.itemCode === itemCode);
+      this.equippedWeapon = {itemCode:weapon.itemCode,count:1};
+      this.removeItem(itemCode,1);
+      this.addItem(temp.itemCode, 1, -1)
+    }
+
+    return this.equippedWeapon;
   }
 
   //공격 사거리 변경

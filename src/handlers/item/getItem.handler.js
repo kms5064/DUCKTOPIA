@@ -105,7 +105,7 @@ const getItemHandler = ({ socket, payload }) => {
   // 아이템 습득 처리
   try {
     // 플레이어 인벤토리에 추가
-    player.addItem(nearestItem.itemData.itemCode, nearestItem.itemData.count, 0);
+    player.addItem(nearestItem.itemData.itemCode, nearestItem.itemData.count, -1);
     console.log(`[아이템 습득 성공] 플레이어(${playerId})가 아이템(${nearestItem.itemId}) 습득`);
 
     // 인벤토리 상태 로깅
