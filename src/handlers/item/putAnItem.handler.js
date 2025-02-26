@@ -49,13 +49,15 @@ const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
 
     if(emptyIndex !== -1){
       const item = itemBox.putAnItem(player,itemCode,count,emptyIndex);
+      console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
+      console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
     
       const playerPutAnItemPayload = {
         playerId: player.user.id,
         itemBoxId: itemBoxId,
         itemData: {
-          itemCode: Object.keys(item)[0], //{code:count}
-          count: Object.values(item)[0],
+          itemCode: itemCode, //{itemCode:count}
+          count: count,
         },
         success: true,
       };

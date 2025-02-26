@@ -1,10 +1,14 @@
 import { config } from '../../config/config.js';
+import CustomError from '../../utils/error/customError.js';
+import { roomSession } from '../../sessions/session.js';
+import makePacket from '../../utils/packet/makePacket.js';
 
 class Player {
   constructor(user, atk, x, y) {
     this.user = user; // User Class
     this.maxHp = config.game.player.playerMaxHealth;
     this.hp = config.game.player.playerMaxHealth;
+    this.maxHunger = config.game.player.playerMaxHunger;
     this.hunger = config.game.player.playerMaxHunger;
     this.speed = config.game.player.playerSpeed;
     this.range = config.game.player.playerDefaultRange;
@@ -22,6 +26,10 @@ class Player {
     //위치 변경 요청 패킷간의 시간차
     this.packetTerm = 0;
     this.lastPosUpdateTime = Date.now();
+
+    // hunger
+    this.hungerCounter = 0;
+    this.lastHungerUpdate = 0;
   }
 
   changePlayerHp(damage) {
@@ -81,20 +89,85 @@ class Player {
 
     return { playerId: this.user.id, x: this.x, y: this.y };
   };
-
   calculateLatency = () => {
     //레이턴시 구하기 => 수정할 것)각 클라마다 다른 레이턴시를 가지고 계산
     //레이턴시 속성명도 생각해볼 필요가 있다
     //player값 직접 바꾸는건 메서드로 만들어서 사용
   };
 
+  /** Hunger System */
+  // 허기 초기화
+  initHungerUpdate() {
+    this.lastHungerUpdate = Date.now();
+  }
+
+  // 허기 감소 카운팅 함수
+  hungerCheck() {
+    const now = Date.now();
+    const deltaTime = now - this.lastHungerUpdate;
+    this.hungerCounter += deltaTime;
+    this.lastHungerUpdate = now;
+
+    if (this.hungerCounter >= config.game.player.playerHungerPeriod) {
+      // game 접근
+      const game = roomSession.getRoom(this.user.getRoomId()).getGame();
+
+      if (this.hunger > 0) {
+        this.changePlayerHunger(-config.game.player.playerHungerDecreaseAmount);
+
+        // console.log('플레이어 아이디' + this.user.id);
+        // console.log('플레이어 배고품' + this.hunger);
+
+        // 캐릭터 hunger 동기화 패킷 전송
+        const decreaseHungerPacket = makePacket(
+          config.packetType.S_PLAYER_HUNGER_UPDATE_NOTIFICATION,
+          {
+            playerId: this.user.id,
+            hunger: this.hunger,
+          },
+        );
+
+        game.broadcast(decreaseHungerPacket);
+      } else {
+        // 체력 감소
+
+        this.hp -= config.game.player.playerHpDecreaseAmountByHunger;
+
+        // 캐릭터 hp 동기화 패킷 전송
+        const decreaseHpPacket = makePacket(config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION, {
+          playerId: this.user.id,
+          hp: this.hp,
+        });
+
+        game.broadcast(decreaseHpPacket);
+      }
+
+      this.hungerCounter = 0;
+
+      // console.log('현재 아이디 : ', this.user.id, ', 현재 허기 : ', this.hunger, ', 현재 체력 : ', this.hp);
+    }
+  }
+
+  // 허기 회복
   changePlayerHunger(amount) {
     this.hunger += amount;
+
+    if (this.hunger > this.maxHunger) {
+      this.hunger = this.maxHunger;
+      this.hungerCounter = 0;
+      this.lastHungerUpdate = Date.now();
+    } else if (this.hunger < 0) {
+      this.hunger = 0;
+    }
+
     return this.hunger;
   }
+
+  /** end of Hunger System */
+
   //플레이어 어택은 데미지만 리턴하기
-  getPlayerAtkDamage() {
-    return this.atk + this.lv * config.game.player.atkPerLv + this.equippedWeapon.atk;
+  getPlayerAtkDamage(weaponAtk) {
+    return this.atk + this.lv * config.game.player.atkPerLv + weaponAtk;
   }
 
   playerDead() {
@@ -109,15 +182,17 @@ class Player {
   }
 
   addItem(itemCode, count, index) {
-    if (index === 0) {
+    if (index === -1) { //0이면 안되지;
       //아이템을 이미 갖고 있는지
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       //있다면 카운트만 증가
       if (item) {
-        item.stack += count;
+        item.count += count;
+        console.log(`아이템 이미 있어서 count만 증가`);
       } else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
+        console.log(`아이템 없어서 count만 증가`);
 
         const checkRoom = (ele) => ele === 0;
         const emptyIndex = this.inventory.findIndex(checkRoom);
@@ -125,41 +200,49 @@ class Player {
       }
       return item;
     } else {
-      const item = this.inventory[index];
+      const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       if (item) {
         item.count += count;
+        console.log(`아이템 이미 있어서 count만 증가`);
       } else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
         this.inventory.splice(index, 1, item);
+        console.log(`아이템 없어서 새로 만듦`);
       }
       return item;
     }
   }
 
   removeItem(itemCode, count) {
-    const removedItem = this.inventory.find((item) => item.itemCode === itemCode);
-    const removedItemIndex = this.inventory.findindex((item) => item.itemCode === itemCode);
+    const removedItem = this.inventory.find((item) => item && item.itemCode === itemCode);
+    const removedItemIndex = this.inventory.findIndex((item) => item && item.itemCode === itemCode);
     if (!removedItem) {
       throw new CustomError('인벤토리에서 아이템을 찾을 수 없습니다.');
     }
 
-    //보유량이 더 많으면 갯수만 줄이기
-    if (removedItem.stack >= count) {
-      removedItem.stack -= count;
+    if (removedItem.count > count) {
+      removedItem.count -= count;
     } else {
       //아이템을 제거
       this.inventory.splice(removedItemIndex, 1, 0);
     }
-    // const targetIndex = this.findItemIndex(itemCode);
-    // this.inventory.splice(targetIndex, 1,0);
-    // return this.inventory;
   }
 
   equipWeapon(itemCode) {
-    const weapon = this.inventory.find((item) => item.itemCode === itemCode);
-    this.equippedWeapon = weapon;
-    return weapon;
+    if(this.equippedWeapon === null){
+      const weapon = this.inventory.find((item) => item.itemCode === itemCode);
+      this.equippedWeapon = {itemCode:weapon.itemCode,count:1};
+      this.removeItem(itemCode,1);
+    }else{
+      const temp = this.equippedWeapon;
+      const weapon = this.inventory.find((item) => item.itemCode === itemCode);
+      this.equippedWeapon = {itemCode:weapon.itemCode,count:1};
+      this.removeItem(itemCode,1);
+      this.addItem(temp.itemCode, 1, -1)
+    }
+
+    return this.equippedWeapon;
   }
 
   //공격 사거리 변경

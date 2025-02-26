@@ -62,9 +62,11 @@ class Game {
     this.gameLoop = setInterval(() => {
       this.phaseCheck();
       this.monsterUpdate();
+      this.playersHungerCheck();
       //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
     }, 1000);
     this.lastUpdate = Date.now();
+    this.initPlayersHunger();
   }
 
   gameEnd() {
@@ -111,6 +113,18 @@ class Game {
   userUpdate() {
     for (const player of this.players) {
       //console.log(player.x, player.y);
+    }
+  }
+
+  initPlayersHunger() {
+    for (const [id, player] of this.players) {
+      player.initHungerUpdate();
+    }
+  }
+
+  playersHungerCheck() {
+    for (const [id, player] of this.players) {
+      player.hungerCheck();
     }
   }
 
@@ -634,7 +648,6 @@ class Game {
     }
   }
 
-
   // 아이템 박스 생성
   createItemBox() {
     const boxId = this.itemManager.createBoxId();
@@ -643,7 +656,10 @@ class Game {
     // 랜덤 아이템 생성 및 박스에 추가
     const items = this.itemManager.generateRandomItems();
     items.forEach((item, index) => {
-      itemBox.itemList.splice(index, 1, { itemCode: item.itemData.itemCode, count: item.itemData.count });
+      itemBox.itemList.splice(index, 1, {
+        itemCode: item.itemData.itemCode,
+        count: item.itemData.count,
+      });
     });
 
     const data = {
@@ -656,15 +672,15 @@ class Game {
     this.objects.set(data.ObjectData.objectId, itemBox);
 
     // 디버깅용 로그
-    console.log(`[아이템 박스 생성] ID: ${boxId}, 위치: (${itemBox.x}, ${itemBox.y})`);
-    console.log('[생성된 아이템 목록]');
-    itemBox.itemList.forEach((item) => {
-      if (item !== null) {
-        console.log(`아이템: ${JSON.stringify(item)}`);
-        console.log(`아이템코드: ${item.itemCode}, 개수: ${item.count}`);
-      }
+    // console.log(`[아이템 박스 생성] ID: ${boxId}, 위치: (${itemBox.x}, ${itemBox.y})`);
+    // console.log('[생성된 아이템 목록]');
+    // itemBox.itemList.forEach((item) => {
+    //   if(item !== null){
+    //     console.log( `아이템: ${JSON.stringify(item)}`);
+    //     console.log( `아이템코드: ${item.itemCode}, 개수: ${item.count}`);
+    //   }
 
-    });
+    // });
 
     return data;
   }

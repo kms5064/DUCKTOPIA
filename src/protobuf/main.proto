@@ -211,6 +211,11 @@ message S2CPlayerHpUpdateNotification { // 플레이어 체력 변경 알림
   int32 hp = 2;
 }
 
+message S2CPlayerHungerUpdateNotification { // 플레이어 허기 변경 알림
+  int32 playerId = 1;
+  int32 hunger = 2;
+}
+
 message C2SPlayerAttackRequest // 플레이어 공격 요청
 {
   float playerDirX = 1; // 마우스 위치 정보
@@ -384,6 +389,7 @@ message S2CPlayerEatFoodResponse { // 사용한 아이템이 식량일 때
   ItemData itemData = 2; // itemid ->itemdata
   int32 playerId = 3;
   int32 hunger = 4;
+  int32 playerHp = 5;
 }
 
 message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
@@ -438,6 +444,7 @@ message GamePacket {
     S2CPlayerPutAnItemNotification playerPutAnItemNotification = 51;
     C2SPlayerCloseBoxRequest playerCloseBoxRequest = 52;
     S2CPlayerCloseBoxNotification playerCloseBoxNotification = 53;
+    S2CPlayerHungerUpdateNotification playerHungerUpdateNotification = 201;
 
     // 몬스터
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;

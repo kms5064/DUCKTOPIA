@@ -18,7 +18,7 @@
       "hp": 130,
       "attack": 25,
       "defence": 15,
-      "range": 5,
+      "range": 6,
       "speed": 10,
       "grade": "D"
     },
@@ -38,7 +38,7 @@
       "hp": 250,
       "attack": 100,
       "defence": 10,
-      "range": 5,
+      "range": 9,
       "speed": 8,
       "grade": "C"
     },
@@ -46,9 +46,9 @@
       "code": 205,
       "name": "워리어덕",
       "hp": 450,
-      "attack": 70,
+      "attack": 120,
       "defence": 25,
-      "range": 5,
+      "range": 12,
       "speed": 8,
       "grade": "B"
     },
@@ -56,9 +56,9 @@
       "code": 206,
       "name": "네크로맨서덕",
       "hp": 400,
-      "attack": 110,
+      "attack": 400,
       "defence": 25,
-      "range": 5,
+      "range": 7,
       "speed": 8,
       "grade": "B"
     },
@@ -78,7 +78,7 @@
       "hp": 1000,
       "attack": 120,
       "defence": 50,
-      "range": 5,
+      "range": 8,
       "speed": 13,
       "grade": "S"
     }
