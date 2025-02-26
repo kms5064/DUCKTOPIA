@@ -65,7 +65,7 @@ const useItemHandler = ({ socket, payload }) => {
 
       // 식량 사용 처리 - changePlayerHunger 메서드 사용
       const currentHunger = player.hunger;
-      const addHunger = Math.min(foodData.hunger, 100 - currentHunger); // 허기 증가량 계산
+      const addHunger = Math.min(foodData.hunger, player.maxHunger - currentHunger); // 허기 증가량 계산
       const newHunger = player.changePlayerHunger(addHunger);
 
       player.removeItem(item.itemCode, item.count);
@@ -75,11 +75,18 @@ const useItemHandler = ({ socket, payload }) => {
       );
       console.log('[식량 사용 후 인벤토리]', player.inventory);
 
+      // 플레이어 체력 회복 처리
+      const currentHp = player.hp;
+      const addHp = Math.min(foodData.hp, player.maxHp - currentHp); // 체력 증가량 계산
+      const newHp = player.changePlayerHp(-addHp); // 음수로 변경하여 체력 회복
+      console.log('[식량 사용 후 체력]', newHp);
+
       packet = makePacket(config.packetType.S_PLAYER_EAT_FOOD_RESPONSE, {
         success: true,
         itemData: item,
         playerId,
         hunger: newHunger,
+        playerHp: newHp,
       });
       break;
     }
