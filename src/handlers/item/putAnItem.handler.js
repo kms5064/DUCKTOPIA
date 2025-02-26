@@ -46,11 +46,13 @@ const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
     //상자에 빈공간이 있는지
     const checkRoom = (ele) => ele ===0;
     const emptyIndex = itemBox.itemList.findIndex(checkRoom);
+    const existItem = player.inventory.find((item) => item && item.itemCode === itemCode);
 
-    if(emptyIndex !== -1){
+    if(emptyIndex !== -1 && existItem){
       const item = itemBox.putAnItem(player,itemCode,count,emptyIndex);
       console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
       console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
+      console.log(`상자 인벤토리 ${JSON.stringify(itemBox.itemList)}`);
     
       const playerPutAnItemPayload = {
         playerId: player.user.id,

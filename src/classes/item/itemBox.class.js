@@ -27,28 +27,28 @@ class ItemBox {
     //보유량이 더 많으면 갯수만 줄이기
     if (removedItem.count > count) {
       removedItem.count -= count;
-      const item = player.addItem(itemCode, count,emptyIndex);
+      const item =  player.addItem(itemCode, count,emptyIndex);
     } else {
       //아이템을 제거하고 stack만큼만 아이템을 반환하도록
       count = removedItem.count;
       this.itemList.splice(removedItemIndex, 1, 0);
-      const item = player.addItem(itemCode, count,emptyIndex);
+      const item =  player.addItem(itemCode, count,emptyIndex);
       return item;
     }
     //player 인벤토리에 추가된 item반환
     return removedItem;
   }
   //플레이어가 박스에 넣기
-  putAnItem(player,itemCode, count,emptyIndex) {
+   putAnItem(player,itemCode, count,emptyIndex) {
     const existItem = this.itemList.find((item) => item.itemCode === itemCode);
     if(existItem){
       existItem.count+=count;
-      player.removeItem(itemCode,count);
+       player.removeItem(itemCode,count);
       return existItem;
     } else{
       const item = { itemCode: itemCode ,count: count };
       this.itemList.splice(emptyIndex, 1, item);
-      player.removeItem(itemCode,count);
+       player.removeItem(itemCode,count);
       return item;
     }
     

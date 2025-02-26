@@ -11,7 +11,10 @@ class DestructibleObjectBase{
 
     getObject(){}
 
-    takeDamage(){
+    takeDamage(dmg){   
+        if(dmg>this.hp){
+            //부서지고(게임에서 오브젝트 삭제), 드랍템 떨구기,
+        }
 
     }
 

@@ -188,11 +188,9 @@ class Player {
       //있다면 카운트만 증가
       if (item) {
         item.count += count;
-        console.log(`아이템 이미 있어서 count만 증가`);
       } else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
-        console.log(`아이템 없어서 count만 증가`);
 
         const checkRoom = (ele) => ele === 0;
         const emptyIndex = this.inventory.findIndex(checkRoom);
@@ -203,12 +201,10 @@ class Player {
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       if (item) {
         item.count += count;
-        console.log(`아이템 이미 있어서 count만 증가`);
       } else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
         this.inventory.splice(index, 1, item);
-        console.log(`아이템 없어서 새로 만듦`);
       }
       return item;
     }
