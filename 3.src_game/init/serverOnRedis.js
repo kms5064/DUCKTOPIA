@@ -38,7 +38,7 @@ const serverOnRedis = async () => {
     await redisClient
       .multi()
       .hSet(name, hashData)
-      .lPush('Server:Game', host)
+      .rPush('Server:Game', host)
       .publish('ServerOn', name)
       .exec();
   } else {

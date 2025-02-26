@@ -33,7 +33,7 @@ const serverOnRedis = async () => {
     await redisClient
       .multi()
       .hSet('Server:Gateway:' + index, hashData)
-      .lPush('Server:Gateway', host)
+      .rPush('Server:Gateway', host)
       .exec();
   } else {
     await redisClient
