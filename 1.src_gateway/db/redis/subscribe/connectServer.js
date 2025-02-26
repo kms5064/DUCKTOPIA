@@ -19,7 +19,8 @@ const connectServer = async (name) => {
   if (server) return;
 
   let port = portType[type][0];
-  if (port === 5557 && name.split(':')[2] === '1') port = 5558;
+  // 테스트용
+  // if (port === 5557 && name.split(':')[2] === '1') port = 5558;
   if (!port) {
     console.error('잘못된 서버 타입입니다');
     return;
