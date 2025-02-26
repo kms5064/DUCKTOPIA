@@ -51,10 +51,16 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
 
   if (monster && player) {
     // 몬스터 HP 차감 처리
-    const damage = player.getPlayerAtkDamage();
-    const currHp = monster.setDamaged(damage);
+    const equippedWeaponCode = player.equippedWeapon.itemCode;
+    const equippedWeapon = game.itemManager.weaponData.find(
+      (weapon) => weapon.code === equippedWeaponCode,
+    );
 
-    // console.log(monsterId, ' HP: ', currHp);
+    const damage = player.getPlayerAtkDamage(equippedWeapon.attack);
+    console.log('[Player Attack] 플레이어 공격력:', damage);
+    console.log('[무기 공격력]');
+
+    const currHp = monster.setDamaged(damage);
 
     // 패킷 생성
     packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
@@ -69,15 +75,42 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
       // 몬스터 사망 처리
       game.removeMonster(monsterId);
 
-      console.log(monsterId, ' 번 몬스터 죽음');
+      // console.log(monsterId, ' 번 몬스터 죽음');
 
       packet = makePacket(config.packetType.S_MONSTER_DEATH_NOTIFICATION, {
         monsterId,
       });
       game.broadcast(packet);
+
+      // 아이템 드롭 처리
+      // console.log(`[아이템 드롭 시도] 몬스터 등급: ${monster.grade}`);
+      const monsterPosition = monster.getMonsterPos();
+      // console.log(`[몬스터 사망 위치] x: ${monsterPosition.x}, y: ${monsterPosition.y}`);
+
+      const droppedItems = game.itemManager.createDropItems(monster.grade, monsterPosition);
+      // console.log(`[아이템 드롭 결과] 생성된 아이템 수: ${droppedItems.length}`);
+
+      if (droppedItems.length > 0) {
+        // console.log('[드롭된 아이템 목록]');
+        // droppedItems.forEach((item, index) => {
+        //   console.log(
+        //     `${index + 1}. 아이템 코드: ${item.itemData.itemCode}, 개수: ${item.itemData.count}`,
+        //   );
+        //   console.log(`   위치: (${item.position.x}, ${item.position.y})`);
+        // });
+
+        // 아이템 생성 알림
+        packet = makePacket(config.packetType.S_ITEM_SPAWN_NOTIFICATION, {
+          items: droppedItems,
+        });
+        console.log('[패킷 전송] S_ITEM_SPAWN_NOTIFICATION 전송');
+        game.broadcast(packet);
+      } else {
+        console.log('[아이템 미생성] 드롭 확률에 실패하여 아이템이 생성되지 않음');
+      }
+    } else {
+      console.log('이게 왜됌?');
     }
-  } else {
-    console.log('이게 왜됌?')
   }
 };
 

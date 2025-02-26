@@ -6,7 +6,7 @@ import { userSession } from '../../sessions/session.js';
 import { roomSession } from '../../sessions/session.js';
 
 const playerOpenBoxHandler = ({ socket, sequence, payload }) => {
-  try {
+
     const { itemBoxId } = payload;
     console.log(`openBoxHandler itemBoxId: ${itemBoxId}`);
 
@@ -40,7 +40,6 @@ const playerOpenBoxHandler = ({ socket, sequence, payload }) => {
     if (!player) {
       throw new CustomError('플레이어를 찾을 수 없습니다');
     }
-    game.addBox(); //테스트용
 
     const itemBox = game.getItemBoxById(itemBoxId);
     if (!itemBox) {
@@ -50,43 +49,27 @@ const playerOpenBoxHandler = ({ socket, sequence, payload }) => {
     //유효한 거리인지 검증
     //이 박스가 점유중이라면 컷
     //박스 오픈한채로 돌아다니면 박스 닫히게?
-    //  if (
-    //    itemBox.calculateDistance <= config.game.VALID_DISTANCE_OF_BOX &&
-    //    itemBox.occupied !== null
-    //  ) {
-    //    itemBox.occupied = player.id;
+    if (
+      //itemBox.calculateDistance <= config.game.VALID_DISTANCE_OF_BOX &&
+      itemBox.occupied === null
+    ) {
+      itemBox.occupied = player.id;
 
-    //    const itemList = itemBox.getItemList();
-    //    const payload = {
-    //      playerId: player.id,
-    //      itemBoxId: itemBoxId,
-    //      itemData: itemList,
-    //    };
+      const itemList = [];
+      itemBox.getItemList();
+      const payload = {
+        playerId: player.user.id,
+        itemBoxId: itemBoxId,
+        itemData: itemList,
+      };
 
-    //    const notification = makePacket(config.packetType.S_PLAYER_OPEN_BOX_RESPONSE, payload);
-    //    //이 유저가 열고 있다는거 브로드캐스트
+      const notification = makePacket(config.packetType.S_PLAYER_OPEN_BOX_NOTIFICATION, payload);
+      //이 유저가 열고 있다는거 브로드캐스트
 
-    //    room.broadcast(notification);
-    //  }
-    //테스트용 패킷
-    console.log('player.user.id' + player.user.id);
-    const playerOpenBoxPayload = {
-      playerId: player.user.id,
-      itemBoxId: 2,
-      itemData: [],
-    };
+      room.broadcast(notification);
+      console.log("상자를 열었다!");
+    }
 
-    const notification = makePacket(
-      config.packetType.S_PLAYER_OPEN_BOX_NOTIFICATION,
-      playerOpenBoxPayload,
-    );
-    //이 유저가 열고 있다는거 브로드캐스트
-
-    room.broadcast(notification);
-  } catch (error) {
-    console.error(error);
-    errorHandler(socket, error, config.packetType.S_PLAYER_OPEN_BOX_NOTIFICATION);
-  }
 };
 
 export default playerOpenBoxHandler;

@@ -44,7 +44,6 @@ const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
       throw new CustomError(ErrorCodes.ITEM_BOX_NOT_FOUND, '상자를 찾을 수 없습니다');
     }
 
-    //테스트용 패킷
     const notificationPayload = {
       playerId: player.user.id,
       itemBoxId: itemBoxId,
@@ -57,9 +56,14 @@ const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
     //이 유저가 닫는거 브로드캐스트
 
     room.broadcast(notification);
+
+    itemBox.occupied = null;//점유 해제
+
+    console.log("상자를 닫았다!");
+
   } catch (error) {
     console.error(error);
-    errorHandler(socket, error, config.packetType.S_PLAYER_OPEN_BOX_RESPONSE);
+    errorHandler(socket, error, config.packetType.S_PLAYER_CLOSE_BOX_NOTIFICATION);
   }
 };
 

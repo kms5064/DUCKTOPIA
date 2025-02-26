@@ -24,6 +24,9 @@ import {
   PLAYER_MAX_HP,
   PLAYER_SPEED,
   VALID_DISTANCE,
+  PLAYER_HUNGER_PERIOD,
+  PLAYER_HUNGER_DECREASE_AMOUNT,
+  PLAYER_HP_DECREASE_AMOUNT_BY_HUNGER,
 } from './constants/player.js';
 import {
   MAX_DROP_ITEM_COUNT,
@@ -42,9 +45,14 @@ import {
   MIN_VALUE_Y,
 } from './constants/map.js';
 import { CharacterType } from './constants/character.js';
-import { VALID_DISTANCE_OF_BOX } from './constants/itemBox.js';
-
+import {
+  VALID_DISTANCE_OF_BOX,
+  BOX_MAX_SLOTS,
+  ITEM_MIN_COUNT,
+  ITEM_MAX_STACK,
+} from './constants/itemBox.js';
 import { DAY_TIME, NIGHT_TIME, DayPhase } from './constants/game.js';
+import { ITEM_PICKUP_RANGE } from './constants/item.js';
 import { OBJECT_MAX_HP } from './constants/object.js';
 
 export const config = {
@@ -93,6 +101,9 @@ export const config = {
       playerMaxHealth: PLAYER_MAX_HP,
       playerSpeed: PLAYER_SPEED,
       validDistance: VALID_DISTANCE,
+      playerHungerPeriod: PLAYER_HUNGER_PERIOD,
+      playerHungerDecreaseAmount: PLAYER_HUNGER_DECREASE_AMOUNT,
+      playerHpDecreaseAmountByHunger: PLAYER_HP_DECREASE_AMOUNT_BY_HUNGER,
     },
     characterType: {
       ...CharacterType,
@@ -115,6 +126,12 @@ export const config = {
       validDistance: VALID_DISTANCE_OF_BOX,
       centerX: CENTER_X,
       centerY: CENTER_Y,
+      boxMaxSlots: BOX_MAX_SLOTS,
+      itemMinCount: ITEM_MIN_COUNT,
+      itemMaxStack: ITEM_MAX_STACK,
+    },
+    item: {
+      pickupRange: ITEM_PICKUP_RANGE,
     },
   },
 };

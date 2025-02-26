@@ -5,3 +5,6 @@ export const PLAYER_DEFAULT_ANGLE = 180; //기본 공격 각도
 export const PLAYER_MAX_HP = 5000;
 export const PLAYER_SPEED = 1;
 export const VALID_DISTANCE = 10; //얼만큼이 적당하지..?
+export const PLAYER_HUNGER_PERIOD = 10000; // 허기 감소 주기 : 10초
+export const PLAYER_HUNGER_DECREASE_AMOUNT = 1; // 허기 감소 값
+export const PLAYER_HP_DECREASE_AMOUNT_BY_HUNGER = 1; // 허기 0 이하일 때 체력 감소 값

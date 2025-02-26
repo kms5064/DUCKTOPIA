@@ -6,9 +6,8 @@ import { userSession } from '../../sessions/session.js';
 import { roomSession } from '../../sessions/session.js';
 
 const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
-  try {
-    const { itemBoxId, itemType, count } = payload;
-    console.log(`putAnItemHandler itemBoxId: ${itemBoxId},itemType: ${itemType},count: ${count}`);
+    const { itemBoxId,itemCode, count } = payload;
+    console.log(`putAnItemHandler itemBoxId: ${itemBoxId},itemCode: ${itemCode},count: ${count}`);
 
     // 유저 객체 조회
     const user = userSession.getUser(socket.id);
@@ -41,36 +40,37 @@ const playerPutAnItemHandler = ({ socket, sequence, payload }) => {
     }
 
     const itemBox = game.getItemBoxById(itemBoxId);
+    if (!itemBox) {
+      throw new CustomError( '상자를 찾을 수 없습니다');
+    }
 
-    // player.removeItem(item.id);
-    // const payload = itemBox.putAnItem(index, item);
+    const existItem = player.inventory.find((item) => item && item.itemCode === itemCode);
 
-    // // 넣어진 아이템을 success코드와 같이 브로드캐스트 해야한다.
+    if(existItem){
+      const item = itemBox.putAnItem(player,itemCode,count);
+      console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
+      console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
+      console.log(`상자 인벤토리 ${JSON.stringify(itemBox.itemList)}`);
+    
+      if(!item){
+        throw new CustomError(`아이템을 넣는데 실패했습니다`);
+      }
+      const playerPutAnItemPayload = {
+        playerId: player.user.id,
+        itemBoxId: itemBoxId,
+        itemData: {
+          itemCode: itemCode, //{itemCode:count}
+          count: count,
+        },
+        success: true,
+      };
+  
+      const notification = makePacket(config.packetType.S_PLAYER_PUT_AN_ITEM_NOTIFICATION, playerPutAnItemPayload);
+  
+      room.broadcast(notification);
+    }
 
-    // const putAnItemRes = makePacket(config.packetType.PUT_AN_ITEM_RESPONSE, payload);
 
-    const playerPutAnItemPayload = {
-      playerId: player.user.id,
-      itemBoxId: 2,
-      itemData: {
-        itemId: itemType,
-        count: count,
-      },
-      count: count,
-      success: false,
-    };
-
-    const notification = makePacket(
-      config.packetType.S_PLAYER_PUT_AN_ITEM_NOTIFICATION,
-      playerPutAnItemPayload,
-    );
-    //이 유저가 열고 있다는거 브로드캐스트
-
-    room.broadcast(notification);
-  } catch (error) {
-    console.error(error);
-    errorHandler(socket, error, config.packetType.S_PLAYER_PUT_AN_ITEM_NOTIFICATION);
-  }
 };
 
 export default playerPutAnItemHandler;
