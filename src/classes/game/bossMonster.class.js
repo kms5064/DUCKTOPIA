@@ -39,7 +39,7 @@ class BossMonster extends Monster {
         }
     }
 
-    setDamaged(player, damage) {
+    setDamaged(damage, player) {
         const newAggro = Math.max(0, this.hatePointList.get(player) + damage);
         this.hatePointList.set(player, newAggro);
         return super.setDamaged(damage);
