@@ -16,7 +16,7 @@ class ItemBox {
   }
 
   //플레이어가 박스에서 꺼내기
-  takeOutAnItem(player,itemCode, count,emptyIndex) {
+  takeOutAnItem(player, itemCode, count, emptyIndex) {
     //temType을 기반으로 박스에 아이템 조회
     const removedItem = this.itemList.find((item) => item.itemCode === itemCode);
     const removedItemIndex = this.itemList.findIndex((item) => item.itemCode === itemCode);
@@ -27,31 +27,33 @@ class ItemBox {
     //보유량이 더 많으면 갯수만 줄이기
     if (removedItem.count > count) {
       removedItem.count -= count;
-      const item =  player.addItem(itemCode, count,emptyIndex);
+      const item = player.addItem(itemCode, count, emptyIndex);
     } else {
       //아이템을 제거하고 stack만큼만 아이템을 반환하도록
       count = removedItem.count;
       this.itemList.splice(removedItemIndex, 1, 0);
-      const item =  player.addItem(itemCode, count,emptyIndex);
+      const item = player.addItem(itemCode, count, emptyIndex);
       return item;
     }
     //player 인벤토리에 추가된 item반환
     return removedItem;
   }
   //플레이어가 박스에 넣기
-   putAnItem(player,itemCode, count,emptyIndex) {
+  putAnItem(player, itemCode, count) {
+    //상자에 빈공간이 있는지
+    const checkRoom = (ele) => ele === 0;
+    const emptyIndex = this.itemList.findIndex(checkRoom);
     const existItem = this.itemList.find((item) => item.itemCode === itemCode);
-    if(existItem){
-      existItem.count+=count;
-       player.removeItem(itemCode,count);
+    if (existItem) {
+      existItem.count += count;
+      player.removeItem(itemCode, count);
       return existItem;
-    } else{
-      const item = { itemCode: itemCode ,count: count };
+    } else {
+      const item = { itemCode: itemCode, count: count };
       this.itemList.splice(emptyIndex, 1, item);
-       player.removeItem(itemCode,count);
+      player.removeItem(itemCode, count);
       return item;
     }
-    
   }
 
   calculateDistance(px, py) {
@@ -63,12 +65,10 @@ class ItemBox {
     [this.itemList[index1], this.itemList[index2]] = [this.itemList[index2], this.itemList[index1]];
   }
 
-  setPosition(x,y){
-    this.x=x;
-    this.y=y;
+  setPosition(x, y) {
+    this.x = x;
+    this.y = y;
   }
-
-
 }
 
 export default ItemBox;
