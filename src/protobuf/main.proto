@@ -344,8 +344,6 @@ message S2CPlayerPutAnItemNotification {
 
 message C2SPlayerCloseBoxRequest { int32 itemBoxId = 1; }
 
-
-
 message S2CPlayerCloseBoxNotification {
   int32 playerId = 1;
   int32 itemBoxId = 2;
@@ -398,6 +396,24 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
   int32 playerId = 3;
 }
 //---- 추가 완료
+
+// 분산 서버 패킷
+// 로비 -> Gateway
+message S2SGameServerPrepare { // 게임준비 응답 to 호스트클라이언트
+  bool success = 1;
+  RoomData room = 2;
+}
+// Gateway -> 게임
+message S2SGameServerJoinRequest { // 게임 서버에 접속하여 데이터 체크
+  RoomData room = 1;
+}
+
+// Gateway -> 로비
+message S2SLoginCast // 로그인 응답
+{
+  bool success = 1;
+  User user = 2;
+}
 
 message GamePacket {
   oneof payload {
@@ -479,5 +495,10 @@ message GamePacket {
     S2CPlayerEatFoodResponse playerEatFoodResponse = 106;
     S2CPlayerEquipWeaponResponse playerEquipWeaponResponse = 107;
     //---- 추가 완료
+
+    // 분산 서버 추가
+    S2SGameServerPrepare gameServerPrepare = 201;
+    S2SGameServerJoinRequest GameServerJoinRequest = 202;
+    S2SLoginCast loginCast = 203;
   }
 }

@@ -8,6 +8,10 @@ import {
   HOST,
   PORT,
   LOCATION_REQ_TIME_TERM,
+  REDIS_USER,
+  REDIS_PASSWORD,
+  REDIS_HOST,
+  REDIS_PORT,
 } from './constants/env.js';
 import {
   PACKET_TYPE,
@@ -59,6 +63,7 @@ export const config = {
     packetTypeByte: PACKET_TYPE_BYTE,
     versionLengthByte: VERSION_LENGTH_BYTE,
     payloadLengthByte: PAYLOAD_LENGTH_BYTE,
+    userIdLengthByte: USER_ID_LENGTH_BYTE,
   },
   packetType: {
     ...PACKET_TYPE,
@@ -79,6 +84,12 @@ export const config = {
       host: DB_HOST,
       port: DB_PORT,
     },
+  },
+  redis: {
+    user: REDIS_USER,
+    password: REDIS_PASSWORD,
+    host: REDIS_HOST,
+    port: REDIS_PORT,
   },
   game: {
     phaseCount: {
