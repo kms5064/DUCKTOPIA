@@ -5,7 +5,7 @@ import {
   RANGE_COOLTIME_MONSTER_AWAKING,
   RANGE_COOLTIME_MONSTER_TRACKING,
 } from '../../config/constants/monster.js';
-import MovableObjectBase from '../base/objectBase.class.js';
+import MovableObjectBase from '../base/movableObjectBase.class.js';
 
 class Monster extends MovableObjectBase {
   constructor(

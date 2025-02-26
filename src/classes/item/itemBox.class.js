@@ -25,7 +25,7 @@ class ItemBox {
     }
 
     //보유량이 더 많으면 갯수만 줄이기
-    if (removedItem.count >= count) {
+    if (removedItem.count > count) {
       removedItem.count -= count;
       const item = player.addItem(itemCode, count,emptyIndex);
     } else {
@@ -43,11 +43,12 @@ class ItemBox {
     const existItem = this.itemList.find((item) => item.itemCode === itemCode);
     if(existItem){
       existItem.count+=count;
+      player.removeItem(itemCode,count);
       return existItem;
     } else{
       const item = { itemCode: itemCode ,count: count };
       this.itemList.splice(emptyIndex, 1, item);
-      player.removeItem(itemCode);
+      player.removeItem(itemCode,count);
       return item;
     }
     
