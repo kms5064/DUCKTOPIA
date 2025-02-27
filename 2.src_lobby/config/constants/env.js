@@ -19,3 +19,4 @@ export const REDIS_USER = process.env.REDIS_USER || 'user';
 export const REDIS_PASSWORD = process.env.REDIS_PASSWORD || 'password';
 export const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
 export const REDIS_PORT = process.env.REDIS_PORT || 6379;
+export const REDIS_CUSTOM = process.env.REDIS_CUSTOM || 'Default';
