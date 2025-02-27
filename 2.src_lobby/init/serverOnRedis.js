@@ -2,6 +2,7 @@ import os from 'os';
 import { redisClient, subscriber } from '../db/redis/redis.js';
 import { roomSession } from '../sessions/session.js';
 import healthCheck from '../db/redis/subscribe/healthCheck.js';
+import { config } from '../config/config.js';
 
 // 프라이빗 IPv4 주소
 function getLocalIP() {
@@ -16,6 +17,7 @@ function getLocalIP() {
 
 const serverOnRedis = async () => {
   const host = getLocalIP();
+  const name = config.redis.custom + 'Server:Lobby';
   const hashData = {
     // 서버 주소
     address: host,
@@ -24,16 +26,14 @@ const serverOnRedis = async () => {
     check: 'new',
   };
 
-  await redisClient.watch('Server:Lobby');
+  await redisClient.watch(name);
   // [1] list에서 서버 조회
-  const serverList = await redisClient.lRange('Server:Lobby', 0, -1);
+  const serverList = await redisClient.lRange(name, 0, -1);
   let index = serverList.indexOf(host);
-  let name = 'Server:Lobby:' + index;
   // [2] hashKey 생성 lobby:2 lobby:3 ... + 값 저장
   // [3] 중복 여부에따라 List 업데이트
   if (index < 0) {
     index = serverList.length;
-    name = 'Server:Lobby:' + index;
     await redisClient
       .multi()
       .hSet(name, hashData)

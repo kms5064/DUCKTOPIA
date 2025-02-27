@@ -1,6 +1,7 @@
 import os from 'os';
 import { redisClient } from '../db/redis/redis.js';
 import connectServer from '../db/redis/subscribe/connectServer.js';
+import { config } from '../config/config.js';
 
 // 프라이빗 IPv4 주소
 function getLocalIP() {
@@ -15,6 +16,7 @@ function getLocalIP() {
 
 const serverOnRedis = async () => {
   const host = getLocalIP();
+  const name = config.redis.custom + 'Server:Gateway';
   const hashData = {
     // 서버 주소
     address: host,
@@ -22,38 +24,38 @@ const serverOnRedis = async () => {
     status: 1,
   };
 
-  await redisClient.watch('Server:Gateway');
+  await redisClient.watch(name);
   // [1] list에서 서버 조회
-  const serverList = await redisClient.lRange('Server:Gateway', 0, -1);
+  const serverList = await redisClient.lRange(name, 0, -1);
   let index = serverList.indexOf(host);
-  let name = 'Server:Gateway:';
   // [2] hashKey 생성 lobby:2 lobby:3 ... + 값 저장
   // [3] 중복 여부에따라 List 업데이트
   if (index < 0) {
-    name = 'Server:Gateway:';
     await redisClient
       .multi()
-      .hSet(name + serverList.length, hashData)
-      .rPush('Server:Gateway', host)
+      .hSet(name + ':' + serverList.length, hashData)
+      .rPush(name, host)
       .exec();
   } else {
     await redisClient
       .multi()
-      .hSet(name + index, hashData)
+      .hSet(name + ':' + index, hashData)
       .exec();
   }
 
   console.log('Redis 서버 오픈 알림 성공');
 
+  const lobby = config.redis.custom + 'Server:Lobby';
   // Gateway 서버의 연결 부
-  const LobbyServers = await redisClient.lRange('Server:Lobby', 0, -1);
+  const LobbyServers = await redisClient.lRange(lobby, 0, -1);
   for (let i = 0; i < LobbyServers.length; i++) {
-    await connectServer('Server:Lobby:' + i); //로비서버 TCP연결
+    await connectServer(lobby + ':' + +i); //로비서버 TCP연결
   }
 
-  const GameServers = await redisClient.lRange('Server:Game', 0, -1);
+  const game = config.redis.custom + 'Server:Game';
+  const GameServers = await redisClient.lRange(game, 0, -1);
   for (let i = 0; i < GameServers.length; i++) {
-    await connectServer('Server:Game:' + i); //게임서버 TCP연결
+    await connectServer(game + ':' + i); //게임서버 TCP연결
   }
 
   console.log('Redis List 모든 서버 연결 성공');
