@@ -16,7 +16,7 @@ function getLocalIP() {
 
 const serverOnRedis = async () => {
   const host = getLocalIP();
-  const name = config.redis.custom + 'Server:Gateway';
+  const mainName = config.redis.custom + 'Server:Gateway';
   const hashData = {
     // 서버 주소
     address: host,
@@ -24,24 +24,17 @@ const serverOnRedis = async () => {
     status: 1,
   };
 
-  await redisClient.watch(name);
+  await redisClient.watch(mainName);
   // [1] list에서 서버 조회
-  const serverList = await redisClient.lRange(name, 0, -1);
-  let index = serverList.indexOf(host);
+  const serverList = await redisClient.lRange(mainName, 0, -1);
+  const index = serverList.indexOf(host);
   // [2] hashKey 생성 lobby:2 lobby:3 ... + 값 저장
   // [3] 중복 여부에따라 List 업데이트
+  let name = mainName + ':' + index;
   if (index < 0) {
-    await redisClient
-      .multi()
-      .hSet(name + ':' + serverList.length, hashData)
-      .rPush(name, host)
-      .exec();
-  } else {
-    await redisClient
-      .multi()
-      .hSet(name + ':' + index, hashData)
-      .exec();
-  }
+    name = mainName + ':' + serverList.length;
+    await redisClient.multi().hSet(name, hashData).rPush(mainName, host).exec();
+  } else await redisClient.multi().hSet(name, hashData).exec();
 
   console.log('Redis 서버 오픈 알림 성공');
 

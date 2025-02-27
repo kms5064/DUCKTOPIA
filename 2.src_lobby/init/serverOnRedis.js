@@ -17,7 +17,7 @@ function getLocalIP() {
 
 const serverOnRedis = async () => {
   const host = getLocalIP();
-  const name = config.redis.custom + 'Server:Lobby';
+  const mainName = config.redis.custom + 'Server:Lobby';
   const hashData = {
     // 서버 주소
     address: host,
@@ -26,23 +26,22 @@ const serverOnRedis = async () => {
     check: 'new',
   };
 
-  await redisClient.watch(name);
+  await redisClient.watch(mainName);
   // [1] list에서 서버 조회
-  const serverList = await redisClient.lRange(name, 0, -1);
-  let index = serverList.indexOf(host);
+  const serverList = await redisClient.lRange(mainName, 0, -1);
+  const index = serverList.indexOf(host);
   // [2] hashKey 생성 lobby:2 lobby:3 ... + 값 저장
   // [3] 중복 여부에따라 List 업데이트
+  let name = mainName + ':' + index;
   if (index < 0) {
-    index = serverList.length;
+    name = mainName + ':' + serverList.length;
     await redisClient
       .multi()
       .hSet(name, hashData)
-      .rPush('Server:Lobby', host)
+      .rPush(mainName, host)
       .publish('ServerOn', name)
       .exec();
-  } else {
-    await redisClient.multi().hSet(name, hashData).publish('ServerOn', name).exec();
-  }
+  } else await redisClient.multi().hSet(name, hashData).publish('ServerOn', name).exec();
 
   roomSession.name = name;
   // 헬스체크 Sub 매핑
