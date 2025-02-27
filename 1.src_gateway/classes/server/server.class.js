@@ -1,6 +1,8 @@
+import { config } from '../../config/config.js';
 import { redisClient } from '../../db/redis/redis.js';
 import onGameEnd from '../../events/game/onGameEnd.js';
 import onLobbyEnd from '../../events/lobby/onLobbyEnd.js';
+import makeServerPacket from '../../utils/packet/makeServerPacket.js';
 
 class Server {
   constructor(serverId, socket) {
@@ -8,8 +10,11 @@ class Server {
     this.socket.id = serverId; //여기에 유니크 아이디
     this.type = serverId.split(':')[1];
     this.stack = 0;
+    this.intervals = [];
     // 헬스체킹
-    this.interval = setInterval(this.healthCheck, 5000);
+    this.intervals.push(setInterval(this.healthCheck, 5000));
+    // 레이턴시 확인
+    this.intervals.push(setInterval(this.latencyCheck, 5000));
   }
 
   healthCheck = async () => {
@@ -37,8 +42,17 @@ class Server {
     // console.log(`//HealthCheck// [Server] ${this.socket.id} / [Stack] : ${this.stack} `);
   };
 
+  // 레이턴시 확인
+  latencyCheck = async () => {
+    const packet = makeServerPacket(config.packetType.S_ERROR_NOTIFICATION, {
+      errorMessage: 'latencyCheck',
+      timestamp: date.now(),
+    });
+    this.socket.write(packet);
+  };
+
   clearChecker() {
-    clearInterval(this.interval);
+    this.intervals.forEach((interval) => clearInterval(interval));
   }
 }
 
