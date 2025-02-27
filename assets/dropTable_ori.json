@@ -3,68 +3,68 @@
   "version": "1.0.0",
   "data": {
     "D": {
-      "dropRate": 20,
+      "dropRate": 50,
       "itemCount": {
         "min": 0,
         "max": 1
       },
       "itemGradeRates": {
         "COMMON": 90,
-        "RARE": 10,
-        "EPIC": 0,
+        "RARE": 7,
+        "EPIC": 3,
         "LEGENDARY": 0
       }
     },
     "C": {
-      "dropRate": 35,
+      "dropRate": 60,
       "itemCount": {
         "min": 0,
         "max": 2
       },
       "itemGradeRates": {
-        "COMMON": 70,
-        "RARE": 25,
+        "COMMON": 80,
+        "RARE": 15,
         "EPIC": 5,
         "LEGENDARY": 0
       }
     },
     "B": {
-      "dropRate": 50,
+      "dropRate": 65,
       "itemCount": {
-        "min": 0,
+        "min": 1,
         "max": 3
+      },
+      "itemGradeRates": {
+        "COMMON": 70,
+        "RARE": 25,
+        "EPIC": 4,
+        "LEGENDARY": 1
+      }
+    },
+    "A": {
+      "dropRate": 75,
+      "itemCount": {
+        "min": 1,
+        "max": 3
+      },
+      "itemGradeRates": {
+        "COMMON": 60,
+        "RARE": 30,
+        "EPIC": 8,
+        "LEGENDARY": 2
+      }
+    },
+    "S": {
+      "dropRate": 85,
+      "itemCount": {
+        "min": 1,
+        "max": 4
       },
       "itemGradeRates": {
         "COMMON": 50,
         "RARE": 35,
-        "EPIC": 15,
-        "LEGENDARY": 0
-      }
-    },
-    "A": {
-      "dropRate": 70,
-      "itemCount": {
-        "min": 0,
-        "max": 4
-      },
-      "itemGradeRates": {
-        "COMMON": 30,
-        "RARE": 40,
-        "EPIC": 25,
+        "EPIC": 10,
         "LEGENDARY": 5
-      }
-    },
-    "S": {
-      "dropRate": 90,
-      "itemCount": {
-        "min": 0,
-        "max": 5
-      },
-      "itemGradeRates": {
-        "COMMON": 20,
-        "RARE": 35,
-        "EPIC": 35,
-        "LEGENDARY": 10
       }
     }
   }
