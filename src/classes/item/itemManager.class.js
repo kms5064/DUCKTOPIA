@@ -31,13 +31,14 @@ class ItemManager {
   }
 
   // 랜덤 아이템 생성
-  generateRandomItems(itemGrade) {
+  generateRandomItems(itemBoxGrade) {
+    const itemGrade = this.rollItemGrade(itemBoxGrade)
     const items = [];
-    const slotCount = Math.floor(Math.random() * config.game.itemBox.boxMaxSlots) + 1; // 최소 1개
+    const slotCount = Math.floor(Math.random() * config.game.itemBox.itemMaxSpawn) + 1; // 최소 1개
 
     for (let i = 0; i < slotCount; i++) {
       // 아이템 타입 결정 (무기 또는 음식)
-      const isWeapon = Math.random() < 0.3; // 30% 확률로 무기 생성
+      const isWeapon = Math.random() < 0.2; // 20% 확률로 무기 생성
 
       if (isWeapon) {
         // 무기 아이템 생성

@@ -6,7 +6,7 @@ import { config } from '../../config/config.js';
 import { DayPhase, WaveState } from '../../config/constants/game.js';
 import ItemBox from '../item/itemBox.class.js';
 import ItemManager from '../item/itemManager.class.js';
-import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
+import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/objects.js';
 import BossMonster from './bossMonster.class.js';
 
 class Game {
@@ -412,8 +412,20 @@ class Game {
     };
 
     objectData.push(coreData);
+    //하드코딩된 등급별 상자 만들기
     for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
-      const itemBox = this.createItemBox();
+      const itemBoxGrade = "D";
+      const itemBox = this.createItemBox(itemBoxGrade);
+      objectData.push(itemBox);
+    }
+    for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
+      const itemBoxGrade = "C";
+      const itemBox = this.createItemBox(itemBoxGrade);
+      objectData.push(itemBox);
+    }
+    for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
+      const itemBoxGrade = "A";
+      const itemBox = this.createItemBox(itemBoxGrade);
       objectData.push(itemBox);
     }
     return objectData;
@@ -613,12 +625,12 @@ class Game {
   }
 
   // 아이템 박스 생성
-  createItemBox() {
+  createItemBox(itemBoxGrade) {
     const boxId = this.itemManager.createBoxId();
     const itemBox = new ItemBox(boxId);
 
     // 랜덤 아이템 생성 및 박스에 추가
-    const items = this.itemManager.generateRandomItems();
+    const items = this.itemManager.generateRandomItems(itemBoxGrade);
     items.forEach((item, index) => {
       itemBox.itemList.splice(index, 1, {
         itemCode: item.itemData.itemCode,

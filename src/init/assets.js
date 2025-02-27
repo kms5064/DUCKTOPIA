@@ -33,11 +33,11 @@ export const loadGameAssets = async () => {
       readFileAsync('monster.json'),
       readFileAsync('dropTable.json'),
       readFileAsync('objectDropTable.json'),
-      readFileAsync('objects.json'),
+      // readFileAsync('objects.json'),
 
 
     ]);
-    gameAssets = { food, weapon, monster, dropTable, objectDropTable ,objects};
+    gameAssets = { food, weapon, monster, dropTable, objectDropTable};
     return gameAssets;
   } catch (error) {
     throw new Error('Failed to load game assets: ' + error.message);

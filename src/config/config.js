@@ -50,6 +50,7 @@ import {
   BOX_MAX_SLOTS,
   ITEM_MIN_COUNT,
   ITEM_MAX_STACK,
+  ITEM_MAX_SPAWN,
 } from './constants/objects.js';
 import { DAY_TIME, NIGHT_TIME, DayPhase } from './constants/game.js';
 import { ITEM_PICKUP_RANGE } from './constants/item.js';
@@ -125,6 +126,7 @@ export const config = {
       boxMaxSlots: BOX_MAX_SLOTS,
       itemMinCount: ITEM_MIN_COUNT,
       itemMaxStack: ITEM_MAX_STACK,
+      itemMaxSpawn:ITEM_MAX_SPAWN,
     },
     item: {
       pickupRange: ITEM_PICKUP_RANGE,
