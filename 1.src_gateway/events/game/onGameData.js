@@ -56,9 +56,6 @@ const onGameData = (socket) => async (data) => {
       const gamePacket = proto.decode(payloadBuffer);
       const payload = gamePacket[gamePacket.payload];
 
-      const user = userSession.getUserByID(userId);
-      if (!user) continue;
-
       console.log(packetType, config.packetType.S_ERROR_NOTIFICATION[0]);
       if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) {
         console.log('오냐?');
