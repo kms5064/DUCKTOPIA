@@ -457,7 +457,7 @@ class Game {
     // this.waveCount += 2;
     const waveMonsterSize = Math.min(
       config.game.monster.waveMaxMonsterCount,
-      this.waveCount * 2 + 3,
+      this.waveCount * 2 + 3
     );
 
     for (let i = 1; i <= waveMonsterSize; i++) {
@@ -527,9 +527,8 @@ class Game {
           });
         }
       }
-      this.waveCount += 1;
     }
-
+    
     //console.log(monstersData.length);
     for (const data of monstersData) {
       //console.log(`${data.length}`);
@@ -541,6 +540,7 @@ class Game {
 
     const owner = this.getPlayerById(this.ownerId);
     owner.user.socket.write(waveMonsterSpawnRequestPacket);
+    this.waveCount += 1;
   }
 
   //웨이브 몬스터 생성1

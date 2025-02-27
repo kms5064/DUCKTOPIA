@@ -60,7 +60,7 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
     
     const currHp = monster.setDamaged(damage);
 
-    console.log(`DMG: ${damage}, MonHp: ${currHp}`);
+    console.log(`${monster.name}(${monster.id})가 Player(${player.id})에게 ${damage}의 Dmg를 받았습니다! MonHp: ${currHp}`);
     
     // 패킷 생성
     packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
