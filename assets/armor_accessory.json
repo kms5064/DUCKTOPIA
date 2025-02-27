@@ -1,0 +1,46 @@
+{
+  "name": "accessory",
+  "version": "1.0.0",
+  "data": [
+    {
+      "code": 701,
+      "name": "마력의 반지",
+      "defense": 2,
+      "attack": 2,
+      "grade": "COMMON",
+      "type": "accessory"
+    },
+    {
+      "code": 702,
+      "name": "수호자의 펜던트",
+      "defense": 4,
+      "attack": 3,
+      "grade": "COMMON",
+      "type": "accessory"
+    },
+    {
+      "code": 703,
+      "name": "흑마법사의 펜던트  ",
+      "defense": 8,
+      "attack": 6,
+      "grade": "RARE",
+      "type": "accessory"
+    },
+    {
+      "code": 704,
+      "name": "신성한 펜던트",
+      "defense": 15,
+      "attack": 10,
+      "grade": "EPIC",
+      "type": "accessory"
+    },
+    {
+      "code": 705,
+      "name": "용의 심장 펜던트",
+      "defense": 25,
+      "attack": 15,
+      "grade": "LEGENDARY",
+      "type": "accessory"
+    }
+  ]
+}

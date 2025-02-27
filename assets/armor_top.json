@@ -1,0 +1,46 @@
+{
+  "name": "armor_top",
+  "version": "1.0.0",
+  "data": [
+    {
+      "code": 301,
+      "name": "가죽 갑옷",
+      "defense": 5,
+      "attack": 2,
+      "grade": "COMMON",
+      "type": "top"
+    },
+    {
+      "code": 302,
+      "name": "철 갑옷",
+      "defense": 8,
+      "attack": 3,
+      "grade": "COMMON",
+      "type": "top"
+    },
+    {
+      "code": 303,
+      "name": "황금 갑옷",
+      "defense": 15,
+      "attack": 6,
+      "grade": "RARE",
+      "type": "top"
+    },
+    {
+      "code": 304,
+      "name": "성기사 갑옷",
+      "defense": 25,
+      "attack": 10,
+      "grade": "EPIC",
+      "type": "top"
+    },
+    {
+      "code": 305,
+      "name": "용기사 갑옷",
+      "defense": 40,
+      "attack": 15,
+      "grade": "LEGENDARY",
+      "type": "top"
+    }
+  ]
+}
