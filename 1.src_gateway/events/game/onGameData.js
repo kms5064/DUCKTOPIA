@@ -49,16 +49,13 @@ const onGameData = (socket) => async (data) => {
       );
 
       const packetType = packet.readUInt16BE(0);
-
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
       const proto = getProtoMessages().GamePacket;
       const gamePacket = proto.decode(payloadBuffer);
       const payload = gamePacket[gamePacket.payload];
 
-      console.log(packetType, config.packetType.S_ERROR_NOTIFICATION[0]);
       if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) {
-        console.log('오냐?');
         latencyCheckHandler({ socket, payload, userId });
         continue;
       }

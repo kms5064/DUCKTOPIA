@@ -2,7 +2,6 @@ import { config } from '../../config/config.js';
 import gameStartHandler from '../../handlers/server/gameStart.handler.js';
 import latencyCheckHandler from '../../handlers/server/latencyCheck.handler.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
-import { userSession } from '../../sessions/session.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
@@ -56,18 +55,13 @@ const onLobbyData = (socket) => async (data) => {
       const gamePacket = proto.decode(payloadBuffer);
       const payload = gamePacket[gamePacket.payload];
 
-      const user = userSession.getUserByID(userId);
-      if (!user) continue;
-
       if (packetType === config.packetType.PREPARE_GAME_SERVER[0]) {
         gameStartHandler({ socket, payload, userId });
         // 서버 -> 서버 이므로 클라이언트에게 전송 X
         continue;
       }
 
-      console.log(packetType, config.packetType.S_ERROR_NOTIFICATION[0]);
       if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) {
-        console.log('오냐???');
         latencyCheckHandler({ socket, payload, userId });
         continue;
       }
