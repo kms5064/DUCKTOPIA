@@ -3,16 +3,16 @@
 // 게임 내 모든 아이템의 생성에 대한 책임이 있는 클래스임
 
 import Item from './item.class.js';
-import ItemBox from './itemBox.class.js';
 import { getGameAssets } from '../../init/assets.js';
 import { config } from '../../config/config.js';
 
 class ItemManager {
   constructor() {
+    const { dropTable, food, weapon } = getGameAssets();
+
     this.itemBoxes = new Map(); // 현재 존재하는 아이템 박스들
     this.fieldDropItems = new Map(); // 필드에 드롭된 아이템들
     this.lastItemId = 1; // 마지막으로 생성된 아이템의 ID
-    const { dropTable, food, weapon } = getGameAssets();
     this.dropTable = dropTable.data;
     this.foodData = food.data;
     this.weaponData = weapon.data;
