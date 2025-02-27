@@ -1,6 +1,7 @@
 import { gameSession, userSession } from '../../sessions/session.js';
 import { config } from '../../config/config.js';
 import CustomError from '../../utils/error/customError.js';
+import { getGameAssets } from '../../init/assets.js';
 
 const useItemHandler = ({ socket, payload, userId }) => {
   const { itemData } = payload;
