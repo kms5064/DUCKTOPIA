@@ -43,7 +43,7 @@ class Server {
   };
 
   // 레이턴시 확인
-  latencyCheck = async () => {
+  latencyCheck = () => {
     const packet = makeServerPacket(
       config.packetType.S_ERROR_NOTIFICATION,
       {
