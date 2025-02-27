@@ -497,8 +497,8 @@ message GamePacket {
     //---- 추가 완료
 
     // 분산 서버 추가
-    S2SGameServerPrepare gameServerPrepare = 201;
-    S2SGameServerJoinRequest gameServerJoinRequest = 202;
-    S2SLoginCast loginCast = 203;
+    S2SGameServerPrepare gameServerPrepare = 2004;
+    S2SGameServerJoinRequest gameServerJoinRequest = 2002;
+    S2SLoginCast loginCast = 2003;
   }
 }

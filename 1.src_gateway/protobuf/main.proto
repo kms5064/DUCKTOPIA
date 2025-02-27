@@ -466,7 +466,7 @@ message GamePacket {
     S2CPlayerPutAnItemNotification playerPutAnItemNotification = 51;
     C2SPlayerCloseBoxRequest playerCloseBoxRequest = 52;
     S2CPlayerCloseBoxNotification playerCloseBoxNotification = 53;
-    S2CPlayerHungerUpdateNotification playerHungerUpdateNotification = 55;
+    S2CPlayerHungerUpdateNotification playerHungerUpdateNotification = 201;
 
     // 몬스터
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;
@@ -503,9 +503,9 @@ message GamePacket {
     //---- 추가 완료
 
     // 분산 서버 추가
-    S2SGameServerPrepare gameServerPrepare = 201;
-    S2SGameServerJoinRequest gameServerJoinRequest = 202;
-    S2SLoginCast loginCast = 203;
-    S2SLogout logOut = 204;
+    S2SGameServerPrepare gameServerPrepare = 2001;
+    S2SGameServerJoinRequest gameServerJoinRequest = 2002;
+    S2SLoginCast loginCast = 2003;
+    S2SLogout logOut = 2004;
   }
 }
