@@ -1,12 +1,10 @@
 import CustomError from '../../utils/error/customError.js';
+import DestructibleObjectBase from '../base/destructibleObjectBase.class.js';
+import { ITEM_BOX_MAX_HP } from '../../config/constants/objects.js';
 
-class ItemBox {
-  constructor(boxId) {
-    this.id = boxId;
-    this.objectCode = 2;
-    this.x = 0;
-    this.y = 0;
-    this.hp = ITEM_BOX_HP;
+class ItemBox extends DestructibleObjectBase{
+  constructor(objectCode) {
+    super(objectCode,2,ITEM_BOX_MAX_HP);
     this.itemList = Array.from({ length: 8 }, () => 0);
     this.occupied = null; //점유중 플레이어아이디
   }

@@ -6,7 +6,7 @@ import { config } from '../../config/config.js';
 import { DayPhase, WaveState } from '../../config/constants/game.js';
 import ItemBox from '../item/itemBox.class.js';
 import ItemManager from '../item/itemManager.class.js';
-import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
+import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/objects.js';
 
 class Game {
   constructor(ownerId) {

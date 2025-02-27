@@ -45,7 +45,7 @@ import {
   MIN_VALUE_Y,
 } from './constants/map.js';
 import { CharacterType } from './constants/character.js';
-import { VALID_DISTANCE_OF_BOX } from './constants/itemBox.js';
+import { VALID_DISTANCE_OF_BOX } from './constants/objects.js';
 import { DAY_TIME, NIGHT_TIME, DayPhase } from './constants/game.js';
 import { ITEM_PICKUP_RANGE } from './constants/item.js';
 
