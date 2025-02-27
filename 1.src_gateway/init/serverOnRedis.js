@@ -39,17 +39,20 @@ const serverOnRedis = async () => {
   console.log('Redis 서버 오픈 알림 성공');
 
   const lobby = config.redis.custom + 'Server:Lobby';
+  const game = config.redis.custom + 'Server:Game';
   // Gateway 서버의 연결 부
   const LobbyServers = await redisClient.lRange(lobby, 0, -1);
-  for (let i = 0; i < LobbyServers.length; i++) {
-    await connectServer(lobby + ':' + +i); //로비서버 TCP연결
-  }
-
-  const game = config.redis.custom + 'Server:Game';
   const GameServers = await redisClient.lRange(game, 0, -1);
-  for (let i = 0; i < GameServers.length; i++) {
-    await connectServer(game + ':' + i); //게임서버 TCP연결
-  }
+
+  // 비동기 서버 연결
+  await Promise.all([
+    ...Array.from({ length: LobbyServers.length }, async (__, idx) => {
+      await connectServer(lobby + ':' + +idx);
+    }),
+    ...Array.from({ length: GameServers.length }, async (__, idx) => {
+      await connectServer(game + ':' + +idx);
+    }),
+  ]);
 
   console.log('Redis List 모든 서버 연결 성공');
 };

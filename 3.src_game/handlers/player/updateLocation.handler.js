@@ -11,7 +11,7 @@ const updateLocationHandler = ({ socket, payload, userId }) => {
   const game = gameSession.getGame(user.getGameId());
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
 
-  const updatePositionNotification = user.player.calculatePosition(x, y);
+  const updatePositionNotification = { playerId: userId, ...user.player.changePlayerPos(x, y) };
 
   // payload 인코딩
   const packet = [

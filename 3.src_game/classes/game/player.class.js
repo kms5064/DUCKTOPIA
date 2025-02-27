@@ -1,4 +1,5 @@
 import { config } from '../../config/config.js';
+import { gameSession, userSession } from '../../sessions/session.js';
 
 class Player {
   constructor(id, atk, x, y) {
@@ -76,22 +77,23 @@ class Player {
 
     if (this.hungerCounter >= config.game.player.playerHungerPeriod) {
       // game 접근
-      const game = roomSession.getRoom(this.user.getRoomId()).getGame();
+      const user = userSession.getUser(this.id);
+      const game = gameSession.getGame(user.getGameId());
 
       if (this.hunger > 0) {
         this.changePlayerHunger(-config.game.player.playerHungerDecreaseAmount);
 
-        // console.log('플레이어 아이디' + this.user.id);
+        // console.log('플레이어 아이디' + this.id);
         // console.log('플레이어 배고품' + this.hunger);
 
         // 캐릭터 hunger 동기화 패킷 전송
-        const decreaseHungerPacket = makePacket(
+        const decreaseHungerPacket = [
           config.packetType.S_PLAYER_HUNGER_UPDATE_NOTIFICATION,
           {
-            playerId: this.user.id,
+            playerId: this.id,
             hunger: this.hunger,
           },
-        );
+        ];
 
         game.broadcast(decreaseHungerPacket);
       } else {
@@ -100,10 +102,13 @@ class Player {
         this.hp -= config.game.player.playerHpDecreaseAmountByHunger;
 
         // 캐릭터 hp 동기화 패킷 전송
-        const decreaseHpPacket = makePacket(config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION, {
-          playerId: this.user.id,
-          hp: this.hp,
-        });
+        const decreaseHpPacket = [
+          config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION,
+          {
+            playerId: this.id,
+            hp: this.hp,
+          },
+        ];
 
         game.broadcast(decreaseHpPacket);
       }
@@ -138,8 +143,8 @@ class Player {
     return this.isAlive;
   }
 
-  findItemIndex(itemId) {
-    const targetIndex = this.inventory.findIndex((item) => (item.id = itemId));
+  findItemIndex(itemCode) {
+    const targetIndex = this.inventory.findIndex((item) => item.itemCode === itemCode);
     return targetIndex;
   }
 
@@ -149,25 +154,23 @@ class Player {
       //아이템을 이미 갖고 있는지
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       //있다면 카운트만 증가
-      if (item) {
-        item.count += count;
-      } else {
+      if (item) item.count += count;
+      else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
 
         const checkRoom = (ele) => ele === 0;
         const emptyIndex = this.inventory.findIndex(checkRoom);
-        this.inventory.splice(emptyIndex, 1, item);
+        this.inventory.splice(emptyIndex, 0, item);
       }
       return item;
     } else {
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
-      if (item) {
-        item.count += count;
-      } else {
+      if (item) item.count += count;
+      else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
-        this.inventory.splice(index, 1, item);
+        this.inventory.splice(index, 0, item);
       }
       return item;
     }

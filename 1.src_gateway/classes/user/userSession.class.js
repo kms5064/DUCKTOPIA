@@ -1,3 +1,6 @@
+import { serverSession } from '../../sessions/session.js';
+import { config } from '../../config/config.js';
+import makeServerPacket from '../../utils/packet/makeServerPacket.js';
 import User from './user.class.js';
 
 /* UserSession 클래스 */
@@ -33,6 +36,16 @@ class UserSession {
   /* 나간 유저 세션에서 제거하는 메서드 */
   deleteUser(socket) {
     const user = this.users.get(socket);
+    const packet = makeServerPacket(config.packetType.LOGOUT_CAST, {}, user.id);
+
+    // 서버들에게 알림주기
+    const lobby = config.redis.custom + config.server.lobbyServer;
+    const lobbyServer = serverSession.getServerById(lobby);
+    lobbyServer.socket.write(packet);
+
+    const gameServer = serverSession.getServerById(user.gameServer);
+    if (gameServer) gameServer.socket.write(packet);
+
     this.logins.delete(user.email);
     this.users.delete(socket);
   }

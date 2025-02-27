@@ -30,11 +30,11 @@ const startGameHandler = ({ socket, payload, userId }) => {
   });
 
   // [테스트] 인덱스 0, 1에 고정으로 아이템 추가
-  game.players.forEach((player) => {
+  game.users.forEach((user) => {
     // 1번 아이템은 0번 인덱스에
-    player.addItem(1, 1, 0);
+    user.player.addItem(1, 1, 0);
     // 101번 아이템은 1번 인덱스에
-    player.addItem(101, 1, 1);
+    user.player.addItem(101, 1, 1);
   });
 
   // 기존 코드 주석 처리 - 찐코드

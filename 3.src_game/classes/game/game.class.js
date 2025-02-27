@@ -1,4 +1,3 @@
-import makePacket from '../../utils/packet/makePacket.js';
 import { getGameAssets } from '../../init/assets.js';
 import Monster from './monster.class.js';
 import { config } from '../../config/config.js';
@@ -7,6 +6,8 @@ import ItemBox from '../item/itemBox.class.js';
 import ItemManager from '../item/itemManager.class.js';
 import { gameSession, userSession } from '../../sessions/session.js';
 import { redisClient } from '../../db/redis/redis.js';
+import BossMonster from './bossMonster.class.js';
+import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
 
 class Game {
   constructor(gameId, ownerId) {
@@ -124,8 +125,8 @@ class Game {
     this.users.delete(userId);
   }
 
-  getPlayerById(userId) {
-    return this.users.get(userId).player;
+  getUserById(userId) {
+    return this.users.get(userId);
   }
 
   userUpdate() {
@@ -144,6 +145,27 @@ class Game {
     for (const [id, user] of this.users) {
       user.player.hungerCheck();
     }
+  }
+
+  getUsersPositionData() {
+    const positions = [];
+    let i = 1;
+    this.users.forEach((user) => {
+      // 새로운 x, y 값 계산
+      const newX = i * 3;
+      const newY = i * 3;
+
+      // 유저 위치 업데이트
+      user.player.playerPositionUpdate(newX, newY);
+      // 업데이트된 위치 정보 반환
+      positions.push({
+        playerId: user.id,
+        x: user.player.x, // 업데이트된 값
+        y: user.player.y, // 업데이트된 값
+      });
+      i++;
+    });
+    return positions;
   }
 
   /**************
@@ -194,6 +216,40 @@ class Game {
       // 몬스터 생성
     }
     return monsterData;
+  }
+
+  //보스 몬스터의 생성
+  createBossMonsterData(isWave = false, pos_x = 0, pos_y = 0) {
+    //몬스터의 숫자가 최대 숫자보다 크다면 보스 몬스터는 잠시 지연하도록
+    if (config.game.monster.maxSpawnCount <= this.monsters.size) {
+      return;
+    }
+
+    const { monster: monsterAsset } = getGameAssets();
+    const data = monsterAsset.data[7];
+
+    const monsterId = this.monsterIndex++;
+    const bossMonster = new BossMonster(
+      monsterId,
+      208,
+      data.name,
+      data.hp,
+      data.attack,
+      data.defence,
+      data.range,
+      data.speed,
+      data.grade,
+      pos_x,
+      pos_y,
+      isWave,
+    );
+
+    this.monsters.set(monsterId, bossMonster);
+    //this.monsters.set(monsterId, bossMonster);
+    return {
+      monsterId,
+      monsterCode: bossMonster.code,
+    };
   }
 
   updateMonsterPosition(monsterId, x, y) {
@@ -359,8 +415,8 @@ class Game {
     }
   }
 
-  getItemBoxById(itemBoxId) {
-    return this.itemBoxes.get(itemBoxId);
+  getItemBoxById(objectId) {
+    return this.objects.get(objectId);
     //여기까지 몬스터 영역
   }
 
@@ -406,7 +462,10 @@ class Game {
 
   coreDamaged(damage) {
     this.coreHp -= damage;
-    if (this.coreHp <= 0) gameSession.removeGame(this);
+    if (this.coreHp <= 0) {
+      console.log('#################### 코어 터짐');
+      gameSession.removeGame(this);
+    }
     return this.coreHp;
   }
 
@@ -476,12 +535,15 @@ class Game {
       console.log(data);
     }
 
-    const waveMonsterSpawnRequestPacket = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, {
-      monsters: monstersData,
-    });
+    const waveMonsterSpawnRequestPacket = [
+      config.packetType.S_MONSTER_SPAWN_REQUEST,
+      {
+        monsters: monstersData,
+      },
+    ];
 
-    const owner = this.getPlayerById(this.ownerId);
-    owner.user.socket.write(waveMonsterSpawnRequestPacket);
+    const owner = this.getUserById(this.ownerId);
+    owner.sendPacket(waveMonsterSpawnRequestPacket);
   }
 
   //웨이브 몬스터 생성1

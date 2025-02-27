@@ -31,8 +31,9 @@ class User {
     this.name = null;
   }
 
-  setGameState(bool) {
+  setGameState(bool, gameServer = null) {
     this.inGame = bool;
+    this.gameServer = gameServer;
   }
 
   getGameState() {
