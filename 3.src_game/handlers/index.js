@@ -13,8 +13,8 @@ import playerCloseBoxHandler from './item/closeBox.handler.js';
 import objectDamagedByMonsterHandler from './object/objectDamagedByMonster.handler.js';
 import createGameHandler from './game/createGame.handler.js';
 import latencyCheckHandler from './server/latencyCheck.handler.js';
-import MonsterAttackHandler from '../../0.src/handlers/monster/monsterAttack.handler.js';
-import getItemHandler from '../../0.src/handlers/item/getItem.handler.js';
+import MonsterAttackHandler from './monster/monsterAttack.handler.js';
+import getItemHandler from './item/getItem.handler.js';
 import useItemHandler from './player/userItem.handler.js';
 
 const handlers = {
