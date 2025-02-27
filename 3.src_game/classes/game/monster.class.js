@@ -1,10 +1,3 @@
-import { config } from '../../config/config.js';
-import {
-  MIN_COOLTIME_MONSTER_AWAKING,
-  MIN_COOLTIME_MONSTER_TRACKING,
-  RANGE_COOLTIME_MONSTER_AWAKING,
-  RANGE_COOLTIME_MONSTER_TRACKING,
-} from '../../config/constants/monster.js';
 import MovableObjectBase from '../base/movableObjectBase.class.js';
 
 class Monster extends MovableObjectBase {
@@ -56,6 +49,7 @@ class Monster extends MovableObjectBase {
   setStartPosition(x, y) {
     this.startPoint_x = x;
     this.startPoint_y = y;
+    this.setPosition(x, y);
   }
 
   getAttack() {

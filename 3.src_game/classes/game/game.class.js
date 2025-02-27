@@ -530,9 +530,8 @@ class Game {
       }
     }
 
-    console.log(monstersData.length);
     for (const data of monstersData) {
-      console.log(data);
+      // console.log(data);
     }
 
     const waveMonsterSpawnRequestPacket = [
