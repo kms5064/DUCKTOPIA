@@ -460,7 +460,7 @@ message GamePacket {
     S2CPlayerPutAnItemNotification playerPutAnItemNotification = 51;
     C2SPlayerCloseBoxRequest playerCloseBoxRequest = 52;
     S2CPlayerCloseBoxNotification playerCloseBoxNotification = 53;
-    S2CPlayerHungerUpdateNotification playerHungerUpdateNotification = 201;
+    S2CPlayerHungerUpdateNotification playerHungerUpdateNotification = 55;
 
     // 몬스터
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;
