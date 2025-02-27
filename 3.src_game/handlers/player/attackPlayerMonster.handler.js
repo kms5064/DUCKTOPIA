@@ -59,6 +59,36 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
     },
   ];
   game.broadcast(MonsterDeathNotification);
+
+  // 아이템 드롭 처리
+  // console.log(`[아이템 드롭 시도] 몬스터 등급: ${monster.grade}`);
+  const monsterPosition = monster.getMonsterPos();
+  // console.log(`[몬스터 사망 위치] x: ${monsterPosition.x}, y: ${monsterPosition.y}`);
+
+  const droppedItems = game.itemManager.createDropItems(monster.grade, monsterPosition);
+  // console.log(`[아이템 드롭 결과] 생성된 아이템 수: ${droppedItems.length}`);
+
+  if (droppedItems.length > 0) {
+    // console.log('[드롭된 아이템 목록]');
+    // droppedItems.forEach((item, index) => {
+    //   console.log(
+    //     `${index + 1}. 아이템 코드: ${item.itemData.itemCode}, 개수: ${item.itemData.count}`,
+    //   );
+    //   console.log(`   위치: (${item.position.x}, ${item.position.y})`);
+    // });
+
+    // 아이템 생성 알림
+    const itemSpawnNotification = [
+      config.packetType.S_ITEM_SPAWN_NOTIFICATION,
+      {
+        items: droppedItems,
+      },
+    ];
+    console.log('[패킷 전송] S_ITEM_SPAWN_NOTIFICATION 전송');
+    game.broadcast(itemSpawnNotification);
+  } else {
+    console.log('[아이템 미생성] 드롭 확률에 실패하여 아이템이 생성되지 않음');
+  }
 };
 
 export default attackPlayerMonsterHandler;
