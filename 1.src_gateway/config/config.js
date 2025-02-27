@@ -57,6 +57,6 @@ export const config = {
     password: REDIS_PASSWORD,
     host: REDIS_HOST,
     port: REDIS_PORT,
-    custom: REDIS_CUSTOM,
+    custom: REDIS_CUSTOM + '/',
   },
 };
