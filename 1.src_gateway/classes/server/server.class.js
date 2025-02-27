@@ -48,7 +48,7 @@ class Server {
       config.packetType.S_ERROR_NOTIFICATION,
       {
         errorMessage: 'latencyCheck',
-        timestamp: date.now(),
+        timestamp: Date.now(),
       },
       -1,
     );
