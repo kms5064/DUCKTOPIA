@@ -45,12 +45,10 @@ const onData = (socket) => async (data) => {
 
       const packetType = packet.readUInt16BE(0);
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
-
       const proto = getProtoMessages().GamePacket;
       const handler = handlers[packetType];
       const gamePacket = proto.decode(payloadBuffer);
       const payload = gamePacket[gamePacket.payload];
-
       await handler({ socket, payload, userId });
     } catch (error) {
       errorHandler(socket, error);
