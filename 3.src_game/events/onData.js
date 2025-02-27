@@ -5,7 +5,7 @@ import { errorHandler } from '../utils/error/errorHandler.js';
 import { formatDate } from '../utils/dateFormatter.js';
 
 const onData = (socket) => async (data) => {
-  console.log(`${formatDate(new Date())} [게이트웨이 -> 게임] 데이터 수신`);
+  // console.log(`${formatDate(new Date())} [게이트웨이 -> 게임] 데이터 수신`);
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;

@@ -5,6 +5,7 @@ import CustomError from '../../utils/error/customError.js';
 
 // 호스트 플레이어가 몬스터 좌표 전달
 const waveStartHandler = ({ socket, payload, userId }) => {
+  console.log('# waveStartHandler');
   const { monsters } = payload;
 
   // 1. 유저 찾기

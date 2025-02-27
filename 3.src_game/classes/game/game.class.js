@@ -323,6 +323,7 @@ class Game {
       let distance = Infinity;
       let inputId = 0;
       let inputPlayer = null;
+      console.log('monsterId : ', monsterId, 'inputPlayer', inputPlayer);
       if (!monster.hasTargetPlayer()) {
         for (const [userId, user] of this.users) {
           // 대상 찾아보기
@@ -530,9 +531,8 @@ class Game {
       }
     }
 
-    console.log(monstersData.length);
     for (const data of monstersData) {
-      console.log(data);
+      // console.log(data);
     }
 
     const waveMonsterSpawnRequestPacket = [
