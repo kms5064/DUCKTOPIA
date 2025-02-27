@@ -8,13 +8,16 @@ import gamePrepareReqHandler from './game/gamePrepareReq.handler.js';
 import latencyCheckHandler from './server/latencyCheck.handler.js';
 
 const handlers = {
+  // Server
   [config.packetType.LOGIN_CAST[0]]: loginCastHandler,
+  [config.packetType.PREPARE_GAME_REQUEST[0]]: gamePrepareReqHandler,
+  [config.packetType.S_ERROR_NOTIFICATION[0]]: latencyCheckHandler,
+
+  // Lobby
   [config.packetType.CREATE_ROOM_REQUEST[0]]: createRoomHandler,
   [config.packetType.GET_ROOM_LIST_REQUEST[0]]: getRoomListHandler,
   [config.packetType.JOIN_ROOM_REQUEST[0]]: joinRoomHandler,
   [config.packetType.LEAVE_ROOM_REQUEST[0]]: leaveRoomHandler,
-  [config.packetType.PREPARE_GAME_REQUEST[0]]: gamePrepareReqHandler,
-  [config.packetType.S_ERROR_NOTIFICATION[0]]: latencyCheckHandler,
 };
 
 export default handlers;
