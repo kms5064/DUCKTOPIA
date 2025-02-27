@@ -33,15 +33,15 @@ const useItemHandler = ({ socket, payload }) => {
   }
 
   // 플레이어 객체 조회
-  //const player = game.getPlayerById(user.getUserData().userId);
-  const player = game.getPlayerById(playerId);
+  const player = game.getPlayerById(user.getUserData().userId);
+  //const player = game.getPlayerById(playerId);
   //console.log('[플레이어 정보 조회]', player);
   //console.log('[플레이어 인벤토리 조회]', player.inventory);
 
   // 아이템 정보 조회
   const itemIndex = player.findItemIndex(itemData.itemCode);
   //console.log('[아이템 정보 조회]', itemIndex);
-  console.log(`${playerId}가 ${itemIndex}를 사용!`);
+  console.log(`${player.user.id}가 ${itemIndex}를 사용!`);
 
   if (itemIndex === -1) {
     throw new Error('아이템을 찾을 수 없습니다.');

@@ -17,7 +17,7 @@
       "name": "전투오리",
       "hp": 100,
       "attack": 10,
-      "defence": 5,
+      "defence": 0,
       "range": 6,
       "speed": 10,
       "grade": "D"
