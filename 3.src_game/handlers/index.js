@@ -16,12 +16,14 @@ import latencyCheckHandler from './server/latencyCheck.handler.js';
 import MonsterAttackHandler from './monster/monsterAttack.handler.js';
 import getItemHandler from './item/getItem.handler.js';
 import useItemHandler from './player/userItem.handler.js';
+import logoutCastHandler from './server/logoutCast.handler.js';
 
 const handlers = {
   // Server
   [config.packetType.JOIN_SERVER_REQUEST[0]]: createGameHandler,
   [config.packetType.START_GAME_REQUEST[0]]: startGameHandler,
   [config.packetType.S_ERROR_NOTIFICATION[0]]: latencyCheckHandler,
+  [config.packetType.LOGOUT_CAST[0]]: logoutCastHandler,
 
   // Game
   [config.packetType.C_PLAYER_ATTACK_REQUEST[0]]: attackPlayerHandler,

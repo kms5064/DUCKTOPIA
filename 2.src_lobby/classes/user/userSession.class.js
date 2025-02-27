@@ -33,6 +33,10 @@ class UserSession {
 
     return ids;
   }
+
+  clearUsers() {
+    this.user = new Map();
+  }
 }
 
 export default UserSession;

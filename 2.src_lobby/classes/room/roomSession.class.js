@@ -43,6 +43,11 @@ class RoomSession {
 
     return roomsData;
   }
+
+  clearRooms() {
+    this.rooms = new Map();
+    this.newId = 1;
+  }
 }
 
 export default RoomSession;
