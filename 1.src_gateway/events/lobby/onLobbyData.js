@@ -2,6 +2,7 @@ import { config } from '../../config/config.js';
 import gameStartHandler from '../../handlers/server/gameStart.handler.js';
 import latencyCheckHandler from '../../handlers/server/latencyCheck.handler.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
+import { userSession } from '../../sessions/session.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
@@ -70,6 +71,9 @@ const onLobbyData = (socket) => async (data) => {
       const packetInfo = Object.values(config.packetType).find(
         ([type, name]) => type === packetType,
       );
+
+      const user = userSession.getUserByID(userId);
+      if (!user) continue;
 
       const resPacket = makePacket(packetInfo, payload);
       user.socket.write(resPacket);

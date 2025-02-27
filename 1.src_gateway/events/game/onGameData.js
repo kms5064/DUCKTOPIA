@@ -64,6 +64,10 @@ const onGameData = (socket) => async (data) => {
       const packetInfo = Object.values(config.packetType).find(
         ([type, name]) => type === packetType,
       );
+
+      const user = userSession.getUserByID(userId);
+      if (!user) continue;
+
       const resPacket = makePacket(packetInfo, payload);
       user.socket.write(resPacket);
     } catch (error) {
