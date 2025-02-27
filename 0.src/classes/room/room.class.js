@@ -70,11 +70,11 @@ class Room {
   }
 
   deleteRoom() {
-    let packet
+    let packet;
     if (this.game.state === RoomStateType.INGAME) {
       packet = makePacket(config.packetType.S_GAME_OVER_NOTIFICATION, {});
       this.broadcast(packet);
-    } 
+    }
     const LeaveRoomResponse = makePacket(config.packetType.LEAVE_ROOM_RESPONSE, {
       success: true,
     });
@@ -104,7 +104,6 @@ class Room {
     setTimeout(() => {
       this.game.gameLoopStart();
     }, 3000);
-
   }
 
   // 게임 종료
