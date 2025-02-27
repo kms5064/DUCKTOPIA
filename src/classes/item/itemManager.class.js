@@ -31,7 +31,7 @@ class ItemManager {
   }
 
   // 랜덤 아이템 생성
-  generateRandomItems() {
+  generateRandomItems(itemGrade) {
     const items = [];
     const slotCount = Math.floor(Math.random() * config.game.itemBox.boxMaxSlots) + 1; // 최소 1개
 
@@ -41,7 +41,10 @@ class ItemManager {
 
       if (isWeapon) {
         // 무기 아이템 생성
-        const randomWeapon = this.weaponData[Math.floor(Math.random() * this.weaponData.length)];
+        const availableWeapons = this.weaponData.filter((weapon) => weapon.grade === itemGrade);
+        if (availableWeapons.length === 0) return null;
+  
+        const randomWeapon = availableWeapons[Math.floor(Math.random() * availableWeapons.length)];
         items.push(
           new Item({
             itemData: {
@@ -53,7 +56,10 @@ class ItemManager {
         );
       } else {
         // 음식 아이템 생성
-        const randomFood = this.foodData[Math.floor(Math.random() * this.foodData.length)];
+        const availableFoods = this.foodData.filter((food) => food.grade === itemGrade);
+        if (availableFoods.length === 0) return null;
+  
+        const randomFood = availableFoods[Math.floor(Math.random() * availableFoods.length)];
         const count =
           Math.floor(Math.random() * config.game.itemBox.itemMaxStack) +
           config.game.itemBox.itemMinCount;
