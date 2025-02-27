@@ -6,7 +6,7 @@ class ItemBox {
     this.objectCode = 2;
     this.x = 0;
     this.y = 0;
-    //this.hp = ITEM_BOX_HP;
+    this.hp = ITEM_BOX_HP;
     this.itemList = Array.from({ length: 8 }, () => 0);
     this.occupied = null; //점유중 플레이어아이디
   }
@@ -48,7 +48,7 @@ class ItemBox {
       existItem.count += count;
       player.removeItem(itemCode, count);
       return existItem;
-    } else {
+    } else if(emptyIndex !==-1){
       const item = { itemCode: itemCode, count: count };
       this.itemList.splice(emptyIndex, 1, item);
       player.removeItem(itemCode, count);

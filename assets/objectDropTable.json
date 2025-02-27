@@ -1,0 +1,10 @@
+{
+  "name": "objectDropTable",
+  "version": "1.0.0",
+  "data": [
+    { "objectCode": 2, "dropList": [301], "max": 2 },
+    { "objectCode": 3, "dropList": [1, 2], "max": 2 },
+    { "objectCode": 4, "dropList": [3, 4], "max": 2 },
+    { "objectCode": 5, "dropList": [5, 6], "max": 2 }
+  ]
+}
