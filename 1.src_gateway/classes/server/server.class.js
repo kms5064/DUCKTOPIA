@@ -44,10 +44,14 @@ class Server {
 
   // 레이턴시 확인
   latencyCheck = async () => {
-    const packet = makeServerPacket(config.packetType.S_ERROR_NOTIFICATION, {
-      errorMessage: 'latencyCheck',
-      timestamp: date.now(),
-    });
+    const packet = makeServerPacket(
+      config.packetType.S_ERROR_NOTIFICATION,
+      {
+        errorMessage: 'latencyCheck',
+        timestamp: date.now(),
+      },
+      -1,
+    );
     this.socket.write(packet);
   };
 

@@ -3,11 +3,13 @@ import signInHandler from './user/signIn.handler.js';
 import signUpHandler from './user/signUp.handler.js';
 import onLobbyServerHandler from './server/onLobbyServer.handler.js';
 import onGameServerHandler from './server/onGameServer.handler.js';
+import latencyCheckHandler from './server/latencyCheck.handler.js';
 
 const handlers = {
   // Gateway
   [config.packetType.REGISTER_REQUEST[0]]: signUpHandler,
   [config.packetType.LOGIN_REQUEST[0]]: signInHandler,
+  [config.packetType.S_ERROR_NOTIFICATION[0]]: latencyCheckHandler,
 
   // Lobby
   [config.packetType.GET_ROOM_LIST_REQUEST[0]]: onLobbyServerHandler,
