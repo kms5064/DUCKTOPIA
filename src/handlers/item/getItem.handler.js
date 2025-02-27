@@ -146,7 +146,7 @@ const getItemHandler = ({ socket, payload }) => {
     } else {
       console.log(`- 인벤토리에서 아이템을 찾을 수 없음`);
     }
-    console.log('[전체 인벤토리]', player.inventory);
+    //console.log('[전체 인벤토리]', player.inventory);
 
     // 필드에서 아이템 제거
     game.itemManager.removeFieldDropItem(nearestItem.itemId);

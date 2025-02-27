@@ -175,7 +175,8 @@ class Player {
 
   //플레이어 어택은 데미지만 리턴하기
   getPlayerAtkDamage(weaponAtk) {
-    return this.atk + this.lv * config.game.player.atkPerLv + weaponAtk;
+    return weaponAtk + Math.floor(Math.random()*10);
+    //this.atk + this.lv * config.game.player.atkPerLv + weaponAtk
   }
 
   playerDead() {

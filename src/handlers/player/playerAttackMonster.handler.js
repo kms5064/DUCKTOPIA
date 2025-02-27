@@ -57,11 +57,11 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
     );
 
     const damage = player.getPlayerAtkDamage(equippedWeapon.attack);
-    console.log('[Player Attack] 플레이어 공격력:', damage);
-    console.log('[무기 공격력]');
-
+    
     const currHp = monster.setDamaged(damage);
 
+    console.log(`DMG: ${damage}, MonHp: ${currHp}`);
+    
     // 패킷 생성
     packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
       monsterId,

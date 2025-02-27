@@ -17,7 +17,7 @@ const playerDamagedByMonsterHandler = async ({ socket, payload }) => {
   if (monster && player) {
     const remainPlayerHp = player.changePlayerHp(monster.getAttack());
     //몬스터가 플레이어를 때렸을 때 [3] : 충격 처리
-    console.log(playerId, '현재 체력: ', remainPlayerHp);
+    console.log(`${playerId}가 ${monsterId}에게 피격, HP: ${remainPlayerHp}`);
     if (remainPlayerHp <= 0) {
       //유저 사망 처리 먼저 하도록 하자.
       //플레이어가 살아날 위치를 지정해준다.
@@ -33,7 +33,7 @@ const playerDamagedByMonsterHandler = async ({ socket, payload }) => {
 
     game.broadcast(packet);
   } else {
-    console.log('이게 왜됌?')
+    console.log('이미 죽은 몬스터의 공격!')
   }
 };
 
