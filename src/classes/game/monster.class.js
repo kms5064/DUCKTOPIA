@@ -143,16 +143,16 @@ class Monster extends MovableObjectBase {
       case 202:
       case 203:
       case 204:
-        lostDistance = 1.5;
+        lostDistance = 3;
         break;
       case 205:
-        lostDistance = 2;
+        lostDistance = 4;
         break;
       case 206:
-        lostDistance = 2.5;
+        lostDistance = 5;
         break;
       case 207:
-        lostDistance = 3;
+        lostDistance = 10;
         break;
       case 208://보스 몬스터인데 혹시 보스가 아니게 될 수 있으니까.
         lostDistance = 20;

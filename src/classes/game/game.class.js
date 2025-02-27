@@ -287,6 +287,7 @@ class Game {
       let inputId = 0;
       let inputPlayer = null;
       if (!monster.hasTargetPlayer()) {
+        if (monster.AwakeCoolTimeCheck()) continue;
 
         for (const [playerId, player] of this.players) {
           // 대상 찾아보기
