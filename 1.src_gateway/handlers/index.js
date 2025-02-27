@@ -34,6 +34,7 @@ const handlers = {
   [config.packetType.C_PLAYER_CLOSE_BOX_REQUEST[0]]: onGameServerHandler,
   [config.packetType.C_PLAYER_DAMAGED_BY_MONSTER_REQUEST[0]]: onGameServerHandler,
   [config.packetType.C_OBJECT_DAMAGED_BY_MONSTER_REQUEST[0]]: onGameServerHandler,
+  [config.packetType.C_PLAYER_GET_ITEM_REQUEST[0]]: onGameServerHandler,
 };
 
 export default handlers;

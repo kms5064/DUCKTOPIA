@@ -26,19 +26,20 @@ const serverOnRedis = async () => {
   // [1] list에서 서버 조회
   const serverList = await redisClient.lRange('Server:Gateway', 0, -1);
   let index = serverList.indexOf(host);
+  let name = 'Server:Gateway:';
   // [2] hashKey 생성 lobby:2 lobby:3 ... + 값 저장
   // [3] 중복 여부에따라 List 업데이트
   if (index < 0) {
-    index = serverList.length;
+    name = 'Server:Gateway:';
     await redisClient
       .multi()
-      .hSet('Server:Gateway:' + index, hashData)
+      .hSet(name + serverList.length, hashData)
       .rPush('Server:Gateway', host)
       .exec();
   } else {
     await redisClient
       .multi()
-      .hSet('Server:Gateway:' + index, hashData)
+      .hSet(name + index, hashData)
       .exec();
   }
 

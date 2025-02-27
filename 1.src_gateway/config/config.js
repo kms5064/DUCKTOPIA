@@ -12,6 +12,7 @@ import {
   REDIS_PASSWORD,
   REDIS_HOST,
   REDIS_PORT,
+  REDIS_CUSTOM,
 } from './constants/env.js';
 import {
   PACKET_TYPE,
@@ -56,5 +57,6 @@ export const config = {
     password: REDIS_PASSWORD,
     host: REDIS_HOST,
     port: REDIS_PORT,
+    custom: REDIS_CUSTOM,
   },
 };

@@ -14,7 +14,7 @@ class Server {
     // 헬스체킹
     this.intervals.push(setInterval(this.healthCheck, 5000));
     // 레이턴시 확인
-    this.intervals.push(setInterval(this.latencyCheck, 5000));
+    // this.intervals.push(setInterval(this.latencyCheck, 5000));
   }
 
   healthCheck = async () => {
