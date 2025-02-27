@@ -58,6 +58,11 @@ const onGameData = (socket) => async (data) => {
       const user = userSession.getUserByID(userId);
       if (!user) continue;
 
+      if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) {
+        latencyCheckHandler({ socket, payload, userId });
+        continue;
+      }
+
       // 클라이언트 패킷 전달
       const packetInfo = Object.values(config.packetType).find(
         ([type, name]) => type === packetType,
