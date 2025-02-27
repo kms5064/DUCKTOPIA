@@ -459,7 +459,6 @@ class Game {
       config.game.monster.waveMaxMonsterCount,
       this.waveCount * 2 + 3,
     );
-    this.waveCount += 1;
 
     for (let i = 1; i <= waveMonsterSize; i++) {
       const monsterId = this.monsterIndex++;
@@ -528,11 +527,12 @@ class Game {
           });
         }
       }
+      this.waveCount += 1;
     }
 
-    console.log(monstersData.length);
+    //console.log(monstersData.length);
     for (const data of monstersData) {
-      console.log(data);
+      //console.log(`${data.length}`);
     }
 
     const waveMonsterSpawnRequestPacket = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, {
