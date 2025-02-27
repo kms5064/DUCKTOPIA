@@ -14,6 +14,7 @@ import playerPutAnItemHandler from './item/putAnItem.handler.js';
 import playerCloseBoxHandler from './item/closeBox.handler.js';
 import objectDamagedByMonsterHandler from './object/objectDamagedByMonster.handler.js';
 import createGameHandler from './game/createGame.handler.js';
+import latencyCheckHandler from './server/latencyCheck.handler.js';
 
 const handlers = {
   [config.packetType.JOIN_SERVER_REQUEST[0]]: createGameHandler,
@@ -35,6 +36,8 @@ const handlers = {
   // [config.packetType.C_PLAYER_TAKE_OUT_AN_ITEM_REQUEST[0]]: playerTakeOutAnItemHandler,
   // [config.packetType.C_PLAYER_PUT_AN_ITEM_REQUEST[0]]: playerPutAnItemHandler,
   // [config.packetType.C_PLAYER_CLOSE_BOX_REQUEST[0]]: playerCloseBoxHandler
+
+  [config.packetType.S_ERROR_NOTIFICATION[0]]: latencyCheckHandler,
 };
 
 export default handlers;
