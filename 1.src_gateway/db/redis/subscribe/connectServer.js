@@ -13,13 +13,8 @@ const connectServer = async (name) => {
   const [host, status] = await redisClient.hmGet(name, ['address', 'status']);
   if (status !== '1') return;
   const type = name.split(':')[1];
-
-  // 서버세션 내 중복 서버 여부확인
-  const server = serverSession.getServerById(name);
-  if (server) return;
-
   const port = portType[type][0];
-  // 테스트용
+  // 로컬에서 게임서버 2 열때 포트를 다르게 하기
   // if (port === 5557 && name.split(':')[2] === '1') port = 5558;
   if (!port) {
     console.error('잘못된 서버 타입입니다');
