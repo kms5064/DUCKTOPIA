@@ -564,6 +564,12 @@ class Game {
         this.addWaveMonster();
       }
 
+      if (this.dayPhase === DayPhase.DAY) {
+        for (const [playerId, player] of this.players) {
+
+        }
+      }
+
       this.dayCounter = 0;
     }
   }

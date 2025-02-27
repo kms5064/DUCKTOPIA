@@ -2,6 +2,9 @@ import { config } from "../../config/config.js";
 import CustomError from "../../utils/error/customError.js";
 import makePacket from "../../utils/packet/makePacket.js";
 
+
+
+
 const chattingHandler = ({ socket, payload }) => {
     const { chatting } = payload;
 

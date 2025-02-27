@@ -275,6 +275,25 @@ class Player {
   getPlayerHp() {
     return this.hp;
   }
+
+  isDead() {
+    return this.hp <= 0 ? true : false;
+  }
+
+  revival(x, y) {
+    if (this.isAlive) {
+      return;
+    }
+
+
+    this.isAlive = true;
+    this.hp = 100;
+    this.x = x;
+    this.y = y;
+    console.log("플레이어 살려냄.");
+  }
+
+
 }
 
 export default Player;
