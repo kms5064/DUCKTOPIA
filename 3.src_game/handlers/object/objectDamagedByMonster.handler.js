@@ -15,19 +15,22 @@ const objectDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
   if (!monster) throw new CustomError(`Monster ID : ${monsterId}는 존재하지 않습니다.`);
 
   // 오브젝트에 따라 다르게 적용
-  let payload = null;
+  let sendPayload = null;
   switch (objectId) {
     case 1:
       const coreHp = game.coreDamaged(monster.getAttack());
       console.log(`코어가 ${monster.getAttack()}의 데미지를 받았습니다! HP: ${coreHp}`);
-      payload = { objectId: objectId, hp: coreHp };
+      sendPayload = { objectId: objectId, hp: coreHp };
       break;
     // 여기에 맘대로 쓰세요
     default:
       break;
   }
 
-  const objectHpUpdateNotification = [config.packetType.S_OBJECT_HP_UPDATE_NOTIFICATION, payload];
+  const objectHpUpdateNotification = [
+    config.packetType.S_OBJECT_HP_UPDATE_NOTIFICATION,
+    sendPayload,
+  ];
   game.broadcast(objectHpUpdateNotification);
 };
 export default objectDamagedByMonsterHandler;
