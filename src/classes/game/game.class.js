@@ -414,17 +414,17 @@ class Game {
     objectData.push(coreData);
     //하드코딩된 등급별 상자 만들기
     for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
-      const itemBoxGrade = "D";
+      const itemBoxGrade = 'D';
       const itemBox = this.createItemBox(itemBoxGrade);
       objectData.push(itemBox);
     }
     for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
-      const itemBoxGrade = "C";
+      const itemBoxGrade = 'C';
       const itemBox = this.createItemBox(itemBoxGrade);
       objectData.push(itemBox);
     }
     for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
-      const itemBoxGrade = "A";
+      const itemBoxGrade = 'A';
       const itemBox = this.createItemBox(itemBoxGrade);
       objectData.push(itemBox);
     }
@@ -513,7 +513,7 @@ class Game {
             monsterId,
             monsterCode: data.code,
           });
-        } else if(this.waveCount === 3 || this.waveCount === 4) {
+        } else if (this.waveCount === 3 || this.waveCount === 4) {
           const monsterList = [0, 1, 3, 4];
           // 몬스터 데이터 뽑기
           const codeIdx = Math.floor(Math.random() * monsterList.length);
@@ -626,8 +626,24 @@ class Game {
 
   // 아이템 박스 생성
   createItemBox(itemBoxGrade) {
+
+    let objectCode = 2;
+    switch (itemBoxGrade) {
+      case 'D':
+        objectCode = 2;
+        break;
+      case 'C':
+        objectCode = 3;
+        break;
+      case 'A':
+        objectCode = 4;
+        break;
+      default:
+        break;
+    }
+
     const boxId = this.itemManager.createBoxId();
-    const itemBox = new ItemBox(boxId);
+    const itemBox = new ItemBox(boxId,objectCode,itemBoxGrade);
 
     // 랜덤 아이템 생성 및 박스에 추가
     const items = this.itemManager.generateRandomItems(itemBoxGrade);
@@ -639,7 +655,7 @@ class Game {
     });
 
     const data = {
-      ObjectData: { objectId: itemBox.id, objectCode: 2 },
+      ObjectData: { objectId: itemBox.id, objectCode: itemBox.objectCode },
       itemData: itemBox.itemList,
       x: itemBox.x,
       y: itemBox.y,
