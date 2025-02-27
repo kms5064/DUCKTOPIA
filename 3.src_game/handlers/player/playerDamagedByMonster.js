@@ -1,5 +1,5 @@
 import { config } from '../../config/config.js';
-import { roomSession, userSession } from '../../sessions/session.js';
+import { gameSession, userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
 
 //실질적으로 몬스터의 데미지가 들어가는 핸들러
