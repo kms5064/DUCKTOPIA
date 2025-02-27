@@ -1,6 +1,6 @@
-import { config } from '../../config/config';
-import { roomSession } from '../../sessions/session';
-import makePacket from '../../utils/packet/makePacket';
+import { config } from '../../config/config.js';
+import { roomSession } from '../../sessions/session.js';
+import makePacket from '../../utils/packet/makePacket.js';
 
 const latencyCheckHandler = ({ socket, payload, userId }) => {
   if (userId !== -1) return;
