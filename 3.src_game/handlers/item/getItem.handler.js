@@ -47,7 +47,7 @@ const getItemHandler = ({ socket, payload, userId }) => {
         playerId: userId,
       },
     ];
-    user.write(failPacket);
+    user.sendPacket(failPacket);
   };
 
   if (!nearestItem) {
