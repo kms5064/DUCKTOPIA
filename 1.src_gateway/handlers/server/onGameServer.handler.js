@@ -16,7 +16,7 @@ const onGameServerHandler = ({ socket, payload, packetType }) => {
   const packetInfo = Object.values(config.packetType).find(([type, name]) => type === packetType);
   const packet = makeServerPacket(packetInfo, payload, user.id);
 
-  const gameServer = serverSession.getServerById(user.gameServer);
+  const gameServer = serverSession.getServerById(config.redis.custom + user.gameServer);
   gameServer.socket.write(packet);
 };
 

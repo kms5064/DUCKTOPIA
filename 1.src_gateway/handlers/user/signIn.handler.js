@@ -45,7 +45,7 @@ const signInHandler = async ({ socket, payload }) => {
     userData.id,
   );
 
-  const serverServer = serverSession.getServerById(config.server.lobbyServer);
+  const serverServer = serverSession.getServerById(config.redis.custom + config.server.lobbyServer);
   serverServer.socket.write(loginCast);
 
   // 6. 패킷 전송
