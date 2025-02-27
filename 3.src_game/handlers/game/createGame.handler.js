@@ -33,19 +33,10 @@ const createGameHandler = async ({ socket, payload, userId }) => {
     {
       success: true,
       monsters: monsterData,
-      objects: [
-        objectData,
-        {
-          objectId: 2,
-          objectCode: 2,
-          itemData: {
-            itemId: 1,
-            count: 2,
-          },
-        },
-      ],
+      objectsPositionData: objectData,
     },
   ];
+
   user.sendPacket(GamePrepareResponse);
 
   const GamePrepareNotification = [

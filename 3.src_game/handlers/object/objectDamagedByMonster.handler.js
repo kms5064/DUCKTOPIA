@@ -1,5 +1,4 @@
 import { config } from '../../config/config.js';
-import { redisClient } from '../../db/redis/redis.js';
 import { gameSession, userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
 
@@ -15,21 +14,20 @@ const objectDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
   const monster = game.getMonsterById(monsterId);
   if (!monster) throw new CustomError(`Monster ID : ${monsterId}는 존재하지 않습니다.`);
 
-  let coreHp = game.getCoreHp();
-
-  if (objectId === 1 && coreHp > 0) {
-    coreHp = game.coreDamaged(monster.getAttack());
-    console.log(`코어가 ${monster.getAttack()}의 데미지를 받았습니다! HP: ${coreHp}`);
-    const payload = { objectId: objectId, hp: coreHp };
-    const objectHpUpdateNotification = [config.packetType.S_OBJECT_HP_UPDATE_NOTIFICATION, payload];
-    game.broadcast(objectHpUpdateNotification);
-    if (coreHp <= 0) {
-      console.log(`코어가 파괴되었습니다. HP: ${coreHp}`);
-      const gameOverPayload = {};
-      const gameOverNotification = [config.packetType.S_GAME_OVER_NOTIFICATION, gameOverPayload];
-      game.broadcast(gameOverNotification);
-      gameSession.removeGame(game);
-    }
+  // 오브젝트에 따라 다르게 적용
+  let payload = null;
+  switch (objectId) {
+    case 1:
+      const coreHp = game.coreDamaged(monster.getAttack());
+      console.log(`코어가 ${monster.getAttack()}의 데미지를 받았습니다! HP: ${coreHp}`);
+      payload = { objectId: objectId, hp: coreHp };
+      break;
+    // 여기에 맘대로 쓰세요
+    default:
+      break;
   }
+
+  const objectHpUpdateNotification = [config.packetType.S_OBJECT_HP_UPDATE_NOTIFICATION, payload];
+  game.broadcast(objectHpUpdateNotification);
 };
 export default objectDamagedByMonsterHandler;

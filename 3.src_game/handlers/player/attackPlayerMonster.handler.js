@@ -9,6 +9,8 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   const user = userSession.getUser(userId);
   if (!user) throw new CustomError('유저 정보가 없습니다.');
 
+  const player = user.player;
+
   // 룸 객체 조회
   const game = gameSession.getGame(user.getGameId());
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
@@ -22,9 +24,17 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   const monster = game.getMonsterById(monsterId);
   if (!monster) throw new CustomError(`Monster ID : ${monsterId}는 존재하지 않습니다.`);
 
+  const equippedWeaponCode = player.equippedWeapon.itemCode;
+  const equippedWeapon = game.itemManager.weaponData.find(
+    (weapon) => weapon.code === equippedWeaponCode,
+  );
+
   // 몬스터 HP 차감 처리
-  const damage = user.player.getPlayerAtkDamage();
-  const currHp = monster.setDamaged(damage);
+  const damage = user.player.getPlayerAtkDamage(equippedWeapon.attack);
+  console.log('[Player Attack] 플레이어 공격력:', damage);
+  console.log('[무기 공격력]');
+
+  const currHp = monster.setDamaged(damage, game);
   // 패킷 생성
   const MonsterHpUpdateNotification = [
     config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION,
