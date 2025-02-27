@@ -1,4 +1,5 @@
 import { config } from '../../config/config.js';
+import latencyCheckHandler from '../../handlers/server/latencyCheck.handler.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import { userSession } from '../../sessions/session.js';
 import { errorHandler } from '../../utils/error/errorHandler.js';
@@ -58,7 +59,9 @@ const onGameData = (socket) => async (data) => {
       const user = userSession.getUserByID(userId);
       if (!user) continue;
 
+      console.log(packetType, config.packetType.S_ERROR_NOTIFICATION[0]);
       if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) {
+        console.log('오냐?');
         latencyCheckHandler({ socket, payload, userId });
         continue;
       }

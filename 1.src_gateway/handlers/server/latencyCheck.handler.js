@@ -1,4 +1,5 @@
 const latencyCheckHandler = ({ socket, payload, userId }) => {
+  console.log('오냐?');
   if (userId !== -1) return;
   const { errorMessage, timestamp } = payload;
   const latency = Date.now() - timestamp;

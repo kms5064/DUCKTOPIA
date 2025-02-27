@@ -65,7 +65,9 @@ const onLobbyData = (socket) => async (data) => {
         continue;
       }
 
+      console.log(packetType, config.packetType.S_ERROR_NOTIFICATION[0]);
       if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) {
+        console.log('오냐???');
         latencyCheckHandler({ socket, payload, userId });
         continue;
       }
