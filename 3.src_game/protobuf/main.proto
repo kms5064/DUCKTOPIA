@@ -414,6 +414,11 @@ message S2SLoginCast // 로그인 응답
   bool success = 1;
   User user = 2;
 }
+// Gateway -> other
+message S2SLogout
+{
+
+}
 
 message GamePacket {
   oneof payload {
@@ -500,5 +505,6 @@ message GamePacket {
     S2SGameServerPrepare gameServerPrepare = 201;
     S2SGameServerJoinRequest gameServerJoinRequest = 202;
     S2SLoginCast loginCast = 203;
+    S2SLogout logOut = 204;
   }
 }
