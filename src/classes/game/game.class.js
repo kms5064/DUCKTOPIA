@@ -565,8 +565,13 @@ class Game {
       }
 
       if (this.dayPhase === DayPhase.DAY) {
+        //날이 밝았을 때, 체력이 0인, 죽어 있는 플레이어라면, 
+        //체력을 회복시키고 코어 주변 어딘가로 이동시킨다. 
+        const respawndistance = 5;
         for (const [playerId, player] of this.players) {
+          if (player.isDead()) {
 
+          }
         }
       }
 
@@ -615,6 +620,7 @@ class Game {
       },
     ];
   }
+
 }
 
 export default Game;
