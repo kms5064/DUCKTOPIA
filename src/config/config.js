@@ -45,7 +45,12 @@ import {
   MIN_VALUE_Y,
 } from './constants/map.js';
 import { CharacterType } from './constants/character.js';
-import { VALID_DISTANCE_OF_BOX } from './constants/objects.js';
+import {
+  VALID_DISTANCE_OF_BOX,
+  BOX_MAX_SLOTS,
+  ITEM_MIN_COUNT,
+  ITEM_MAX_STACK,
+} from './constants/itemBox.js';
 import { DAY_TIME, NIGHT_TIME, DayPhase } from './constants/game.js';
 import { ITEM_PICKUP_RANGE } from './constants/item.js';
 
@@ -117,6 +122,9 @@ export const config = {
       validDistance: VALID_DISTANCE_OF_BOX,
       centerX: CENTER_X,
       centerY: CENTER_Y,
+      boxMaxSlots: BOX_MAX_SLOTS,
+      itemMinCount: ITEM_MIN_COUNT,
+      itemMaxStack: ITEM_MAX_STACK,
     },
     item: {
       pickupRange: ITEM_PICKUP_RANGE,

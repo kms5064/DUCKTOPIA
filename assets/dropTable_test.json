@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "data": {
     "D": {
-      "dropRate": 20,
+      "dropRate": 100,
       "itemCount": {
-        "min": 0,
-        "max": 1
+        "min": 2,
+        "max": 2
       },
       "itemGradeRates": {
         "COMMON": 90,
@@ -16,9 +16,9 @@
       }
     },
     "C": {
-      "dropRate": 35,
+      "dropRate": 100,
       "itemCount": {
-        "min": 0,
+        "min": 2,
         "max": 2
       },
       "itemGradeRates": {
@@ -29,10 +29,10 @@
       }
     },
     "B": {
-      "dropRate": 50,
+      "dropRate": 100,
       "itemCount": {
-        "min": 0,
-        "max": 3
+        "min": 2,
+        "max": 2
       },
       "itemGradeRates": {
         "COMMON": 50,
@@ -42,10 +42,10 @@
       }
     },
     "A": {
-      "dropRate": 70,
+      "dropRate": 100,
       "itemCount": {
-        "min": 0,
-        "max": 4
+        "min": 2,
+        "max": 2
       },
       "itemGradeRates": {
         "COMMON": 30,
@@ -55,10 +55,10 @@
       }
     },
     "S": {
-      "dropRate": 90,
+      "dropRate": 100,
       "itemCount": {
-        "min": 0,
-        "max": 5
+        "min": 2,
+        "max": 2
       },
       "itemGradeRates": {
         "COMMON": 20,

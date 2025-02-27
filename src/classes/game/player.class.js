@@ -32,8 +32,16 @@ class Player {
     this.lastHungerUpdate = 0;
   }
 
-  changePlayerHp(damage) {
-    this.hp -= damage;
+  changePlayerHp(amount) {
+    // 플레이어 체력 감소 및 회복 (체력 회복은 음수로 보냄)
+    this.hp -= amount;
+
+    if (this.hp > this.maxHp) {
+      this.hp = this.maxHp;
+    } else if (this.hp < 0) {
+      this.hp = 0;
+    }
+
     return this.hp;
   }
 
@@ -167,7 +175,8 @@ class Player {
 
   //플레이어 어택은 데미지만 리턴하기
   getPlayerAtkDamage(weaponAtk) {
-    return this.atk + this.lv * config.game.player.atkPerLv + weaponAtk;
+    return weaponAtk + Math.floor(Math.random()*10);
+    //this.atk + this.lv * config.game.player.atkPerLv + weaponAtk
   }
 
   playerDead() {
@@ -182,7 +191,8 @@ class Player {
   }
 
   addItem(itemCode, count, index) {
-    if (index === -1) { //0이면 안되지;
+    if (index === -1) {
+      //0이면 안되지;
       //아이템을 이미 갖고 있는지
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       //있다면 카운트만 증가
@@ -226,16 +236,16 @@ class Player {
   }
 
   equipWeapon(itemCode) {
-    if(this.equippedWeapon === null){
+    if (this.equippedWeapon === null) {
       const weapon = this.inventory.find((item) => item.itemCode === itemCode);
-      this.equippedWeapon = {itemCode:weapon.itemCode,count:1};
-      this.removeItem(itemCode,1);
-    }else{
+      this.equippedWeapon = { itemCode: weapon.itemCode, count: 1 };
+      this.removeItem(itemCode, 1);
+    } else {
       const temp = this.equippedWeapon;
       const weapon = this.inventory.find((item) => item.itemCode === itemCode);
-      this.equippedWeapon = {itemCode:weapon.itemCode,count:1};
-      this.removeItem(itemCode,1);
-      this.addItem(temp.itemCode, 1, -1)
+      this.equippedWeapon = { itemCode: weapon.itemCode, count: 1 };
+      this.removeItem(itemCode, 1);
+      this.addItem(temp.itemCode, 1, -1);
     }
 
     return this.equippedWeapon;

@@ -57,11 +57,11 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
     );
 
     const damage = player.getPlayerAtkDamage(equippedWeapon.attack);
-    console.log('[Player Attack] 플레이어 공격력:', damage);
-    console.log('[무기 공격력]');
-
+    
     const currHp = monster.setDamaged(damage);
 
+    console.log(`DMG: ${damage}, MonHp: ${currHp}`);
+    
     // 패킷 생성
     packet = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
       monsterId,
@@ -109,7 +109,7 @@ const attackPlayerMonsterHandler = ({ socket, payload }) => {
         console.log('[아이템 미생성] 드롭 확률에 실패하여 아이템이 생성되지 않음');
       }
     } else {
-      console.log('이게 왜됌?');
+      console.log('이미 죽은 몬스터를 공격!');
     }
   }
 };

@@ -6,7 +6,8 @@ import { config } from '../../config/config.js';
 import { DayPhase, WaveState } from '../../config/constants/game.js';
 import ItemBox from '../item/itemBox.class.js';
 import ItemManager from '../item/itemManager.class.js';
-import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/objects.js';
+import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
+import BossMonster from './bossMonster.class.js';
 
 class Game {
   constructor(ownerId) {
@@ -27,6 +28,9 @@ class Game {
     this.waveState = WaveState.NONE;
     this.dayCounter = 0;
     this.waveMonsters = new Map();
+    this.bossMonsterWaveCount = 20;
+    //this.waveCount = 3;
+    this.waveCount = 1;
 
     // Zone
     this.zone = [
@@ -57,7 +61,6 @@ class Game {
       return;
     }
     this.gameLoop = setInterval(() => {
-      // this.addMonster();
       this.phaseCheck();
       this.monsterUpdate();
       this.playersHungerCheck();
@@ -93,7 +96,7 @@ class Game {
    * PLAYER
    */
   addPlayer(user) {
-    const player = new Player(user, 100, 0, 0);
+    const player = new Player(user, 10, 0, 0);
     this.players.set(user.id, player);
   }
 
@@ -127,8 +130,10 @@ class Game {
   }
 
   /**************
-   * MONSTER
+   * 몬스터 생성
    */
+
+  //초기에 몬스터들의 정보를 주는 것이기에 몬스터를 생성한다.
   createMonsterData() {
     const monsterData = [];
 
@@ -139,64 +144,110 @@ class Game {
     const maxAmount = config.game.monster.maxSpawnCount - this.monsters.size;
 
     for (let i = 1; i <= maxAmount; i++) {
-      const monsterId = this.monsterIndex;
+      const monsterId = this.monsterIndex++;
       // Monster Asset 조회
       const { monster: monsterAsset } = getGameAssets();
 
+      const monsterList = [0, 1, 3, 4, 5];
       // 몬스터 데이터 뽑기
-      const codeIdx = Math.floor(Math.random() * 7);
-      const data = monsterAsset.data[codeIdx];
+      const codeIdx = Math.floor(Math.random() * monsterList.length);
+      const data = monsterAsset.data[monsterList[codeIdx]];
 
+      if (i < maxAmount) {
+        const monster = new Monster(
+          monsterId,
+          data.code,
+          data.name,
+          data.hp,
+          data.attack,
+          data.defence,
+          data.range,
+          data.speed,
+          data.grade,
+          0,
+          0,
+        );
+
+        this.monsters.set(monsterId, monster);
+        monsterData.push({
+          monsterId,
+          monsterCode: monster.code,
+        });
+      } else {
+        monsterData.push(this.createBossMonsterData());
+      }
       // 몬스터 생성
-      const monster = new Monster(
-        monsterId,
-        data.code,
-        data.name,
-        data.hp,
-        data.attack,
-        data.defence,
-        data.range,
-        data.speed,
-        data.grade,
-        0,
-        0,
-      );
-
-      this.monsters.set(monsterId, monster);
-      this.monsterIndex++; //Index 증가
-      monsterData.push({
-        monsterId,
-        monsterCode: monster.code,
-      });
     }
     return monsterData;
   }
 
-  updateMonsterPosition(monsterId, x, y) {
-    this.monsters.get(monsterId).setPosition(x, y);
+  //보스 몬스터의 생성
+  createBossMonsterData(isWave = false, pos_x = 0, pos_y = 0) {
+    //몬스터의 숫자가 최대 숫자보다 크다면 보스 몬스터는 잠시 지연하도록
+    if (config.game.monster.maxSpawnCount <= this.monsters.size) {
+      return;
+    }
+
+    const { monster: monsterAsset } = getGameAssets();
+    const data = monsterAsset.data[7];
+
+    const monsterId = this.monsterIndex++;
+    const bossMonster = new BossMonster(
+      monsterId,
+      208,
+      data.name,
+      data.hp,
+      data.attack,
+      data.defence,
+      data.range,
+      data.speed,
+      data.grade,
+      pos_x,
+      pos_y,
+      isWave,
+    );
+
+    this.monsters.set(monsterId, bossMonster);
+    //this.monsters.set(monsterId, bossMonster);
+    return {
+      monsterId,
+      monsterCode: bossMonster.code,
+    };
   }
 
-  addMonster() {
-    // 몬스터 데이터 생성
-    const monsterData = this.createMonsterData();
+  updateMonsterPosition(monsterId, x, y) {
+    if (this.monsters.has(monsterId)) {
+      this.monsters.get(monsterId).setPosition(x, y);
+    }
 
-    // 패킷 생성
-    const packet = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, { monsters: monsterData });
-
-    const owner = this.getPlayerById(this.ownerId);
-    owner.getUser().getSocket().write(packet); // Host 에게 전송
+    if (this.waveMonsters.has(monsterId)) {
+      this.waveMonsters.get(monsterId).setPosition(x, y);
+    }
   }
 
   getMonsterById(monsterId) {
-    return this.monsters.get(monsterId);
+    if (this.monsters.has(monsterId)) {
+      return this.monsters.get(monsterId);
+    }
+
+    if (this.waveMonsters.has(monsterId)) {
+      return this.waveMonsters.get(monsterId);
+    }
   }
 
   getAllMonster() {
     return this.monsters;
   }
 
+  getAllWaveMonster() {
+    return this.waveMonsters;
+  }
+
   removeMonster(monsterId) {
-    this.monsters.delete(monsterId);
+    //몬스터의 삭제
+    if (this.monsters.has(monsterId)) {
+      this.monsters.delete(monsterId);
+    }
 
     // 웨이브 몬스터 삭제
     if (this.waveMonsters.has(monsterId)) {
@@ -217,12 +268,9 @@ class Game {
   }
 
   monsterUpdate() {
-    //몬스터가 플레이어의 거리를 구해서 발견한다.
-    //몬스터의 거리가 너무 멀어지면 id값을 0이나 -1을
-    this.monsterDisCovered();
-    //몬스터y가 플레이어를 가지고 있을 경우 움직인다.
-    //this.monsterMove();
-    //this.monsterTimeCheck();
+    this.monsterDisCovered(); //몬스터가 플레이어를 등록, 해제 하는 걸 담당
+    this.monsterMove(); //몬스터 내부의 행동 패턴 등을 담당
+    this.monsterTimeCheck(); //몬스터 내부의 시간 체크 담당
 
     //몬스터의 사망 판정도 체크해 보도록 하자.
 
@@ -239,12 +287,6 @@ class Game {
       let inputId = 0;
       let inputPlayer = null;
       if (!monster.hasTargetPlayer()) {
-        //몬스터가 죽었을 때, hp가 0인데 반응이 나올 수 있으니 체크
-        if (monster.monsterDeath()) {
-          this.monsters.delete(monsterId);
-          continue;
-        }
-
         for (const [playerId, player] of this.players) {
           // 대상 찾아보기
           const calculatedDistance = monster.returnCalculateDistance(player);
@@ -307,31 +349,28 @@ class Game {
   //플레이어 타겟이 정해져 있지 않다면 무조건 코어 쪽으로 이동시키도록 한다.
   //
   monsterMove() {
-    const monsterMoveList = [];
-
     for (const [monsterId, monster] of this.monsters) {
-      const monsterPos = monster.getPosition();
-      const targetId = monster.gettargetPlayer();
-
-      const monsterMoverPayload = {
-        monsterId: monsterId,
-        targetId: targetId,
-        x: monsterPos.x,
-        y: monsterPos.y,
-      };
-
-      monsterMoveList.push(monsterMoverPayload);
+      if (monster.isBossMonster()) {
+        //보스 몬스터의 행동
+        monster.setPattern();
+      } else {
+        //일반 몬스터의 행동
+      }
     }
-    const packet = makePacket(config.packetType.S_MONSTER_MOVE_NOTIFICATION, monsterMoveList);
 
-    //이런 식으로 게임에서 notification을 보내보도록 하자.
-    game.broadcast(packet);
+    for (const [monsterId, waveMonster] of this.waveMonsters) {
+      if (waveMonster.isBossMonster()) {
+        waveMonster.setPattern(); //웨이브 속의 보스 몬스터의 패턴
+      } else {
+        //일반 웨이브 몬스터의 패턴
+      }
+    }
   }
 
   monsterTimeCheck() {
+    const now = Date.now();
+    const deltaTime = now - this.monsterLastUpdate;
     for (const [monsterId, monster] of this.monsters) {
-      const now = Date.now();
-      const deltaTime = now - this.monsterLastUpdate;
       monster.CoolTimeCheck(deltaTime);
     }
   }
@@ -410,63 +449,147 @@ class Game {
   }
 
   // 웨이브 몬스터 생성
+  // 여기서는 데이터를 생성하지 않고 spawn을 통해 생성한다.
   addWaveMonster() {
     const monstersData = [];
-    for (let i = 1; i <= config.game.monster.waveMaxMonsterCount; i++) {
-      const monsterId = this.monsterIndex;
+    const { monster: monsterAsset } = getGameAssets();
+    // const waveMonsterSize = Math.min(config.game.monster.waveMaxMonsterCount, this.waveCount);
+    // this.waveCount += 2;
+    const waveMonsterSize = Math.min(
+      config.game.monster.waveMaxMonsterCount,
+      this.waveCount * 2 + 3,
+    );
 
-      // 몬스터 데이터 뽑기
-      const codeIdx =
-        Math.floor(
-          Math.random() *
-            (config.game.monster.waveMonsterMaxCode - config.game.monster.waveMonsterMinCode + 1),
-        ) + config.game.monster.waveMonsterMinCode;
+    for (let i = 1; i <= waveMonsterSize; i++) {
+      const monsterId = this.monsterIndex++;
 
-      this.monsterIndex++; //Index 증가
+      if (this.bossMonsterWaveCount === 0) {
+        //monstersData.push(this.createBossMonsterData(true, monster.x, monster.y));
+        const data = monsterAsset.data[7];
+        this.bossMonsterWaveCount = 20;
 
-      // 몬스터 id와 code 저장
-      monstersData.push({
-        monsterId,
-        monsterCode: codeIdx,
-      });
+        monstersData.push({
+          monsterId,
+          monsterCode: data.code,
+        });
+      }
+      // else {
+      //   this.bossMonsterWaveCount--;
+
+      //   const monsterList = [0, 1, 3, 4, 5];
+      //   // 몬스터 데이터 뽑기
+      //   const codeIdx = Math.floor(Math.random() * monsterList.length);
+      //   const data = monsterAsset.data[monsterList[codeIdx]];
+      //   //this.monsters.set(monsterId, waveMonster);
+
+      //   // 몬스터 id와 code 저장
+      //   monstersData.push({
+      //     monsterId,
+      //     monsterCode: data.code,
+      //   });
+      // }
+      else {
+        if (this.waveCount === 1 || this.waveCount === 2) {
+          const monsterList = [0, 1];
+          // 몬스터 데이터 뽑기
+          const codeIdx = Math.floor(Math.random() * monsterList.length);
+          const data = monsterAsset.data[monsterList[codeIdx]];
+          //this.monsters.set(monsterId, waveMonster);
+
+          // 몬스터 id와 code 저장
+          monstersData.push({
+            monsterId,
+            monsterCode: data.code,
+          });
+        } else if(this.waveCount === 3 || this.waveCount === 4) {
+          const monsterList = [0, 1, 3, 4];
+          // 몬스터 데이터 뽑기
+          const codeIdx = Math.floor(Math.random() * monsterList.length);
+          const data = monsterAsset.data[monsterList[codeIdx]];
+          //this.monsters.set(monsterId, waveMonster);
+
+          // 몬스터 id와 code 저장
+          monstersData.push({
+            monsterId,
+            monsterCode: data.code,
+          });
+        } else {
+          const monsterList = [0, 1, 3, 4, 5];
+          // 몬스터 데이터 뽑기
+          const codeIdx = Math.floor(Math.random() * monsterList.length);
+          const data = monsterAsset.data[monsterList[codeIdx]];
+          //this.monsters.set(monsterId, waveMonster);
+
+          // 몬스터 id와 code 저장
+          monstersData.push({
+            monsterId,
+            monsterCode: data.code,
+          });
+        }
+      }
+      this.waveCount += 1;
     }
 
-    // 패킷 전송
-    const monsterSpawnRequestPacket = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, {
+    //console.log(monstersData.length);
+    for (const data of monstersData) {
+      //console.log(`${data.length}`);
+    }
+
+    const waveMonsterSpawnRequestPacket = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, {
       monsters: monstersData,
     });
 
     const owner = this.getPlayerById(this.ownerId);
-
-    owner.user.socket.write(monsterSpawnRequestPacket);
-
-    this.setWaveState(WaveState.INWAVE);
+    owner.user.socket.write(waveMonsterSpawnRequestPacket);
   }
 
+  //웨이브 몬스터 생성1
   spawnWaveMonster(monsters) {
     for (const monster of monsters) {
       // Monster Asset 조회
       const { monster: monsterAsset } = getGameAssets();
+      console.log(monster.monsterCode);
+      const data = monsterAsset.data.find((asset) => asset.code === monster.monsterCode);
+      console.log(data);
 
-      const data = monsterAsset.data.find((asset) => asset.code === monster.code);
+      if (monster.monsterCode === 208) {
+        const bossMonster = new BossMonster(
+          monster.monsterId,
+          monster.monsterCode,
+          data.name,
+          data.hp,
+          data.attack,
+          data.defence,
+          data.range,
+          data.speed,
+          data.grade,
+          monster.x,
+          monster.y,
+          true,
+        );
 
-      // 몬스터 생성
-      const spawnMonster = new Monster(
-        monster.monsterId,
-        monster.code,
-        data.name,
-        data.hp,
-        data.attack,
-        data.defence,
-        5,
-        data.speed,
-        monster.x,
-        monster.y,
-        true,
-      );
+        this.monsters.set(monster.monsterId, bossMonster);
+        this.waveMonsters.set(monster.monsterId, bossMonster);
+      } else {
+        // 몬스터 생성
+        const spawnMonster = new Monster(
+          monster.monsterId,
+          monster.monsterCode,
+          data.name,
+          data.hp,
+          data.attack,
+          data.defence,
+          data.range,
+          data.speed,
+          data.grade,
+          monster.x,
+          monster.y,
+          true,
+        );
 
-      this.monsters.set(monster.monsterId, spawnMonster);
-      this.waveMonsters.set(monster.monsterId, spawnMonster);
+        this.monsters.set(monster.monsterId, spawnMonster);
+        this.waveMonsters.set(monster.monsterId, spawnMonster);
+      }
     }
   }
 

@@ -5,6 +5,7 @@
 import Item from './item.class.js';
 import ItemBox from './itemBox.class.js';
 import { getGameAssets } from '../../init/assets.js';
+import { config } from '../../config/config.js';
 
 class ItemManager {
   constructor() {
@@ -16,11 +17,6 @@ class ItemManager {
     this.foodData = food.data;
     this.weaponData = weapon.data;
     this.lastBoxId = 1; // 마지막으로 생성된 박스의 ID
-
-    // 아이템 박스 관련 상수
-    this.BOX_MAX_SLOTS = 8; // 박스 최대 슬롯 수
-    this.ITEM_MIN_COUNT = 1; // 아이템 최소 개수
-    this.ITEM_MAX_STACK = 5; // 아이템 최대 스택
   }
 
   // 박스 ID 생성
@@ -37,7 +33,7 @@ class ItemManager {
   // 랜덤 아이템 생성
   generateRandomItems() {
     const items = [];
-    const slotCount = Math.floor(Math.random() * this.BOX_MAX_SLOTS) + 1; // 최소 1개
+    const slotCount = Math.floor(Math.random() * config.game.itemBox.boxMaxSlots) + 1; // 최소 1개
 
     for (let i = 0; i < slotCount; i++) {
       // 아이템 타입 결정 (무기 또는 음식)
@@ -58,7 +54,9 @@ class ItemManager {
       } else {
         // 음식 아이템 생성
         const randomFood = this.foodData[Math.floor(Math.random() * this.foodData.length)];
-        const count = Math.floor(Math.random() * this.ITEM_MAX_STACK) + this.ITEM_MIN_COUNT;
+        const count =
+          Math.floor(Math.random() * config.game.itemBox.itemMaxStack) +
+          config.game.itemBox.itemMinCount;
         items.push(
           new Item({
             itemData: {
@@ -76,10 +74,10 @@ class ItemManager {
 
   // 몬스터 사망 시 아이템 생성
   createDropItems(monsterGrade, position) {
-    console.log(`\n[아이템 드롭 시작]`);
-    console.log(`몬스터 등급: ${monsterGrade}`);
-    console.log(`몬스터 위치: x=${position.x}, y=${position.y}`);
-    console.log(`현재 필드 아이템 수: ${this.fieldDropItems.size}`);
+    //console.log(`\n[아이템 드롭 시작]`);
+    //console.log(`몬스터 등급: ${monsterGrade}`);
+    //console.log(`몬스터 위치: x=${position.x}, y=${position.y}`);
+    //console.log(`현재 필드 아이템 수: ${this.fieldDropItems.size}`);
 
     // 드롭 확률 체크
     if (!this.rollDropItems(monsterGrade)) {
@@ -113,22 +111,22 @@ class ItemManager {
       }
     }
 
-    console.log(`\n[아이템 드롭 완료]`);
-    console.log(`- 생성 시도: ${count}개`);
-    console.log(`- 실제 생성: ${items.length}개`);
-    console.log(`- 현재 필드 아이템 수: ${this.fieldDropItems.size}`);
+    //console.log(`\n[아이템 드롭 완료]`);
+    //console.log(`- 생성 시도: ${count}개`);
+    //console.log(`- 실제 생성: ${items.length}개`);
+    //console.log(`- 현재 필드 아이템 수: ${this.fieldDropItems.size}`);
 
     return items;
   }
 
   // 아이템 드롭 여부 결정
   rollDropItems(monsterGrade) {
-    console.log(`\n[드롭 확률 체크]`);
-    console.log(`몬스터 등급: ${monsterGrade}`);
-    console.log(`드롭 테이블:`, this.dropTable);
+    //console.log(`\n[드롭 확률 체크]`);
+    //console.log(`몬스터 등급: ${monsterGrade}`);
+    //console.log(`드롭 테이블:`, this.dropTable);
 
     const dropRate = this.dropTable[monsterGrade]?.dropRate;
-    console.log(`해당 등급 드롭율: ${dropRate}`);
+    //console.log(`해당 등급 드롭율: ${dropRate}`);
 
     if (!dropRate) {
       console.log(`[경고] ${monsterGrade} 등급의 드롭 테이블이 없습니다.`);

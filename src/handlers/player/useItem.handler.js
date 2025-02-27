@@ -34,12 +34,14 @@ const useItemHandler = ({ socket, payload }) => {
 
   // 플레이어 객체 조회
   const player = game.getPlayerById(user.getUserData().userId);
-  console.log('[플레이어 정보 조회]', player);
-  console.log('[플레이어 인벤토리 조회]', player.inventory);
+  //const player = game.getPlayerById(playerId);
+  //console.log('[플레이어 정보 조회]', player);
+  //console.log('[플레이어 인벤토리 조회]', player.inventory);
 
   // 아이템 정보 조회
   const itemIndex = player.findItemIndex(itemData.itemCode);
-  console.log('[아이템 정보 조회]', itemIndex);
+  //console.log('[아이템 정보 조회]', itemIndex);
+  console.log(`${player.user.id}가 ${itemIndex}를 사용!`);
 
   if (itemIndex === -1) {
     throw new Error('아이템을 찾을 수 없습니다.');
@@ -65,21 +67,33 @@ const useItemHandler = ({ socket, payload }) => {
 
       // 식량 사용 처리 - changePlayerHunger 메서드 사용
       const currentHunger = player.hunger;
-      const addHunger = Math.min(foodData.hunger, 100 - currentHunger); // 허기 증가량 계산
+      const addHunger = Math.min(foodData.hunger, player.maxHunger - currentHunger); // 허기 증가량 계산
       const newHunger = player.changePlayerHunger(addHunger);
 
-      player.removeItem(item.itemCode, item.count);
+      // 아이템 개수 감소 (1개만 사용)
+      player.removeItem(item.itemCode, 1);
 
       console.log(
         `[기존 허기]: ${currentHunger} / [허기 증가량]: ${addHunger} / [현재 허기]: ${newHunger}`,
       );
-      console.log('[식량 사용 후 인벤토리]', player.inventory);
+      //console.log('[식량 사용 후 인벤토리]', player.inventory);
+
+      // 플레이어 체력 회복 처리
+      const currentHp = player.hp;
+      const addHp = Math.min(foodData.hp, player.maxHp - currentHp); // 체력 증가량 계산
+      const newHp = player.changePlayerHp(-addHp); // 음수로 변경하여 체력 회복
+      //console.log('[식량 사용 후 체력]', newHp);
+      console.log(`기존HP: ${currentHp}, 회복HP: ${addHp}, 현재HP: ${newHp}`);
 
       packet = makePacket(config.packetType.S_PLAYER_EAT_FOOD_RESPONSE, {
         success: true,
-        itemData: item,
+        itemData: {
+          itemCode: item.itemCode,
+          count: 1, // 사용한 아이템 개수는 1개
+        },
         playerId,
         hunger: newHunger,
+        playerHp: newHp,
       });
       break;
     }
