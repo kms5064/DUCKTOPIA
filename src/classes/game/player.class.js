@@ -7,7 +7,8 @@ class Player {
   constructor(user, atk, x, y) {
     this.user = user; // User Class
     this.maxHp = config.game.player.playerMaxHealth;
-    this.hp = config.game.player.playerMaxHealth;
+    //this.hp = config.game.player.playerMaxHealth;  // 이 쪽 이따가 다시 풀어놓자
+    this.hp = 100;
     this.maxHunger = config.game.player.playerMaxHunger;
     this.hunger = config.game.player.playerMaxHunger;
     this.speed = config.game.player.playerSpeed;
@@ -282,15 +283,16 @@ class Player {
 
   revival(x, y) {
     if (this.isAlive) {
-      return;
+      return false;
     }
 
 
     this.isAlive = true;
     this.hp = 100;
-    this.x = x;
-    this.y = y;
+    this.playerPositionUpdate(x, y);
     console.log("플레이어 살려냄.");
+
+    return { playerId: this.user.id, x: this.x, y: this.y };
   }
 
 

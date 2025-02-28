@@ -287,7 +287,7 @@ class Game {
       let inputId = 0;
       let inputPlayer = null;
       if (!monster.hasTargetPlayer()) {
-        if (monster.AwakeCoolTimeCheck()) continue;
+        //if (monster.AwakeCoolTimeCheck()) continue;
 
         for (const [playerId, player] of this.players) {
           // 대상 찾아보기
@@ -565,13 +565,27 @@ class Game {
       }
 
       if (this.dayPhase === DayPhase.DAY) {
-        //날이 밝았을 때, 체력이 0인, 죽어 있는 플레이어라면, 
+        //날이 밝았을 때, 체력이 0인, 죽어 있는 플레이어라면,
         //체력을 회복시키고 코어 주변 어딘가로 이동시킨다. 
+        const revivalList = [];
         const respawndistance = 5;
         for (const [playerId, player] of this.players) {
           if (player.isDead()) {
-
+            const degree = (Math.random() * 360) * (Math.PI / 180);//360도 내에서 출력
+            const dx = respawndistance * Math.sin(degree) + this.corePosition.x;
+            const dy = respawndistance * Math.cos(degree) + this.corePosition.y;
+            const payload = player.revival(dx, dy);
+            revivalList.push(payload);
           }
+        }
+
+        for (const revival of revivalList) {
+          const notification = makePacket(config.packetType.S_PLAYER_POSITION_UPDATE_NOTIFICATION, {
+            playerPositions: [revival],
+          });
+
+          this.broadcast(notification);
+          console.log("플레이어를 코어 주변 위치로 이동시킴");
         }
       }
 
