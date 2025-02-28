@@ -15,21 +15,23 @@ const gamePrepareReqHandler = ({ socket, payload }) => {
     throw new CustomError('게임 생성에 실패했습니다!');
   }
 
+  //console.log("정확히 어느 타이밍에 발동되는가.");
+
   // 초기 몬스터 정보 생성
   const monsterData = game.createMonsterData();
 
   //초기 오브젝트 정보 생성
   const objectData = game.createObjectData();
 
- 
+
   const GamePrepareResponse = makePacket(config.packetType.PREPARE_GAME_RESPONSE, {
     success: true,
     monsters: monsterData,
-    objectsPositionData:  objectData,
+    objectsPositionData: objectData,
   });
 
   socket.write(GamePrepareResponse);
-  
+
 
   const GamePrepareNotification = makePacket(config.packetType.PREPARE_GAME_NOTIFICATION, {
     room: room.getRoomData(),

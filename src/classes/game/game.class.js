@@ -29,6 +29,7 @@ class Game {
     this.dayCounter = 0;
     this.waveMonsters = new Map();
 
+
     // Zone
     this.zone = [
       { distance: 10.0, area: 1 }, // 중앙 근접 구역
@@ -50,6 +51,9 @@ class Game {
     this.itemManager = new ItemManager();
     this.bossMonsterWaveCount = 20;
     this.waveCount = 3;
+
+    //채팅 정보
+    this.localChatting = [];
   }
 
   /**************
@@ -140,6 +144,9 @@ class Game {
       return;
     }
     const maxAmount = config.game.monster.maxSpawnCount - this.monsters.size;
+    const meg_per_playerCount = Math.max(1, Math.floor(Math.log2(this.players.size)));
+
+
 
     for (let i = 1; i <= maxAmount; i++) {
       const monsterId = this.monsterIndex++;
@@ -151,14 +158,15 @@ class Game {
       const codeIdx = Math.floor(Math.random() * monsterList.length);
       const data = monsterAsset.data[monsterList[codeIdx]];
 
+
       if (i < maxAmount) {
         const monster = new Monster(
           monsterId,
           data.code,
           data.name,
-          data.hp,
-          data.attack,
-          data.defence,
+          data.hp * meg_per_playerCount,
+          data.attack * meg_per_playerCount,
+          data.defence + meg_per_playerCount * 2,
           data.range,
           data.speed,
           data.grade,
@@ -191,14 +199,17 @@ class Game {
     const { monster: monsterAsset } = getGameAssets();
     const data = monsterAsset.data[7];
 
+    const meg_per_playerCount = Math.max(1, Math.floor(Math.log2(this.players.size)));
+
+
     const monsterId = this.monsterIndex++;
     const bossMonster = new BossMonster(
       monsterId,
       208,
       data.name,
-      data.hp,
-      data.attack,
-      data.defence,
+      data.hp * meg_per_playerCount,
+      data.attack * meg_per_playerCount / 2,
+      data.defence + meg_per_playerCount * 4,
       data.range,
       data.speed,
       data.grade,
@@ -633,6 +644,19 @@ class Game {
         count: 1,
       },
     ];
+  }
+
+  chattingControl(chatting) {
+    if (this.localChatting.length >= 15) {
+      this.localChatting.shift();
+    }
+
+    this.localChatting.push(chatting);
+    const packet = makePacket(config.packetType.S_CHATTING_NOTIFICATION, {
+      chatting: this.localChatting
+    });
+
+    this.broadcast(packet);
   }
 
 }

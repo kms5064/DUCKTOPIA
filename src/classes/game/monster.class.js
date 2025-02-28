@@ -178,7 +178,7 @@ class Monster extends MovableObjectBase {
         case 206:
         case 207:
         case 208:
-          this.monsterAwakeCoolTime = 0;//보스 몬스터와 암살자 타입은 인식 쿨타임이 없는 걸로
+          this.monsterAwakeCoolTime = 3000;//보스 몬스터와 암살자 타입은 인식 쿨타임이 없는 걸로
           break;
       }
 
