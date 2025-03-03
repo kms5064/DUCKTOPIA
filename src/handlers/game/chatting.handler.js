@@ -41,9 +41,7 @@ const chattingHandler = ({ socket, payload }) => {
         throw new CustomError(`아무런 내용이 오지 않았습니다.`);
     }
 
-    const chattingPayload = {
-        chatting: chatting
-    };
+    game.chattingControl(chatting);
 
     // const packet = makePacket(config.packetType.S_CHATTING_NOTIFICATION, chattingPayload);
     // game.broadcast(packet);

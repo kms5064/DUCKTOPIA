@@ -397,7 +397,24 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
   ItemData itemData = 2; // itemid ->itemdata
   int32 playerId = 3;
 }
-//---- 추가 완료
+
+// 이준성 - 채팅 관련
+
+message C2SPlayerChattingRequest {
+  int32 playerId = 1;
+  string message = 2;
+}
+
+message S2CPlayerChattingNotification {
+  int32 playerId = 1;
+  string message = 2;
+}
+
+message S2CPlayerRevivalNotification {
+  int32 playerId = 1;
+  Position position = 2;
+}
+
 
 message GamePacket {
   oneof payload {
@@ -479,5 +496,9 @@ message GamePacket {
     S2CPlayerEatFoodResponse playerEatFoodResponse = 106;
     S2CPlayerEquipWeaponResponse playerEquipWeaponResponse = 107;
     //---- 추가 완료
+
+    //---- 2025.03.03 추가 : 이준성
+    C2SPlayerChattingRequest c2SPlayerChattingRequest = 108;
+    S2CPlayerChattingNotification s2CPlayerChattingNotification = 109;
   }
 }
