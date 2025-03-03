@@ -1,35 +1,38 @@
+import makePacket from '../../utils/packet/makePacket.js';
 import { getGameAssets } from '../../init/assets.js';
 import Monster from './monster.class.js';
+import Player from './player.class.js';
 import { config } from '../../config/config.js';
 import { DayPhase, WaveState } from '../../config/constants/game.js';
 import ItemBox from '../item/itemBox.class.js';
 import ItemManager from '../item/itemManager.class.js';
-import { gameSession, userSession } from '../../sessions/session.js';
-import { redisClient } from '../../db/redis/redis.js';
+import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/objects.js';
 import BossMonster from './bossMonster.class.js';
-import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
+import Grass from '../object/grass.class.js';
+import ObjectManager from '../object/objectManager.class.js';
 
 class Game {
-  constructor(gameId, ownerId) {
-    this.id = gameId;
-    this.ownerId = ownerId;
-
-    this.users = new Map();
+  constructor(ownerId) {
+    this.players = new Map();
+    this.monsterIndex = 1;
     this.monsters = new Map();
     this.objects = new Map();
     this.map = []; // 0과 1로 된 2차원배열?
-
-    this.monsterIndex = 1;
     this.coreHp = config.game.core.maxHP;
     this.corePosition = config.game.core.position;
+    this.lastUpdate = 0;
     this.gameLoop = null;
     this.highLatency = 120;
+    this.ownerId = ownerId;
 
     // 웨이브 시스템
     this.dayPhase = DayPhase.DAY;
     this.waveState = WaveState.NONE;
     this.dayCounter = 0;
     this.waveMonsters = new Map();
+    this.bossMonsterWaveCount = 20;
+    //this.waveCount = 3;
+    this.waveCount = 1;
 
     // Zone
     this.zone = [
@@ -45,27 +48,18 @@ class Game {
       3: [7, 8], // 중앙 근접 3
     };
 
-    // 시간
-    this.lastUpdate = 0;
+    //몬스터 쿨타임
     this.monsterLastUpdate = Date.now();
 
     // 아이템 관리 : 2025.02.21 추가
     this.itemManager = new ItemManager();
-    this.bossMonsterWaveCount = 20;
-    this.waveCount = 3;
+
+
   }
 
   /**************
    * GAME
    */
-
-  // 게임 시작
-  startGame() {
-    setTimeout(() => {
-      this.gameLoopStart();
-    }, 3000);
-  }
-
   gameLoopStart() {
     if (this.gameLoop !== null) {
       return;
@@ -74,6 +68,7 @@ class Game {
       this.phaseCheck();
       this.monsterUpdate();
       this.playersHungerCheck();
+      //밑의 것을 전부 monster들이 알아서 처리할 수 있도록 한다.
     }, 1000);
     this.lastUpdate = Date.now();
     this.initPlayersHunger();
@@ -81,7 +76,6 @@ class Game {
 
   gameEnd() {
     clearInterval(this.gameLoop);
-    const userIds = [];
     this.gameLoop = null;
 
     const gameOverNotification = [config.packetType.S_GAME_OVER_NOTIFICATION, {}];
@@ -104,73 +98,55 @@ class Game {
     });
   }
 
-  // 전체 공지(본인 포함)
-  broadcast(packetInfos) {
-    this.users.forEach((user) => {
-      user.sendPacket(packetInfos);
+  //다른 사람에게 전송(본인 포함)
+  broadcast(packet) {
+    this.players.forEach((player) => {
+      player.getUser().getSocket().write(packet);
     });
   }
 
   /**************
-   * USER -> PLAYER
+   * PLAYER
    */
-  addUser(user) {
-    this.users.set(user.id, user);
+  addPlayer(user) {
+    const player = new Player(user, 10, 0, 0);
+    this.players.set(user.id, player);
   }
 
   getPlayerBySocket(socket) {
-    return this.users.find((user) => user.socket === socket).player;
+    return this.players.find((player) => player.user.socket === socket);
   }
   removePlayer(userId) {
-    this.users.delete(userId);
+    this.players.delete(userId);
   }
 
-  getUserById(userId) {
-    return this.users.get(userId);
+  getPlayerById(userId) {
+    return this.players.get(userId);
   }
 
   userUpdate() {
-    for (const [id, user] of this.users) {
+    for (const player of this.players) {
       //console.log(player.x, player.y);
     }
   }
 
   initPlayersHunger() {
-    for (const [id, user] of this.users) {
-      user.player.initHungerUpdate();
+    for (const [id, player] of this.players) {
+      player.initHungerUpdate();
     }
   }
 
   playersHungerCheck() {
-    for (const [id, user] of this.users) {
-      user.player.hungerCheck();
+    for (const [id, player] of this.players) {
+      player.hungerCheck();
     }
   }
 
-  getUsersPositionData() {
-    const positions = [];
-    let i = 1;
-    this.users.forEach((user) => {
-      // 새로운 x, y 값 계산
-      const newX = i * 3;
-      const newY = i * 3;
-
-      // 유저 위치 업데이트
-      user.player.playerPositionUpdate(newX, newY);
-      // 업데이트된 위치 정보 반환
-      positions.push({
-        playerId: user.id,
-        x: user.player.x, // 업데이트된 값
-        y: user.player.y, // 업데이트된 값
-      });
-      i++;
-    });
-    return positions;
-  }
-
   /**************
-   * MONSTER
+   * 몬스터 생성
    */
+
+  //초기에 몬스터들의 정보를 주는 것이기에 몬스터를 생성한다.
   createMonsterData() {
     const monsterData = [];
 
@@ -324,14 +300,14 @@ class Game {
       let inputId = 0;
       let inputPlayer = null;
       if (!monster.hasTargetPlayer()) {
-        for (const [userId, user] of this.users) {
+        for (const [playerId, player] of this.players) {
           // 대상 찾아보기
-          const calculatedDistance = monster.returnCalculateDistance(user.player);
+          const calculatedDistance = monster.returnCalculateDistance(player);
 
           if (distance > calculatedDistance) {
             distance = calculatedDistance;
-            inputId = userId;
-            inputPlayer = user.player;
+            inputId = playerId;
+            inputPlayer = player;
           }
         }
 
@@ -353,14 +329,14 @@ class Game {
         }
         distance = monster.getDistanceByPlayer();
 
-        for (const [userId, user] of this.users) {
+        for (const [playerId, player] of this.players) {
           // 대상 찾아보기
-          const calculatedDistance = monster.returnCalculateDistance(user.player);
+          const calculatedDistance = monster.returnCalculateDistance(player);
 
           if (distance > calculatedDistance) {
             distance = calculatedDistance;
-            inputId = userId;
-            inputPlayer = user.player;
+            inputId = playerId;
+            inputPlayer = player;
           }
         }
 
@@ -375,12 +351,9 @@ class Game {
       }
     }
 
-    const packet = [
-      config.packetType.S_MONSTER_AWAKE_NOTIFICATION,
-      {
-        monsterTarget: monsterDiscoverPayload,
-      },
-    ];
+    const packet = makePacket(config.packetType.S_MONSTER_AWAKE_NOTIFICATION, {
+      monsterTarget: monsterDiscoverPayload,
+    });
 
     this.broadcast(packet);
   }
@@ -417,7 +390,6 @@ class Game {
 
   getItemBoxById(objectId) {
     return this.objects.get(objectId);
-    //여기까지 몬스터 영역
   }
 
   checkSpawnArea(monsterCode, x, y) {
@@ -453,18 +425,29 @@ class Game {
     };
 
     objectData.push(coreData);
-    for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
-      const itemBox = this.createItemBox();
-      objectData.push(itemBox);
+
+    const itemBoxGrades = ['D','B','C'];
+
+    itemBoxGrades.forEach((grade)=>{
+      for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
+        const itemBox = this.createItemBox(grade);
+        objectData.push(itemBox);
+      }
+    })
+
+    for (let i = 0; i < MAX_NUMBER_OF_GRASS; i++) {
+      const grass = this.createObject("grass");
+      objectData.push(grass);
+
     }
+
     return objectData;
   }
 
   coreDamaged(damage) {
     this.coreHp -= damage;
     if (this.coreHp <= 0) {
-      console.log('#################### 코어 터짐');
-      gameSession.removeGame(this);
+      this.gameEnd();
     }
     return this.coreHp;
   }
@@ -476,15 +459,12 @@ class Game {
     if (this.dayPhase === DayPhase.DAY) this.dayPhase = DayPhase.NIGHT;
     else this.dayPhase = DayPhase.DAY;
 
-    const changePhasePacket = [
-      config.packetType.S_GAME_PHASE_UPDATE_NOTIFICATION,
-      {
-        gameState: {
-          phaseType: this.dayPhase,
-          nextPhaseAt: this.lastUpdate + config.game.phaseCount[this.dayPhase],
-        },
+    const changePhasePacket = makePacket(config.packetType.S_GAME_PHASE_UPDATE_NOTIFICATION, {
+      gameState: {
+        phaseType: this.dayPhase,
+        nextPhaseAt: this.lastUpdate + config.game.phaseCount[this.dayPhase],
       },
-    ];
+    });
 
     this.broadcast(changePhasePacket);
   }
@@ -498,8 +478,12 @@ class Game {
   addWaveMonster() {
     const monstersData = [];
     const { monster: monsterAsset } = getGameAssets();
-    const waveMonsterSize = Math.min(config.game.monster.waveMaxMonsterCount, this.waveCount);
-    this.waveCount += 2;
+    // const waveMonsterSize = Math.min(config.game.monster.waveMaxMonsterCount, this.waveCount);
+    // this.waveCount += 2;
+    const waveMonsterSize = Math.min(
+      config.game.monster.waveMaxMonsterCount,
+      this.waveCount * 2 + 3,
+    );
 
     for (let i = 1; i <= waveMonsterSize; i++) {
       const monsterId = this.monsterIndex++;
@@ -513,36 +497,75 @@ class Game {
           monsterId,
           monsterCode: data.code,
         });
-      } else {
-        this.bossMonsterWaveCount--;
-
-        const monsterList = [0, 1, 3, 4, 5];
-        // 몬스터 데이터 뽑기
-        const codeIdx = Math.floor(Math.random() * monsterList.length);
-        const data = monsterAsset.data[monsterList[codeIdx]];
-        //this.monsters.set(monsterId, waveMonster);
-
-        // 몬스터 id와 code 저장
-        monstersData.push({
-          monsterId,
-          monsterCode: data.code,
-        });
       }
+      // else {
+      //   this.bossMonsterWaveCount--;
+
+      //   const monsterList = [0, 1, 3, 4, 5];
+      //   // 몬스터 데이터 뽑기
+      //   const codeIdx = Math.floor(Math.random() * monsterList.length);
+      //   const data = monsterAsset.data[monsterList[codeIdx]];
+      //   //this.monsters.set(monsterId, waveMonster);
+
+      //   // 몬스터 id와 code 저장
+      //   monstersData.push({
+      //     monsterId,
+      //     monsterCode: data.code,
+      //   });
+      // }
+      else {
+        if (this.waveCount === 1 || this.waveCount === 2) {
+          const monsterList = [0, 1];
+          // 몬스터 데이터 뽑기
+          const codeIdx = Math.floor(Math.random() * monsterList.length);
+          const data = monsterAsset.data[monsterList[codeIdx]];
+          //this.monsters.set(monsterId, waveMonster);
+
+          // 몬스터 id와 code 저장
+          monstersData.push({
+            monsterId,
+            monsterCode: data.code,
+          });
+        } else if (this.waveCount === 3 || this.waveCount === 4) {
+          const monsterList = [0, 1, 3, 4];
+          // 몬스터 데이터 뽑기
+          const codeIdx = Math.floor(Math.random() * monsterList.length);
+          const data = monsterAsset.data[monsterList[codeIdx]];
+          //this.monsters.set(monsterId, waveMonster);
+
+          // 몬스터 id와 code 저장
+          monstersData.push({
+            monsterId,
+            monsterCode: data.code,
+          });
+        } else {
+          const monsterList = [0, 1, 3, 4, 5];
+          // 몬스터 데이터 뽑기
+          const codeIdx = Math.floor(Math.random() * monsterList.length);
+          const data = monsterAsset.data[monsterList[codeIdx]];
+          //this.monsters.set(monsterId, waveMonster);
+
+          // 몬스터 id와 code 저장
+          monstersData.push({
+            monsterId,
+            monsterCode: data.code,
+          });
+        }
+      }
+      this.waveCount += 1;
     }
 
+    //console.log(monstersData.length);
     for (const data of monstersData) {
-      // console.log(data);
+      //console.log(`${data.length}`);
     }
 
-    const waveMonsterSpawnRequestPacket = [
-      config.packetType.S_MONSTER_SPAWN_REQUEST,
-      {
-        monsters: monstersData,
-      },
-    ];
+    const waveMonsterSpawnRequestPacket = makePacket(config.packetType.S_MONSTER_SPAWN_REQUEST, {
+      monsters: monstersData,
+    });
 
-    const owner = this.getUserById(this.ownerId);
-    owner.sendPacket(waveMonsterSpawnRequestPacket);
+    const owner = this.getPlayerById(this.ownerId);
+    owner.user.socket.write(waveMonsterSpawnRequestPacket);
   }
 
   //웨이브 몬스터 생성1
@@ -615,12 +638,28 @@ class Game {
   }
 
   // 아이템 박스 생성
-  createItemBox() {
+  createItemBox(itemBoxGrade) {
+
+    let objectCode = 2;
+    switch (itemBoxGrade) {
+      case 'D':
+        objectCode = 2;
+        break;
+      case 'C':
+        objectCode = 3;
+        break;
+      case 'A':
+        objectCode = 4;
+        break;
+      default:
+        break;
+    }
+
     const boxId = this.itemManager.createBoxId();
-    const itemBox = new ItemBox(boxId);
+    const itemBox = new ItemBox(boxId,objectCode,itemBoxGrade);
 
     // 랜덤 아이템 생성 및 박스에 추가
-    const items = this.itemManager.generateRandomItems();
+    const items = this.itemManager.generateRandomItems(itemBoxGrade);
     items.forEach((item, index) => {
       itemBox.itemList.splice(index, 1, {
         itemCode: item.itemData.itemCode,
@@ -629,7 +668,7 @@ class Game {
     });
 
     const data = {
-      ObjectData: { objectId: itemBox.id, objectCode: 2 },
+      ObjectData: { objectId: itemBox.id, objectCode: itemBox.objectCode },
       itemData: itemBox.itemList,
       x: itemBox.x,
       y: itemBox.y,
@@ -645,11 +684,31 @@ class Game {
     //     console.log( `아이템: ${JSON.stringify(item)}`);
     //     console.log( `아이템코드: ${item.itemCode}, 개수: ${item.count}`);
     //   }
+
     // });
 
     return data;
   }
+  createObject(name){
+    switch (name) {
+      case "grass":
+        const id = this.itemManager.createObjectId();
+        const grass = new Grass(id);
+        const data = {
+          ObjectData: { objectId: grass.id, objectCode: grass.objectCode },
+          itemData: grass.dropItems,
+          x: grass.x,
+          y: grass.y,
+        };
+        return data;
+        break;
+    
+      default:
+        break;
+    }
 
+
+  }
   // 초기 아이템 생성 - 테스트
   createInitialItems() {
     // 1번과 101번 아이템 고정으로 생성

@@ -16,13 +16,13 @@ class ItemManager {
     this.dropTable = dropTable.data;
     this.foodData = food.data;
     this.weaponData = weapon.data;
-    this.lastBoxId = 1; // 마지막으로 생성된 박스의 ID
+    this.lastObjectId = 1; // 마지막으로 생성된 박스의 ID
   }
 
   // 박스 ID 생성
-  createBoxId() {
-    this.lastBoxId += 1;
-    return this.lastBoxId;
+  createObjectId() {
+    this.lastObjectId += 1;
+    return this.lastObjectId;
   }
 
   // 아이템 ID 생성

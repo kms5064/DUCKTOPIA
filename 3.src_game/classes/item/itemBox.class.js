@@ -1,12 +1,11 @@
 import CustomError from '../../utils/error/customError.js';
+import DestructibleObjectBase from '../base/destructibleObjectBase.class.js';
+import { ITEM_BOX_MAX_HP } from '../../config/constants/objects.js';
 
-class ItemBox {
-  constructor(boxId) {
-    this.id = boxId;
-    this.objectCode = 2;
-    this.x = 0;
-    this.y = 0;
-    //this.hp = ITEM_BOX_HP;
+class ItemBox extends DestructibleObjectBase{
+  constructor(id,objectCode,grade) {
+    super(id,objectCode,ITEM_BOX_MAX_HP);
+    this.grade = grade;
     this.itemList = Array.from({ length: 8 }, () => 0);
     this.occupied = null; //점유중 플레이어아이디
   }
@@ -48,7 +47,7 @@ class ItemBox {
       existItem.count += count;
       player.removeItem(itemCode, count);
       return existItem;
-    } else {
+    } else if(emptyIndex !==-1){
       const item = { itemCode: itemCode, count: count };
       this.itemList.splice(emptyIndex, 1, item);
       player.removeItem(itemCode, count);
@@ -65,10 +64,6 @@ class ItemBox {
     [this.itemList[index1], this.itemList[index2]] = [this.itemList[index2], this.itemList[index1]];
   }
 
-  setPosition(x, y) {
-    this.x = x;
-    this.y = y;
-  }
 }
 
 export default ItemBox;
