@@ -7,6 +7,12 @@ class DestructibleObjectBase{
         this.y=0
         this.dropItem = Array.from({ length: 4 }, () => 0);
     }
+    /*
+    objectCode
+    1 = core
+    2~4 = itemBox
+    5 = grass
+    */
 
 
     getObject(){}
