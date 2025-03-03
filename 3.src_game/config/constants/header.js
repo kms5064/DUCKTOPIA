@@ -62,6 +62,9 @@ export const PACKET_TYPE = {
   S_PLAYER_GET_ITEM_NOTIFICATION: [4022, 'playerGetItemNotification'],
   //---- 추가 완료
   S_PLAYER_HUNGER_UPDATE_NOTIFICATION: [4023, 'playerHungerUpdateNotification'],
+  S_PLAYER_CHATTING_NOTIFICATION: [4024, 'playerChattingNotification'],
+  S_PLAYER_REVIVAL_NOTIFICATION: [4025, 'playerRevivalNotification'],
+  //----- 채팅과 부활 추가
 
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],

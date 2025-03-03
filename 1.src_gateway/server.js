@@ -9,8 +9,8 @@ const server = net.createServer(onConnection);
 const startServer = async () => {
   await InitServer();
 
-  server.listen(config.server.port, config.server.host, () => {
-    console.log('[게이트웨이] 서버 시작!!', config.server.port);
+  server.listen(9999, config.server.host, () => {
+    console.log('[게이트웨이] 서버 시작!!', 9999);
   });
 };
 

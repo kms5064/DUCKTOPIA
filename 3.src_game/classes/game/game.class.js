@@ -45,6 +45,8 @@ class Game {
       3: [7, 8], // 중앙 근접 3
     };
 
+    this.revivalList = [];
+
     // 시간
     this.lastUpdate = 0;
     this.monsterLastUpdate = Date.now();
@@ -53,6 +55,7 @@ class Game {
     this.itemManager = new ItemManager();
     this.bossMonsterWaveCount = 20;
     this.waveCount = 3;
+
   }
 
   /**************
@@ -319,6 +322,8 @@ class Game {
   monsterDisCovered() {
     const monsterDiscoverPayload = [];
     for (const [monsterId, monster] of this.monsters) {
+      if (monster.AwakeCoolTimeCheck()) continue;
+
       // 대상이 없는 몬스터만
       let distance = Infinity;
       let inputId = 0;
@@ -530,9 +535,9 @@ class Game {
       }
     }
 
-    for (const data of monstersData) {
-      // console.log(data);
-    }
+    // for (const data of monstersData) {
+    //   // console.log(data);
+    // }
 
     const waveMonsterSpawnRequestPacket = [
       config.packetType.S_MONSTER_SPAWN_REQUEST,
@@ -610,6 +615,29 @@ class Game {
         this.addWaveMonster();
       }
 
+      if (this.revivalList.length > 0 && this.dayPhase === DayPhase.DAY) {
+        const respawndistance = 5;
+
+        for (const playerId of this.revivalList) {
+          const degree = (Math.random() * 360) * (Math.PI / 180);//360도 내에서 출력
+          const dx = respawndistance * Math.sin(degree) + this.corePosition.x;
+          const dy = respawndistance * Math.cos(degree) + this.corePosition.y;
+          //const payload = player.revival(dx, dy);
+          this.users.get(playerId).revival();
+
+          const revivalPayloadInfos = [config.packetType.S_PLAYER_REVIVAL_NOTIFICATION, {
+            playerId: playerId,
+            position: {
+              x: dx,
+              y: dy
+            }
+          }];
+
+          this.broadcast(revivalPayloadInfos);
+        }
+      }
+
+
       this.dayCounter = 0;
     }
   }
@@ -663,6 +691,10 @@ class Game {
         count: 1,
       },
     ];
+  }
+
+  setRevivalList(playerId) {
+    this.revivalList.push(playerId);
   }
 }
 

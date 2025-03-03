@@ -49,7 +49,6 @@ class Monster extends MovableObjectBase {
   setStartPosition(x, y) {
     this.startPoint_x = x;
     this.startPoint_y = y;
-    this.setPosition(x, y);
   }
 
   getAttack() {
@@ -130,15 +129,13 @@ class Monster extends MovableObjectBase {
       case 201:
       case 202:
       case 203:
-      case 204:
         lostDistance = 1.5;
         break;
+      case 204:
       case 205:
-        lostDistance = 2;
+        lostDistance = 5;
         break;
       case 206:
-        lostDistance = 2.5;
-        break;
       case 207:
         lostDistance = 3;
         break;
@@ -157,7 +154,22 @@ class Monster extends MovableObjectBase {
       targetHp <= 0 ||
       distanceFromStartPoint > lostDistance * 2 + this.awakeRange
     ) {
-      this.monsterAwakeCoolTime = 2000; //2초에서 3초 정도 인식을 하지 않도록 만든다.
+      switch (this.code) {
+        case 201:
+        case 202:
+        case 203:
+          this.monsterAwakeCoolTime = 2000;//2초에서 3초 정도 인식을 하지 않도록 만든다.
+          break;
+        case 204:
+        case 205:
+          this.monsterAwakeCoolTime = 4000;//원거리 계통 캐릭터들은 좀 길게 텀을 주자.
+          break;
+        case 206:
+        case 207:
+        case 208:
+          this.monsterAwakeCoolTime = 3000;//보스 몬스터와 암살자 타입은 인식 쿨타임이 없는 걸로
+          break;
+      }
       this.distanceBetweenPlayer = Infinity;
       this.targetPlayer = null;
       return true;
@@ -166,6 +178,8 @@ class Monster extends MovableObjectBase {
       return false;
     }
   }
+
+
 
   //0보다 큰 값의 시간 값들을 체크하기
   CoolTimeCheck(deltaTime) {
