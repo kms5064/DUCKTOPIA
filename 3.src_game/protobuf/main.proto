@@ -390,6 +390,9 @@ message S2CPlayerCloseBoxNotification {
 // 게임 종료
 message S2CGameOverNotification {}
 
+//게임 승리
+message S2CGameClearNotification{}
+
 // 에러 처리
 message S2CErrorNotification {
   string errorMessage = 1;
@@ -546,6 +549,7 @@ message GamePacket {
 
     // 게임 오버
     S2CGameOverNotification gameOverNotification = 43;
+    S2CGameClearNotification gameClearNotification = 999;
 
     // 에러
     S2CErrorNotification errorNotification = 44;
