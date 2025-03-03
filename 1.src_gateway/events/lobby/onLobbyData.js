@@ -8,6 +8,7 @@ import makePacket from '../../utils/packet/makePacket.js';
 
 const onLobbyData = (socket) => async (data) => {
   // console.log('로비서버 데이터 수신');
+  // console.time('check');
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
@@ -41,7 +42,7 @@ const onLobbyData = (socket) => async (data) => {
 
       // 값 추출 및 버전 검증
       const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
-      if (version !== config.client.version) continue;
+      if (version !== config.client.version) break;
 
       const userId = +packet.toString(
         'utf8',
@@ -67,16 +68,19 @@ const onLobbyData = (socket) => async (data) => {
         continue;
       }
 
-      // 클라이언트 패킷 전달
-      const packetInfo = Object.values(config.packetType).find(
-        ([type, name]) => type === packetType,
-      );
-
       const user = userSession.getUserByID(userId);
       if (!user) continue;
 
-      const resPacket = makePacket(packetInfo, null, payloadBuffer);
+      const header = packet.subarray(
+        0,
+        headerLength - (userIdLengthByte + userIdByte + payloadLengthByte),
+      );
+      const payload = packet.subarray(headerLength - payloadLengthByte);
+      const resPacket = Buffer.concat([header, payload]);
+
       user.socket.write(resPacket);
+      // console.log('로비 서버 연결');
+      // console.timeEnd('check');
     } catch (error) {
       errorHandler(socket, error);
     }

@@ -7,6 +7,7 @@ import makePacket from '../../utils/packet/makePacket.js';
 
 const onGameData = (socket) => async (data) => {
   // console.log('게임서버 데이터 수신');
+  // console.time('check');
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
@@ -33,7 +34,7 @@ const onGameData = (socket) => async (data) => {
         defaultLength + versionByte + userIdLengthByte + userIdByte + payloadLengthByte;
 
       // buffer의 길이가 충분한 동안 실행
-      if (socket.buffer.length < headerLength + payloadByte) continue;
+      if (socket.buffer.length < headerLength + payloadByte) break;
       const packet = socket.buffer.subarray(0, headerLength + payloadByte);
       // 남은 패킷 buffer 재할당
       socket.buffer = socket.buffer.subarray(headerLength + payloadByte);
@@ -60,16 +61,19 @@ const onGameData = (socket) => async (data) => {
         continue;
       }
 
-      // 클라이언트 패킷 전달
-      const packetInfo = Object.values(config.packetType).find(
-        ([type, name]) => type === packetType,
-      );
-
       const user = userSession.getUserByID(userId);
       if (!user) continue;
 
-      const resPacket = makePacket(packetInfo, null, payloadBuffer);
+      const header = packet.subarray(
+        0,
+        headerLength - (userIdLengthByte + userIdByte + payloadLengthByte),
+      );
+      const payload = packet.subarray(headerLength - payloadLengthByte);
+      const resPacket = Buffer.concat([header, payload]);
+
       user.socket.write(resPacket);
+      // console.log('클라이언트 연결');
+      // console.timeEnd('check');
     } catch (error) {
       errorHandler(socket, error);
     }

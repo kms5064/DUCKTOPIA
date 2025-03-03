@@ -37,7 +37,7 @@ subscriber.on('error', (err) => {
 });
 
 // Sub 함수 매핑
-await subscriber.subscribe('ServerOn', connectServer);
-await subscriber.subscribe('UserGameEnd', updateInGame);
+await subscriber.subscribe(config.redis.custom + '/ServerOn', connectServer);
+await subscriber.subscribe(config.redis.custom + '/UserGameEnd', updateInGame);
 
 export { redisClient, subscriber };
