@@ -56,7 +56,7 @@ import {
   BOX_MAX_SLOTS,
   ITEM_MIN_COUNT,
   ITEM_MAX_STACK,
-} from './constants/itemBox.js';
+} from './constants/objects.js';
 import { ITEM_PICKUP_RANGE } from './constants/item.js';
 
 import { DAY_TIME, NIGHT_TIME, DayPhase } from './constants/game.js';

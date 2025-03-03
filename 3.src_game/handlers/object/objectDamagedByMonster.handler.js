@@ -2,6 +2,7 @@ import { config } from '../../config/config.js';
 import { gameSession, userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
 
+//코어를 포함한 몬스터와 적대적인 구조물들
 const objectDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
   const { objectId, monsterId } = payload;
 
