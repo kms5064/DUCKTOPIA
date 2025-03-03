@@ -8,6 +8,7 @@ import { formatDate } from '../utils/dateFormatter.js';
 const onData = (socket) => async (data) => {
   // console.log(`[클라이언트] 데이터 수신 ${socket.id} 패킷 ${data}, `);
   // console.log(`${formatDate(new Date())} [클라이언트] 데이터 수신 ${socket.id} 패킷`);
+  console.time('check');
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
@@ -16,7 +17,6 @@ const onData = (socket) => async (data) => {
   const payloadLengthByte = config.header.payloadLengthByte;
   let payloadByte = 0;
   const defaultLength = packetTypeByte + versionLengthByte;
-  let idx = 1;
 
   try {
     while (socket.buffer.length >= defaultLength) {
@@ -63,6 +63,8 @@ const onData = (socket) => async (data) => {
       const payload = gamePacket[gamePacket.payload];
 
       await handler({ socket, payload, packetType });
+      console.log("클라이언트 연결 응답시간")
+      console.timeEnd('check');
     }
   } catch (e) {
     errorHandler(socket, e);
