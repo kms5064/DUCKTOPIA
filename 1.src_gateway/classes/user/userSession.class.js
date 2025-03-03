@@ -34,20 +34,22 @@ class UserSession {
   }
 
   /* 나간 유저 세션에서 제거하는 메서드 */
-  deleteUser(socket) {
-    const user = this.users.get(socket);
+  deleteUser(socketId) {
+    const user = this.users.get(socketId);
     const packet = makeServerPacket(config.packetType.LOGOUT_CAST, {}, user.id);
 
-    // 서버들에게 알림주기
-    const lobby = config.redis.custom + config.server.lobbyServer;
-    const lobbyServer = serverSession.getServerById(lobby);
-    lobbyServer.socket.write(packet);
+    // 로그인 성공 시 Lobby에 유저가 있으므로 삭제요청
+    if(user.id) {
+      const lobby = config.redis.custom + config.server.lobbyServer;
+      const lobbyServer = serverSession.getServerById(lobby);
+      lobbyServer.socket.write(packet);
+    }
 
     const gameServer = serverSession.getServerById(user.gameServer);
     if (gameServer) gameServer.socket.write(packet);
 
     this.logins.delete(user.email);
-    this.users.delete(socket);
+    this.users.delete(socketId);
   }
 
   /* 특정 유저 조회하는 메서드 */
