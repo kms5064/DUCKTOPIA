@@ -1,9 +1,8 @@
 import { config } from '../config/config.js';
 import handlers from '../handlers/index.js';
-import { getProtoMessages } from '../init/loadProtos.js';
 import { errorHandler } from '../utils/error/errorHandler.js';
+import { getProtoMessages } from '../init/loadProtos.js';
 import onEnd from './onEnd.js';
-import { formatDate } from '../utils/dateFormatter.js';
 
 const onData = (socket) => async (data) => {
   // console.log(`[클라이언트] 데이터 수신 ${socket.id} 패킷 ${data}, `);
@@ -57,12 +56,12 @@ const onData = (socket) => async (data) => {
       // }
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
-      const proto = getProtoMessages().GamePacket;
       const handler = handlers[packetType];
-      const gamePacket = proto.decode(payloadBuffer);
-      const payload = gamePacket[gamePacket.payload];
+      // const proto = getProtoMessages().GamePacket;
+      // const gamePacket = proto.decode(payloadBuffer);
+      // const payload = gamePacket[gamePacket.payload];
 
-      await handler({ socket, payload, packetType });
+      await handler({ socket, payloadBuffer, packetType });
     }
   } catch (e) {
     errorHandler(socket, e);

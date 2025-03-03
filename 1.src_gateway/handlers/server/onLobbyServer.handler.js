@@ -3,7 +3,7 @@ import { serverSession, userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
 import makeServerPacket from '../../utils/packet/makeServerPacket.js';
 
-const onLobbyServerHandler = ({ socket, payload, packetType }) => {
+const onLobbyServerHandler = ({ socket, payloadBuffer, packetType }) => {
   // 유저 객체 조회
   const user = userSession.getUser(socket.id);
   if (!user || !user.id) {
@@ -15,7 +15,7 @@ const onLobbyServerHandler = ({ socket, payload, packetType }) => {
   }
 
   const packetInfo = Object.values(config.packetType).find(([type, name]) => type === packetType);
-  const packet = makeServerPacket(packetInfo, payload, user.id);
+  const packet = makeServerPacket(packetInfo, { payloadBuffer }, user.id);
   const lobbyServer = serverSession.getServerById(config.redis.custom + config.server.lobbyServer);
   lobbyServer.socket.write(packet);
 };

@@ -52,18 +52,18 @@ const onLobbyData = (socket) => async (data) => {
       const packetType = packet.readUInt16BE(0);
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
-      const proto = getProtoMessages().GamePacket;
-      const gamePacket = proto.decode(payloadBuffer);
-      const payload = gamePacket[gamePacket.payload];
+      // const proto = getProtoMessages().GamePacket;
+      // const gamePacket = proto.decode(payloadBuffer);
+      // const payload = gamePacket[gamePacket.payload];
 
       if (packetType === config.packetType.PREPARE_GAME_SERVER[0]) {
-        gameStartHandler({ socket, payload, userId });
+        gameStartHandler({ socket, payloadBuffer, userId });
         // 서버 -> 서버 이므로 클라이언트에게 전송 X
         continue;
       }
 
       if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) {
-        latencyCheckHandler({ socket, payload, userId });
+        latencyCheckHandler({ socket, payloadBuffer, userId });
         continue;
       }
 
@@ -75,7 +75,7 @@ const onLobbyData = (socket) => async (data) => {
       const user = userSession.getUserByID(userId);
       if (!user) continue;
 
-      const resPacket = makePacket(packetInfo, payload);
+      const resPacket = makePacket(packetInfo, payloadBuffer);
       user.socket.write(resPacket);
     } catch (error) {
       errorHandler(socket, error);
