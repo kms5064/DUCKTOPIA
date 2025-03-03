@@ -62,6 +62,13 @@ export const PACKET_TYPE = {
   S_PLAYER_GET_ITEM_NOTIFICATION: [4022, 'playerGetItemNotification'],
   //---- 추가 완료
   S_PLAYER_HUNGER_UPDATE_NOTIFICATION: [4023, 'playerHungerUpdateNotification'],
+  //03추가
+  S_PLAYER_CHATTING_REQUEST: [4024, 'playerChattingRequest'],
+  S_PLAYER_CHATTING_NOTIFICATION: [4025, 'playerChattingNotification'],
+  S_PLAYER_REVIVAL_NOTIFICATION: [4026, 'playerRevivalNotification'],
+  C_PLAYER_SET_OBJECT_REQUEST: [4027, 'playerSetObjectRequest'],
+  S_PLAYER_SET_OBJECT_RESPONSE: [4028, 'playerSetObjectResponse'],
+  S_OBJECT_SET_NOTIFICATION: [4029, 'objectSetNotification'],
 
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
@@ -79,6 +86,9 @@ export const PACKET_TYPE = {
   S_OBJECT_HP_UPDATE_NOTIFICATION: [6001, 'objectHpUpdateNotification'],
   C_OBJECT_DAMAGED_BY_MONSTER_REQUEST: [6002, 'objectDamagedByMonsterRequest'],
   S_GAME_OVER_NOTIFICATION: [6003, 'gameOverNotification'],
+  //03추가
+  C_OBJECT_DAMAGED_BY_PLAYER_REQUEST: [6004, 'objectDamagedByPlayerRequest'],
+  S_OBJECT_DESTROY_NOTIFICATION: [6005, 'objectDestroyNotification'],
 
   // 에러
   S_ERROR_NOTIFICATION: [7001, 'errorNotification'],
