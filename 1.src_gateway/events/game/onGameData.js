@@ -7,7 +7,7 @@ import makePacket from '../../utils/packet/makePacket.js';
 
 const onGameData = (socket) => async (data) => {
   // console.log('게임서버 데이터 수신');
-  console.time('check');
+  // console.time('check');
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
@@ -72,8 +72,8 @@ const onGameData = (socket) => async (data) => {
       const resPacket = Buffer.concat([header, payload]);
 
       user.socket.write(resPacket);
-      console.log('클라이언트 연결');
-      console.timeEnd('check');
+      // console.log('클라이언트 연결');
+      // console.timeEnd('check');
     } catch (error) {
       errorHandler(socket, error);
     }

@@ -8,7 +8,7 @@ import makePacket from '../../utils/packet/makePacket.js';
 
 const onLobbyData = (socket) => async (data) => {
   // console.log('로비서버 데이터 수신');
-  console.time('check');
+  // console.time('check');
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
@@ -79,8 +79,8 @@ const onLobbyData = (socket) => async (data) => {
       const resPacket = Buffer.concat([header, payload]);
 
       user.socket.write(resPacket);
-      console.log('로비 서버 연결');
-      console.timeEnd('check');
+      // console.log('로비 서버 연결');
+      // console.timeEnd('check');
     } catch (error) {
       errorHandler(socket, error);
     }
