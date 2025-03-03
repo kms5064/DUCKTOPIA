@@ -7,7 +7,7 @@ const server = net.createServer(onConnection);
 
 const startServer = async () => {
   await InitServer();
-  server.listen(8888, config.server.host, () => {
+  server.listen(config.server.port, config.server.host, () => {
     console.log('[로비] 서버 시작!!', 8888);
   });
 };
