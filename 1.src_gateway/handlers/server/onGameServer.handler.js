@@ -3,7 +3,7 @@ import { serverSession, userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
 import { config } from '../../config/config.js';
 
-const onGameServerHandler = ({ socket, payload, packetType }) => {
+const onGameServerHandler = ({ socket, payloadBuffer, packetType }) => {
   // 유저 객체 조회
   const user = userSession.getUser(socket.id);
   if (!user || !user.id) {
@@ -14,7 +14,7 @@ const onGameServerHandler = ({ socket, payload, packetType }) => {
   }
 
   const packetInfo = Object.values(config.packetType).find(([type, name]) => type === packetType);
-  const packet = makeServerPacket(packetInfo, payload, user.id);
+  const packet = makeServerPacket(packetInfo, null, payloadBuffer, user.id);
   const gameServer = serverSession.getServerById(user.gameServer);
   gameServer.socket.write(packet);
 };

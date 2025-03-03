@@ -2,9 +2,14 @@ import makeServerPacket from '../../utils/packet/makeServerPacket.js';
 import { serverSession, userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
 import { config } from '../../config/config.js';
+import { getProtoMessages } from '../../init/loadProtos.js';
 import { redisClient } from '../../db/redis/redis.js';
 
-const gameStartHandler = async ({ socket, payload, userId }) => {
+const gameStartHandler = async ({ socket, payloadBuffer, userId }) => {
+  const proto = getProtoMessages().GamePacket;
+  const gamePacket = proto.decode(payloadBuffer);
+  const payload = gamePacket[gamePacket.payload];
+
   // 방장의 상태 확인
   const user = userSession.getUserByID(userId);
   if (!user || !user.id) throw new CustomError('유저 정보가 없습니다.');
@@ -36,7 +41,8 @@ const gameStartHandler = async ({ socket, payload, userId }) => {
 
   const reqPacket = makeServerPacket(
     config.packetType.JOIN_SERVER_REQUEST,
-    { room: payload.room },
+    null,
+    payloadBuffer,
     user.id,
   );
 

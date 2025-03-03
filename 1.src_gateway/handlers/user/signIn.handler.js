@@ -4,10 +4,15 @@ import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
 import bcrypt from 'bcrypt';
 import { config } from '../../config/config.js';
+import { getProtoMessages } from '../../init/loadProtos.js';
 import makeServerPacket from '../../utils/packet/makeServerPacket.js';
 
-const signInHandler = async ({ socket, payload }) => {
-  const { email, password } = payload;
+const signInHandler = async ({ socket, payloadBuffer }) => {
+  // const { email, password } = payload;
+
+  const proto = getProtoMessages().GamePacket;
+  const gamePacket = proto.decode(payloadBuffer);
+  const { email, password } = gamePacket[gamePacket.payload];
 
   // 1. 사용자 존재 여부 DB에서 확인
   const userData = await findUserByEmail(email);
@@ -42,6 +47,7 @@ const signInHandler = async ({ socket, payload }) => {
       success: true,
       user: user.getUserData(),
     },
+    null,
     userData.id,
   );
 

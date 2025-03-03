@@ -4,9 +4,6 @@ import { config } from './0.src/config/config.js';
 
 // 더미 클라이언트
 
-let gameServerPacket;
-let monsters;
-
 class Client {
   constructor(id, password, name, host, port) {
     this.id = id;
@@ -15,14 +12,22 @@ class Client {
     this.socket = new net.Socket();
     this.buffer = Buffer.alloc(0);
     this.infos = {};
+    this.interval = null;
+    this.lastUpdated = 0;
+    this.latency = [];
 
     // this.socket.connect(config.server.port, config.server.host, this.onConnection);
     this.socket.connect(port, host, this.onConnection);
+    this.socket.on('error', this.onError);
     this.socket.on('data', this.onData);
   }
 
   onConnection = async () => {
     console.log(`${this.id} 연결 성공`);
+  };
+
+  onError = (err) => {
+    console.error(err);
   };
 
   // 패킷 수신
@@ -41,7 +46,7 @@ class Client {
       payloadByte = this.buffer.readUInt32BE(defaultLength + versionByte);
       const headerLength = defaultLength + versionByte + payloadLengthByte;
       // buffer의 길이가 충분한 동안 실행
-      if (this.buffer.length < headerLength + payloadByte) continue;
+      if (this.buffer.length < headerLength + payloadByte) break;
       // 패킷 분리
       const packet = this.buffer.subarray(0, headerLength + payloadByte);
       // 남은 패킷 buffer 재할당
@@ -52,23 +57,35 @@ class Client {
       if (version !== config.client.version) continue;
       const packetType = packet.readUInt16BE(0);
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
+
       try {
         const proto = getProtoMessages().GamePacket;
         const gamePacket = proto.decode(payloadBuffer);
         const payload = gamePacket[gamePacket.payload];
 
-        console.log('패킷 수신', packetType, payload);
+        const now = Date.now();
+        const latency = now - this.lastUpdated;
+        this.latency.push(latency);
+        const avg = Math.round(
+          this.latency.reduce((acc, cur, idx, arr) => acc + cur / arr.length, 0),
+        );
+
+        console.log(
+          `[패킷 수신] ${this.name}의 왕복시간 ${latency} ms / 평균 ${avg} ms / ${payload ? true : false}`,
+        );
         switch (packetType) {
           case config.packetType.LOGIN_RESPONSE[0]:
-            // await this.createRoomRequest();
+            await this.createRoomRequest();
             break;
-          case config.packetType.GAME_INFOS_REQUEST[0]:
-            monsters = payload.monsters;
-            monsters.forEach((monster) => {
-              monster.x = 5;
-              monster.y = 10;
-            });
-            await this.gameStart(monsters, payload.objects);
+          case config.packetType.CREATE_ROOM_RESPONSE[0]:
+            await this.prepareRequest();
+            console.log('완료');
+            break;
+          case config.packetType.PREPARE_GAME_NOTIFICATION[0]:
+            await this.moveUpdate();
+            break;
+          case config.packetType.S_PLAYER_POSITION_UPDATE_NOTIFICATION[0]:
+            await this.moveUpdate();
             break;
         }
       } catch (e) {
@@ -110,11 +127,14 @@ class Client {
       payloadLengthBuffer,
       payloadBuffer,
     ]);
+    this.lastUpdated = Date.now();
     this.socket.write(packet);
   }
 
   async end() {
     await this.delay(2000);
+    clearInterval(this.interval);
+    this.interval = null;
     this.socket.end();
   }
 
@@ -140,12 +160,10 @@ class Client {
   }
 
   async prepareRequest() {
-    const payload = {};
-    this.sendPacket(config.packetType.PREPARE_GAME_REQUEST, payload);
+    this.sendPacket(config.packetType.PREPARE_GAME_REQUEST, {});
   }
 
   async gameStart(monsters, objects) {
-    console.log('#5');
     const payload = { monsters, objects };
     this.sendPacket(config.packetType.START_GAME_REQUEST, payload);
   }
@@ -159,6 +177,14 @@ class Client {
     };
     this.sendPacket(config.packetType.JOIN_SERVER_REQUEST, payload);
   }
+
+  moveUpdate = async () => {
+    const payload = {
+      x: 5,
+      y: 5,
+    };
+    this.sendPacket(config.packetType.C_PLAYER_POSITION_UPDATE_REQUEST, payload);
+  };
 }
 
 // 테스트용 함수 모음
@@ -169,10 +195,10 @@ const registerTest = async (client_count = 1) => {
       const id = `dummy${idx}@email.com`;
       const password = '123456';
       const name = `dummy${idx}`;
-      const client = new Client(id, password, name, config.server.host, 5556);
-
+      // const client = new Client(id, password, name, config.server.host, 5555);
+      const client = new Client(id, password, name, '127.0.0.1', 5555);
       await client.registerRequest();
-      await client.end();
+      // await client.end();
     }),
   );
 };
@@ -184,10 +210,10 @@ const loginTest = async (client_count = 1) => {
       const id = `dummy${idx}@email.com`;
       const password = '123456';
       const name = `dummy${idx}`;
-      const client = new Client(id, password, name, config.server.host, 5556);
+      const client = new Client(id, password, name, config.server.host, 5555);
 
       await client.loginRequest();
-      await client.end();
+      // await client.end();
     }),
   );
 };
@@ -201,18 +227,15 @@ const customTest = async (client_count = 1) => {
       const name = `dummy${idx}`;
 
       // Lobby 서버 연결
-      const client = new Client(id, password, name, '127.0.0.1', 5556);
+      const client = new Client(id, password, name, '127.0.0.1', 5555);
+      // const client = new Client(id, password, name, '43.201.23.100', 5555);
 
       // 로그인 이후 사용할 메서드 적용
-      console.log('#1');
+
       await client.loginRequest();
-      await client.delay(1000);
-      console.log('#2');
-      await client.createRoomRequest();
-      await client.delay(1000);
-      console.log('#3');
-      await client.prepareRequest();
-      console.log('#4');
+
+      // await client.createRoomRequest();
+      // await client.prepareRequest();
       // await client.gameStart();
       // await client.end();
       // await gameClient.joinRequest();
@@ -221,7 +244,7 @@ const customTest = async (client_count = 1) => {
 };
 
 // 테스트 실행문
-await loadProtos().then(() => {
-  // registerTest(10);
-  customTest(1);
+await loadProtos().then(async () => {
+  // await registerTest(300);
+  customTest(100);
 });

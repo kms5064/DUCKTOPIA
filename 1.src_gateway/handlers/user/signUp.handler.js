@@ -4,6 +4,7 @@ import { createUser } from '../../db/user/user.db.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
 import { config } from '../../config/config.js';
+import { getProtoMessages } from '../../init/loadProtos.js';
 
 const SALT_OR_ROUNDS = 10;
 
@@ -27,7 +28,11 @@ const signUpSchema = Joi.object({
   }),
 });
 
-const signUpHandler = async ({ socket, payload }) => {
+const signUpHandler = async ({ socket, payloadBuffer }) => {
+  const proto = getProtoMessages().GamePacket;
+  const gamePacket = proto.decode(payloadBuffer);
+  const payload = gamePacket[gamePacket.payload];
+
   const { email, password, nickname } = payload;
   const obj = { nickname, email, password };
 

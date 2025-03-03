@@ -77,15 +77,24 @@ class Game {
   gameEnd() {
     clearInterval(this.gameLoop);
     this.gameLoop = null;
+
+    const gameOverNotification = [config.packetType.S_GAME_OVER_NOTIFICATION, {}];
+    this.broadcast(gameOverNotification);
+
+    this.users.forEach((user) => {
+      userSession.deleteUser(user.id);
+      userIds.push(user.id);
+    });
+    // Gateway의 user 정보 업데이트용
+    redisClient.publish(config.redis.custom + '/UserGameEnd', userIds.join(','));
+    // Lobby의 roomId 삭제용
+    redisClient.publish(config.redis.custom + '/RemoveRoom', String(this.id));
   }
 
-  //다른 사람에게 전송(본인 제외)
-  notification(socket, packet) {
-    this.players.forEach((player) => {
-      const playerSocket = player.getUser().getSocket();
-      if (playerSocket !== socket) {
-        playerSocket.write(packet);
-      }
+  // 전체 공지(본인 제외)
+  notification(id, packetInfos) {
+    this.users.forEach((user) => {
+      if (user.id !== id) user.sendPacket(packetInfos);
     });
   }
 
