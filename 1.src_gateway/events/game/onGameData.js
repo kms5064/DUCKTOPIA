@@ -51,12 +51,12 @@ const onGameData = (socket) => async (data) => {
       const packetType = packet.readUInt16BE(0);
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
-      const proto = getProtoMessages().GamePacket;
-      const gamePacket = proto.decode(payloadBuffer);
-      const payload = gamePacket[gamePacket.payload];
+      // const proto = getProtoMessages().GamePacket;
+      // const gamePacket = proto.decode(payloadBuffer);
+      // const payload = gamePacket[gamePacket.payload];
 
       if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) {
-        latencyCheckHandler({ socket, payload, userId });
+        latencyCheckHandler({ socket, payloadBuffer, userId });
         continue;
       }
 
@@ -68,7 +68,7 @@ const onGameData = (socket) => async (data) => {
       const user = userSession.getUserByID(userId);
       if (!user) continue;
 
-      const resPacket = makePacket(packetInfo, payload);
+      const resPacket = makePacket(packetInfo, null, payloadBuffer);
       user.socket.write(resPacket);
     } catch (error) {
       errorHandler(socket, error);

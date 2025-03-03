@@ -39,14 +39,17 @@ class UserSession {
     const packet = makeServerPacket(config.packetType.LOGOUT_CAST, {}, user.id);
 
     // 로그인 성공 시 Lobby에 유저가 있으므로 삭제요청
-    if(user.id) {
+    if (user.id) {
       const lobby = config.redis.custom + config.server.lobbyServer;
       const lobbyServer = serverSession.getServerById(lobby);
       lobbyServer.socket.write(packet);
     }
 
-    const gameServer = serverSession.getServerById(user.gameServer);
-    if (gameServer) gameServer.socket.write(packet);
+    let gameServer = null;
+    if (user.gameServer) {
+      gameServer = serverSession.getServerById(user.gameServer);
+      if (gameServer) gameServer.socket.write(packet);
+    }
 
     this.logins.delete(user.email);
     this.users.delete(socketId);

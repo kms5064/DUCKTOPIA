@@ -1,17 +1,18 @@
 import { config } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 
-function makePacket([packetType, packetTypeName], payload) {
-  const proto = getProtoMessages().GamePacket;
-  let message = null;
-  let payloadBuffer = null;
+function makePacket([packetType, packetTypeName], payload, payloadBuffer = null) {
+  if (!payloadBuffer) {
+    const proto = getProtoMessages().GamePacket;
+    let message = null;
 
-  // payload 생성
-  try {
-    message = proto.create({ [packetTypeName]: payload });
-    payloadBuffer = proto.encode(message).finish();
-  } catch (e) {
-    console.error(e);
+    // payload 생성
+    try {
+      message = proto.create({ [packetTypeName]: payload });
+      payloadBuffer = proto.encode(message).finish();
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   // header 생성
