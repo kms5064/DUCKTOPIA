@@ -50,9 +50,7 @@ const signUpHandler = async ({ socket, payloadBuffer }) => {
   await createUser(nickname, email, hashedPw);
 
   // 4. 패킷 전송
-  const registerResponse = makePacket(config.packetType.REGISTER_RESPONSE, {
-    payload: { success: true },
-  });
+  const registerResponse = makePacket(config.packetType.REGISTER_RESPONSE, { success: true });
   socket.write(registerResponse);
 };
 

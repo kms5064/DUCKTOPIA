@@ -15,7 +15,7 @@ const onLobbyServerHandler = ({ socket, payloadBuffer, packetType }) => {
   }
 
   const packetInfo = Object.values(config.packetType).find(([type, name]) => type === packetType);
-  const packet = makeServerPacket(packetInfo, { payloadBuffer }, user.id);
+  const packet = makeServerPacket(packetInfo, null, payloadBuffer, user.id);
   const lobbyServer = serverSession.getServerById(config.redis.custom + config.server.lobbyServer);
   lobbyServer.socket.write(packet);
 };

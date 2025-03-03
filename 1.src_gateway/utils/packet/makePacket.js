@@ -1,7 +1,7 @@
 import { config } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 
-function makePacket([packetType, packetTypeName], { payload, payloadBuffer = null }) {
+function makePacket([packetType, packetTypeName], payload, payloadBuffer = null) {
   if (!payloadBuffer) {
     const proto = getProtoMessages().GamePacket;
     let message = null;

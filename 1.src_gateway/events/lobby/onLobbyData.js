@@ -75,7 +75,7 @@ const onLobbyData = (socket) => async (data) => {
       const user = userSession.getUserByID(userId);
       if (!user) continue;
 
-      const resPacket = makePacket(packetInfo, payloadBuffer);
+      const resPacket = makePacket(packetInfo, null, payloadBuffer);
       user.socket.write(resPacket);
     } catch (error) {
       errorHandler(socket, error);

@@ -44,11 +44,10 @@ const signInHandler = async ({ socket, payloadBuffer }) => {
   const loginCast = makeServerPacket(
     config.packetType.LOGIN_CAST,
     {
-      payload: {
-        success: true,
-        user: user.getUserData(),
-      },
+      success: true,
+      user: user.getUserData(),
     },
+    null,
     userData.id,
   );
 
@@ -57,10 +56,8 @@ const signInHandler = async ({ socket, payloadBuffer }) => {
 
   // 6. 패킷 전송
   const loginResponse = makePacket(config.packetType.LOGIN_RESPONSE, {
-    payload: {
-      success: true,
-      user: user.getUserData(),
-    },
+    success: true,
+    user: user.getUserData(),
   });
 
   socket.write(loginResponse);

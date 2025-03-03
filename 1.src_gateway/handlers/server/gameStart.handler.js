@@ -41,7 +41,8 @@ const gameStartHandler = async ({ socket, payloadBuffer, userId }) => {
 
   const reqPacket = makeServerPacket(
     config.packetType.JOIN_SERVER_REQUEST,
-    { payloadBuffer },
+    null,
+    payloadBuffer,
     user.id,
   );
 
