@@ -36,6 +36,6 @@ subscriber.on('error', (err) => {
 });
 
 // Sub 함수 매핑
-subscriber.subscribe('RemoveRoom', deleteRoom);
+subscriber.subscribe(config.redis.custom + '/RemoveRoom', deleteRoom);
 
 export { redisClient, subscriber };
