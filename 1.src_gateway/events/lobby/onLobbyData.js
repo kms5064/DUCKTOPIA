@@ -41,7 +41,7 @@ const onLobbyData = (socket) => async (data) => {
 
       // 값 추출 및 버전 검증
       const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
-      if (version !== config.client.version) continue;
+      if (version !== config.client.version) break;
 
       const userId = +packet.toString(
         'utf8',
@@ -67,15 +67,16 @@ const onLobbyData = (socket) => async (data) => {
         continue;
       }
 
-      // 클라이언트 패킷 전달
-      const packetInfo = Object.values(config.packetType).find(
-        ([type, name]) => type === packetType,
-      );
-
       const user = userSession.getUserByID(userId);
       if (!user) continue;
 
-      const resPacket = makePacket(packetInfo, null, payloadBuffer);
+      const header = packet.subarray(
+        0,
+        headerLength - (userIdLengthByte + userIdByte + payloadLengthByte),
+      );
+      const payload = packet.subarray(headerLength - payloadLengthByte);
+      const resPacket = Buffer.concat([header, payload]);
+
       user.socket.write(resPacket);
     } catch (error) {
       errorHandler(socket, error);

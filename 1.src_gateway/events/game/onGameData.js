@@ -33,7 +33,7 @@ const onGameData = (socket) => async (data) => {
         defaultLength + versionByte + userIdLengthByte + userIdByte + payloadLengthByte;
 
       // buffer의 길이가 충분한 동안 실행
-      if (socket.buffer.length < headerLength + payloadByte) continue;
+      if (socket.buffer.length < headerLength + payloadByte) break;
       const packet = socket.buffer.subarray(0, headerLength + payloadByte);
       // 남은 패킷 buffer 재할당
       socket.buffer = socket.buffer.subarray(headerLength + payloadByte);
@@ -60,15 +60,16 @@ const onGameData = (socket) => async (data) => {
         continue;
       }
 
-      // 클라이언트 패킷 전달
-      const packetInfo = Object.values(config.packetType).find(
-        ([type, name]) => type === packetType,
-      );
-
       const user = userSession.getUserByID(userId);
       if (!user) continue;
 
-      const resPacket = makePacket(packetInfo, null, payloadBuffer);
+      const header = packet.subarray(
+        0,
+        headerLength - (userIdLengthByte + userIdByte + payloadLengthByte),
+      );
+      const payload = packet.subarray(headerLength - payloadLengthByte);
+      const resPacket = Buffer.concat([header, payload]);
+
       user.socket.write(resPacket);
     } catch (error) {
       errorHandler(socket, error);
