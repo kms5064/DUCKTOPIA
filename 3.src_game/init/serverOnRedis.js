@@ -40,11 +40,14 @@ const serverOnRedis = async () => {
       .multi()
       .hSet(name, hashData)
       .rPush(mainName, host)
-      .publish('ServerOn', name)
+      .publish(config.redis.custom + '/ServerOn', name)
       .exec();
-  } else {
-    await redisClient.multi().hSet(name, hashData).publish('ServerOn', name).exec();
-  }
+  } else
+    await redisClient
+      .multi()
+      .hSet(name, hashData)
+      .publish(config.redis.custom + '/ServerOn', name)
+      .exec();
 
   gameSession.name = name;
   // 헬스체크 Sub 매핑

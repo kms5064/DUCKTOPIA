@@ -92,9 +92,9 @@ class Game {
       userIds.push(user.id);
     });
     // Gateway의 user 정보 업데이트용
-    redisClient.publish('UserGameEnd', userIds.join(','));
+    redisClient.publish(config.redis.custom + '/UserGameEnd', userIds.join(','));
     // Lobby의 roomId 삭제용
-    redisClient.publish('RemoveRoom', String(this.id));
+    redisClient.publish(config.redis.custom + '/RemoveRoom', String(this.id));
   }
 
   // 전체 공지(본인 제외)

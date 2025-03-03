@@ -1,12 +1,12 @@
 import { config } from '../config/config.js';
 import handlers from '../handlers/index.js';
 import { errorHandler } from '../utils/error/errorHandler.js';
-import { getProtoMessages } from '../init/loadProtos.js';
 import onEnd from './onEnd.js';
 
 const onData = (socket) => async (data) => {
   // console.log(`[클라이언트] 데이터 수신 ${socket.id} 패킷 ${data}, `);
   // console.log(`${formatDate(new Date())} [클라이언트] 데이터 수신 ${socket.id} 패킷`);
+  // console.time('check');
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
@@ -57,6 +57,8 @@ const onData = (socket) => async (data) => {
       // const payload = gamePacket[gamePacket.payload];
 
       await handler({ socket, payloadBuffer, packetType });
+      // console.log('게임 서버 연결');
+      // console.timeEnd('check');
     }
   } catch (e) {
     errorHandler(socket, e);
