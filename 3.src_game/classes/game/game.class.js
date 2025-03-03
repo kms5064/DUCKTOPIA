@@ -322,7 +322,8 @@ class Game {
   monsterDisCovered() {
     const monsterDiscoverPayload = [];
     for (const [monsterId, monster] of this.monsters) {
-      if (monster.AwakeCoolTimeCheck()) continue;
+      //if (monster.AwakeCoolTimeCheck()) continue;
+      console.log(`몬스터 ${monsterId}`);
 
       // 대상이 없는 몬스터만
       let distance = Infinity;
@@ -330,8 +331,10 @@ class Game {
       let inputPlayer = null;
       if (!monster.hasTargetPlayer()) {
         for (const [userId, user] of this.users) {
+          console.log(`유저 : ${userId}`);
           // 대상 찾아보기
           const calculatedDistance = monster.returnCalculateDistance(user.player);
+          console.log(`${monsterId}와 ${userId} 간의 거리 : ${calculatedDistance}`);
 
           if (distance > calculatedDistance) {
             distance = calculatedDistance;
