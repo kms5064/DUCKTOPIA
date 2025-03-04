@@ -15,20 +15,6 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   const game = gameSession.getGame(user.getGameId());
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
 
-  // itemManager 디버깅 로그 추가
-  console.log('[itemManager 데이터 확인]', {
-    hasHelmetData: !!game.itemManager.armorHelmetData,
-    hasTopData: !!game.itemManager.armorTopData,
-    hasBottomData: !!game.itemManager.armorBottomData,
-    hasShoesData: !!game.itemManager.armorShoesData,
-    hasAccessoryData: !!game.itemManager.armorAccessoryData,
-    helmetDataLength: game.itemManager.armorHelmetData?.length || 0,
-    topDataLength: game.itemManager.armorTopData?.length || 0,
-    bottomDataLength: game.itemManager.armorBottomData?.length || 0,
-    shoesDataLength: game.itemManager.armorShoesData?.length || 0,
-    accessoryDataLength: game.itemManager.armorAccessoryData?.length || 0,
-  });
-
   // Notification - 다른 플레이어들에게 전달
   const motionPayload = { playerId: userId, playerDirX, playerDirY };
   const PlayerAttackNotification = [config.packetType.S_PLAYER_ATTACK_NOTIFICATION, motionPayload];
@@ -146,7 +132,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
       items: droppedItems,
     },
   ];
-  console.log('[패킷 전송] S_ITEM_SPAWN_NOTIFICATION 전송');
+  // console.log('[패킷 전송] S_ITEM_SPAWN_NOTIFICATION 전송');
   game.broadcast(itemSpawnNotification);
 };
 

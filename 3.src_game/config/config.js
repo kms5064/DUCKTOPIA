@@ -56,8 +56,15 @@ import {
   BOX_MAX_SLOTS,
   ITEM_MIN_COUNT,
   ITEM_MAX_STACK,
+  OBJECT_CORE_CODE,
 } from './constants/itemBox.js';
-import { ITEM_PICKUP_RANGE } from './constants/item.js';
+import {
+  ITEM_PICKUP_RANGE,
+  MUSTARD_ITEM_CODE,
+  MUSTARD_MATERIAL_CODE1,
+  MUSTARD_MATERIAL_CODE2,
+  MUSTARD_MATERIAL_CODE3,
+} from './constants/item.js';
 
 import { DAY_TIME, NIGHT_TIME, DayPhase } from './constants/game.js';
 
@@ -140,9 +147,14 @@ export const config = {
       boxMaxSlots: BOX_MAX_SLOTS,
       itemMinCount: ITEM_MIN_COUNT,
       itemMaxStack: ITEM_MAX_STACK,
+      objectCoreCode: OBJECT_CORE_CODE,
     },
     item: {
       pickupRange: ITEM_PICKUP_RANGE,
+      mustardMaterialCode1: MUSTARD_MATERIAL_CODE1,
+      mustardMaterialCode2: MUSTARD_MATERIAL_CODE2,
+      mustardMaterialCode3: MUSTARD_MATERIAL_CODE3,
+      mustardItemCode: MUSTARD_ITEM_CODE,
     },
   },
 };

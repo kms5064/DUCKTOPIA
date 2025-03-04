@@ -88,10 +88,10 @@ class ItemManager {
 
   // 몬스터 사망 시 아이템 생성
   createDropItems(monsterGrade, position) {
-    console.log(`\n[아이템 드롭 시작]`);
-    console.log(`몬스터 등급: ${monsterGrade}`);
-    console.log(`몬스터 위치: x=${position.x}, y=${position.y}`);
-    console.log(`현재 필드 아이템 수: ${this.fieldDropItems.size}`);
+    // console.log(`\n[아이템 드롭 시작]`);
+    // console.log(`몬스터 등급: ${monsterGrade}`);
+    // console.log(`몬스터 위치: x=${position.x}, y=${position.y}`);
+    // console.log(`현재 필드 아이템 수: ${this.fieldDropItems.size}`);
 
     // 드롭 확률 체크
     if (!this.rollDropItems(monsterGrade)) {
@@ -101,7 +101,7 @@ class ItemManager {
 
     // 드롭할 아이템 개수 결정
     const count = this.rollItemCount(monsterGrade);
-    console.log(`[아이템 개수 결정] ${count}개`);
+    // console.log(`[아이템 개수 결정] ${count}개`);
 
     if (count === 0) {
       console.log('[아이템 드롭 실패] 드롭 개수 0');
@@ -112,35 +112,35 @@ class ItemManager {
     const items = [];
     for (let i = 0; i < count; i++) {
       const itemGrade = this.rollItemGrade(monsterGrade);
-      console.log(`[${i + 1}번째 아이템] 등급: ${itemGrade}`);
+      // console.log(`[${i + 1}번째 아이템] 등급: ${itemGrade}`);
 
       const item = this.createItem(itemGrade, position);
       if (item) {
         items.push(item);
         console.log(
-          `- 아이템 생성 성공: 코드=${item.itemData.itemCode}, 위치=(${item.position.x}, ${item.position.y})`,
+          // `- 아이템 생성 성공: 코드=${item.itemData.itemCode}, 위치=(${item.position.x}, ${item.position.y})`,
         );
       } else {
         console.log(`- 아이템 생성 실패: ${itemGrade} 등급의 아이템을 찾을 수 없음`);
       }
     }
 
-    console.log(`\n[아이템 드롭 완료]`);
-    console.log(`- 생성 시도: ${count}개`);
-    console.log(`- 실제 생성: ${items.length}개`);
-    console.log(`- 현재 필드 아이템 수: ${this.fieldDropItems.size}`);
+    // console.log(`\n[아이템 드롭 완료]`);
+    // console.log(`- 생성 시도: ${count}개`);
+    // console.log(`- 실제 생성: ${items.length}개`);
+    // console.log(`- 현재 필드 아이템 수: ${this.fieldDropItems.size}`);
 
     return items;
   }
 
   // 아이템 드롭 여부 결정
   rollDropItems(monsterGrade) {
-    console.log(`\n[드롭 확률 체크]`);
-    console.log(`몬스터 등급: ${monsterGrade}`);
-    console.log(`드롭 테이블:`, this.dropTable);
+    // console.log(`\n[드롭 확률 체크]`);
+    // console.log(`몬스터 등급: ${monsterGrade}`);
+    // console.log(`드롭 테이블:`, this.dropTable);
 
     const dropRate = this.dropTable[monsterGrade]?.dropRate;
-    console.log(`해당 등급 드롭율: ${dropRate}`);
+    // console.log(`해당 등급 드롭율: ${dropRate}`);
 
     if (!dropRate) {
       console.log(`[경고] ${monsterGrade} 등급의 드롭 테이블이 없습니다.`);
@@ -149,7 +149,7 @@ class ItemManager {
 
     const roll = Math.random() * 100;
     const result = roll <= dropRate;
-    console.log(`주사위: ${roll.toFixed(2)} vs 드롭율: ${dropRate} => ${result ? '성공' : '실패'}`);
+    // console.log(`주사위: ${roll.toFixed(2)} vs 드롭율: ${dropRate} => ${result ? '성공' : '실패'}`);
 
     return result;
   }
