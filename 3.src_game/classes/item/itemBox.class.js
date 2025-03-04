@@ -56,6 +56,21 @@ class ItemBox {
     }
   }
 
+  //머스타드 제조에 사용
+  removeItem(itemCode, count) {
+    const removedItem = this.itemList.find((item) => item.itemCode === itemCode);
+    const removedItemIndex = this.itemList.findIndex((item) => item.itemCode === itemCode);
+    if (!removedItem) {
+      throw new CustomError('상자에서 아이템을 찾을 수 없습니다.');
+    }
+
+    if (removedItem.count > count) {
+      removedItem.count -= count;
+    } else {
+      this.itemList.splice(removedItemIndex, 1, 0);
+    }
+  }
+
   calculateDistance(px, py) {
     const distance = Math.sqrt(Math.pow(px - this.x, 2) + Math.pow(py - this.y, 2));
     return distance;
