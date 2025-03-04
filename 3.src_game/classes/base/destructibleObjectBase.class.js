@@ -2,15 +2,15 @@ import { getGameAssets } from '../../init/assets.js';
 import { OBJECT_HIT_COUNT } from '../../config/constants/objects.js';
 
 class DestructibleObjectBase {
-  constructor(id, objectCode, name) {
+  constructor(id, objectCode, name, maxHp, x = null, y = null) {
     this.id = id;
     this.objectCode = objectCode;
     //objectCode 1= core, 2~4 = ItemBox, 5 = grass 
     this.name = name;
-    this.hp = OBJECT_HIT_COUNT;
-    this.maxHp = OBJECT_HIT_COUNT;
-    this.x = 0;
-    this.y = 0;
+    this.hp = maxHp;
+    this.maxHp = maxHp;
+    this.x = x ?? 0;
+    this.y = y ?? 0;
     this.dropItems = this.makeDropItem(objectCode);
     this.isDestroyed = false;
   }
@@ -21,7 +21,7 @@ class DestructibleObjectBase {
   }
 
   changeObjectHp(damage) {
-    this.hp -= damage;
+    this.hp -= Math.max(Math.min(this.hp,damage),1);
     return this.hp;
   }
 

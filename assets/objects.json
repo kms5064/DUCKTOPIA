@@ -13,8 +13,12 @@
       {
         "code": 303,
         "name": "고급 아이템박스"
+      },
+      {
+        "code": 15125,
+        "name" : "testWall",
+        "object" : 30
       }
-
     ]
   }
   
