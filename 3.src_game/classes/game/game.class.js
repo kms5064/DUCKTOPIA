@@ -525,7 +525,7 @@ class Game {
       } else {
         this.bossMonsterWaveCount--;
 
-        const monsterList = [0, 1, 3, 4, 5];
+        const monsterList = [0, 1, 2, 3, 4, 5, 6];
         // 몬스터 데이터 뽑기
         const codeIdx = Math.floor(Math.random() * monsterList.length);
         const data = monsterAsset.data[monsterList[codeIdx]];
@@ -624,12 +624,7 @@ class Game {
   }
 
   // 아이템 박스 생성
-<<<<<<< Updated upstream
-  createItemBox() {
-
-=======
   createItemBox(itemBoxGrade) {
->>>>>>> Stashed changes
     const { objectDropTable } = getGameAssets()
     const { name, objectCode } = objectDropTable.data.find((e) => e?.grade === itemBoxGrade)
 
