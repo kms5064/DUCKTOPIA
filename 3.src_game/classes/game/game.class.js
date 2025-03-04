@@ -8,6 +8,7 @@ import { gameSession, userSession } from '../../sessions/session.js';
 import { redisClient } from '../../db/redis/redis.js';
 import BossMonster from './bossMonster.class.js';
 import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
+import Core from '../core/core.class.js';
 
 class Game {
   constructor(gameId, ownerId) {
@@ -20,7 +21,8 @@ class Game {
     this.map = []; // 0과 1로 된 2차원배열?
 
     this.monsterIndex = 1;
-    this.coreHp = config.game.core.maxHP;
+    // this.coreHp = config.game.core.maxHP;
+    this.core = new Core(config.game.core.maxHP);
     this.corePosition = config.game.core.position;
     this.gameLoop = null;
     this.highLatency = 120;
@@ -440,19 +442,17 @@ class Game {
    * CORE
    */
 
+  getCore() {
+    return this.core;
+  }
+
   getCoreHp() {
-    const coreHp = this.coreHp;
-    return coreHp;
+    return this.core.getCoreHp();
   }
 
   createObjectData() {
     const objectData = [];
-    const coreData = {
-      ObjectData: { objectId: 1, objectCode: 1 },
-      itemData: [],
-      x: 0,
-      y: 0,
-    };
+    const coreData = this.core.getCoreData();
 
     objectData.push(coreData);
     for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
@@ -462,13 +462,20 @@ class Game {
     return objectData;
   }
 
+  // 코어 박스 생성
+  createCoreBox(coreData) {
+    coreData.ObjectData.objectCode = 2; // objectCode 변경
+    const itemBox = new ItemBox(coreData.ObjectData.objectId);
+    this.objects.set(coreData.ObjectData.objectId, itemBox);
+  }
+
   coreDamaged(damage) {
-    this.coreHp -= damage;
-    if (this.coreHp <= 0) {
+    const coreHp = this.core.coreDamaged(damage);
+    if (coreHp <= 0) {
       console.log('#################### 코어 터짐');
       gameSession.removeGame(this);
     }
-    return this.coreHp;
+    return coreHp;
   }
 
   /**************

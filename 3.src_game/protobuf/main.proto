@@ -339,7 +339,8 @@ message S2CPlayerPutAnItemNotification {
   int32 playerId = 1;
   int32 itemBoxId = 2;
   ItemData itemData = 3;
-  bool success = 4;
+  repeated ItemData objectDatas = 4;
+  bool success = 5;
 }
 
 message C2SPlayerCloseBoxRequest { int32 itemBoxId = 1; }
