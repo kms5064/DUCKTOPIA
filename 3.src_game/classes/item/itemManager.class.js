@@ -8,8 +8,16 @@ import { config } from '../../config/config.js';
 
 class ItemManager {
   constructor() {
-    const { dropTable, food, weapon, armorTop, armorBottom, armorHelmet, armorAccessory } =
-      getGameAssets();
+    const {
+      dropTable,
+      food,
+      weapon,
+      armorTop,
+      armorBottom,
+      armorHelmet,
+      armorShoes,
+      armorAccessory,
+    } = getGameAssets();
 
     this.itemBoxes = new Map(); // 현재 존재하는 아이템 박스들
     this.fieldDropItems = new Map(); // 필드에 드롭된 아이템들
@@ -20,6 +28,7 @@ class ItemManager {
     this.armorTopData = armorTop.data;
     this.armorBottomData = armorBottom.data;
     this.armorHelmetData = armorHelmet.data;
+    this.armorShoesData = armorShoes.data;
     this.armorAccessoryData = armorAccessory.data;
     this.lastBoxId = 1; // 마지막으로 생성된 박스의 ID
   }
@@ -190,8 +199,8 @@ class ItemManager {
       this.fieldDropItems.set(itemId, { itemId, ...item });
       return item;
     } else if (isArmor) {
-      // 방어구 타입 랜덤 선택 (상의/하의/투구/장신구)
-      const armorTypes = ['armorTop', 'armorBottom', 'armorHelmet', 'armorAccessory'];
+      // 방어구 타입 랜덤 선택 (상의/하의/투구/신발/장신구)
+      const armorTypes = ['armorTop', 'armorBottom', 'armorHelmet', 'armorShoes', 'armorAccessory'];
       const randomType = armorTypes[Math.floor(Math.random() * armorTypes.length)];
       const availableArmors = this[randomType + 'Data'].filter(
         (armor) => armor.grade === itemGrade,

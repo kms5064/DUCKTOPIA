@@ -28,7 +28,36 @@ const useItemHandler = ({ socket, payload, userId }) => {
   let packet;
 
   // itemCode로 아이템 타입 판단
-  const itemType = item.itemCode <= 100 ? 'FOOD' : 'WEAPON';
+  // 아이템 코드 범위에 따라 아이템 타입 판단
+  let itemType;
+  switch (true) {
+    case item.itemCode <= 100:
+      itemType = 'FOOD';
+      break;
+    case item.itemCode <= 200:
+      itemType = 'WEAPON';
+      break;
+    case item.itemCode >= 301 && item.itemCode <= 400:
+      itemType = 'TOP';
+      break;
+    case item.itemCode >= 401 && item.itemCode <= 500:
+      itemType = 'BOTTOM';
+      break;
+    case item.itemCode >= 501 && item.itemCode <= 600:
+      itemType = 'SHOES';
+      break;
+    case item.itemCode >= 601 && item.itemCode <= 700:
+      itemType = 'HELMET';
+      break;
+    case item.itemCode >= 701 && item.itemCode <= 800:
+      itemType = 'ACCESSORY';
+      break;
+    case item.itemCode >= 801:
+      itemType = 'etc';
+      break;
+    default:
+      throw new CustomError('알 수 없는 아이템 타입입니다.');
+  }
 
   // 아이템 타입에 따라 다른 처리
   switch (itemType) {
@@ -54,7 +83,7 @@ const useItemHandler = ({ socket, payload, userId }) => {
       // 플레이어 체력 회복 처리
       const currentHp = player.hp;
       const addHp = Math.min(foodData.hp, player.maxHp - currentHp); // 체력 증가량 계산
-      const newHp = player.changePlayerHp(-addHp); // 음수로 변경하여 체력 회복
+      const newHp = player.changePlayerHp(-addHp, game); // 음수로 변경하여 체력 회복
       console.log('[식량 사용 후 체력]', newHp);
 
       packet = [
@@ -76,6 +105,116 @@ const useItemHandler = ({ socket, payload, userId }) => {
     case 'WEAPON': {
       // 무기 장착 처리
       player.equipWeapon(item.itemCode);
+
+      packet = [
+        config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE,
+        {
+          success: true,
+          itemData: item,
+          playerId: userId,
+        },
+      ];
+      break;
+    }
+
+    case 'TOP': {
+      // 상의 장착 처리
+      const equippedArmor = player.equipArmor('top', item.itemCode);
+
+      // 디버깅 로그 추가
+      console.log('[방어구 장착 - 상의]', {
+        itemCode: item.itemCode,
+        equippedArmor,
+        allArmors: player.equippedArmors,
+      });
+
+      packet = [
+        config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE,
+        {
+          success: true,
+          itemData: item,
+          playerId: userId,
+        },
+      ];
+      break;
+    }
+
+    case 'BOTTOM': {
+      // 하의 장착 처리
+      const equippedArmor = player.equipArmor('bottom', item.itemCode);
+
+      // 디버깅 로그 추가
+      console.log('[방어구 장착 - 하의]', {
+        itemCode: item.itemCode,
+        equippedArmor,
+        allArmors: player.equippedArmors,
+      });
+
+      packet = [
+        config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE,
+        {
+          success: true,
+          itemData: item,
+          playerId: userId,
+        },
+      ];
+      break;
+    }
+
+    case 'SHOES': {
+      // 신발 장착 처리
+      const equippedArmor = player.equipArmor('shoes', item.itemCode);
+
+      // 디버깅 로그 추가
+      console.log('[방어구 장착 - 신발]', {
+        itemCode: item.itemCode,
+        equippedArmor,
+        allArmors: player.equippedArmors,
+      });
+
+      packet = [
+        config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE,
+        {
+          success: true,
+          itemData: item,
+          playerId: userId,
+        },
+      ];
+      break;
+    }
+
+    case 'HELMET': {
+      // 헬멧 장착 처리
+      const equippedArmor = player.equipArmor('helmet', item.itemCode);
+
+      // 디버깅 로그 추가
+      console.log('[방어구 장착 - 헬멧]', {
+        itemCode: item.itemCode,
+        equippedArmor,
+        allArmors: player.equippedArmors,
+      });
+
+      packet = [
+        config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE,
+        {
+          success: true,
+          itemData: item,
+          playerId: userId,
+        },
+      ];
+      break;
+    }
+
+    case 'ACCESSORY': {
+      // 액세서리 장착 처리
+      const equippedArmor = player.equipArmor('accessory', item.itemCode);
+
+      // 디버깅 로그 추가
+      console.log('[방어구 장착 - 액세서리]', {
+        itemCode: item.itemCode,
+        equippedArmor,
+        allArmors: player.equippedArmors,
+      });
 
       packet = [
         config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE,

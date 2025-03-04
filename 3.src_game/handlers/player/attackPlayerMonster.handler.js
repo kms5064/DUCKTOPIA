@@ -15,6 +15,20 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   const game = gameSession.getGame(user.getGameId());
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
 
+  // itemManager 디버깅 로그 추가
+  console.log('[itemManager 데이터 확인]', {
+    hasHelmetData: !!game.itemManager.armorHelmetData,
+    hasTopData: !!game.itemManager.armorTopData,
+    hasBottomData: !!game.itemManager.armorBottomData,
+    hasShoesData: !!game.itemManager.armorShoesData,
+    hasAccessoryData: !!game.itemManager.armorAccessoryData,
+    helmetDataLength: game.itemManager.armorHelmetData?.length || 0,
+    topDataLength: game.itemManager.armorTopData?.length || 0,
+    bottomDataLength: game.itemManager.armorBottomData?.length || 0,
+    shoesDataLength: game.itemManager.armorShoesData?.length || 0,
+    accessoryDataLength: game.itemManager.armorAccessoryData?.length || 0,
+  });
+
   // Notification - 다른 플레이어들에게 전달
   const motionPayload = { playerId: userId, playerDirX, playerDirY };
   const PlayerAttackNotification = [config.packetType.S_PLAYER_ATTACK_NOTIFICATION, motionPayload];
@@ -24,15 +38,70 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   const monster = game.getMonsterById(monsterId);
   if (!monster) throw new CustomError(`Monster ID : ${monsterId}는 존재하지 않습니다.`);
 
-  const equippedWeaponCode = player.equippedWeapon.itemCode;
-  const equippedWeapon = game.itemManager.weaponData.find(
-    (weapon) => weapon.code === equippedWeaponCode,
-  );
+  // 무기 공격력 계산
+  let weaponAttack = 0;
+  if (player.equippedWeapon !== null) {
+    const equippedWeaponCode = player.equippedWeapon.itemCode;
+    const equippedWeapon = game.itemManager.weaponData.find(
+      (weapon) => weapon.code === equippedWeaponCode,
+    );
 
-  // 몬스터 HP 차감 처리
-  const damage = player.getPlayerAtkDamage(equippedWeapon.attack);
+    if (equippedWeapon) {
+      weaponAttack = equippedWeapon.attack;
+    }
+  }
+
+  // 방어구의 공격력 계산
+  let armorAttack = 0;
+
+  if (Object.values(player.equippedArmors).some((armor) => armor !== null)) {
+    // 각 방어구 타입별로 공격력 계산
+    Object.entries(player.equippedArmors).forEach(([armorType, armor]) => {
+      if (armor !== null) {
+        // 방어구 데이터 조회
+        let armorData;
+
+        // 방어구 타입에 따라 다른 데이터 소스에서 조회
+        switch (armorType) {
+          case 'helmet':
+            armorData = game.itemManager.armorHelmetData?.find(
+              (item) => item.code === armor.itemCode,
+            );
+            break;
+          case 'top':
+            armorData = game.itemManager.armorTopData?.find((item) => item.code === armor.itemCode);
+            break;
+          case 'bottom':
+            armorData = game.itemManager.armorBottomData?.find(
+              (item) => item.code === armor.itemCode,
+            );
+            break;
+          case 'shoes':
+            armorData = game.itemManager.armorShoesData?.find(
+              (item) => item.code === armor.itemCode,
+            );
+            break;
+          case 'accessory':
+            armorData = game.itemManager.armorAccessoryData?.find(
+              (item) => item.code === armor.itemCode,
+            );
+            break;
+        }
+
+        // 방어구 데이터가 있고 attack 속성이 있으면 공격력에 추가
+        if (armorData && armorData.attack) {
+          armorAttack += armorData.attack;
+        }
+      }
+    });
+  }
+
+  // 몬스터 HP 차감 처리 - 무기 공격력과 방어구 공격력 합산
+  const totalAttack = weaponAttack + armorAttack;
+  const damage = player.getPlayerAtkDamage(totalAttack);
   console.log('[Player Attack] 플레이어 공격력:', damage);
-  console.log('[무기 공격력]');
+  console.log('[무기 공격력]:', weaponAttack);
+  console.log('[방어구 공격력]:', armorAttack);
 
   const currHp = monster.setDamaged(damage, game);
 
@@ -62,26 +131,13 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   ];
   game.broadcast(MonsterDeathNotification);
 
-  // 아이템 드롭 처리
-  // console.log(`[아이템 드롭 시도] 몬스터 등급: ${monster.grade}`);
   const monsterPosition = monster.getMonsterPos();
-  // console.log(`[몬스터 사망 위치] x: ${monsterPosition.x}, y: ${monsterPosition.y}`);
-
   const droppedItems = game.itemManager.createDropItems(monster.grade, monsterPosition);
-  // console.log(`[아이템 드롭 결과] 생성된 아이템 수: ${droppedItems.length}`);
 
   if (droppedItems.length <= 0) {
     console.log('[아이템 미생성] 드롭 확률에 실패하여 아이템이 생성되지 않음');
     return;
   }
-
-  // console.log('[드롭된 아이템 목록]');
-  // droppedItems.forEach((item, index) => {
-  //   console.log(
-  //     `${index + 1}. 아이템 코드: ${item.itemData.itemCode}, 개수: ${item.itemData.count}`,
-  //   );
-  //   console.log(`   위치: (${item.position.x}, ${item.position.y})`);
-  // });
 
   // 아이템 생성 알림
   const itemSpawnNotification = [
