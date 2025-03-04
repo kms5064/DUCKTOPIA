@@ -95,7 +95,7 @@ class Game {
    * PLAYER
    */
   addPlayer(user) {
-    const player = new Player(user, 100, 0, 0);
+    const player = new Player(user, 10, 0, 0);
     this.players.set(user.id, player);
   }
 
