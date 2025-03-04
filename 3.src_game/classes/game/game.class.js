@@ -9,6 +9,7 @@ import ItemManager from '../item/itemManager.class.js';
 import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/objects.js';
 import BossMonster from './bossMonster.class.js';
 import Grass from '../object/grass.class.js';
+import Wall from '../object/wall.class.js';
 
 class Game {
   constructor(ownerId) {
@@ -677,7 +678,8 @@ class Game {
 
     return data;
   }
-  createObject(name){
+
+  createObject(name, objectCode = null, x = null, y = null){
     switch (name) {
       case "grass": {
         const id = this.itemManager.createObjectId();
@@ -690,13 +692,20 @@ class Game {
         };
         this.objects.set(id, grass)
         return data;
-        break;
-    
+      }
+      case "wall" : {
+        const id = this.itemManager.createObjectId();
+        const wall = new Wall(id, objectCode, x, y);
+        const data = {
+          ObjectData: { objectId: id, objectCode },
+          position: {x, y}
+        };
+        this.objects.set(id, wall)
+        return data;
+      }
       default:
         break;
     }
-
-
   }
   // 초기 아이템 생성 - 테스트
   createInitialItems() {
