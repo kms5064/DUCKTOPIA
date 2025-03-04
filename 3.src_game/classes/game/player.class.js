@@ -229,6 +229,18 @@ class Player {
   getPlayerHp() {
     return this.hp;
   }
+
+  revival(pos_x, pos_y) {
+    if (this.isAlive) {
+      return;
+    }
+    else {
+      this.isAlive = true;
+      this.hp = this.maxHp;
+      this.x = pos_x;
+      this.y = pos_y;
+    }
+  }
 }
 
 export default Player;

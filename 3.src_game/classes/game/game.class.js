@@ -52,6 +52,8 @@ class Game {
     // 아이템 관리 : 2025.02.21 추가
     this.itemManager = new ItemManager();
 
+    this.revivalList = [];
+
     // 
     this.bossMonsterWaveCount = 20;
     this.waveCount = 3;
@@ -615,6 +617,31 @@ class Game {
         this.addWaveMonster();
       }
 
+      if (this.dayPhase === DayPhase.DAY) {
+        const respawndistance = 5;
+        //플레이어가 죽는 거 구현
+        for (const [userId, user] of this.users) {
+          const degree = (Math.random() * 360) * (Math.PI / 180);//360도 내에서 출력
+          const dx = respawndistance * Math.sin(degree) + this.corePosition.x;
+          const dy = respawndistance * Math.cos(degree) + this.corePosition.y;
+          user.player.revival(dx, dy);
+
+          const revivalPayloadInfos = [config.packetType.S_PLAYER_REVIVAL_NOTIFICATION, {
+            playerId: playerId,
+            position: {
+              x: dx,
+              y: dy
+            }
+          }];
+
+          this.broadcast(revivalPayloadInfos);
+        }
+      }
+
+
+
+
+
       this.dayCounter = 0;
     }
   }
@@ -668,6 +695,10 @@ class Game {
         count: 1,
       },
     ];
+  }
+
+  setRevivalList(playerId) {
+    this.revivalList.push(playerId);
   }
 }
 
