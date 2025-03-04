@@ -244,23 +244,6 @@ message C2SPlayerDamagedByMonsterRequest {
   int32 monsterId = 2;
 }
 
-//03-03 추가.
-message C2SPlayerChattingRequest {
-  int32 playerId = 1;
-  string message = 2;
-}
-
-message S2CPlayerChattingNotification {
-  int32 playerId = 1;
-  string message = 2;
-}
-
-message S2CPlayerRevivalNotification {
-  int32 playerId = 1;
-  Position position = 2;
-}
-
-
 // 몬스터
 message S2CMonsterSpawnRequest // 몬스터 스폰 호스트클라이언트에게만 요청
 {
@@ -317,38 +300,10 @@ message C2SObjectDamagedByMonsterRequest {
   int32 monsterId = 2;
 }
 
-
-message C2SObjectDamagedByPlayerRequest { //2025-03-03 추가 //04수정
-  int32 objectId = 1;
-  float playerDirX = 2;
-  float playerDirY = 3;
-}
-
-message S2CObjectHpUpdateNotification { // 
+message S2CObjectHpUpdateNotification { // 코어 Id=0;
   int32 objectId = 1;
   int32 hp = 2;
 }
-
-message S2CObjectDestroyNotification { // 2025-03-03 추가
-  int32 objectId = 1;
-}
-
-message S2CObjectSetNotification { //2025-03-03 추가 // 건물 설치
-  // objectId + objectCode
-  ObjectData ObjectData = 1;
-  Position position = 2;
-}
-
-message C2SPlayerSetObjectRequest { //2025-03-03 추가// 설치 아이템 일때.
-  int32 itemCode = 1; // 
-  Position position =2;
-}
-
-message S2CPlayerSetObjectResponse { //2025-03-03 추가// 설치 아이템 일때.
-  bool success = 1;
-  int32 itemCode = 2; 
-  int32 playerId = 3;
-
 
 // 아이템 박스 시스템
 message C2SPlayerOpenBoxRequest { int32 itemBoxId = 1; }
@@ -383,9 +338,8 @@ message C2SPlayerPutAnItemRequest {
 message S2CPlayerPutAnItemNotification {
   int32 playerId = 1;
   int32 itemBoxId = 2;
-  ItemData itemData = 3; //내가 넣은 아이템
-  repeated ItemData objitemDatas = 4; //상자 안에 든 아이템들.
-  bool success = 5;
+  ItemData itemData = 3;
+  bool success = 4;
 }
 
 message C2SPlayerCloseBoxRequest { int32 itemBoxId = 1; }
@@ -397,9 +351,6 @@ message S2CPlayerCloseBoxNotification {
 
 // 게임 종료
 message S2CGameOverNotification {}
-
-//게임 승리
-message S2CGameClearNotification{}
 
 // 에러 처리
 message S2CErrorNotification {
@@ -446,22 +397,6 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
 }
 //---- 추가 완료
 
-//아이템 조합 04 추가.
-
-message C2SItemCombinationRequest { //2025-03-04 추가// 설치 아이템 일때.
-  int32 itemCode1 = 1; // 
-  int32 itemCode2 = 2;
-}
-
-message S2CItemCombinationNotification { //2025-03-04 추가
-  bool success = 1;
-  int32 itemCode1 = 2; // 
-  int32 itemCode2 = 3;
-  int32 itemResultCode = 4; 
-  int32 playerId = 5;
-}
-
-
 // 분산 서버 패킷
 // 로비 -> Gateway
 message S2SGameServerPrepare { // 게임준비 응답 to 호스트클라이언트
@@ -479,6 +414,7 @@ message S2SLoginCast // 로그인 응답
   bool success = 1;
   User user = 2;
 }
+
 // Gateway -> other
 message S2SLogout
 {
@@ -531,11 +467,6 @@ message GamePacket {
     C2SPlayerCloseBoxRequest playerCloseBoxRequest = 52;
     S2CPlayerCloseBoxNotification playerCloseBoxNotification = 53;
     S2CPlayerHungerUpdateNotification playerHungerUpdateNotification = 201;
-    //03-03추가
-    C2SPlayerChattingRequest playerChattingRequest = 202;
-    S2CPlayerChattingNotification playerChattingNotification = 203;
-    S2CPlayerRevivalNotification playerRevivalNotification = 204;
-
 
     // 몬스터
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;
@@ -552,14 +483,9 @@ message GamePacket {
     // 오브젝트
     S2CObjectHpUpdateNotification objectHpUpdateNotification = 42;
     C2SObjectDamagedByMonsterRequest objectDamagedByMonsterRequest = 54;
-    //03-03추가
-    C2SObjectDamagedByPlayerRequest objectDamagedByPlayerRequest = 55;
-    S2CObjectDestroyNotification objectDestroyNotification = 56;
-    S2CObjectSetNotification objectSetNotification = 57;
 
     // 게임 오버
     S2CGameOverNotification gameOverNotification = 43;
-    S2CGameClearNotification gameClearNotification = 999;
 
     // 에러
     S2CErrorNotification errorNotification = 44;
@@ -574,12 +500,12 @@ message GamePacket {
     C2SPlayerUseItemRequest playerUseItemRequest = 105;
     S2CPlayerEatFoodResponse playerEatFoodResponse = 106;
     S2CPlayerEquipWeaponResponse playerEquipWeaponResponse = 107;
-    //03-03 추가
-    C2SPlayerSetObjectRequest playerSetObjectRequest = 108;
-    S2CPlayerSetObjectResponse playerSetObjectResponse = 109;
-    //03-04 추가
-    C2SItemCombinationRequest itemCombinationRequest =110;
-    S2CItemCombinationNotification itemCombinationNotification =111;
     //---- 추가 완료
+
+    // 분산 서버 추가
+    S2SGameServerPrepare gameServerPrepare = 2001;
+    S2SGameServerJoinRequest gameServerJoinRequest = 2002;
+    S2SLoginCast loginCast = 2003;
+    S2SLogout logOut = 2004;
   }
 }
