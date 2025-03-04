@@ -321,6 +321,9 @@ class Game {
   monsterDisCovered() {
     const monsterDiscoverPayload = [];
     for (const [monsterId, monster] of this.monsters) {
+      if (monster.AwakeCoolTimeCheck()) {
+        continue;
+      }
       // 대상이 없는 몬스터만
       let distance = Infinity;
       let inputId = 0;

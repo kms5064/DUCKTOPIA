@@ -57,7 +57,7 @@ class Monster extends MovableObjectBase {
   }
 
   AwakeCoolTimeCheck() {
-    return this.monsterAwakeCoolTime <= 0 ? true : false;
+    return this.monsterAwakeCoolTime > 0 ? true : false;
   }
 
   getDistanceByPlayer() {
