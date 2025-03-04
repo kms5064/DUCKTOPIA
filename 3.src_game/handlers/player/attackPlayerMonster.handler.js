@@ -31,10 +31,10 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
 
   // 몬스터 HP 차감 처리
   const damage = user.player.getPlayerAtkDamage(equippedWeapon.attack);
-  console.log('[Player Attack] 플레이어 공격력:', damage);
-  console.log('[무기 공격력]');
-
   const currHp = monster.setDamaged(damage, game);
+  console.log('[Player Attack] 플레이어 공격력:', damage, '몬스터 HP: ', currHp);
+  // console.log('[무기 공격력]');
+
   // 패킷 생성
   const MonsterHpUpdateNotification = [
     config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION,
@@ -87,7 +87,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
       items: droppedItems,
     },
   ];
-  console.log('[패킷 전송] S_ITEM_SPAWN_NOTIFICATION 전송');
+  // console.log('[패킷 전송] S_ITEM_SPAWN_NOTIFICATION 전송');
   game.broadcast(itemSpawnNotification);
 };
 

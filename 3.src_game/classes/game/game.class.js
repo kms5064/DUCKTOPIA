@@ -30,6 +30,9 @@ class Game {
     this.waveState = WaveState.NONE;
     this.dayCounter = 0;
     this.waveMonsters = new Map();
+    this.bossMonsterWaveCount = 20;
+    // this.waveCount = 3;
+    this.waveCount = 1;
 
     // Zone
     this.zone = [
@@ -51,8 +54,7 @@ class Game {
 
     // 아이템 관리 : 2025.02.21 추가
     this.itemManager = new ItemManager();
-    this.bossMonsterWaveCount = 20;
-    this.waveCount = 3;
+    
   }
 
   /**************
@@ -498,8 +500,12 @@ class Game {
   addWaveMonster() {
     const monstersData = [];
     const { monster: monsterAsset } = getGameAssets();
-    const waveMonsterSize = Math.min(config.game.monster.waveMaxMonsterCount, this.waveCount);
-    this.waveCount += 2;
+    // const waveMonsterSize = Math.min(config.game.monster.waveMaxMonsterCount, this.waveCount);
+    // this.waveCount += 2;
+    const waveMonsterSize = Math.min(
+      config.game.monster.waveMaxMonsterCount,
+      this.waveCount * 2 + 3
+    );
 
     for (let i = 1; i <= waveMonsterSize; i++) {
       const monsterId = this.monsterIndex++;
@@ -513,20 +519,60 @@ class Game {
           monsterId,
           monsterCode: data.code,
         });
-      } else {
-        this.bossMonsterWaveCount--;
+      } 
+      // else {
+      //   // this.bossMonsterWaveCount--;
 
-        const monsterList = [0, 1, 3, 4, 5];
-        // 몬스터 데이터 뽑기
-        const codeIdx = Math.floor(Math.random() * monsterList.length);
-        const data = monsterAsset.data[monsterList[codeIdx]];
-        //this.monsters.set(monsterId, waveMonster);
+      //   const monsterList = [0, 1, 3, 4, 5];
+      //   // 몬스터 데이터 뽑기
+      //   const codeIdx = Math.floor(Math.random() * monsterList.length);
+      //   const data = monsterAsset.data[monsterList[codeIdx]];
+      //   //this.monsters.set(monsterId, waveMonster);
 
-        // 몬스터 id와 code 저장
-        monstersData.push({
-          monsterId,
-          monsterCode: data.code,
-        });
+      //   // 몬스터 id와 code 저장
+      //   monstersData.push({
+      //     monsterId,
+      //     monsterCode: data.code,
+      //   });
+      // }
+      else {
+        if (this.waveCount === 1 || this.waveCount === 2) {
+          const monsterList = [0, 1];
+          // 몬스터 데이터 뽑기
+          const codeIdx = Math.floor(Math.random() * monsterList.length);
+          const data = monsterAsset.data[monsterList[codeIdx]];
+          //this.monsters.set(monsterId, waveMonster);
+
+          // 몬스터 id와 code 저장
+          monstersData.push({
+            monsterId,
+            monsterCode: data.code,
+          });
+        } else if(this.waveCount === 3 || this.waveCount === 4) {
+          const monsterList = [0, 1, 2, 3];
+          // 몬스터 데이터 뽑기
+          const codeIdx = Math.floor(Math.random() * monsterList.length);
+          const data = monsterAsset.data[monsterList[codeIdx]];
+          //this.monsters.set(monsterId, waveMonster);
+
+          // 몬스터 id와 code 저장
+          monstersData.push({
+            monsterId,
+            monsterCode: data.code,
+          });
+        } else {
+          const monsterList = [0, 1, 2, 3, 4, 5, 6];
+          // 몬스터 데이터 뽑기
+          const codeIdx = Math.floor(Math.random() * monsterList.length);
+          const data = monsterAsset.data[monsterList[codeIdx]];
+          //this.monsters.set(monsterId, waveMonster);
+
+          // 몬스터 id와 code 저장
+          monstersData.push({
+            monsterId,
+            monsterCode: data.code,
+          });
+        }
       }
     }
 
@@ -543,6 +589,7 @@ class Game {
 
     const owner = this.getUserById(this.ownerId);
     owner.sendPacket(waveMonsterSpawnRequestPacket);
+    this.waveCount += 1;
   }
 
   //웨이브 몬스터 생성1

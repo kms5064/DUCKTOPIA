@@ -34,8 +34,8 @@ const useItemHandler = ({ socket, payload }) => {
 
   // 플레이어 객체 조회
   const player = game.getPlayerById(user.getUserData().userId);
-  console.log('[플레이어 정보 조회]', player);
-  console.log('[플레이어 인벤토리 조회]', player.inventory);
+  // console.log('[플레이어 정보 조회]', player);
+  // console.log('[플레이어 인벤토리 조회]', player.inventory);
 
   // 아이템 정보 조회
   const itemIndex = player.findItemIndex(itemData.itemCode);
