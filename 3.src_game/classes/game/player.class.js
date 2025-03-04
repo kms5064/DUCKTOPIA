@@ -46,9 +46,7 @@ class Player {
       const defense = this.calculateArmorEffects(game);
 
       // 비율 감산 방식 적용 (감쇠 곡선)
-      // 최종 데미지 = 원래 데미지 × (100 / (100 + 방어력))
-      const DEFENSE_CONSTANT = 100; // 이 상수를 조정하여 방어력 효과를 강화/약화 가능
-      const damageReductionFactor = DEFENSE_CONSTANT / (DEFENSE_CONSTANT + defense);
+      const damageReductionFactor = 100 / (100 + defense);
 
       // 원래 데미지와 감소된 데미지 로그 출력 (디버깅용)
       console.log('[방어력 계산]', {
