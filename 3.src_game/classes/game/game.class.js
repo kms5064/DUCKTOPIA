@@ -628,8 +628,11 @@ class Game {
     const { objectDropTable } = getGameAssets()
     const { name, objectCode } = objectDropTable.data.find((e) => e?.grade === itemBoxGrade)
 
+
     const boxId = this.itemManager.createObjectId();
     const itemBox = new ItemBox(boxId, objectCode, name, itemBoxGrade);
+    console.log(`created item box boxId${boxId}, name:${name}, objectCode${objectCode}`);
+
 
     // 랜덤 아이템 생성 및 박스에 추가
     const items = this.itemManager.generateRandomItems();
@@ -641,13 +644,13 @@ class Game {
     });
 
     const data = {
-      ObjectData: { objectId: itemBox.id, objectCode: 2 },
+      ObjectData: { objectId: itemBox.id, objectCode: itemBox.objectCode },
       itemData: itemBox.itemList,
       x: itemBox.x,
       y: itemBox.y,
     };
 
-    this.objects.set(data.ObjectData.objectId, itemBox);
+    this.objects.set(itemBox.id, itemBox);
 
     // 디버깅용 로그
     // console.log(`[아이템 박스 생성] ID: ${boxId}, 위치: (${itemBox.x}, ${itemBox.y})`);

@@ -37,6 +37,7 @@ const startGameHandler = ({ socket, payload, userId }) => {
     user.player.addItem(1, 1, 0);
     // 101번 아이템은 1번 인덱스에
     user.player.addItem(101, 1, 1);
+    user.player.addItem(15125,1,2);
   });
 
   // 기존 코드 주석 처리 - 찐코드
@@ -55,14 +56,25 @@ const startGameHandler = ({ socket, payload, userId }) => {
 
   startGameObject.push(coreData);
 
-  [...game.objects.values()].forEach((itemBoxObject) => {
-    const itemBox = {
-      ObjectData: { objectId: itemBoxObject.id, objectCode: 2 },
-      itemData: itemBoxObject.itemList,
-      x: itemBoxObject.x,
-      y: itemBoxObject.y,
-    };
-    startGameObject.push(itemBox);
+  [...game.objects.values()].forEach((obj) => {
+    if(obj.id){
+      const object = {
+        ObjectData: { objectId: obj.id, objectCode: obj.objectCode },
+        itemData: obj.itemData,
+        x: obj.x,
+        y: obj.y,
+      };
+      startGameObject.push(object);
+    }
+  // [...game.objects.values()].forEach((itemBoxObject) => {
+  //   const itemBox = {
+  //     ObjectData: { objectId: itemBoxObject.id, objectCode:itemBoxObject.objectCode },
+  //     itemData: itemBoxObject.itemList,
+  //     x: itemBoxObject.x,
+  //     y: itemBoxObject.y,
+  //   };
+  //   startGameObject.push(itemBox);
+   
   });
 
   const GameStartNotification = [
