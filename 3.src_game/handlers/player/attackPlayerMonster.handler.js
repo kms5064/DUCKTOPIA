@@ -1,4 +1,3 @@
-import makePacket from '../../utils/packet/makePacket.js';
 import { gameSession, userSession } from '../../sessions/session.js';
 import { config } from '../../config/config.js';
 import CustomError from '../../utils/error/customError.js';
@@ -18,8 +17,8 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
 
   // Notification - 다른 플레이어들에게 전달
   const motionPayload = { playerId: userId, playerDirX, playerDirY };
-  const packet = makePacket(config.packetType.S_PLAYER_ATTACK_NOTIFICATION, motionPayload);
-  game.notification(userId, packet);
+  const PlayerAttackNotification = [config.packetType.S_PLAYER_ATTACK_NOTIFICATION, motionPayload];
+  game.notification(userId, PlayerAttackNotification);
 
   // 몬스터 조회
   const monster = game.getMonsterById(monsterId);
@@ -38,13 +37,16 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   const currHp = monster.setDamaged(damage, game);
 
   // 패킷 생성 - 몬스터 HP 업데이트
-  let hpUpdatePacket = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
-    monsterId,
-    hp: currHp,
-  });
+  const MonsterHpUpdateNotification = [
+    config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION,
+    {
+      monsterId,
+      hp: currHp,
+    },
+  ];
 
   // broadcast - 모든 플레이어들에게 전달
-  game.broadcast(hpUpdatePacket);
+  game.broadcast(MonsterHpUpdateNotification);
 
   if (currHp > 0) return;
 
@@ -52,10 +54,13 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   game.removeMonster(monsterId);
 
   // 몬스터 사망 알림
-  let deathPacket = makePacket(config.packetType.S_MONSTER_DEATH_NOTIFICATION, {
-    monsterId,
-  });
-  game.broadcast(deathPacket);
+  const MonsterDeathNotification = [
+    config.packetType.S_MONSTER_DEATH_NOTIFICATION,
+    {
+      monsterId,
+    },
+  ];
+  game.broadcast(MonsterDeathNotification);
 
   // 아이템 드롭 처리
   // console.log(`[아이템 드롭 시도] 몬스터 등급: ${monster.grade}`);
@@ -79,11 +84,14 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   // });
 
   // 아이템 생성 알림
-  let itemSpawnPacket = makePacket(config.packetType.S_ITEM_SPAWN_NOTIFICATION, {
-    items: droppedItems,
-  });
+  const itemSpawnNotification = [
+    config.packetType.S_ITEM_SPAWN_NOTIFICATION,
+    {
+      items: droppedItems,
+    },
+  ];
   console.log('[패킷 전송] S_ITEM_SPAWN_NOTIFICATION 전송');
-  game.broadcast(itemSpawnPacket);
+  game.broadcast(itemSpawnNotification);
 };
 
 export default attackPlayerMonsterHandler;
