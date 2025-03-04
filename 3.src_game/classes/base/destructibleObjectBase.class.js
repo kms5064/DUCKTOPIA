@@ -1,5 +1,4 @@
 import { getGameAssets } from '../../init/assets.js';
-import { OBJECT_HIT_COUNT } from '../../config/constants/objects.js';
 
 class DestructibleObjectBase {
   constructor(id, objectCode, name, maxHp, x = null, y = null) {
