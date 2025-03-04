@@ -15,7 +15,7 @@ const useItemHandler = ({ socket, payload, userId }) => {
   console.log('[플레이어 정보 조회]', player);
   console.log('[플레이어 인벤토리 조회]', player.inventory);
 
-  // 룸 객체 조회
+  // 게임 객체(세션) 조회
   const game = gameSession.getGame(user.getGameId());
   if (!game) throw new CustomError(`Game ID: (${user.getGameId()}) Game 정보가 없습니다.`);
 
@@ -27,6 +27,7 @@ const useItemHandler = ({ socket, payload, userId }) => {
   const item = player.inventory[itemIndex];
   let packet;
 
+  // itemCode로 아이템 타입 판단
   const itemType = item.itemCode <= 100 ? 'FOOD' : 'WEAPON';
 
   // 아이템 타입에 따라 다른 처리
@@ -88,7 +89,7 @@ const useItemHandler = ({ socket, payload, userId }) => {
     }
 
     default:
-      throw new Error('알 수 없는 아이템 타입입니다.');
+      throw new CustomError('알 수 없는 아이템 타입입니다.');
   }
 
   // 응답 전송
