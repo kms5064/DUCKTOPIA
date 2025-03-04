@@ -25,9 +25,9 @@
     {
       "code": 203,
       "name": "리얼닌자덕",
-      "hp": 400,
-      "attack": 64,
-      "defence": 22,
+      "hp": 200,
+      "attack": 20,
+      "defence": 5,
       "range": 5,
       "speed": 10,
       "grade": "C"
@@ -65,9 +65,9 @@
     {
       "code": 207,
       "name": "다크나이트덕",
-      "hp": 700,
-      "attack": 80,
-      "defence": 40,
+      "hp": 500,
+      "attack": 30,
+      "defence": 15,
       "range": 5,
       "speed": 11,
       "grade": "A"
