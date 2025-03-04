@@ -36,9 +36,6 @@ class Player {
     // hunger
     this.hungerCounter = 0;
     this.lastHungerUpdate = 0;
-
-    // 방어력 추가
-    this.defense = 0;
   }
 
   changePlayerHp(amount, game) {
@@ -169,7 +166,6 @@ class Player {
   getPlayerAtkDamage(totalAtk) {
     // return this.atk + this.lv * config.game.player.atkPerLv + weaponAtk;
     return totalAtk + Math.floor(Math.random() * this.atk);
-    // 기존에는 랜덤이었으나, 현재 방어구 추가로 인해 정확한 데미지를 리턴하는게 좋을 듯 함. - 데미지 계산 방식 변경
   }
 
   playerDead() {
