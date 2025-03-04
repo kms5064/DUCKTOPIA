@@ -49,6 +49,10 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
 
   if (currHp > 0) return;
 
+  if (monster.isBossMonster()) {
+    console.log("이 자리에 보스 몬스터 잡은 후 클리어 패킷을 보낼 것");
+  }
+
   // 몬스터 사망 처리
   game.removeMonster(monsterId);
 

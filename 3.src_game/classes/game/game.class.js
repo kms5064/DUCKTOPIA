@@ -50,8 +50,6 @@ class Game {
 
     this.revivalList = [];
 
-    this.revivalList = [];
-
     //몬스터 쿨타임
     this.monsterLastUpdate = Date.now();
 
