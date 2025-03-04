@@ -451,10 +451,14 @@ class Game {
     this.objects.set(1, coreData)
     objectData.push(coreData);
 
-    for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
-      const itemBox = this.createItemBox();
-      objectData.push(itemBox);
-    }
+    const itemBoxGrades = ['B', 'C', 'D'];
+
+    itemBoxGrades.forEach((grade) => {
+      for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
+        const itemBox = this.createItemBox(grade);
+        objectData.push(itemBox);
+      }
+    })
 
     for (let i = 0; i < MAX_NUMBER_OF_GRASS; i++) {
       const grass = this.createObject("grass");
@@ -620,8 +624,12 @@ class Game {
   }
 
   // 아이템 박스 생성
+<<<<<<< Updated upstream
   createItemBox() {
 
+=======
+  createItemBox(itemBoxGrade) {
+>>>>>>> Stashed changes
     const { objectDropTable } = getGameAssets()
     const { name, objectCode } = objectDropTable.data.find((e) => e?.grade === itemBoxGrade)
 
