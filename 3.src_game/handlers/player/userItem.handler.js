@@ -12,8 +12,8 @@ const useItemHandler = ({ socket, payload, userId }) => {
   if (!user) throw new CustomError(`User ID (${userId}): 유저 정보가 없습니다.`);
 
   const player = user.player;
-  console.log('[플레이어 정보 조회]', player);
-  console.log('[플레이어 인벤토리 조회]', player.inventory);
+  // console.log('[플레이어 정보 조회]', player);
+  // console.log('[플레이어 인벤토리 조회]', player.inventory);
 
   // 룸 객체 조회
   const game = gameSession.getGame(user.getGameId());
@@ -46,15 +46,16 @@ const useItemHandler = ({ socket, payload, userId }) => {
       player.removeItem(item.itemCode, 1);
 
       console.log(
-        `[기존 허기]: ${currentHunger} / [허기 증가량]: ${addHunger} / [현재 허기]: ${newHunger}`,
+        `[허기 증가량]: ${addHunger} / [현재 허기]: ${newHunger}`,
       );
-      console.log('[식량 사용 후 인벤토리]', player.inventory);
+      
+      // console.log('[식량 사용 후 인벤토리]', player.inventory);
 
       // 플레이어 체력 회복 처리
       const currentHp = player.hp;
       const addHp = Math.min(foodData.hp, player.maxHp - currentHp); // 체력 증가량 계산
       const newHp = player.changePlayerHp(-addHp); // 음수로 변경하여 체력 회복
-      console.log('[식량 사용 후 체력]', newHp);
+      console.log('[체력 증가량]', addHp, '[식량 사용 후 체력]', newHp);
 
       packet = [
         config.packetType.S_PLAYER_EAT_FOOD_RESPONSE,

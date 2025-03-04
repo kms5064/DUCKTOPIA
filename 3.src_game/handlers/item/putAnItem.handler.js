@@ -67,8 +67,8 @@ const playerPutAnItemHandler = ({ socket, payload, userId }) => {
     item = itemBox.putAnItem(player, itemCode, count);
 
     console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
-    console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
-    console.log(`${itemBoxId} 인벤토리 ${JSON.stringify(itemBox.itemList)}`);
+    //console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
+    //console.log(`${itemBoxId} 인벤토리 ${JSON.stringify(itemBox.itemList)}`);
 
     objectDatas = item.itemList;
   }
