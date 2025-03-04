@@ -15,7 +15,7 @@ const playerOpenBoxHandler = ({ socket, payload, userId }) => {
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
 
   const itemBox = game.getItemBoxById(itemBoxId);
-  if (!itemBox) throw new CustomError('상자를 찾을 수 없습니다');
+  if (!itemBox) throw new CustomError(`itemBoxId : ${itemBoxId} 를 찾을 수 없습니다.`);
 
   //유효한 거리인지 검증
   //이 박스가 점유중이라면 컷
@@ -38,7 +38,7 @@ const playerOpenBoxHandler = ({ socket, payload, userId }) => {
     //이 유저가 열고 있다는거 브로드캐스트
 
     game.broadcast(notification);
-    console.log('상자를 열었다!');
+    console.log(`itemBoxId : ${itemBoxId}를 열었다!`);
   }
 };
 
