@@ -74,7 +74,7 @@ const startGameHandler = ({ socket, payload, userId }) => {
     },
   ];
 
-  game.startGame();
+  game.gameLoopStart();
   game.broadcast(GameStartNotification);
 };
 
