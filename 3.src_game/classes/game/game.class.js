@@ -668,7 +668,7 @@ class Game {
       case "grass": {
         const id = this.itemManager.createObjectId();
         const grass = new Grass(id);
-        data = {
+        const data = {
           ObjectData: { objectId: grass.id, objectCode: grass.objectCode },
           itemData: grass.dropItems,
           x: grass.x,
