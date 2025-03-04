@@ -8,7 +8,6 @@ import { gameSession, userSession } from '../../sessions/session.js';
 import { redisClient } from '../../db/redis/redis.js';
 import BossMonster from './bossMonster.class.js';
 import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
-import BossMonster from './bossMonster.class.js';
 import Grass from '../object/grass.class.js';
 import Wall from '../object/wall.class.js';
 
