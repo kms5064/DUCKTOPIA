@@ -16,7 +16,8 @@
       },
       {
         "code": 15125,
-        "name" : "testWall"
+        "name" : "testWall",
+        "object" : 30
       }
     ]
   }
