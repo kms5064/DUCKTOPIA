@@ -9,7 +9,6 @@ import ItemManager from '../item/itemManager.class.js';
 import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/objects.js';
 import BossMonster from './bossMonster.class.js';
 import Grass from '../object/grass.class.js';
-import ObjectManager from '../object/objectManager.class.js';
 
 class Game {
   constructor(ownerId) {
