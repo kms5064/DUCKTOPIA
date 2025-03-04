@@ -6,7 +6,7 @@ import { getGameAssets } from '../../init/assets.js';
 class Grass extends DestructibleObjectBase {
   constructor(id) {
     const { objectDropTable } = getGameAssets()
-    const { name, maxHp } = objectDropTable.data.find((e) => e.objectCode === objectCode);
+    const { name, maxHp } = objectDropTable.data.find((e) => e.objectCode === 6);
     super(id, 6, name, maxHp);
   }
 
