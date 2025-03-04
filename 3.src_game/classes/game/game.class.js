@@ -51,6 +51,8 @@ class Game {
 
     // 아이템 관리 : 2025.02.21 추가
     this.itemManager = new ItemManager();
+
+    // 
     this.bossMonsterWaveCount = 20;
     this.waveCount = 3;
   }
