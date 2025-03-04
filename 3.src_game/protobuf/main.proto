@@ -581,5 +581,12 @@ message GamePacket {
     C2SItemCombinationRequest itemCombinationRequest =110;
     S2CItemCombinationNotification itemCombinationNotification =111;
     //---- 추가 완료
+
+
+    // 분산서버
+    S2SGameServerPrepare gameServerPrepare = 2001;
+    S2SGameServerJoinRequest gameServerJoinRequest = 2002;
+    S2SLoginCast loginCast = 2003;
+    S2SLogout logout = 2004;
   }
 }
