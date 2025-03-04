@@ -549,7 +549,7 @@ class Game {
             monsterCode: data.code,
           });
         } else if(this.waveCount === 3 || this.waveCount === 4) {
-          const monsterList = [0, 1, 3, 4];
+          const monsterList = [0, 1, 2, 3];
           // 몬스터 데이터 뽑기
           const codeIdx = Math.floor(Math.random() * monsterList.length);
           const data = monsterAsset.data[monsterList[codeIdx]];
@@ -561,7 +561,7 @@ class Game {
             monsterCode: data.code,
           });
         } else {
-          const monsterList = [0, 1, 3, 4, 5];
+          const monsterList = [0, 1, 2, 3, 4, 5, 6];
           // 몬스터 데이터 뽑기
           const codeIdx = Math.floor(Math.random() * monsterList.length);
           const data = monsterAsset.data[monsterList[codeIdx]];
