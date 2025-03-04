@@ -412,7 +412,7 @@ class Game {
     }
   }
 
-  getItemBoxById(objectId) {
+  getObjectById(objectId) {
     return this.objects.get(objectId);
     //여기까지 몬스터 영역
   }
