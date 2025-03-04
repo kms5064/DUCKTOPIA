@@ -82,7 +82,7 @@ const onLobbyData = (socket) => async (data) => {
       // console.log('로비 서버 연결');
       // console.timeEnd('check');
     } catch (error) {
-      errorHandler(socket, error);
+      console.error(error)
     }
   }
 };

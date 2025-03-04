@@ -4,12 +4,12 @@
     "data": [
       { "objectCode": 2,"name":"itemBox1", "dropList": [301], "max": 1,"grade":"D" },
       { "objectCode": 3,"name":"itemBox2", "dropList": [302], "max": 1,"grade":"C"},
-      { "objectCode": 4,"name":"itemBox3", "dropList": [303], "max": 1,"grade":"A" },
+      { "objectCode": 4,"name":"itemBox3", "dropList": [303], "max": 1,"grade":"B" },
   
       { "objectCode": 5,"name":"grass", "maxHp": 3, "dropList": [1, 2], "max": 2 },
       { "objectCode": 6, "name": "tree", "maxHp": 3, "dropList": [3, 4], "max": 2 },
       { "objectCode": 7, "name": "tree2", "maxHp": 3, "dropList": [5, 6], "max": 2 },
 
-      {"objectCode": 30,"name":"testWall", "maxHp": 5}
+      {"objectCode": 30,"name":"testWall", "maxHp": 5, "dropList": [], "max": 0}
     ]
   }

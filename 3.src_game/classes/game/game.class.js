@@ -7,15 +7,13 @@ import ItemManager from '../item/itemManager.class.js';
 import { gameSession, userSession } from '../../sessions/session.js';
 import { redisClient } from '../../db/redis/redis.js';
 import BossMonster from './bossMonster.class.js';
-import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/itemBox.js';
-import BossMonster from './bossMonster.class.js';
+import { MAX_NUMBER_OF_ITEM_BOX, MAX_NUMBER_OF_GRASS } from '../../config/constants/objects.js';
 import Grass from '../object/grass.class.js';
 import Wall from '../object/wall.class.js';
 
-const { monster: monsterAsset, objectDropTable } = getGameAssets();
-
 class Game {
   constructor(gameId, ownerId) {
+
     this.id = gameId;
     this.ownerId = ownerId;
 
@@ -182,9 +180,11 @@ class Game {
       const monsterId = this.monsterIndex++;
       // Monster Asset 조회
 
-      const monsterList = [0, 1, 3, 4, 5];
+      const monsterList = [0, 1, 2, 3, 4, 5, 6];
       // 몬스터 데이터 뽑기
       const codeIdx = Math.floor(Math.random() * monsterList.length);
+      
+      const {monster: monsterAsset} = getGameAssets()
       const data = monsterAsset.data[monsterList[codeIdx]];
 
       if (i < maxAmount) {
@@ -222,6 +222,7 @@ class Game {
       return;
     }
 
+    const { monster: monsterAsset } = getGameAssets()
     const data = monsterAsset.data[7];
 
     const monsterId = this.monsterIndex++;
@@ -411,7 +412,7 @@ class Game {
     }
   }
 
-  getItemBoxById(objectId) {
+  getObjectById(objectId) {
     return this.objects.get(objectId);
     //여기까지 몬스터 영역
   }
@@ -450,10 +451,14 @@ class Game {
     this.objects.set(1, coreData)
     objectData.push(coreData);
 
-    for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
-      const itemBox = this.createItemBox();
-      objectData.push(itemBox);
-    }
+    const itemBoxGrades = ['B', 'C', 'D'];
+
+    itemBoxGrades.forEach((grade) => {
+      for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
+        const itemBox = this.createItemBox(grade);
+        objectData.push(itemBox);
+      }
+    })
 
     for (let i = 0; i < MAX_NUMBER_OF_GRASS; i++) {
       const grass = this.createObject("grass");
@@ -500,7 +505,8 @@ class Game {
   // 여기서는 데이터를 생성하지 않고 spawn을 통해 생성한다.
   addWaveMonster() {
     const monstersData = [];
-    
+    const { monster: monsterAsset } = getGameAssets()
+
     const waveMonsterSize = Math.min(config.game.monster.waveMaxMonsterCount, this.waveCount);
     this.waveCount += 2;
 
@@ -519,7 +525,7 @@ class Game {
       } else {
         this.bossMonsterWaveCount--;
 
-        const monsterList = [0, 1, 3, 4, 5];
+        const monsterList = [0, 1, 2, 3, 4, 5, 6];
         // 몬스터 데이터 뽑기
         const codeIdx = Math.floor(Math.random() * monsterList.length);
         const data = monsterAsset.data[monsterList[codeIdx]];
@@ -553,6 +559,7 @@ class Game {
     for (const monster of monsters) {
       // Monster Asset 조회
       console.log(monster.monsterCode);
+      const { monster: monsterAsset } = getGameAssets()
       const data = monsterAsset.data.find((asset) => asset.code === monster.monsterCode);
       console.log(data);
 
@@ -617,11 +624,11 @@ class Game {
   }
 
   // 아이템 박스 생성
-  createItemBox() {
-
+  createItemBox(itemBoxGrade) {
+    const { objectDropTable } = getGameAssets()
     const { name, objectCode } = objectDropTable.data.find((e) => e?.grade === itemBoxGrade)
 
-    const boxId = this.itemManager.createBoxId();
+    const boxId = this.itemManager.createObjectId();
     const itemBox = new ItemBox(boxId, objectCode, name, itemBoxGrade);
 
     // 랜덤 아이템 생성 및 박스에 추가
@@ -696,6 +703,10 @@ class Game {
         itemCode: 101,
         count: 1,
       },
+      {
+        itemCode: 15125,
+        count: 1,
+      }
     ];
   }
 }

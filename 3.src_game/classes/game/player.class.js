@@ -1,11 +1,10 @@
 import { config } from '../../config/config.js';
-import CustomError from '../../utils/error/customError.js';
-import { gameSession } from '../../sessions/session.js';
-import makePacket from '../../utils/packet/makePacket.js';
+import { gameSession, userSession } from '../../sessions/session.js';
 
 class Player {
   constructor(id, atk, x, y) {
     this.id = id;
+
     this.maxHp = config.game.player.playerMaxHealth;
     this.hp = config.game.player.playerMaxHealth;
     this.maxHunger = config.game.player.playerMaxHunger;
@@ -16,15 +15,9 @@ class Player {
     this.characterType = config.game.characterType.RED;
 
     this.lv = 1;
-    this.atk = atk;
-    this.def = 5;
+    this.atk = atk; //10
     this.inventory = Array.from({ length: 16 }, () => 0);
     this.equippedWeapon = null;
-    this.helmet = null;
-    this.chestArmor = null;
-    this.pants = null;
-    this.boots = null;
-    this.accessory = null;
     this.x = x;
     this.y = y;
     this.isAlive = true;
@@ -41,7 +34,17 @@ class Player {
   changePlayerHp(amount) {
     // 플레이어 체력 감소 및 회복 (체력 회복은 음수로 보냄)
     this.hp = Math.min(Math.max(this.hp - amount, 0), this.maxHp);
+    this.hp = Math.min(Math.max(this.hp - amount, 0), this.maxHp);
     return this.hp;
+  }
+
+  getData() {
+    return {
+      characterType: this.characterType,
+      hp: this.hp,
+      weapon: this.equippedWeapon,
+      atk: this.atk,
+    };
   }
 
   getData() {
@@ -155,16 +158,12 @@ class Player {
     }
   }
 
-  // 허기 회복
   changePlayerHunger(amount) {
-    this.hunger += amount;
+    this.hunger = Math.min(Math.max(this.hunger + amount, 0), this.maxHunger);
 
-    if (this.hunger > this.maxHunger) {
-      this.hunger = this.maxHunger;
-      this.hungerCounter = 0;
+    if (this.hunger === this.maxHunger) {
       this.lastHungerUpdate = Date.now();
-    } else if (this.hunger < 0) {
-      this.hunger = 0;
+      this.hungerCounter = 0;
     }
 
     return this.hunger;
@@ -174,8 +173,8 @@ class Player {
 
   //플레이어 어택은 데미지만 리턴하기
   getPlayerAtkDamage(weaponAtk) {
-    return weaponAtk + Math.floor(Math.random() * 10);
-    //this.atk + this.lv * config.game.player.atkPerLv + weaponAtk
+    // return this.atk + this.lv * config.game.player.atkPerLv + weaponAtk;
+    return weaponAtk + Math.floor(Math.random() * this.atk);
   }
 
   playerDead() {
@@ -185,7 +184,7 @@ class Player {
   }
 
   findItemIndex(itemCode) {
-    const targetIndex = this.inventory.findIndex((item) => item && item.itemCode === itemCode);
+    const targetIndex = this.inventory.findIndex((item) => item.itemCode === itemCode);
     return targetIndex;
   }
 
@@ -195,25 +194,23 @@ class Player {
       //아이템을 이미 갖고 있는지
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       //있다면 카운트만 증가
-      if (item) {
-        item.count += count;
-      } else {
+      if (item) item.count += count;
+      else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
 
         const checkRoom = (ele) => ele === 0;
         const emptyIndex = this.inventory.findIndex(checkRoom);
-        this.inventory.splice(emptyIndex, 1, item);
+        this.inventory.splice(emptyIndex, 0, item);
       }
       return item;
     } else {
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
-      if (item) {
-        item.count += count;
-      } else {
+      if (item) item.count += count;
+      else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
-        this.inventory.splice(index, 1, item);
+        this.inventory.splice(index, 0, item);
       }
       return item;
     }
@@ -272,33 +269,9 @@ class Player {
     return this.angle;
   }
 
-  getUser() {
-    return this.user;
-  }
-
   getPlayerHp() {
     return this.hp;
   }
 }
 
 export default Player;
-
-//유저 동기화는 어떤 방식으로 하지?
-//hp, lv, hunger,inventory,equippedWeapon,isAlive같은 status는 변화가 있을때만 동기화하기
-//hp변화(피격) 브로드캐스트용 패킷
-//lv변화 브로드캐스트용 패킷 / 필요한가?
-//hunger변화 브로드캐스트용 패킷 / 필요한가?
-//equippedWeapon변화 브로드캐스트용 패킷
-//isAlive변화 브로드캐스트용 패킷
-
-//위치 같은 계속 변화하는건 루프(프레임)마다 동기화
-//위치 패킷
-//키업다운때만 동기화
-//위치 패킷은 클라에서 받은 입력(새 좌표)를 받아서 저장하고 저장된 좌표를 나를 제외한 세션의 모든 클라에게 보낸다.
-//너무 자주 보내지 말고 시간을 잘 조절해 보자
-
-//키보드로 움직이는 게임은 보통 클라에서 먼저 움직이고 서버에 통보하며 통보된 위치를 브로드캐스트
-
-//가시랜더링 생각해보기
-
-//허기가0이면 데미지를 받는다

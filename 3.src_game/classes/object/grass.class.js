@@ -2,11 +2,12 @@ import DestructibleObjectBase from '../base/destructibleObjectBase.class.js';
 import { GRASS_MAX_HP ,GRASS_RESPAWN_TIME} from '../../config/constants/objects.js';
 import { getGameAssets } from '../../init/assets.js';
 
-const { objectDropTable }= getGameAssets()
+
 class Grass extends DestructibleObjectBase {
   constructor(id) {
-    const { name, maxHp } = objectDropTable.data.find((e) => e.objectCode === objectCode);
-    super(id, 6, name, maxHp);
+    const { objectDropTable } = getGameAssets()
+    const { name, maxHp } = objectDropTable.data.find((e) => e.objectCode === 5);
+    super(id, 5, name, maxHp);
   }
 
   growBack() {
