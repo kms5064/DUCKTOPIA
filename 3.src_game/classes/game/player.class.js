@@ -15,7 +15,7 @@ class Player {
     this.characterType = config.game.characterType.RED;
 
     this.lv = 1;
-    this.atk = atk;
+    this.atk = atk; //10
     this.inventory = Array.from({ length: 16 }, () => 0);
     this.equippedWeapon = null;
     this.x = x;
@@ -134,7 +134,8 @@ class Player {
 
   //플레이어 어택은 데미지만 리턴하기
   getPlayerAtkDamage(weaponAtk) {
-    return this.atk + this.lv * config.game.player.atkPerLv + weaponAtk;
+    // return this.atk + this.lv * config.game.player.atkPerLv + weaponAtk;
+    return weaponAtk + Math.floor(Math.random() * this.atk);
   }
 
   playerDead() {
