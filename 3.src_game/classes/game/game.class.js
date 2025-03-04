@@ -628,7 +628,7 @@ class Game {
     const { objectDropTable } = getGameAssets()
     const { name, objectCode } = objectDropTable.data.find((e) => e?.grade === itemBoxGrade)
 
-    const boxId = this.itemManager.createBoxId();
+    const boxId = this.itemManager.createObjectId();
     const itemBox = new ItemBox(boxId, objectCode, name, itemBoxGrade);
 
     // 랜덤 아이템 생성 및 박스에 추가
