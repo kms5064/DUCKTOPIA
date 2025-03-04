@@ -1,3 +1,4 @@
+import makePacket from '../../utils/packet/makePacket.js';
 import { gameSession, userSession } from '../../sessions/session.js';
 import { config } from '../../config/config.js';
 import CustomError from '../../utils/error/customError.js';
@@ -11,14 +12,14 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
 
   const player = user.player;
 
-  // 룸 객체 조회
+  // 게임 객체(세션) 조회
   const game = gameSession.getGame(user.getGameId());
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
 
   // Notification - 다른 플레이어들에게 전달
   const motionPayload = { playerId: userId, playerDirX, playerDirY };
-  const PlayerAttackNotification = [config.packetType.S_PLAYER_ATTACK_NOTIFICATION, motionPayload];
-  game.notification(userId, PlayerAttackNotification);
+  const packet = makePacket(config.packetType.S_PLAYER_ATTACK_NOTIFICATION, motionPayload);
+  game.notification(userId, packet);
 
   // 몬스터 조회
   const monster = game.getMonsterById(monsterId);
@@ -30,35 +31,31 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   );
 
   // 몬스터 HP 차감 처리
-  const damage = user.player.getPlayerAtkDamage(equippedWeapon.attack);
+  const damage = player.getPlayerAtkDamage(equippedWeapon.attack);
   console.log('[Player Attack] 플레이어 공격력:', damage);
   console.log('[무기 공격력]');
 
   const currHp = monster.setDamaged(damage, game);
-  // 패킷 생성
-  const MonsterHpUpdateNotification = [
-    config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION,
-    {
-      monsterId,
-      hp: currHp,
-    },
-  ];
+
+  // 패킷 생성 - 몬스터 HP 업데이트
+  let hpUpdatePacket = makePacket(config.packetType.S_MONSTER_HP_UPDATE_NOTIFICATION, {
+    monsterId,
+    hp: currHp,
+  });
 
   // broadcast - 모든 플레이어들에게 전달
-  game.broadcast(MonsterHpUpdateNotification);
+  game.broadcast(hpUpdatePacket);
 
   if (currHp > 0) return;
 
   // 몬스터 사망 처리
   game.removeMonster(monsterId);
 
-  const MonsterDeathNotification = [
-    config.packetType.S_MONSTER_DEATH_NOTIFICATION,
-    {
-      monsterId,
-    },
-  ];
-  game.broadcast(MonsterDeathNotification);
+  // 몬스터 사망 알림
+  let deathPacket = makePacket(config.packetType.S_MONSTER_DEATH_NOTIFICATION, {
+    monsterId,
+  });
+  game.broadcast(deathPacket);
 
   // 아이템 드롭 처리
   // console.log(`[아이템 드롭 시도] 몬스터 등급: ${monster.grade}`);
@@ -72,6 +69,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
     console.log('[아이템 미생성] 드롭 확률에 실패하여 아이템이 생성되지 않음');
     return;
   }
+
   // console.log('[드롭된 아이템 목록]');
   // droppedItems.forEach((item, index) => {
   //   console.log(
@@ -81,14 +79,11 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   // });
 
   // 아이템 생성 알림
-  const itemSpawnNotification = [
-    config.packetType.S_ITEM_SPAWN_NOTIFICATION,
-    {
-      items: droppedItems,
-    },
-  ];
+  let itemSpawnPacket = makePacket(config.packetType.S_ITEM_SPAWN_NOTIFICATION, {
+    items: droppedItems,
+  });
   console.log('[패킷 전송] S_ITEM_SPAWN_NOTIFICATION 전송');
-  game.broadcast(itemSpawnNotification);
+  game.broadcast(itemSpawnPacket);
 };
 
 export default attackPlayerMonsterHandler;
