@@ -10,6 +10,6 @@
       { "objectCode": 6, "name": "tree", "maxHp": 3, "dropList": [3, 4], "max": 2 },
       { "objectCode": 7, "name": "tree2", "maxHp": 3, "dropList": [5, 6], "max": 2 },
 
-      {"objectCode": 30,"name":"testWall", "maxHp": 5}
+      {"objectCode": 30,"name":"testWall", "maxHp": 5, "dropList": [], "max": 0}
     ]
   }
