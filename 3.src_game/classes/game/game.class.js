@@ -180,10 +180,11 @@ class Game {
       const monsterId = this.monsterIndex++;
       // Monster Asset 조회
 
-      const monsterList = [0, 1, 3, 4, 5];
+      const monsterList = [0, 1, 2, 3, 4, 5, 6];
       // 몬스터 데이터 뽑기
       const codeIdx = Math.floor(Math.random() * monsterList.length);
-
+      
+      const {monster: monsterAsset} = getGameAssets()
       const data = monsterAsset.data[monsterList[codeIdx]];
 
       if (i < maxAmount) {
@@ -221,6 +222,7 @@ class Game {
       return;
     }
 
+    const { monster: monsterAsset } = getGameAssets()
     const data = monsterAsset.data[7];
 
     const monsterId = this.monsterIndex++;
@@ -499,7 +501,8 @@ class Game {
   // 여기서는 데이터를 생성하지 않고 spawn을 통해 생성한다.
   addWaveMonster() {
     const monstersData = [];
-    
+    const { monster: monsterAsset } = getGameAssets()
+
     const waveMonsterSize = Math.min(config.game.monster.waveMaxMonsterCount, this.waveCount);
     this.waveCount += 2;
 
@@ -552,6 +555,7 @@ class Game {
     for (const monster of monsters) {
       // Monster Asset 조회
       console.log(monster.monsterCode);
+      const { monster: monsterAsset } = getGameAssets()
       const data = monsterAsset.data.find((asset) => asset.code === monster.monsterCode);
       console.log(data);
 
@@ -618,6 +622,7 @@ class Game {
   // 아이템 박스 생성
   createItemBox() {
 
+    const { objectDropTable } = getGameAssets()
     const { name, objectCode } = objectDropTable.data.find((e) => e?.grade === itemBoxGrade)
 
     const boxId = this.itemManager.createBoxId();
