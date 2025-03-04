@@ -1,0 +1,46 @@
+{
+  "name": "armor_helmet",
+  "version": "1.0.0",
+  "data": [
+    {
+      "code": 601,
+      "name": "가죽 투구",
+      "defense": 3,
+      "attack": 1,
+      "grade": "COMMON",
+      "type": "helmet"
+    },
+    {
+      "code": 602,
+      "name": "철 투구",
+      "defense": 6,
+      "attack": 2,
+      "grade": "COMMON",
+      "type": "helmet"
+    },
+    {
+      "code": 603,
+      "name": "황금 투구",
+      "defense": 12,
+      "attack": 5,
+      "grade": "RARE",
+      "type": "helmet"
+    },
+    {
+      "code": 604,
+      "name": "성기사 투구",
+      "defense": 20,
+      "attack": 8,
+      "grade": "EPIC",
+      "type": "helmet"
+    },
+    {
+      "code": 605,
+      "name": "용기사 투구",
+      "defense": 32,
+      "attack": 12,
+      "grade": "LEGENDARY",
+      "type": "helmet"
+    }
+  ]
+}
