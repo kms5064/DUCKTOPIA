@@ -24,7 +24,7 @@ const startGameHandler = ({ socket, payload, userId }) => {
   const initialItems = game.createInitialItems();
 
   objects.forEach((object) => {
-    if (object.ObjectData.objectCode === 2) {
+    if (object.ObjectData.objectCode ) {
       game.getItemBoxById(object.ObjectData.objectId).setPosition(object.x, object.y);
     }
   });

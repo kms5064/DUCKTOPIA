@@ -132,7 +132,7 @@ class Monster extends MovableObjectBase {
         lostDistance = 1.5;
         break;
       case 204:
-      case 205:
+      case 205://원거리 몬스터들은 좀 더 길게
         lostDistance = 5;
         break;
       case 206:
