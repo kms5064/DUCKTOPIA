@@ -13,6 +13,7 @@ import Wall from '../object/wall.class.js';
 
 class Game {
   constructor(gameId, ownerId) {
+
     this.id = gameId;
     this.ownerId = ownerId;
 
@@ -182,6 +183,7 @@ class Game {
       const monsterList = [0, 1, 3, 4, 5];
       // 몬스터 데이터 뽑기
       const codeIdx = Math.floor(Math.random() * monsterList.length);
+
       const data = monsterAsset.data[monsterList[codeIdx]];
 
       if (i < maxAmount) {
@@ -693,6 +695,10 @@ class Game {
         itemCode: 101,
         count: 1,
       },
+      {
+        itemCode: 15125,
+        count: 1,
+      }
     ];
   }
 }
