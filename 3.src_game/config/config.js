@@ -60,9 +60,10 @@ import {
 } from './constants/itemBox.js';
 import {
   ITEM_PICKUP_RANGE,
-  MUSTAD_MATERIAL_CODE1,
-  MUSTAD_MATERIAL_CODE2,
-  MUSTAD_MATERIAL_CODE3,
+  MUSTARD_ITEM_CODE,
+  MUSTARD_MATERIAL_CODE1,
+  MUSTARD_MATERIAL_CODE2,
+  MUSTARD_MATERIAL_CODE3,
 } from './constants/item.js';
 
 import { DAY_TIME, NIGHT_TIME, DayPhase } from './constants/game.js';
@@ -150,9 +151,10 @@ export const config = {
     },
     item: {
       pickupRange: ITEM_PICKUP_RANGE,
-      mustadMaterialCode1: MUSTAD_MATERIAL_CODE1,
-      mustadMaterialCode2: MUSTAD_MATERIAL_CODE2,
-      mustadMaterialCode3: MUSTAD_MATERIAL_CODE3,
+      mustardMaterialCode1: MUSTARD_MATERIAL_CODE1,
+      mustardMaterialCode2: MUSTARD_MATERIAL_CODE2,
+      mustardMaterialCode3: MUSTARD_MATERIAL_CODE3,
+      mustardItemCode: MUSTARD_ITEM_CODE,
     },
   },
 };
