@@ -639,23 +639,10 @@ class Game {
   // 아이템 박스 생성
   createItemBox(itemBoxGrade) {
 
-    let objectCode = 2;
-    switch (itemBoxGrade) {
-      case 'D':
-        objectCode = 2;
-        break;
-      case 'C':
-        objectCode = 3;
-        break;
-      case 'A':
-        objectCode = 4;
-        break;
-      default:
-        break;
-    }
+    const {name, objectCode} = objectDropTable.data.find((e) => e?.grade === itemBoxGrade)
 
     const boxId = this.itemManager.createBoxId();
-    const itemBox = new ItemBox(boxId,objectCode,itemBoxGrade);
+    const itemBox = new ItemBox(boxId, objectCode, name, itemBoxGrade);
 
     // 랜덤 아이템 생성 및 박스에 추가
     const items = this.itemManager.generateRandomItems(itemBoxGrade);

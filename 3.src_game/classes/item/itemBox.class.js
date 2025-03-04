@@ -3,8 +3,8 @@ import DestructibleObjectBase from '../base/destructibleObjectBase.class.js';
 import { ITEM_BOX_MAX_HP } from '../../config/constants/objects.js';
 
 class ItemBox extends DestructibleObjectBase{
-  constructor(id,objectCode,grade) {
-    super(id,objectCode,ITEM_BOX_MAX_HP);
+  constructor(id,objectCode,name, grade) {
+    super(id,objectCode, name, ITEM_BOX_MAX_HP);
     this.grade = grade;
     this.itemList = Array.from({ length: 8 }, () => 0);
     this.occupied = null; //점유중 플레이어아이디
