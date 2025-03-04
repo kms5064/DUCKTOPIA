@@ -59,9 +59,6 @@ class Core {
   }
   //플레이어가 박스에 넣기
   putAnItem(player, itemCode, count) {
-    //상자에 빈공간이 있는지
-    const checkRoom = (ele) => ele === 0;
-    const emptyIndex = this.itemData.findIndex(checkRoom);
     const existItem = this.itemData.find((item) => item.itemCode === itemCode);
     if (existItem) {
       existItem.count += count;
@@ -69,7 +66,7 @@ class Core {
       return existItem;
     } else {
       const item = { itemCode: itemCode, count: count };
-      this.itemData.splice(emptyIndex, 1, item);
+      this.itemData.push(item);
       if (player) player.removeItem(itemCode, count);
       return item;
     }
@@ -79,15 +76,10 @@ class Core {
     // 생성 가능 개수
     const createCount = materialCounts.reduce((a, b) => Math.min(a, b));
 
-    // const materialCodes = [
-    //   config.game.item.mustardMaterialCode1,
-    //   config.game.item.mustardMaterialCode2,
-    //   config.game.item.mustardMaterialCode3,
-    // ];
-
     const materialCodes = [
       config.game.item.mustardMaterialCode1,
       config.game.item.mustardMaterialCode2,
+      config.game.item.mustardMaterialCode3,
     ];
 
     // 재료 소비
@@ -103,12 +95,13 @@ class Core {
       if (removedItem.count > createCount) {
         removedItem.count -= createCount;
       } else {
-        this.itemData.splice(removedItemIndex, 1, 0);
+        this.itemData.splice(removedItemIndex, 1);
       }
     });
 
     // 머스타드 생성
     this.putAnItem(null, config.game.item.mustardItemCode, createCount);
+    console.log('허니 머스타드 생성 성공!!');
   }
 
   removeItem(itemCode, count) {
