@@ -7,7 +7,7 @@ import CustomError from '../../utils/error/customError.js';
 
 //파밍용 오브젝트들
 const objectAttackedByPlayerHandler = async ({ socket, payload, userId }) => {
-  const { objectId, playerId } = payload;
+  const { objectId, playerDirX,playerDirY } = payload;
 
   const user = userSession.getUser(userId);
   if (!user) throw new CustomError(`User ID : (${userId}): 유저 정보가 없습니다.`);

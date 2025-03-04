@@ -14,7 +14,7 @@ const playerCloseBoxHandler = ({ socket, payload, userId }) => {
   const game = gameSession.getGame(user.getGameId());
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
 
-  const itemBox = game.getItemBoxById(itemBoxId);
+  const itemBox = game.getObjectById(itemBoxId);
   if (!itemBox) throw new CustomError(ErrorCodes.ITEM_BOX_NOT_FOUND, '상자를 찾을 수 없습니다');
 
   const notificationPayload = {

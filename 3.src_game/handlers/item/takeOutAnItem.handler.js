@@ -16,7 +16,7 @@ const playerTakeOutAnItemHandler = ({ socket, payload, userId }) => {
 
   const player = user.player;
 
-  const itemBox = game.getItemBoxById(itemBoxId);
+  const itemBox = game.getObjectById(itemBoxId);
   if (!itemBox) throw new CustomError('상자를 찾을 수 없습니다');
 
   //인벤토리에 빈공간이 있는지
