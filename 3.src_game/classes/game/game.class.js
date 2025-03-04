@@ -10,6 +10,8 @@ import { MAX_NUMBER_OF_ITEM_BOX } from '../../config/constants/objects.js';
 import BossMonster from './bossMonster.class.js';
 import Grass from '../object/grass.class.js';
 
+const { monster: monsterAsset, objectDropTable } = getGameAssets();
+
 class Game {
   constructor(ownerId) {
     this.players = new Map();
@@ -158,7 +160,7 @@ class Game {
     for (let i = 1; i <= maxAmount; i++) {
       const monsterId = this.monsterIndex++;
       // Monster Asset 조회
-      const { monster: monsterAsset } = getGameAssets();
+      
 
       const monsterList = [0, 1, 3, 4, 5];
       // 몬스터 데이터 뽑기
@@ -200,7 +202,6 @@ class Game {
       return;
     }
 
-    const { monster: monsterAsset } = getGameAssets();
     const data = monsterAsset.data[7];
 
     const monsterId = this.monsterIndex++;
@@ -476,7 +477,6 @@ class Game {
   // 여기서는 데이터를 생성하지 않고 spawn을 통해 생성한다.
   addWaveMonster() {
     const monstersData = [];
-    const { monster: monsterAsset } = getGameAssets();
     // const waveMonsterSize = Math.min(config.game.monster.waveMaxMonsterCount, this.waveCount);
     // this.waveCount += 2;
     const waveMonsterSize = Math.min(
@@ -571,7 +571,6 @@ class Game {
   spawnWaveMonster(monsters) {
     for (const monster of monsters) {
       // Monster Asset 조회
-      const { monster: monsterAsset } = getGameAssets();
       console.log(monster.monsterCode);
       const data = monsterAsset.data.find((asset) => asset.code === monster.monsterCode);
       console.log(data);
