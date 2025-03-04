@@ -333,6 +333,7 @@ class Game {
         for (const [userId, user] of this.users) {
           console.log(`유저 : ${userId}`);
           // 대상 찾아보기
+          console.log(user.player.getPlayerPos());
           const calculatedDistance = monster.returnCalculateDistance(user.player);
           console.log(`${monsterId}와 ${userId} 간의 거리 : ${calculatedDistance}`);
 
