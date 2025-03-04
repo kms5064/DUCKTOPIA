@@ -422,8 +422,9 @@ class Game {
       x: 0,
       y: 0,
     };
-
+    this.objects.set(1, coreData)
     objectData.push(coreData);
+    
 
     const itemBoxGrades = ['D','B','C'];
 
@@ -431,13 +432,14 @@ class Game {
       for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
         const itemBox = this.createItemBox(grade);
         objectData.push(itemBox);
+        
       }
     })
 
     for (let i = 0; i < MAX_NUMBER_OF_GRASS; i++) {
       const grass = this.createObject("grass");
       objectData.push(grass);
-
+      
     }
 
     return objectData;
@@ -677,15 +679,16 @@ class Game {
   }
   createObject(name){
     switch (name) {
-      case "grass":
+      case "grass": {
         const id = this.itemManager.createObjectId();
         const grass = new Grass(id);
-        const data = {
+        data = {
           ObjectData: { objectId: grass.id, objectCode: grass.objectCode },
           itemData: grass.dropItems,
           x: grass.x,
           y: grass.y,
         };
+        this.objects.set(id, grass)
         return data;
         break;
     
