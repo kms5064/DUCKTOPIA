@@ -20,6 +20,10 @@ class DestructibleObjectBase {
     this.y = y;
   }
 
+  getPosition(){
+    return {x:this.x,y:this.y};
+  }
+
   changeObjectHp(damage) {
     this.hp -= Math.max(Math.min(this.hp,damage),1);
     return this.hp;

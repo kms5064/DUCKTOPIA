@@ -27,10 +27,19 @@ const objectAttackedByPlayerHandler = async ({ socket, payload, userId }) => {
   if (equippedWeapon.type === 'sword' || equippedWeapon.type === 'axe') {
     const objectHp = object.changeObjectHp(1); //체력깎고
     if (objectHp <= 0) {
-
+      const objectPosition = object.getPosition();
       //아이템 드랍하는 메서드
-
+      const itemSpawnNotification = [
+        config.packetType.S_ITEM_SPAWN_NOTIFICATION,
+        {
+          items: object.dropItems,
+        },
+      ];
+      console.log('[패킷 전송] S_ITEM_SPAWN_NOTIFICATION 전송');
+      game.broadcast(itemSpawnNotification);
       //////////////////////
+
+      //상태 업데이트
       object.isDestroyed = true;
       const packet = {objectId: object.id};
 
@@ -40,6 +49,6 @@ const objectAttackedByPlayerHandler = async ({ socket, payload, userId }) => {
     }
   }
 
-  //만약 3번쳤으면 아이템 드랍하고 상태 업데이트하고
+
 };
 export default objectAttackedByPlayerHandler;

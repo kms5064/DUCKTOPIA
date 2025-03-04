@@ -4,8 +4,8 @@ import { gameSession } from '../../sessions/session.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
 class Player {
-  constructor(user, atk, x, y) {
-    this.user = user; // User Class
+  constructor(id, atk, x, y) {
+    this.id = id;
     this.maxHp = config.game.player.playerMaxHealth;
     this.hp = config.game.player.playerMaxHealth;
     this.maxHunger = config.game.player.playerMaxHunger;
@@ -40,17 +40,18 @@ class Player {
 
   changePlayerHp(amount) {
     // 플레이어 체력 감소 및 회복 (체력 회복은 음수로 보냄)
-    this.hp -= amount;
-
-    if (this.hp > this.maxHp) {
-      this.hp = this.maxHp;
-    } else if (this.hp < 0) {
-      this.hp = 0;
-    }
-
+    this.hp = Math.min(Math.max(this.hp - amount, 0), this.maxHp);
     return this.hp;
   }
 
+  getData() {
+    return {
+      characterType: this.characterType,
+      hp: this.hp,
+      weapon: this.equippedWeapon,
+      atk: this.atk,
+    };
+  }
   getPlayerPos() {
     return { x: this.x, y: this.y };
   }
@@ -59,18 +60,6 @@ class Player {
     this.x = x;
     this.y = y;
     return { x: this.x, y: this.y };
-  }
-
-  getPlayerData() {
-    return {
-      ...this.user.getUserData(),
-      character: {
-        characterType: this.characterType,
-        hp: this.hp,
-        weapon: this.equippedWeapon,
-        atk: this.atk,
-      },
-    };
   }
 
   //player 메서드 여기에 만들어놓고 나중에 옮기기
@@ -101,7 +90,7 @@ class Player {
     this.playerPositionUpdate(newX, newY);
     this.lastPosUpdateTime = now;
 
-    return { playerId: this.user.id, x: this.x, y: this.y };
+    return { playerId: this.id, x: this.x, y: this.y };
   };
   calculateLatency = () => {
     //레이턴시 구하기 => 수정할 것)각 클라마다 다른 레이턴시를 가지고 계산
@@ -124,22 +113,23 @@ class Player {
 
     if (this.hungerCounter >= config.game.player.playerHungerPeriod) {
       // game 접근
-      const game = gameSession.getGame(this.user.getGameId());
+      const user = userSession.getUser(this.id);
+      const game = gameSession.getGame(user.getGameId());
 
       if (this.hunger > 0) {
         this.changePlayerHunger(-config.game.player.playerHungerDecreaseAmount);
 
-        // console.log('플레이어 아이디' + this.user.id);
+        // console.log('플레이어 아이디' + this.id);
         // console.log('플레이어 배고품' + this.hunger);
 
         // 캐릭터 hunger 동기화 패킷 전송
-        const decreaseHungerPacket = makePacket(
+        const decreaseHungerPacket = [
           config.packetType.S_PLAYER_HUNGER_UPDATE_NOTIFICATION,
           {
-            playerId: this.user.id,
+            playerId: this.id,
             hunger: this.hunger,
           },
-        );
+        ];
 
         game.broadcast(decreaseHungerPacket);
       } else {
@@ -148,10 +138,13 @@ class Player {
         this.hp -= config.game.player.playerHpDecreaseAmountByHunger;
 
         // 캐릭터 hp 동기화 패킷 전송
-        const decreaseHpPacket = makePacket(config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION, {
-          playerId: this.user.id,
-          hp: this.hp,
-        });
+        const decreaseHpPacket = [
+          config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION,
+          {
+            playerId: this.id,
+            hp: this.hp,
+          },
+        ];
 
         game.broadcast(decreaseHpPacket);
       }
@@ -181,7 +174,7 @@ class Player {
 
   //플레이어 어택은 데미지만 리턴하기
   getPlayerAtkDamage(weaponAtk) {
-    return weaponAtk + Math.floor(Math.random()*10);
+    return weaponAtk + Math.floor(Math.random() * 10);
     //this.atk + this.lv * config.game.player.atkPerLv + weaponAtk
   }
 
@@ -244,14 +237,14 @@ class Player {
   equipWeapon(itemCode) {
     if (this.equippedWeapon === null) {
       const weapon = this.inventory.find((item) => item.itemCode === itemCode);
-      if(!weapon) throw new CustomError(`인벤토리에서 장착하려는 아이템을 찾지 못했습니다.`);
-      
+      if (!weapon) throw new CustomError(`인벤토리에서 장착하려는 아이템을 찾지 못했습니다.`);
+
       this.equippedWeapon = { itemCode: weapon.itemCode, count: 1 };
       this.removeItem(itemCode, 1);
     } else {
       const temp = this.equippedWeapon;
       const weapon = this.inventory.find((item) => item.itemCode === itemCode);
-      if(!weapon) throw new CustomError(`인벤토리에서 장착하려는 아이템을 찾지 못했습니다.`);
+      if (!weapon) throw new CustomError(`인벤토리에서 장착하려는 아이템을 찾지 못했습니다.`);
 
       this.equippedWeapon = { itemCode: weapon.itemCode, count: 1 };
       this.removeItem(itemCode, 1);
