@@ -18,6 +18,7 @@ import getItemHandler from './item/getItem.handler.js';
 import useItemHandler from './player/useItem.handler.js';
 import logoutCastHandler from './server/logoutCast.handler.js';
 import objectMountHandler from './object/objectMount.handler.js';
+import chattingHandler from './game/chatting.handler.js';
 
 const handlers = {
   // Server
@@ -45,7 +46,7 @@ const handlers = {
   [config.packetType.C_MONSTER_SPAWN_RESPONSE[0]]: waveStartHandler,
   [config.packetType.C_MONSTER_ATTACK_REQUEST[0]]: MonsterAttackHandler,
   [config.packetType.C_MONSTER_MOVE_REQUEST[0]]: monsterMoveNotificationHandler,
-  
+  [config.packetType.S_PLAYER_CHATTING_REQUEST[0]]: chattingHandler,
 };
 
 export default handlers;
