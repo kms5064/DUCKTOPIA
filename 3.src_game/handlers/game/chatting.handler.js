@@ -3,6 +3,7 @@ import { userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
 
 const chattingHandler = ({ socket, payload, userId }) => {
+    console.log("채팅들어옴");
     const { playerId, message } = payload;
 
     const user = userSession.getUser(userId);

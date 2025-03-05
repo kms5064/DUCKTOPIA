@@ -684,6 +684,9 @@ class Game {
         //const respawndistance = 10;
         //플레이어가 죽는 거 구현
         for (const [userId, user] of this.users) {
+          if (user.player.getPlayerHp() > 0) {
+            continue;
+          }
           let dx;
           let dy;
           const revivalpart = Math.floor(Math.random() * 4 + 1);
@@ -705,6 +708,7 @@ class Game {
               dy = 3 + Math.random() + this.corePosition.y;
               break;
           }
+
           user.player.revival(dx, dy);
 
           const revivalPayloadInfos = [config.packetType.S_PLAYER_REVIVAL_NOTIFICATION, {
