@@ -8,7 +8,16 @@ import { config } from '../../config/config.js';
 
 class ItemManager {
   constructor() {
-    const { dropTable, food, weapon } = getGameAssets();
+    const {
+      dropTable,
+      food,
+      weapon,
+      armorTop,
+      armorBottom,
+      armorHelmet,
+      armorShoes,
+      armorAccessory,
+    } = getGameAssets();
 
     this.itemBoxes = new Map(); // 현재 존재하는 아이템 박스들
     this.fieldDropItems = new Map(); // 필드에 드롭된 아이템들
@@ -16,6 +25,11 @@ class ItemManager {
     this.dropTable = dropTable.data;
     this.foodData = food.data;
     this.weaponData = weapon.data;
+    this.armorTopData = armorTop.data;
+    this.armorBottomData = armorBottom.data;
+    this.armorHelmetData = armorHelmet.data;
+    this.armorShoesData = armorShoes.data;
+    this.armorAccessoryData = armorAccessory.data;
     this.lastBoxId = 1; // 마지막으로 생성된 박스의 ID
   }
 
@@ -30,7 +44,7 @@ class ItemManager {
     return this.lastItemId++;
   }
 
-  // 랜덤 아이템 생성
+  // 랜덤 아이템  - 박스
   generateRandomItems() {
     const items = [];
     const slotCount = Math.floor(Math.random() * config.game.itemBox.boxMaxSlots) + 1; // 최소 1개
@@ -74,10 +88,10 @@ class ItemManager {
 
   // 몬스터 사망 시 아이템 생성
   createDropItems(monsterGrade, position) {
-    console.log(`\n[아이템 드롭 시작]`);
-    console.log(`몬스터 등급: ${monsterGrade}`);
-    console.log(`몬스터 위치: x=${position.x}, y=${position.y}`);
-    console.log(`현재 필드 아이템 수: ${this.fieldDropItems.size}`);
+    // console.log(`\n[아이템 드롭 시작]`);
+    // console.log(`몬스터 등급: ${monsterGrade}`);
+    // console.log(`몬스터 위치: x=${position.x}, y=${position.y}`);
+    // console.log(`현재 필드 아이템 수: ${this.fieldDropItems.size}`);
 
     // 드롭 확률 체크
     if (!this.rollDropItems(monsterGrade)) {
@@ -87,7 +101,7 @@ class ItemManager {
 
     // 드롭할 아이템 개수 결정
     const count = this.rollItemCount(monsterGrade);
-    console.log(`[아이템 개수 결정] ${count}개`);
+    // console.log(`[아이템 개수 결정] ${count}개`);
 
     if (count === 0) {
       console.log('[아이템 드롭 실패] 드롭 개수 0');
@@ -98,35 +112,35 @@ class ItemManager {
     const items = [];
     for (let i = 0; i < count; i++) {
       const itemGrade = this.rollItemGrade(monsterGrade);
-      console.log(`[${i + 1}번째 아이템] 등급: ${itemGrade}`);
+      // console.log(`[${i + 1}번째 아이템] 등급: ${itemGrade}`);
 
       const item = this.createItem(itemGrade, position);
       if (item) {
         items.push(item);
         console.log(
-          `- 아이템 생성 성공: 코드=${item.itemData.itemCode}, 위치=(${item.position.x}, ${item.position.y})`,
+          // `- 아이템 생성 성공: 코드=${item.itemData.itemCode}, 위치=(${item.position.x}, ${item.position.y})`,
         );
       } else {
         console.log(`- 아이템 생성 실패: ${itemGrade} 등급의 아이템을 찾을 수 없음`);
       }
     }
 
-    console.log(`\n[아이템 드롭 완료]`);
-    console.log(`- 생성 시도: ${count}개`);
-    console.log(`- 실제 생성: ${items.length}개`);
-    console.log(`- 현재 필드 아이템 수: ${this.fieldDropItems.size}`);
+    // console.log(`\n[아이템 드롭 완료]`);
+    // console.log(`- 생성 시도: ${count}개`);
+    // console.log(`- 실제 생성: ${items.length}개`);
+    // console.log(`- 현재 필드 아이템 수: ${this.fieldDropItems.size}`);
 
     return items;
   }
 
   // 아이템 드롭 여부 결정
   rollDropItems(monsterGrade) {
-    console.log(`\n[드롭 확률 체크]`);
-    console.log(`몬스터 등급: ${monsterGrade}`);
-    console.log(`드롭 테이블:`, this.dropTable);
+    // console.log(`\n[드롭 확률 체크]`);
+    // console.log(`몬스터 등급: ${monsterGrade}`);
+    // console.log(`드롭 테이블:`, this.dropTable);
 
     const dropRate = this.dropTable[monsterGrade]?.dropRate;
-    console.log(`해당 등급 드롭율: ${dropRate}`);
+    // console.log(`해당 등급 드롭율: ${dropRate}`);
 
     if (!dropRate) {
       console.log(`[경고] ${monsterGrade} 등급의 드롭 테이블이 없습니다.`);
@@ -135,7 +149,7 @@ class ItemManager {
 
     const roll = Math.random() * 100;
     const result = roll <= dropRate;
-    console.log(`주사위: ${roll.toFixed(2)} vs 드롭율: ${dropRate} => ${result ? '성공' : '실패'}`);
+    // console.log(`주사위: ${roll.toFixed(2)} vs 드롭율: ${dropRate} => ${result ? '성공' : '실패'}`);
 
     return result;
   }
@@ -163,8 +177,11 @@ class ItemManager {
 
   // 아이템 생성
   createItem(itemGrade, position) {
-    // 무기 또는 음식 결정 (30% 확률로 무기)
-    const isWeapon = Math.random() < 0.3;
+    // 무기, 방어구, 음식 생성 (10% - 무기 / 20% - 방어구 / 70% - 음식)
+    const isWeapon = Math.random() < 0.1;
+    const isArmor = Math.random() < 0.2;
+    const isFood = Math.random() < 0.7;
+
     const itemId = this.lastItemId++;
 
     if (isWeapon) {
@@ -181,7 +198,27 @@ class ItemManager {
       });
       this.fieldDropItems.set(itemId, { itemId, ...item });
       return item;
-    } else {
+    } else if (isArmor) {
+      // 방어구 타입 랜덤 선택 (상의/하의/투구/신발/장신구)
+      const armorTypes = ['armorTop', 'armorBottom', 'armorHelmet', 'armorShoes', 'armorAccessory'];
+      const randomType = armorTypes[Math.floor(Math.random() * armorTypes.length)];
+      const availableArmors = this[randomType + 'Data'].filter(
+        (armor) => armor.grade === itemGrade,
+      );
+
+      if (availableArmors.length === 0) return null;
+
+      const randomArmor = availableArmors[Math.floor(Math.random() * availableArmors.length)];
+      const item = new Item({
+        itemData: {
+          itemCode: randomArmor.code,
+          count: 1,
+        },
+        position: this.addRandomOffset(position),
+      });
+      this.fieldDropItems.set(itemId, { itemId, ...item });
+      return item;
+    } else if (isFood) {
       const availableFoods = this.foodData.filter((food) => food.grade === itemGrade);
       if (availableFoods.length === 0) return null;
 
@@ -196,6 +233,7 @@ class ItemManager {
       this.fieldDropItems.set(itemId, { itemId, ...item });
       return item;
     }
+    return null;
   }
 
   // 아이템 위치에 랜덤성 추가
