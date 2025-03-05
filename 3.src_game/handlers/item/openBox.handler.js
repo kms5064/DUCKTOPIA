@@ -26,8 +26,8 @@ const playerOpenBoxHandler = ({ socket, payload, userId }) => {
   ) {
     itemBox.occupied = userId;
 
-    const itemList = [];
-    itemBox.getItemList();
+    let itemList = [];
+    itemList = itemBox.getItemList();
     const payload = {
       playerId: userId,
       itemBoxId: itemBoxId,
@@ -38,7 +38,7 @@ const playerOpenBoxHandler = ({ socket, payload, userId }) => {
     //이 유저가 열고 있다는거 브로드캐스트
 
     game.broadcast(notification);
-    console.log('상자를 열었다!');
+    console.log(`상자를 열었다! ${JSON.stringify(itemList)}`);
   }
 };
 

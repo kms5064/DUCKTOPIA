@@ -18,6 +18,7 @@ import getItemHandler from './item/getItem.handler.js';
 import useItemHandler from './player/userItem.handler.js';
 import logoutCastHandler from './server/logoutCast.handler.js';
 import objectMountHandler from './object/objectMount.handler.js';
+import objectAttackedByPlayerHandler from './object/objectAttackedByPlayer.handler.js';
 
 const handlers = {
   // Server
@@ -40,6 +41,8 @@ const handlers = {
   [config.packetType.C_PLAYER_OPEN_BOX_REQUEST[0]]: playerOpenBoxHandler,
   [config.packetType.C_PLAYER_CLOSE_BOX_REQUEST[0]]: playerCloseBoxHandler,
   [config.packetType.C_OBJECT_DAMAGED_BY_MONSTER_REQUEST[0]]: objectDamagedByMonsterHandler,
+  [config.packetType.C_OBJECT_DAMAGED_BY_PLAYER_REQUEST[0]]: objectAttackedByPlayerHandler,
+
   [config.packetType.C_PLAYER_SET_OBJECT_REQUEST[0]]: objectMountHandler,
 
   [config.packetType.C_MONSTER_SPAWN_RESPONSE[0]]: waveStartHandler,

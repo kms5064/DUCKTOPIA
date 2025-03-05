@@ -60,7 +60,7 @@ const startGameHandler = ({ socket, payload, userId }) => {
     if(obj.id){
       const object = {
         ObjectData: { objectId: obj.id, objectCode: obj.objectCode },
-        itemData: obj.itemData,
+        itemData: obj.itemList,
         x: obj.x,
         y: obj.y,
       };
