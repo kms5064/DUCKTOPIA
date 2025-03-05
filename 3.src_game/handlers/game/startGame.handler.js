@@ -24,9 +24,11 @@ const startGameHandler = ({ socket, payload, userId }) => {
   const initialItems = game.createInitialItems();
 
   objects.forEach((object) => {
-    if (object.ObjectData.objectCode === 2) {
-      game.getItemBoxById(object.ObjectData.objectId).setPosition(object.x, object.y);
-    }
+    // 코어 제외
+    if (object.ObjectData.objectId === 1) return 
+
+    const serverObj = game.getObjectById(object.ObjectData.objectId)
+    serverObj.setPosition(object.x, object.y);
   });
 
   // [테스트] 인덱스 0, 1에 고정으로 아이템 추가
@@ -72,7 +74,7 @@ const startGameHandler = ({ socket, payload, userId }) => {
     },
   ];
 
-  game.startGame();
+  game.gameLoopStart();
   game.broadcast(GameStartNotification);
 };
 

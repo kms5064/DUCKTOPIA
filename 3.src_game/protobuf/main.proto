@@ -324,25 +324,31 @@ message C2SObjectDamagedByPlayerRequest { //2025-03-03 추가 //04수정
   float playerDirY = 3;
 }
 
-
 message S2CObjectHpUpdateNotification { // 
   int32 objectId = 1;
   int32 hp = 2;
 }
 
-
 message S2CObjectDestroyNotification { // 2025-03-03 추가
   int32 objectId = 1;
 }
 
-
-
 message S2CObjectSetNotification { //2025-03-03 추가 // 건물 설치
+  // objectId + objectCode
   ObjectData ObjectData = 1;
   Position position = 2;
 }
 
+message C2SPlayerSetObjectRequest { //2025-03-03 추가// 설치 아이템 일때.
+  int32 itemCode = 1; // 
+  Position position =2;
+}
 
+message S2CPlayerSetObjectResponse { //2025-03-03 추가// 설치 아이템 일때.
+  bool success = 1;
+  int32 itemCode = 2; 
+  int32 playerId = 3;
+}
 
 // 아이템 박스 시스템
 message C2SPlayerOpenBoxRequest { int32 itemBoxId = 1; }
@@ -590,5 +596,12 @@ message GamePacket {
     C2SItemCombinationRequest itemCombinationRequest =110;
     S2CItemCombinationNotification itemCombinationNotification =111;
     //---- 추가 완료
+
+
+    // 분산서버
+    S2SGameServerPrepare gameServerPrepare = 2001;
+    S2SGameServerJoinRequest gameServerJoinRequest = 2002;
+    S2SLoginCast loginCast = 2003;
+    S2SLogout logout = 2004;
   }
 }
