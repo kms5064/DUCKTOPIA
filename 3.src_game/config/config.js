@@ -57,7 +57,7 @@ import {
   ITEM_MIN_COUNT,
   ITEM_MAX_STACK,
   OBJECT_CORE_CODE,
-} from './constants/itemBox.js';
+} from './constants/objects.js';
 import {
   ITEM_PICKUP_RANGE,
   MUSTARD_ITEM_CODE,
