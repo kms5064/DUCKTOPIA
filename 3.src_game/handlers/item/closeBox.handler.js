@@ -19,7 +19,7 @@ const playerCloseBoxHandler = ({ socket, payload, userId }) => {
     game.getCore().occupied = null;
   } else {
     // 아이템 박스
-    const itemBox = game.getItemBoxById(itemBoxId);
+    const itemBox = game.getObjectById(itemBoxId);
     if (!itemBox) throw new CustomError(ErrorCodes.ITEM_BOX_NOT_FOUND, '상자를 찾을 수 없습니다');
     itemBox.occupied = null; //점유 해제
   }
