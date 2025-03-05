@@ -16,15 +16,11 @@ const objectMountHandler = async ({ socket, payload, userId }) => {
     const game = gameSession.getGame(user.getGameId());
     if (!game) throw new CustomError(`Game ID : (${user.getGameId()}): Game 정보가 없습니다.`);
 
-    const item = player.inventory[itemIndex];
     const { object: objectCode , defaultCode } = objects.data.find((e) => e.code === itemCode);
     if (objectCode === -1) throw new CustomError('잘못된 사용 입니다.');
 
-    const itemIndex = player.findItemIndex(defaultCode);
-    if (itemIndex === -1) throw new CustomError('아이템을 찾을 수 없습니다.');
-    
     // 아이템 개수 감소
-    player.removeItem(item.itemCode, 1);
+    player.removeItem(defaultCode, 1);
     const payload1 = {
         success: true,
         itemCode: defaultCode,
