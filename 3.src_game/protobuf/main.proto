@@ -383,8 +383,8 @@ message C2SPlayerPutAnItemRequest {
 message S2CPlayerPutAnItemNotification {
   int32 playerId = 1;
   int32 itemBoxId = 2;
-  ItemData itemData = 3; //내가 넣은 아이템
-  repeated ItemData objitemDatas = 4; //상자 안에 든 아이템들.
+  ItemData itemData = 3;
+  repeated ItemData objectDatas = 4;
   bool success = 5;
 }
 
