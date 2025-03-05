@@ -757,7 +757,7 @@ class Game {
         count: 1,
       },
       {
-        itemCode: 15125,
+        itemCode: 901,
         count: 1,
       }
     ];

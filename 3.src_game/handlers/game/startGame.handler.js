@@ -37,6 +37,7 @@ const startGameHandler = ({ socket, payload, userId }) => {
     user.player.addItem(1, 1, 0);
     // 101번 아이템은 1번 인덱스에
     user.player.addItem(101, 1, 1);
+    user.player.addItem(901, 1, 2);
   });
 
   // 기존 코드 주석 처리 - 찐코드
