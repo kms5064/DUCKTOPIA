@@ -339,17 +339,6 @@ message S2CObjectSetNotification { //2025-03-03 추가 // 건물 설치
   Position position = 2;
 }
 
-message C2SPlayerSetObjectRequest { //2025-03-03 추가// 설치 아이템 일때.
-  int32 itemCode = 1; // 
-  Position position =2;
-}
-
-message S2CPlayerSetObjectResponse { //2025-03-03 추가// 설치 아이템 일때.
-  bool success = 1;
-  int32 itemCode = 2; 
-  int32 playerId = 3;
-}
-
 // 아이템 박스 시스템
 message C2SPlayerOpenBoxRequest { int32 itemBoxId = 1; }
 
