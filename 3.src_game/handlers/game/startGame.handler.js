@@ -54,14 +54,25 @@ const startGameHandler = ({ socket, payload, userId }) => {
 
   startGameObject.push(coreData);
 
-  [...game.objects.values()].forEach((itemBoxObject) => {
-    const itemBox = {
-      ObjectData: { objectId: itemBoxObject.id, objectCode: 2 },
-      itemData: itemBoxObject.itemList,
-      x: itemBoxObject.x,
-      y: itemBoxObject.y,
-    };
-    startGameObject.push(itemBox);
+  [...game.objects.values()].forEach((obj) => {
+    if(obj.id){
+      const object = {
+        ObjectData: { objectId: obj.id, objectCode: obj.objectCode },
+        itemData: obj.itemList,
+        x: obj.x,
+        y: obj.y,
+      };
+      startGameObject.push(object);
+    }
+  // [...game.objects.values()].forEach((itemBoxObject) => {
+  //   const itemBox = {
+  //     ObjectData: { objectId: itemBoxObject.id, objectCode:itemBoxObject.objectCode },
+  //     itemData: itemBoxObject.itemList,
+  //     x: itemBoxObject.x,
+  //     y: itemBoxObject.y,
+  //   };
+  //   startGameObject.push(itemBox);
+   
   });
 
   const GameStartNotification = [
