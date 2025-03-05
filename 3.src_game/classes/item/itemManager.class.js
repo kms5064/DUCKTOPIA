@@ -8,7 +8,16 @@ import { config } from '../../config/config.js';
 
 class ItemManager {
   constructor() {
-    const { dropTable, food, weapon } = getGameAssets();
+    const {
+      dropTable,
+      food,
+      weapon,
+      armorTop,
+      armorBottom,
+      armorHelmet,
+      armorShoes,
+      armorAccessory,
+    } = getGameAssets();
 
     this.itemBoxes = new Map(); // 현재 존재하는 아이템 박스들
     this.fieldDropItems = new Map(); // 필드에 드롭된 아이템들
@@ -16,6 +25,11 @@ class ItemManager {
     this.dropTable = dropTable.data;
     this.foodData = food.data;
     this.weaponData = weapon.data;
+    this.armorTopData = armorTop.data;
+    this.armorBottomData = armorBottom.data;
+    this.armorHelmetData = armorHelmet.data;
+    this.armorShoesData = armorShoes.data;
+    this.armorAccessoryData = armorAccessory.data;
     this.lastBoxId = 1; // 마지막으로 생성된 박스의 ID
   }
 
@@ -30,7 +44,7 @@ class ItemManager {
     return this.lastItemId++;
   }
 
-  // 랜덤 아이템 생성
+  // 랜덤 아이템  - 박스
   generateRandomItems() {
     const items = [];
     const slotCount = Math.floor(Math.random() * config.game.itemBox.boxMaxSlots) + 1; // 최소 1개
@@ -163,8 +177,11 @@ class ItemManager {
 
   // 아이템 생성
   createItem(itemGrade, position) {
-    // 무기 또는 음식 결정 (30% 확률로 무기)
-    const isWeapon = Math.random() < 0.3;
+    // 무기, 방어구, 음식 생성 (10% - 무기 / 20% - 방어구 / 70% - 음식)
+    const isWeapon = Math.random() < 0.1;
+    const isArmor = Math.random() < 0.2;
+    const isFood = Math.random() < 0.7;
+
     const itemId = this.lastItemId++;
 
     if (isWeapon) {
@@ -181,7 +198,27 @@ class ItemManager {
       });
       this.fieldDropItems.set(itemId, { itemId, ...item });
       return item;
-    } else {
+    } else if (isArmor) {
+      // 방어구 타입 랜덤 선택 (상의/하의/투구/신발/장신구)
+      const armorTypes = ['armorTop', 'armorBottom', 'armorHelmet', 'armorShoes', 'armorAccessory'];
+      const randomType = armorTypes[Math.floor(Math.random() * armorTypes.length)];
+      const availableArmors = this[randomType + 'Data'].filter(
+        (armor) => armor.grade === itemGrade,
+      );
+
+      if (availableArmors.length === 0) return null;
+
+      const randomArmor = availableArmors[Math.floor(Math.random() * availableArmors.length)];
+      const item = new Item({
+        itemData: {
+          itemCode: randomArmor.code,
+          count: 1,
+        },
+        position: this.addRandomOffset(position),
+      });
+      this.fieldDropItems.set(itemId, { itemId, ...item });
+      return item;
+    } else if (isFood) {
       const availableFoods = this.foodData.filter((food) => food.grade === itemGrade);
       if (availableFoods.length === 0) return null;
 
@@ -196,6 +233,7 @@ class ItemManager {
       this.fieldDropItems.set(itemId, { itemId, ...item });
       return item;
     }
+    return null;
   }
 
   // 아이템 위치에 랜덤성 추가
