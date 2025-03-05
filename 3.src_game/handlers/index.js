@@ -15,7 +15,7 @@ import createGameHandler from './game/createGame.handler.js';
 import latencyCheckHandler from './server/latencyCheck.handler.js';
 import MonsterAttackHandler from './monster/monsterAttack.handler.js';
 import getItemHandler from './item/getItem.handler.js';
-import useItemHandler from './player/userItem.handler.js';
+import useItemHandler from './player/useItem.handler.js';
 import logoutCastHandler from './server/logoutCast.handler.js';
 import objectMountHandler from './object/objectMount.handler.js';
 import objectAttackedByPlayerHandler from './object/objectAttackedByPlayer.handler.js';

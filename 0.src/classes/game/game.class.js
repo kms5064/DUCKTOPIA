@@ -110,8 +110,9 @@ class Game {
   /**************
    * USER -> PLAYER
    */
-  addUser(user) {
-    this.users.set(user.id, user);
+  addPlayer(user) {
+    const player = new Player(user, 10, 0, 0);
+    this.players.set(user.id, player);
   }
 
   getPlayerBySocket(socket) {

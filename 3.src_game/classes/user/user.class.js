@@ -8,7 +8,7 @@ class User {
     this.id = id;
     this.name = name;
     this.gameId = gameId;
-    this.player = new Player(this.id, 100, 0, 0);
+    this.player = new Player(this.id, 10, 0, 0);
   }
 
   sendPacket([packetType, payload]) {

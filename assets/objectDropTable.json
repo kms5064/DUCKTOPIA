@@ -10,6 +10,9 @@
       { "objectCode": 6, "name": "tree", "maxHp": 3, "dropList": [3, 4], "max": 2 },
       { "objectCode": 7, "name": "tree2", "maxHp": 3, "dropList": [5, 6], "max": 2 },
 
-      {"objectCode": 30,"name":"testWall", "maxHp": 5, "dropList": [], "max": 0}
+      { "objectCode": 30, "name": "testWall1", "maxHp": 100, "dropList": [], "max": 0 },
+      { "objectCode": 31, "name": "testWall1", "maxHp": 100, "dropList": [], "max": 0 },
+      { "objectCode": 32, "name": "testWall2", "maxHp": 100, "dropList": [], "max": 0 },
+      { "objectCode": 33, "name": "testWall3", "maxHp": 100, "dropList": [], "max": 0 }
     ]
   }

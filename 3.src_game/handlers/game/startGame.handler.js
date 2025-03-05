@@ -37,7 +37,7 @@ const startGameHandler = ({ socket, payload, userId }) => {
     user.player.addItem(1, 1, 0);
     // 101번 아이템은 1번 인덱스에
     user.player.addItem(101, 1, 1);
-    user.player.addItem(15125,1,2);
+    user.player.addItem(901, 1, 2);
   });
 
   // 기존 코드 주석 처리 - 찐코드
@@ -47,12 +47,10 @@ const startGameHandler = ({ socket, payload, userId }) => {
   //   });
   // });
   const startGameObject = [];
-  const coreData = {
-    ObjectData: { objectId: 1, objectCode: 1 },
-    itemData: [],
-    x: 0,
-    y: 0,
-  };
+
+  const core = game.getCore();
+  if (!core) throw new CustomError('코어 정보가 없습니다.');
+  const coreData = core.getCoreData();
 
   startGameObject.push(coreData);
 

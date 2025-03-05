@@ -18,6 +18,13 @@ class Player {
     this.atk = atk; //10
     this.inventory = Array.from({ length: 16 }, () => 0);
     this.equippedWeapon = null;
+    this.equippedArmors = {
+      top: null,
+      bottom: null,
+      shoes: null,
+      helmet: null,
+      accessory: null,
+    };
     this.x = x;
     this.y = y;
     this.isAlive = true;
@@ -31,8 +38,28 @@ class Player {
     this.lastHungerUpdate = 0;
   }
 
-  changePlayerHp(amount) {
+  changePlayerHp(amount, game) {
     // 플레이어 체력 감소 및 회복 (체력 회복은 음수로 보냄)
+    // 데미지를 받는 경우 (amount > 0)에만 방어력 적용
+    if (amount > 0) {
+      // 방어력 계산
+      const defense = this.calculateArmorEffects(game);
+
+      // 비율 감산 방식 적용 (감쇠 곡선)
+      const damageReductionFactor = 100 / (100 + defense);
+
+      // 원래 데미지와 감소된 데미지 로그 출력 (디버깅용)
+      console.log('[방어력 계산]', {
+        원래데미지: amount,
+        방어력: defense,
+        감소율: (1 - damageReductionFactor) * 100 + '%',
+        최종데미지: Math.max(1, Math.floor(amount * damageReductionFactor)),
+      });
+
+      // 최종 데미지 계산 (최소 1의 데미지는 입도록 함)
+      amount = Math.max(1, Math.floor(amount * damageReductionFactor));
+    }
+
     this.hp = Math.min(Math.max(this.hp - amount, 0), this.maxHp);
     this.hp = Math.min(Math.max(this.hp - amount, 0), this.maxHp);
     return this.hp;
@@ -43,6 +70,7 @@ class Player {
       characterType: this.characterType,
       hp: this.hp,
       weapon: this.equippedWeapon,
+      armors: this.equippedArmors,
       atk: this.atk,
     };
   }
@@ -172,9 +200,9 @@ class Player {
   /** end of Hunger System */
 
   //플레이어 어택은 데미지만 리턴하기
-  getPlayerAtkDamage(weaponAtk) {
+  getPlayerAtkDamage(totalAtk) {
     // return this.atk + this.lv * config.game.player.atkPerLv + weaponAtk;
-    return weaponAtk + Math.floor(Math.random() * this.atk);
+    return totalAtk + Math.floor(Math.random() * this.atk);
   }
 
   playerDead() {
@@ -231,6 +259,7 @@ class Player {
     }
   }
 
+  // 무기 장착
   equipWeapon(itemCode) {
     if (this.equippedWeapon === null) {
       const weapon = this.inventory.find((item) => item.itemCode === itemCode);
@@ -249,6 +278,84 @@ class Player {
     }
 
     return this.equippedWeapon;
+  }
+
+  // 방어구 장착
+  equipArmor(armorType, itemCode) {
+    if (this.equippedArmors[armorType] === null) {
+      const armor = this.inventory.find((item) => item.itemCode === itemCode);
+      this.equippedArmors[armorType] = { itemCode: armor.itemCode, count: 1 };
+      this.removeItem(itemCode, 1);
+    } else {
+      const temp = this.equippedArmors[armorType];
+      const armor = this.inventory.find((item) => item.itemCode === itemCode);
+      this.equippedArmors[armorType] = { itemCode: armor.itemCode, count: 1 };
+      this.removeItem(itemCode, 1);
+      this.addItem(temp.itemCode, 1, -1);
+    }
+
+    return this.equippedArmors[armorType];
+  }
+
+  // 방어구 효과 계산 (방어력 등)
+  calculateArmorEffects(game) {
+    let totalDefense = 0;
+    const armorDefenseDetails = {}; // 디버깅용 상세 정보
+
+    // 각 방어구 타입별로 방어력 계산
+    Object.entries(this.equippedArmors).forEach(([armorType, armor]) => {
+      if (armor !== null) {
+        // 방어구 데이터 조회
+        let armorData;
+        let dataSource = null;
+
+        // 방어구 타입에 따라 다른 데이터 소스에서 조회
+        switch (armorType) {
+          case 'helmet':
+            dataSource = game.itemManager.armorHelmetData;
+            armorData = dataSource?.find((item) => item.code === armor.itemCode);
+            break;
+          case 'top':
+            dataSource = game.itemManager.armorTopData;
+            armorData = dataSource?.find((item) => item.code === armor.itemCode);
+            break;
+          case 'bottom':
+            dataSource = game.itemManager.armorBottomData;
+            armorData = dataSource?.find((item) => item.code === armor.itemCode);
+            break;
+          case 'shoes':
+            dataSource = game.itemManager.armorShoesData;
+            armorData = dataSource?.find((item) => item.code === armor.itemCode);
+            break;
+          case 'accessory':
+            dataSource = game.itemManager.armorAccessoryData;
+            armorData = dataSource?.find((item) => item.code === armor.itemCode);
+            break;
+        }
+
+        // 디버깅 로그용 정보 저장
+        armorDefenseDetails[armorType] = {
+          itemCode: armor.itemCode,
+          hasDataSource: !!dataSource,
+          dataSourceLength: dataSource?.length || 0,
+          armorData: armorData ? { ...armorData } : null,
+          defense: armorData?.defense || 0,
+        };
+
+        // 방어구 데이터가 있고 defense 속성이 있으면 방어력에 추가
+        if (armorData && armorData.defense) {
+          totalDefense += armorData.defense;
+        }
+      }
+    });
+
+    // 디버깅 로그 출력
+    console.log('[방어구 방어력 계산 상세]', {
+      armorDefenseDetails,
+      totalDefense,
+    });
+
+    return totalDefense;
   }
 
   //공격 사거리 변경

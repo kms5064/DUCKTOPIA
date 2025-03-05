@@ -15,9 +15,28 @@
         "name": "고급 아이템박스"
       },
       {
-        "code": 15125,
-        "name" : "testWall",
-        "object" : 30
+        "code": 901,
+        "name": "testWall1",
+        "object": 30,
+        "defaultCode": 901
+      },
+      {
+        "code": 902,
+        "name": "testWall2",
+        "object": 31,
+        "defaultCode": 901
+      },
+      {
+        "code": 903,
+        "name": "testWall3",
+        "object": 32,
+        "defaultCode": 901
+      },
+      {
+        "code": 904,
+        "name": "testWall4",
+        "object": 33,
+        "defaultCode": 901
       }
     ]
   }
