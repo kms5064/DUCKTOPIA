@@ -59,8 +59,8 @@ class Game {
     // 아이템 관리 : 2025.02.21 추가
     this.itemManager = new ItemManager();
 
-    this.moveQueue = [];
     this.loopCheck = 0;
+    this.monsterMoveQueue = [];
   }
 
   /**************
@@ -73,6 +73,7 @@ class Game {
     }
     this.gameLoop = setInterval(() => {
       this.playerMoveUpdate();
+      this.monsterMoveUpdate();
       this.loopCheck ++
       if(this.loopCheck < 5){
         return
@@ -177,9 +178,13 @@ class Game {
 
   playerMoveUpdate() {
     const playerPositions = [];
-    while (this.moveQueue.length > 0) {
-      const playerPosition = this.moveQueue.pop();
-      playerPositions.push(playerPosition);
+    for(const user of this.users) {
+      const playerPosition = {
+        playerId: user.id,
+        x: user.player.x,
+        y: user.player.y
+      };
+      playerPositions.push(playerPosition)
     }
 
     // payload 인코딩
@@ -459,6 +464,25 @@ class Game {
       }
     }
     return this.monsterArea[area].includes(monsterCode);
+  }
+
+  monsterMoveUpdate() {
+    const monsterPositionData = [];
+    while(this.monsterMoveQueue.length > 0) {
+      const monsterPosition = this.monsterMoveQueue.pop()
+      monsterPositionData.push(...monsterPosition.monsterPositionData);
+    }
+    
+    // payload 인코딩
+    const packet = [
+      config.packetType.S_MONSTER_MOVE_NOTIFICATION,
+      {
+        monsterPositions: monsterPositionData,
+      },
+    ];
+
+    // 룸 내 인원에게 브로드캐스트
+    this.broadcast(packet);
   }
 
   /**************
