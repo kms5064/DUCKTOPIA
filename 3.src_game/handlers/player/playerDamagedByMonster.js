@@ -21,6 +21,7 @@ const playerDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
   if (!monster) throw new CustomError(`Monster ID : ${monsterId}는 존재하지 않습니다.`);
 
   const remainPlayerHp = player.changePlayerHp(monster.getAttack(), game);
+  if(remainPlayerHp <= 0) return
 
   const packet = [config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION, { playerId: userId, hp: remainPlayerHp }];
 

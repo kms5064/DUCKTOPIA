@@ -139,41 +139,41 @@ class Player {
 
   // 허기 감소 카운팅 함수
   hungerCheck() {
+    if (!this.isAlive) return
+
     const now = Date.now();
     const deltaTime = now - this.lastHungerUpdate;
     this.hungerCounter += deltaTime;
     this.lastHungerUpdate = now;
 
-    if (this.hungerCounter >= config.game.player.playerHungerPeriod) {
-      // game 접근
-      const user = userSession.getUser(this.id);
-      const game = gameSession.getGame(user.getGameId());
+    if (this.hungerCounter < config.game.player.playerHungerPeriod) return
 
-      if (this.hunger > 0) {
-        this.changePlayerHunger(-config.game.player.playerHungerDecreaseAmount);
+    // game 접근
+    const user = userSession.getUser(this.id);
+    const game = gameSession.getGame(user.getGameId());
 
-        // console.log('플레이어 아이디' + this.id);
-        // console.log('플레이어 배고품' + this.hunger);
+    if (this.hunger > 0) {
+      this.changePlayerHunger(-config.game.player.playerHungerDecreaseAmount);
 
-        // 캐릭터 hunger 동기화 패킷 전송
-        const decreaseHungerPacket = [
-          config.packetType.S_PLAYER_HUNGER_UPDATE_NOTIFICATION,
-          {
-            playerId: this.id,
-            hunger: this.hunger,
-          },
-        ];
+      // console.log('플레이어 아이디' + this.id);
+      // console.log('플레이어 배고품' + this.hunger);
 
-        game.broadcast(decreaseHungerPacket);
-      } else {
-        // 체력 감소
+      // 캐릭터 hunger 동기화 패킷 전송
+      const decreaseHungerPacket = [
+        config.packetType.S_PLAYER_HUNGER_UPDATE_NOTIFICATION,
+        {
+          playerId: this.id,
+          hunger: this.hunger,
+        },
+      ];
 
-        this.hp -= config.game.player.playerHpDecreaseAmountByHunger;
-        if(this.hp <= 0) {
-          this.hp = 0;
-          this.playerDead();
-        }
+      game.broadcast(decreaseHungerPacket);
+    } else {
+      // 체력 감소
 
+      this.hp -= config.game.player.playerHpDecreaseAmountByHunger;
+      if (this.hp <= 0) this.playerDead();
+      else {
         // 캐릭터 hp 동기화 패킷 전송
         const decreaseHpPacket = [
           config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION,
@@ -185,11 +185,11 @@ class Player {
 
         game.broadcast(decreaseHpPacket);
       }
-
-      this.hungerCounter = 0;
-
-      // console.log('현재 아이디 : ', this.user.id, ', 현재 허기 : ', this.hunger, ', 현재 체력 : ', this.hp);
     }
+
+    this.hungerCounter = 0;
+
+    // console.log('현재 아이디 : ', this.user.id, ', 현재 허기 : ', this.hunger, ', 현재 체력 : ', this.hp);
   }
 
   changePlayerHunger(amount) {
