@@ -38,9 +38,9 @@ export const loadProtos = async () => {
       protoMessages[type] = root.lookupType(type);
     }
 
-    console.log('Protobuf 파일이 로드되었습니다.');
+    // console.log('Protobuf 파일이 로드되었습니다.');
   } catch (error) {
-    console.error('Protobuf 파일 로드 중 오류가 발생했습니다: ', error);
+    // console.error('Protobuf 파일 로드 중 오류가 발생했습니다: ', error);
   }
 };
 

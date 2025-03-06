@@ -35,6 +35,7 @@ export const PACKET_TYPE = {
   START_GAME_REQUEST: [3004, 'gameStartRequest'],
   START_GAME_RESPONSE: [3005, 'gameStartResponse'],
   START_GAME_NOTIFICATION: [3006, 'gameStartNotification'],
+  CLEAR_GAME_NOTIFICATION: [3007, 'gameClearNotification'],
 
   // 플레이어 기본 동작
   C_PLAYER_POSITION_UPDATE_REQUEST: [4001, 'playerPositionUpdateRequest'],
@@ -83,8 +84,8 @@ export const PACKET_TYPE = {
   S_MONSTER_HP_UPDATE_NOTIFICATION: [5010, 'monsterHpUpdateNotification'],
 
   //오브젝트
-  C_OBJECT_ATTACKED_BY_PLAYER:[4030,'objectAttackedByPlayer'],
-  S_OBJECT_DESTROY_NOTIFICATION:[4031, 'objectDestroyNotification'],
+  C_OBJECT_ATTACKED_BY_PLAYER: [4030, 'objectAttackedByPlayer'],
+  S_OBJECT_DESTROY_NOTIFICATION: [4031, 'objectDestroyNotification'],
 
   // 코어
   S_OBJECT_HP_UPDATE_NOTIFICATION: [6001, 'objectHpUpdateNotification'],

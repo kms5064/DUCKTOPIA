@@ -4,7 +4,7 @@ import { gameSession, userSession } from '../../sessions/session.js';
 
 const playerOpenBoxHandler = ({ socket, payload, userId }) => {
   const { itemBoxId } = payload;
-  console.log(`openBoxHandler itemBoxId: ${itemBoxId}`);
+  // console.log(`openBoxHandler itemBoxId: ${itemBoxId}`);
 
   // 유저 객체 조회
   const user = userSession.getUser(userId);
@@ -29,7 +29,7 @@ const playerOpenBoxHandler = ({ socket, payload, userId }) => {
 
       const notification = [config.packetType.S_PLAYER_OPEN_BOX_NOTIFICATION, payload];
       game.broadcast(notification);
-      console.log(`itemBoxId : ${itemBoxId}를 열었다!`);
+      // console.log(`itemBoxId : ${itemBoxId}를 열었다!`);
     }
   } else {
     const itemBox = game.getObjectById(itemBoxId);
@@ -54,7 +54,7 @@ const playerOpenBoxHandler = ({ socket, payload, userId }) => {
       //이 유저가 열고 있다는거 브로드캐스트
 
       game.broadcast(notification);
-      console.log(`상자를 열었다! ${JSON.stringify(itemList)}`);
+      // console.log(`상자를 열었다! ${JSON.stringify(itemList)}`);
     }
   }
 };

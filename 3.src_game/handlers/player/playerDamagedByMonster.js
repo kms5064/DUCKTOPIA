@@ -24,10 +24,10 @@ const playerDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
   const remainPlayerHp = player.changePlayerHp(monster.getAttack(), game);
 
   //몬스터가 플레이어를 때렸을 때 [3] : 충격 처리
-  console.log(`[Player Damaged] ${monster.name} DMG: ${monster.attack}, RemainHp: ${remainPlayerHp}`);
+  // console.log(`[Player Damaged] ${monster.name} DMG: ${monster.attack}, RemainHp: ${remainPlayerHp}`);
   if (remainPlayerHp <= 0) {
     //유저 사망 처리
-    console.log('플레이어 사망');
+    // console.log('플레이어 사망');
     packet = [config.packetType.S_PLAYER_DEATH_NOTIFICATION, { playerId: userId }];
   } else {
     packet = [

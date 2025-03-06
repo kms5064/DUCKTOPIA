@@ -39,9 +39,10 @@ class BossMonster extends Monster {
     }
   }
 
-  setDamaged(damage, player) {
-    const newAggro = Math.max(0, this.hatePointList.get(player) + damage);
-    this.hatePointList.set(player, newAggro);
+  setDamaged(damage, isMustard) {
+    // const newAggro = Math.max(0, this.hatePointList.get(player) + damage);
+    // this.hatePointList.set(player, newAggro);
+    if(!isMustard) return this.hp;
     return super.setDamaged(damage);
   }
 
@@ -142,7 +143,7 @@ class BossMonster extends Monster {
   death() {}
 
   setTargetPlayer(player) {
-    console.log('보스 몬스터 쪽의 이동');
+    // console.log('보스 몬스터 쪽의 이동');
     super.setTargetPlayer(player);
     this.setPattern();
   }

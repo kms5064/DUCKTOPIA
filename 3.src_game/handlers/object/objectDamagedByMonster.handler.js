@@ -23,7 +23,7 @@ const objectDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
   switch (objectId) {
     case 1:
       const coreHp = game.coreDamaged(monster.getAttack());
-      console.log(`코어가 ${monster.getAttack()}의 데미지를 받았습니다! HP: ${coreHp}`);
+      // console.log(`코어가 ${monster.getAttack()}의 데미지를 받았습니다! HP: ${coreHp}`);
       sendPayload = { objectId: objectId, hp: coreHp };
       break;
     default:

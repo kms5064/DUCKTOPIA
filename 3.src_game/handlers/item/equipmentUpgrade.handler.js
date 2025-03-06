@@ -7,9 +7,7 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
   const { itemCode1, itemCode2 } = payload;
 
   // 데이터 체크
-  if (!itemCode1 || !itemCode2) {
-    throw new CustomError(`아이템이 부족하여 조합할 수 없습니다.`);
-  }
+  if (!itemCode1 || !itemCode2) throw new CustomError(`아이템이 부족하여 조합할 수 없습니다.`);
 
   // 유저 객체 조회
   const user = userSession.getUser(userId);
@@ -35,31 +33,37 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
   let isSuccess = false;
   let createGrade = null;
   let createEquipmentList = null;
+  let mustardWeaponCode = null;
+  let createRandom = 0;
   // 특수 조합 (허니 머스타드 적용 무기)
   if (
-    config.game.item.mustardMaterialCode3 === itemCode1 ||
-    config.game.item.mustardMaterialCode3 === itemCode2
+    config.game.item.mustardItemCode === itemCode1 ||
+    config.game.item.mustardItemCode === itemCode2
   ) {
     // '1xx' 무기
-    if (item1Str[0] !== '1' || item2Str[0] !== '1') {
-      throw new CustomError('허니 머스타드는 무기가 아닌 부위에는 조합할 수 없습니다.');
-    }
+    const weaponCode = [item1Str, item2Str].find((code) => code !== config.game.item.mustardItemCode && code[0] === '1');
+    if (!weaponCode) throw new CustomError('허니 머스타드는 무기가 아닌 부위에는 조합할 수 없습니다.');
 
+    // 이미 바른 무기에 못바르게 예외처리
+    const combination = weapon.data.find((data) => data.code === weaponCode);
+    if (combination.isMustard) return
+
+    // 머스타드 무기는 코드에 50을 추가
+    mustardWeaponCode = +weaponCode + 50
     isSuccess = true;
-
     // TODO : 허니머스타드 무기
     // createEquipmentList = 이부분에 넣어주면 됩니다
   } else {
     // 장비 조합
 
-    if (item1Str.length !== item2Str.length || item1Str[0] !== item2Str[0]) {
+    if (item1Str.length !== item2Str.length || item1Str[0] !== item2Str[0]) 
       throw new CustomError('조합이 불가능합니다.');
-    }
-    const itemType = item1Str[0];
 
+    const itemType = item1Str[0];
     const items = [itemCode1, itemCode2];
     const itemDatas = [];
     const itemGrades = [];
+  
 
     // 에셋 데이터 검증
     items.forEach((item) => {
@@ -157,14 +161,14 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
       default:
         throw new CustomError('존재하지않는 아이템 입니다.');
     }
+    createRandom = Math.floor(Math.random() * createEquipmentList.length);
   }
 
   // 유저 인벤토리에서 재료 삭제
   user.player.removeItem(itemCode1, 1);
   user.player.removeItem(itemCode2, 1);
-
-  const createRandom = Math.floor(Math.random() * createEquipmentList.length);
-  const createEquipment = createEquipmentList[createRandom];
+  
+  const createEquipment = mustardWeaponCode ? {code: mustardWeaponCode} : createEquipmentList[createRandom];
   console.log(
     `조합에 ${isSuccess ? '성공' : '실패'} 하여 ${createGrade} 등급의 새로운 아이템이 생성되었습니다.`,
     createEquipment,

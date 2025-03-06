@@ -4,7 +4,7 @@ import { config } from '../../config/config.js';
 
 const playerPutAnItemHandler = ({ socket, payload, userId }) => {
   const { itemBoxId, itemCode, count } = payload;
-  console.log(`putAnItemHandler itemBoxId: ${itemBoxId},itemCode: ${itemCode},count: ${count}`);
+  // console.log(`putAnItemHandler itemBoxId: ${itemBoxId},itemCode: ${itemCode},count: ${count}`);
 
   // 유저 객체 조회
   const user = userSession.getUser(userId);
@@ -50,7 +50,7 @@ const playerPutAnItemHandler = ({ socket, payload, userId }) => {
       core.createMustardItem([material1Count, material2Count, material3Count]);
     }
 
-    console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
+    // console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
     // console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
     // console.log(`${itemBoxId} 인벤토리 ${JSON.stringify(core.itemData)}`);
 
@@ -66,9 +66,9 @@ const playerPutAnItemHandler = ({ socket, payload, userId }) => {
       const item = itemBox.putAnItem(player, itemCode, count);
       if (!item) throw new CustomError(`아이템을 넣는데 실패했습니다`);
 
-      console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
-      console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
-      console.log(`상자 ${itemBoxId} 인벤토리 ${JSON.stringify(itemBox.itemList)}`);
+      // console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
+      // console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
+      // console.log(`상자 ${itemBoxId} 인벤토리 ${JSON.stringify(itemBox.itemList)}`);
 
     objectDatas = itemBox.itemList;
   }

@@ -38,6 +38,7 @@ const handlers = {
   [config.packetType.C_PLAYER_SET_OBJECT_REQUEST[0]]: onGameServerHandler,
   [config.packetType.C_OBJECT_DAMAGED_BY_PLAYER_REQUEST[0]]: onGameServerHandler,
   [config.packetType.C_ITEM_COMBINATION_REQUEST[0]]: onGameServerHandler,
+  [config.packetType.S_PLAYER_CHATTING_REQUEST[0]]: onGameServerHandler,
 };
 
 export default handlers;

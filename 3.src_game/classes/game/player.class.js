@@ -49,19 +49,21 @@ class Player {
       const damageReductionFactor = 100 / (100 + defense);
 
       // 원래 데미지와 감소된 데미지 로그 출력 (디버깅용)
-      console.log('[방어력 계산]', {
-        원래데미지: amount,
-        방어력: defense,
-        감소율: (1 - damageReductionFactor) * 100 + '%',
-        최종데미지: Math.max(1, Math.floor(amount * damageReductionFactor)),
-      });
+      // console.log('[방어력 계산]', {
+      //   원래데미지: amount,
+      //   방어력: defense,
+      //   감소율: (1 - damageReductionFactor) * 100 + '%',
+      //   최종데미지: Math.max(1, Math.floor(amount * damageReductionFactor)),
+      // });
 
       // 최종 데미지 계산 (최소 1의 데미지는 입도록 함)
       amount = Math.max(1, Math.floor(amount * damageReductionFactor));
     }
 
     this.hp = Math.min(Math.max(this.hp - amount, 0), this.maxHp);
-    this.hp = Math.min(Math.max(this.hp - amount, 0), this.maxHp);
+    if (this.hp === 0) {
+      this.playerDead();
+    }
     return this.hp;
   }
 
@@ -207,7 +209,7 @@ class Player {
 
   playerDead() {
     this.isAlive = false;
-    this.inventory = [];
+    // this.inventory = [];
     return this.isAlive;
   }
 
@@ -354,10 +356,10 @@ class Player {
     });
 
     // 디버깅 로그 출력
-    console.log('[방어구 방어력 계산 상세]', {
-      armorDefenseDetails,
-      totalDefense,
-    });
+    // console.log('[방어구 방어력 계산 상세]', {
+    //   armorDefenseDetails,
+    //   totalDefense,
+    // });
 
     return totalDefense;
   }
@@ -382,6 +384,18 @@ class Player {
 
   getPlayerHp() {
     return this.hp;
+  }
+
+  revival(pos_x, pos_y) {
+    if (this.isAlive) {
+      return;
+    }
+    else {
+      this.isAlive = true;
+      this.hp = this.maxHp;
+      this.x = pos_x;
+      this.y = pos_y;
+    }
   }
 }
 
