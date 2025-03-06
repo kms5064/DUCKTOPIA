@@ -82,6 +82,10 @@ export const PACKET_TYPE = {
   S_MONSTER_ATTACK_NOTIFICATION: [5009, 'monsterAttackNotification'],
   S_MONSTER_HP_UPDATE_NOTIFICATION: [5010, 'monsterHpUpdateNotification'],
 
+  //오브젝트
+  C_OBJECT_ATTACKED_BY_PLAYER:[4030,'objectAttackedByPlayer'],
+  S_OBJECT_DESTROY_NOTIFICATION:[4031, 'objectDestroyNotification'],
+
   // 코어
   S_OBJECT_HP_UPDATE_NOTIFICATION: [6001, 'objectHpUpdateNotification'],
   C_OBJECT_DAMAGED_BY_MONSTER_REQUEST: [6002, 'objectDamagedByMonsterRequest'],
