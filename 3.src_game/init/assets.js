@@ -39,6 +39,7 @@ export const loadGameAssets = async () => {
       armorHelmet,
       armorShoes,
       armorAccessory,
+      upgradeRate,
     ] = await Promise.all([
       readFileAsync('food.json'),
       readFileAsync('weapon.json'),
@@ -51,6 +52,7 @@ export const loadGameAssets = async () => {
       readFileAsync('armor_helmet.json'),
       readFileAsync('armor_shoes.json'),
       readFileAsync('armor_accessory.json'),
+      readFileAsync('upgradeRate.json'),
     ]);
 
     gameAssets = {
@@ -65,6 +67,7 @@ export const loadGameAssets = async () => {
       armorHelmet,
       armorShoes,
       armorAccessory,
+      upgradeRate,
     };
     return gameAssets;
   } catch (error) {

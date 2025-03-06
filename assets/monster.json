@@ -68,7 +68,7 @@
       "hp": 300,
       "attack": 30,
       "defence": 15,
-      "range": 5,
+      "range": 10,
       "speed": 11,
       "grade": "A"
     },
