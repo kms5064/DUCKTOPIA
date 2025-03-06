@@ -582,7 +582,6 @@ message GamePacket {
     S2CItemCombinationNotification itemCombinationNotification =111;
     //---- 추가 완료
 
-
     // 분산서버
     S2SGameServerPrepare gameServerPrepare = 2001;
     S2SGameServerJoinRequest gameServerJoinRequest = 2002;

@@ -91,6 +91,9 @@ export const PACKET_TYPE = {
   C_OBJECT_DAMAGED_BY_PLAYER_REQUEST: [6004, 'objectDamagedByPlayerRequest'],
   S_OBJECT_DESTROY_NOTIFICATION: [6005, 'objectDestroyNotification'],
 
+  C_ITEM_COMBINATION_REQUEST: [9001, 'itemCombinationRequest'],
+  S_ITEM_COMBINATION_NOTIFICATION: [9002, 'itemCombinationNotification'],
+
   // 에러
   S_ERROR_NOTIFICATION: [7001, 'errorNotification'],
 

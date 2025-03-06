@@ -59,6 +59,7 @@ import {
   OBJECT_CORE_CODE,
 } from './constants/objects.js';
 import {
+  EQUIPMENT_GRADES,
   ITEM_PICKUP_RANGE,
   MUSTARD_ITEM_CODE,
   MUSTARD_MATERIAL_CODE1,
@@ -155,6 +156,7 @@ export const config = {
       mustardMaterialCode2: MUSTARD_MATERIAL_CODE2,
       mustardMaterialCode3: MUSTARD_MATERIAL_CODE3,
       mustardItemCode: MUSTARD_ITEM_CODE,
+      equipmentGrades: EQUIPMENT_GRADES,
     },
   },
 };
