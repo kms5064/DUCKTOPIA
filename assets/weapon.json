@@ -9,7 +9,7 @@
       "range": 5,
       "speed": 10,
       "grade": "COMMON",
-      "isMustard": true,
+      "isMustard": false,
       "type": "sword"
     },
     {
@@ -19,7 +19,7 @@
       "range": 4,
       "speed": 8,
       "grade": "COMMON",
-      "isMustard": true,
+      "isMustard": false,
       "type": "axe"
     },
     {
@@ -29,7 +29,7 @@
       "range": 15,
       "speed": 12,
       "grade": "COMMON",
-      "isMustard": true,
+      "isMustard": false,
       "type": "bow"
     },
     {
@@ -39,7 +39,7 @@
       "range": 12,
       "speed": 9,
       "grade": "COMMON",
-      "isMustard": true,
+      "isMustard": false,
       "type": "staff"
     },
     {
@@ -49,7 +49,7 @@
       "range": 5,
       "speed": 11,
       "grade": "COMMON",
-      "isMustard": true,
+      "isMustard": false,
       "type": "sword"
     },
     {
@@ -59,7 +59,7 @@
       "range": 4,
       "speed": 9,
       "grade": "COMMON",
-      "isMustard": true,
+      "isMustard": false,
       "type": "axe"
     },
     {
@@ -69,7 +69,7 @@
       "range": 16,
       "speed": 13,
       "grade": "COMMON",
-      "isMustard": true,
+      "isMustard": false,
       "type": "bow"
     },
     {
@@ -79,7 +79,7 @@
       "range": 13,
       "speed": 10,
       "grade": "COMMON",
-      "isMustard": true,
+      "isMustard": false,
       "type": "staff"
     },
     {
@@ -89,7 +89,7 @@
       "range": 6,
       "speed": 12,
       "grade": "RARE",
-      "isMustard": true,
+      "isMustard": false,
       "type": "sword"
     },
     {
@@ -99,7 +99,7 @@
       "range": 5,
       "speed": 9,
       "grade": "RARE",
-      "isMustard": true,
+      "isMustard": false,
       "type": "axe"
     },
     {
@@ -109,7 +109,7 @@
       "range": 20,
       "speed": 14,
       "grade": "RARE",
-      "isMustard": true,
+      "isMustard": false,
       "type": "bow"
     },
     {
@@ -119,7 +119,7 @@
       "range": 15,
       "speed": 11,
       "grade": "RARE",
-      "isMustard": true,
+      "isMustard": false,
       "type": "staff"
     },
     {
@@ -129,7 +129,7 @@
       "range": 6,
       "speed": 13,
       "grade": "RARE",
-      "isMustard": true,
+      "isMustard": false,
       "type": "sword"
     },
     {
@@ -139,7 +139,7 @@
       "range": 21,
       "speed": 15,
       "grade": "RARE",
-      "isMustard": true,
+      "isMustard": false,
       "type": "bow"
     },
     {
@@ -149,7 +149,7 @@
       "range": 7,
       "speed": 13,
       "grade": "EPIC",
-      "isMustard": true,
+      "isMustard": false,
       "type": "sword"
     },
     {
@@ -159,7 +159,7 @@
       "range": 6,
       "speed": 10,
       "grade": "EPIC",
-      "isMustard": true,
+      "isMustard": false,
       "type": "axe"
     },
     {
@@ -169,7 +169,7 @@
       "range": 22,
       "speed": 15,
       "grade": "EPIC",
-      "isMustard": true,
+      "isMustard": false,
       "type": "bow"
     },
     {
@@ -179,7 +179,7 @@
       "range": 17,
       "speed": 12,
       "grade": "EPIC",
-      "isMustard": true,
+      "isMustard": false,
       "type": "staff"
     },
     {
@@ -189,7 +189,7 @@
       "range": 8,
       "speed": 14,
       "grade": "LEGENDARY",
-      "isMustard": true,
+      "isMustard": false,
       "type": "sword"
     },
     {
@@ -199,7 +199,7 @@
       "range": 20,
       "speed": 13,
       "grade": "LEGENDARY",
-      "isMustard": true,
+      "isMustard": false,
       "type": "staff"
     },
     {
