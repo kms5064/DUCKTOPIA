@@ -69,7 +69,7 @@ const playerPutAnItemHandler = ({ socket, payload, userId }) => {
     //console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
     //console.log(`${itemBoxId} 인벤토리 ${JSON.stringify(itemBox.itemList)}`);
 
-    objectDatas = item.itemList;
+    objectDatas = itemBox.itemList;
   }
 
   if (!item) throw new CustomError(`아이템을 넣는데 실패했습니다`);
