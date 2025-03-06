@@ -61,7 +61,7 @@ class Player {
     }
 
     this.hp = Math.min(Math.max(this.hp - amount, 0), this.maxHp);
-    if (this.hp === 0) {
+    if (this.hp <= 0) {
       this.playerDead();
     }
     return this.hp;
