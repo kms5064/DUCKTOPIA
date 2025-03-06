@@ -109,16 +109,16 @@ const playerPutAnItemHandler = ({ socket, payload, userId }) => {
       if (!existItem) throw new CustomError('선택한 아이템을 찾을 수 없습니다');
 
       const item = itemBox.putAnItem(player, itemCode, count);
+      if (!item) throw new CustomError(`아이템을 넣는데 실패했습니다`);
 
       console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
-      //console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
-      //console.log(`${itemBoxId} 인벤토리 ${JSON.stringify(itemBox.itemList)}`);
+      console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
+      console.log(`상자 ${itemBoxId} 인벤토리 ${JSON.stringify(itemBox.itemList)}`);
 
       objectDatas = item.itemList;
     }
   }
 
-  if (!item) throw new CustomError(`아이템을 넣는데 실패했습니다`);
 
   const playerPutAnItemPayload = {
     playerId: userId,

@@ -56,6 +56,7 @@ import {
   BOX_MAX_SLOTS,
   ITEM_MIN_COUNT,
   ITEM_MAX_STACK,
+  ITEM_MAX_SPAWN,
   OBJECT_CORE_CODE,
 } from './constants/objects.js';
 import {
@@ -147,6 +148,7 @@ export const config = {
       boxMaxSlots: BOX_MAX_SLOTS,
       itemMinCount: ITEM_MIN_COUNT,
       itemMaxStack: ITEM_MAX_STACK,
+      itemMaxSpawn:ITEM_MAX_SPAWN,
       objectCoreCode: OBJECT_CORE_CODE,
     },
     item: {

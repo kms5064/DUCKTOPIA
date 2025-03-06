@@ -57,9 +57,12 @@ generateRandomItems(itemBoxGrade) {
     if (isWeapon) {
       // 무기 아이템 생성
       const availableWeapons = this.weaponData.filter((weapon) => weapon.grade === itemGrade);
+
       if (availableWeapons.length === 0) return null;
 
       const randomWeapon = availableWeapons[Math.floor(Math.random() * availableWeapons.length)];
+      console.log(`randomWeapon code: ${randomWeapon.code}`);
+
       items.push(
         new Item({
           itemData: {
@@ -72,9 +75,11 @@ generateRandomItems(itemBoxGrade) {
     } else {
       // 음식 아이템 생성
       const availableFoods = this.foodData.filter((food) => food.grade === itemGrade);
+
       if (availableFoods.length === 0) return null;
 
       const randomFood = availableFoods[Math.floor(Math.random() * availableFoods.length)];
+      console.log(`randomFood code: ${randomFood.code}`);
       const count =
         Math.floor(Math.random() * config.game.itemBox.itemMaxStack) +
         config.game.itemBox.itemMinCount;
@@ -89,7 +94,7 @@ generateRandomItems(itemBoxGrade) {
       );
     }
   }
-
+  console.log(`아이템 박스에서 아이템이 잘 만들어지고 있나? ${JSON.stringify(items)}`);
   return items;
 }
 

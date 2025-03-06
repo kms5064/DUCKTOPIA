@@ -222,23 +222,27 @@ class Player {
       //아이템을 이미 갖고 있는지
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       //있다면 카운트만 증가
-      if (item) item.count += count;
-      else {
+      if (item) {
+        item.count += count;
+      } else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
 
         const checkRoom = (ele) => ele === 0;
         const emptyIndex = this.inventory.findIndex(checkRoom);
-        this.inventory.splice(emptyIndex, 0, item);
+        this.inventory.splice(emptyIndex, 1, item);
+        return item;
       }
       return item;
     } else {
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
-      if (item) item.count += count;
-      else {
+      if (item) {
+        item.count += count;
+      } else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
-        this.inventory.splice(index, 0, item);
+        this.inventory.splice(index, 1, item);
+        return item;
       }
       return item;
     }
