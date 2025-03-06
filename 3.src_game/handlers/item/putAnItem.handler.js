@@ -70,7 +70,7 @@ const playerPutAnItemHandler = ({ socket, payload, userId }) => {
       console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
       console.log(`상자 ${itemBoxId} 인벤토리 ${JSON.stringify(itemBox.itemList)}`);
 
-    objectDatas = item.itemList;
+    objectDatas = itemBox.itemList;
   }
 
 
