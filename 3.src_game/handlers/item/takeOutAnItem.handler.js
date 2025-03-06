@@ -30,8 +30,8 @@ const playerTakeOutAnItemHandler = ({ socket, payload, userId }) => {
     const item = core.takeOutAnItem(player, itemCode, count, emptyIndex);
 
     console.log(`플레이어가 아이템을 꺼냈습니다 ${JSON.stringify(item)}`);
-    console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
-    console.log(`코어 제조함 인벤토리 ${JSON.stringify(core.itemData)}`);
+    // console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
+    // console.log(`코어 제조함 인벤토리 ${JSON.stringify(core.itemData)}`);
   } else {
     const itemBox = game.getObjectById(itemBoxId);
     if (!itemBox) throw new CustomError('상자를 찾을 수 없습니다');
