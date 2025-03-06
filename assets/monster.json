@@ -24,7 +24,7 @@
     },
     {
       "code": 203,
-      "name": "리얼닌자덕",
+      "name": "스파르타오리",
       "hp": 200,
       "attack": 20,
       "defence": 5,
@@ -64,11 +64,11 @@
     },
     {
       "code": 207,
-      "name": "다크나이트덕",
-      "hp": 500,
+      "name": "레이저오리",
+      "hp": 300,
       "attack": 30,
       "defence": 15,
-      "range": 5,
+      "range": 10,
       "speed": 11,
       "grade": "A"
     },

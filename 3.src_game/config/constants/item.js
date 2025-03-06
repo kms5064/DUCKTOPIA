@@ -5,3 +5,5 @@ export const MUSTARD_MATERIAL_CODE1 = 7; //꿀
 export const MUSTARD_MATERIAL_CODE2 = 8; //계란 후라이
 export const MUSTARD_MATERIAL_CODE3 = 801; //머스타드 씨앗
 export const MUSTARD_ITEM_CODE = 802;
+
+export const EQUIPMENT_GRADES = ['COMMON', 'RARE', 'EPIC', 'LEGENDARY'];

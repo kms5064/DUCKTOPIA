@@ -32,7 +32,7 @@ const playerOpenBoxHandler = ({ socket, payload, userId }) => {
       console.log(`itemBoxId : ${itemBoxId}를 열었다!`);
     }
   } else {
-    const itemBox = game.getItemBoxById(itemBoxId);
+    const itemBox = game.getObjectById(itemBoxId);
     if (!itemBox) throw new CustomError(`itemBoxId : ${itemBoxId} 를 찾을 수 없습니다.`);
 
     //유효한 거리인지 검증
@@ -54,7 +54,7 @@ const playerOpenBoxHandler = ({ socket, payload, userId }) => {
       //이 유저가 열고 있다는거 브로드캐스트
 
       game.broadcast(notification);
-      console.log(`itemBoxId : ${itemBoxId}를 열었다!`);
+      console.log(`상자를 열었다! ${JSON.stringify(itemList)}`);
     }
   }
 };

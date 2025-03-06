@@ -51,15 +51,14 @@ const playerPutAnItemHandler = ({ socket, payload, userId }) => {
     }
 
     console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
-    console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
-    console.log(`${itemBoxId} 인벤토리 ${JSON.stringify(core.itemData)}`);
+    // console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
+    // console.log(`${itemBoxId} 인벤토리 ${JSON.stringify(core.itemData)}`);
 
     objectDatas = core.itemData;
   } else {
     // 아이템 박스
-
-    const itemBox = game.getItemBoxById(itemBoxId);
-    if (!itemBox) throw new CustomError(`itemBoxId: ${itemBoxId}를 찾을 수 없습니다`);
+    const itemBox = game.getObjectById(itemBoxId);
+    if (!itemBox) throw new CustomError('상자를 찾을 수 없습니다');
 
     const existItem = player.inventory.find((item) => item && item.itemCode === itemCode);
     if (!existItem) throw new CustomError('선택한 아이템을 찾을 수 없습니다');
@@ -85,10 +84,6 @@ const playerPutAnItemHandler = ({ socket, payload, userId }) => {
     objectDatas: objectDatas,
     success: true,
   };
-
-  console.log('playerPutAnItemPayload : ', playerPutAnItemPayload);
-
-  //TODO : objectDatas 추가 작업
 
   const notification = [
     config.packetType.S_PLAYER_PUT_AN_ITEM_NOTIFICATION,
