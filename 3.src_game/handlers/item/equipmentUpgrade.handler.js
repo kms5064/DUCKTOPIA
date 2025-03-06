@@ -40,8 +40,8 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
     config.game.item.mustardMaterialCode3 === itemCode2
   ) {
     // '1xx' 무기
-    const weaponCode = payload.find((code) => code === config.game.item.mustardMaterialCode3 && code.toString()[0] === '1');
-    if (weaponCode) throw new CustomError('허니 머스타드는 무기가 아닌 부위에는 조합할 수 없습니다.');
+    const weaponCode = [item1Str, item2Str].find((code) => code !== config.game.item.mustardItemCode && code[0] === '1');
+    if (!weaponCode) throw new CustomError('허니 머스타드는 무기가 아닌 부위에는 조합할 수 없습니다.');
 
     // 머스타드 무기는 코드에 50을 추가
     mustardWeaponCode = +weaponCode + 50
