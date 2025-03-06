@@ -5,7 +5,7 @@ import CustomError from '../../utils/error/customError.js';
 
 const getItemHandler = ({ socket, payload }) => {
   const { position, playerId } = payload;
-  console.log(`[아이템 습득 시도] 플레이어 ID: ${playerId}, 아이템 위치: ${position}`);
+  // console.log(`[아이템 습득 시도] 플레이어 ID: ${playerId}, 아이템 위치: ${position}`);
 
   // 유저 객체 조회
   const user = userSession.getUser(socket.id);
@@ -132,34 +132,34 @@ const getItemHandler = ({ socket, payload }) => {
     console.log(`[아이템 습득 성공] 플레이어(${playerId})가 아이템(${nearestItem.itemId}) 습득`);
 
     // 인벤토리 상태 로깅
-    console.log(`[인벤토리 상태]`);
-    console.log(
-      `- 습득한 아이템: 코드=${nearestItem.itemData.itemCode}, 개수=${nearestItem.itemData.count}`,
-    );
+    // console.log(`[인벤토리 상태]`);
+    // console.log(
+    //   `- 습득한 아이템: 코드=${nearestItem.itemData.itemCode}, 개수=${nearestItem.itemData.count}`,
+    // );
     const inventoryItem = player.inventory.find(
       (item) => item && item.itemCode === nearestItem.itemData.itemCode,
     );
     if (inventoryItem) {
-      console.log(
-        `- 인벤토리 아이템 현황: 코드=${inventoryItem.itemCode}, 현재 개수=${inventoryItem.count}`,
-      );
+      // console.log(
+      //   `- 인벤토리 아이템 현황: 코드=${inventoryItem.itemCode}, 현재 개수=${inventoryItem.count}`,
+      // );
     } else {
       console.log(`- 인벤토리에서 아이템을 찾을 수 없음`);
     }
-    console.log('[전체 인벤토리]', player.inventory);
+    // console.log('[전체 인벤토리]', player.inventory);
 
     // 필드에서 아이템 제거
     game.itemManager.removeFieldDropItem(nearestItem.itemId);
 
     // 필드 아이템 상태 로깅
     const remainingItems = game.itemManager.getAllFieldDropItems();
-    console.log(
-      '\n[필드 아이템 현황]',
-      remainingItems.map((item) => ({
-        itemCode: item.itemData.itemCode,
-        position: item.position,
-      })),
-    );
+    // console.log(
+    //   '\n[필드 아이템 현황]',
+    //   remainingItems.map((item) => ({
+    //     itemCode: item.itemData.itemCode,
+    //     position: item.position,
+    //   })),
+    // );
 
     // 습득 성공 알림 (모든 플레이어에게)
     const successPacket = makePacket(config.packetType.S_PLAYER_GET_ITEM_NOTIFICATION, {

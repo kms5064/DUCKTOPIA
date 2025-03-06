@@ -39,7 +39,7 @@ const playerCloseBoxHandler = ({ socket, sequence, payload }) => {
     if (!player) {
       throw new CustomError(ErrorCodes.PLAYER_NOT_FOUND, '플레이어를 찾을 수 없습니다');
     }
-    const itemBox = game.getItemBoxById(itemBoxId);
+    const itemBox = game.getObjectById(itemBoxId);
     if (!itemBox) {
       throw new CustomError(ErrorCodes.ITEM_BOX_NOT_FOUND, '상자를 찾을 수 없습니다');
     }

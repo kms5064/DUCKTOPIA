@@ -1,11 +1,10 @@
 import { config } from '../../config/config.js';
-import CustomError from '../../utils/error/customError.js';
-import { gameSession } from '../../sessions/session.js';
-import makePacket from '../../utils/packet/makePacket.js';
+import { gameSession, userSession } from '../../sessions/session.js';
 
 class Player {
-  constructor(user, atk, x, y) {
-    this.user = user; // User Class
+  constructor(id, atk, x, y) {
+    this.id = id;
+
     this.maxHp = config.game.player.playerMaxHealth;
     this.hp = config.game.player.playerMaxHealth;
     this.maxHunger = config.game.player.playerMaxHunger;
@@ -16,15 +15,16 @@ class Player {
     this.characterType = config.game.characterType.RED;
 
     this.lv = 1;
-    this.atk = atk;
-    this.def = 5;
+    this.atk = atk; //10
     this.inventory = Array.from({ length: 16 }, () => 0);
     this.equippedWeapon = null;
-    this.helmet = null;
-    this.chestArmor = null;
-    this.pants = null;
-    this.boots = null;
-    this.accessory = null;
+    this.equippedArmors = {
+      top: null,
+      bottom: null,
+      shoes: null,
+      helmet: null,
+      accessory: null,
+    };
     this.x = x;
     this.y = y;
     this.isAlive = true;
@@ -38,19 +38,53 @@ class Player {
     this.lastHungerUpdate = 0;
   }
 
-  changePlayerHp(amount) {
+  changePlayerHp(amount, game) {
     // 플레이어 체력 감소 및 회복 (체력 회복은 음수로 보냄)
-    this.hp -= amount;
+    // 데미지를 받는 경우 (amount > 0)에만 방어력 적용
+    if (amount > 0) {
+      // 방어력 계산
+      const defense = this.calculateArmorEffects(game);
 
-    if (this.hp > this.maxHp) {
-      this.hp = this.maxHp;
-    } else if (this.hp < 0) {
-      this.hp = 0;
+      // 비율 감산 방식 적용 (감쇠 곡선)
+      const damageReductionFactor = 100 / (100 + defense);
+
+      // 원래 데미지와 감소된 데미지 로그 출력 (디버깅용)
+      // console.log('[방어력 계산]', {
+      //   원래데미지: amount,
+      //   방어력: defense,
+      //   감소율: (1 - damageReductionFactor) * 100 + '%',
+      //   최종데미지: Math.max(1, Math.floor(amount * damageReductionFactor)),
+      // });
+
+      // 최종 데미지 계산 (최소 1의 데미지는 입도록 함)
+      amount = Math.max(1, Math.floor(amount * damageReductionFactor));
     }
 
+    this.hp = Math.min(Math.max(this.hp - amount, 0), this.maxHp);
+    if (this.hp === 0) {
+      this.playerDead();
+    }
     return this.hp;
   }
 
+  getData() {
+    return {
+      characterType: this.characterType,
+      hp: this.hp,
+      weapon: this.equippedWeapon,
+      armors: this.equippedArmors,
+      atk: this.atk,
+    };
+  }
+
+  getData() {
+    return {
+      characterType: this.characterType,
+      hp: this.hp,
+      weapon: this.equippedWeapon,
+      atk: this.atk,
+    };
+  }
   getPlayerPos() {
     return { x: this.x, y: this.y };
   }
@@ -59,18 +93,6 @@ class Player {
     this.x = x;
     this.y = y;
     return { x: this.x, y: this.y };
-  }
-
-  getPlayerData() {
-    return {
-      ...this.user.getUserData(),
-      character: {
-        characterType: this.characterType,
-        hp: this.hp,
-        weapon: this.equippedWeapon,
-        atk: this.atk,
-      },
-    };
   }
 
   //player 메서드 여기에 만들어놓고 나중에 옮기기
@@ -101,7 +123,7 @@ class Player {
     this.playerPositionUpdate(newX, newY);
     this.lastPosUpdateTime = now;
 
-    return { playerId: this.user.id, x: this.x, y: this.y };
+    return { playerId: this.id, x: this.x, y: this.y };
   };
   calculateLatency = () => {
     //레이턴시 구하기 => 수정할 것)각 클라마다 다른 레이턴시를 가지고 계산
@@ -124,22 +146,23 @@ class Player {
 
     if (this.hungerCounter >= config.game.player.playerHungerPeriod) {
       // game 접근
-      const game = gameSession.getGame(this.user.getGameId());
+      const user = userSession.getUser(this.id);
+      const game = gameSession.getGame(user.getGameId());
 
       if (this.hunger > 0) {
         this.changePlayerHunger(-config.game.player.playerHungerDecreaseAmount);
 
-        // console.log('플레이어 아이디' + this.user.id);
+        // console.log('플레이어 아이디' + this.id);
         // console.log('플레이어 배고품' + this.hunger);
 
         // 캐릭터 hunger 동기화 패킷 전송
-        const decreaseHungerPacket = makePacket(
+        const decreaseHungerPacket = [
           config.packetType.S_PLAYER_HUNGER_UPDATE_NOTIFICATION,
           {
-            playerId: this.user.id,
+            playerId: this.id,
             hunger: this.hunger,
           },
-        );
+        ];
 
         game.broadcast(decreaseHungerPacket);
       } else {
@@ -148,10 +171,13 @@ class Player {
         this.hp -= config.game.player.playerHpDecreaseAmountByHunger;
 
         // 캐릭터 hp 동기화 패킷 전송
-        const decreaseHpPacket = makePacket(config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION, {
-          playerId: this.user.id,
-          hp: this.hp,
-        });
+        const decreaseHpPacket = [
+          config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION,
+          {
+            playerId: this.id,
+            hp: this.hp,
+          },
+        ];
 
         game.broadcast(decreaseHpPacket);
       }
@@ -162,16 +188,12 @@ class Player {
     }
   }
 
-  // 허기 회복
   changePlayerHunger(amount) {
-    this.hunger += amount;
+    this.hunger = Math.min(Math.max(this.hunger + amount, 0), this.maxHunger);
 
-    if (this.hunger > this.maxHunger) {
-      this.hunger = this.maxHunger;
-      this.hungerCounter = 0;
+    if (this.hunger === this.maxHunger) {
       this.lastHungerUpdate = Date.now();
-    } else if (this.hunger < 0) {
-      this.hunger = 0;
+      this.hungerCounter = 0;
     }
 
     return this.hunger;
@@ -180,19 +202,19 @@ class Player {
   /** end of Hunger System */
 
   //플레이어 어택은 데미지만 리턴하기
-  getPlayerAtkDamage(weaponAtk) {
-    return weaponAtk + Math.floor(Math.random()*10);
-    //this.atk + this.lv * config.game.player.atkPerLv + weaponAtk
+  getPlayerAtkDamage(totalAtk) {
+    // return this.atk + this.lv * config.game.player.atkPerLv + weaponAtk;
+    return totalAtk + Math.floor(Math.random() * this.atk);
   }
 
   playerDead() {
     this.isAlive = false;
-    this.inventory = [];
+    // this.inventory = [];
     return this.isAlive;
   }
 
   findItemIndex(itemCode) {
-    const targetIndex = this.inventory.findIndex((item) => item && item.itemCode === itemCode);
+    const targetIndex = this.inventory.findIndex((item) => item.itemCode === itemCode);
     return targetIndex;
   }
 
@@ -211,6 +233,7 @@ class Player {
         const checkRoom = (ele) => ele === 0;
         const emptyIndex = this.inventory.findIndex(checkRoom);
         this.inventory.splice(emptyIndex, 1, item);
+        return item;
       }
       return item;
     } else {
@@ -221,6 +244,7 @@ class Player {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
         this.inventory.splice(index, 1, item);
+        return item;
       }
       return item;
     }
@@ -241,17 +265,18 @@ class Player {
     }
   }
 
+  // 무기 장착
   equipWeapon(itemCode) {
     if (this.equippedWeapon === null) {
       const weapon = this.inventory.find((item) => item.itemCode === itemCode);
-      if(!weapon) throw new CustomError(`인벤토리에서 장착하려는 아이템을 찾지 못했습니다.`);
-      
+      if (!weapon) throw new CustomError(`인벤토리에서 장착하려는 아이템을 찾지 못했습니다.`);
+
       this.equippedWeapon = { itemCode: weapon.itemCode, count: 1 };
       this.removeItem(itemCode, 1);
     } else {
       const temp = this.equippedWeapon;
       const weapon = this.inventory.find((item) => item.itemCode === itemCode);
-      if(!weapon) throw new CustomError(`인벤토리에서 장착하려는 아이템을 찾지 못했습니다.`);
+      if (!weapon) throw new CustomError(`인벤토리에서 장착하려는 아이템을 찾지 못했습니다.`);
 
       this.equippedWeapon = { itemCode: weapon.itemCode, count: 1 };
       this.removeItem(itemCode, 1);
@@ -259,6 +284,84 @@ class Player {
     }
 
     return this.equippedWeapon;
+  }
+
+  // 방어구 장착
+  equipArmor(armorType, itemCode) {
+    if (this.equippedArmors[armorType] === null) {
+      const armor = this.inventory.find((item) => item.itemCode === itemCode);
+      this.equippedArmors[armorType] = { itemCode: armor.itemCode, count: 1 };
+      this.removeItem(itemCode, 1);
+    } else {
+      const temp = this.equippedArmors[armorType];
+      const armor = this.inventory.find((item) => item.itemCode === itemCode);
+      this.equippedArmors[armorType] = { itemCode: armor.itemCode, count: 1 };
+      this.removeItem(itemCode, 1);
+      this.addItem(temp.itemCode, 1, -1);
+    }
+
+    return this.equippedArmors[armorType];
+  }
+
+  // 방어구 효과 계산 (방어력 등)
+  calculateArmorEffects(game) {
+    let totalDefense = 0;
+    const armorDefenseDetails = {}; // 디버깅용 상세 정보
+
+    // 각 방어구 타입별로 방어력 계산
+    Object.entries(this.equippedArmors).forEach(([armorType, armor]) => {
+      if (armor !== null) {
+        // 방어구 데이터 조회
+        let armorData;
+        let dataSource = null;
+
+        // 방어구 타입에 따라 다른 데이터 소스에서 조회
+        switch (armorType) {
+          case 'helmet':
+            dataSource = game.itemManager.armorHelmetData;
+            armorData = dataSource?.find((item) => item.code === armor.itemCode);
+            break;
+          case 'top':
+            dataSource = game.itemManager.armorTopData;
+            armorData = dataSource?.find((item) => item.code === armor.itemCode);
+            break;
+          case 'bottom':
+            dataSource = game.itemManager.armorBottomData;
+            armorData = dataSource?.find((item) => item.code === armor.itemCode);
+            break;
+          case 'shoes':
+            dataSource = game.itemManager.armorShoesData;
+            armorData = dataSource?.find((item) => item.code === armor.itemCode);
+            break;
+          case 'accessory':
+            dataSource = game.itemManager.armorAccessoryData;
+            armorData = dataSource?.find((item) => item.code === armor.itemCode);
+            break;
+        }
+
+        // 디버깅 로그용 정보 저장
+        armorDefenseDetails[armorType] = {
+          itemCode: armor.itemCode,
+          hasDataSource: !!dataSource,
+          dataSourceLength: dataSource?.length || 0,
+          armorData: armorData ? { ...armorData } : null,
+          defense: armorData?.defense || 0,
+        };
+
+        // 방어구 데이터가 있고 defense 속성이 있으면 방어력에 추가
+        if (armorData && armorData.defense) {
+          totalDefense += armorData.defense;
+        }
+      }
+    });
+
+    // 디버깅 로그 출력
+    // console.log('[방어구 방어력 계산 상세]', {
+    //   armorDefenseDetails,
+    //   totalDefense,
+    // });
+
+    return totalDefense;
   }
 
   //공격 사거리 변경
@@ -279,33 +382,21 @@ class Player {
     return this.angle;
   }
 
-  getUser() {
-    return this.user;
-  }
-
   getPlayerHp() {
     return this.hp;
+  }
+
+  revival(pos_x, pos_y) {
+    if (this.isAlive) {
+      return;
+    }
+    else {
+      this.isAlive = true;
+      this.hp = this.maxHp;
+      this.x = pos_x;
+      this.y = pos_y;
+    }
   }
 }
 
 export default Player;
-
-//유저 동기화는 어떤 방식으로 하지?
-//hp, lv, hunger,inventory,equippedWeapon,isAlive같은 status는 변화가 있을때만 동기화하기
-//hp변화(피격) 브로드캐스트용 패킷
-//lv변화 브로드캐스트용 패킷 / 필요한가?
-//hunger변화 브로드캐스트용 패킷 / 필요한가?
-//equippedWeapon변화 브로드캐스트용 패킷
-//isAlive변화 브로드캐스트용 패킷
-
-//위치 같은 계속 변화하는건 루프(프레임)마다 동기화
-//위치 패킷
-//키업다운때만 동기화
-//위치 패킷은 클라에서 받은 입력(새 좌표)를 받아서 저장하고 저장된 좌표를 나를 제외한 세션의 모든 클라에게 보낸다.
-//너무 자주 보내지 말고 시간을 잘 조절해 보자
-
-//키보드로 움직이는 게임은 보통 클라에서 먼저 움직이고 서버에 통보하며 통보된 위치를 브로드캐스트
-
-//가시랜더링 생각해보기
-
-//허기가0이면 데미지를 받는다

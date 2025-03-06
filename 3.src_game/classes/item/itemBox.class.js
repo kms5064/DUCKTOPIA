@@ -2,9 +2,9 @@ import CustomError from '../../utils/error/customError.js';
 import DestructibleObjectBase from '../base/destructibleObjectBase.class.js';
 import { ITEM_BOX_MAX_HP } from '../../config/constants/objects.js';
 
-class ItemBox extends DestructibleObjectBase{
-  constructor(id,objectCode,grade) {
-    super(id,objectCode,ITEM_BOX_MAX_HP);
+class ItemBox extends DestructibleObjectBase {
+  constructor(id, objectCode, name, grade) {
+    super(id, objectCode, name, ITEM_BOX_MAX_HP);
     this.grade = grade;
     this.itemList = Array.from({ length: 8 }, () => 0);
     this.occupied = null; //점유중 플레이어아이디
@@ -18,6 +18,8 @@ class ItemBox extends DestructibleObjectBase{
   takeOutAnItem(player, itemCode, count, emptyIndex) {
     //temType을 기반으로 박스에 아이템 조회
     const removedItem = this.itemList.find((item) => item.itemCode === itemCode);
+    console.log(`takeOutAnItem removedItem ${JSON.stringify(removedItem)}`);
+
     const removedItemIndex = this.itemList.findIndex((item) => item.itemCode === itemCode);
     if (!removedItem) {
       throw new CustomError('상자에서 아이템을 찾을 수 없습니다.');
@@ -55,6 +57,21 @@ class ItemBox extends DestructibleObjectBase{
     }
   }
 
+  //머스타드 제조에 사용
+  removeItem(itemCode, count) {
+    const removedItem = this.itemList.find((item) => item.itemCode === itemCode);
+    const removedItemIndex = this.itemList.findIndex((item) => item.itemCode === itemCode);
+    if (!removedItem) {
+      throw new CustomError('상자에서 아이템을 찾을 수 없습니다.');
+    }
+
+    if (removedItem.count > count) {
+      removedItem.count -= count;
+    } else {
+      this.itemList.splice(removedItemIndex, 1, 0);
+    }
+  }
+
   calculateDistance(px, py) {
     const distance = Math.sqrt(Math.pow(px - this.x, 2) + Math.pow(py - this.y, 2));
     return distance;
@@ -63,7 +80,6 @@ class ItemBox extends DestructibleObjectBase{
   changeItemPos(index1, index2) {
     [this.itemList[index1], this.itemList[index2]] = [this.itemList[index2], this.itemList[index1]];
   }
-
 }
 
 export default ItemBox;

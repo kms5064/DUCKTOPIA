@@ -75,7 +75,7 @@ const onGameData = (socket) => async (data) => {
       // console.log('클라이언트 연결');
       // console.timeEnd('check');
     } catch (error) {
-      errorHandler(socket, error);
+      console.error(error)
     }
   }
 };

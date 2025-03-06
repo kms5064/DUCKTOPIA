@@ -9,6 +9,7 @@
       "range": 5,
       "speed": 10,
       "grade": "COMMON",
+      "isMustard": false,
       "type": "sword"
     },
     {
@@ -18,6 +19,7 @@
       "range": 4,
       "speed": 8,
       "grade": "COMMON",
+      "isMustard": false,
       "type": "axe"
     },
     {
@@ -27,6 +29,7 @@
       "range": 15,
       "speed": 12,
       "grade": "COMMON",
+      "isMustard": false,
       "type": "bow"
     },
     {
@@ -36,6 +39,7 @@
       "range": 12,
       "speed": 9,
       "grade": "COMMON",
+      "isMustard": false,
       "type": "staff"
     },
     {
@@ -45,6 +49,7 @@
       "range": 5,
       "speed": 11,
       "grade": "COMMON",
+      "isMustard": false,
       "type": "sword"
     },
     {
@@ -54,6 +59,7 @@
       "range": 4,
       "speed": 9,
       "grade": "COMMON",
+      "isMustard": false,
       "type": "axe"
     },
     {
@@ -63,6 +69,7 @@
       "range": 16,
       "speed": 13,
       "grade": "COMMON",
+      "isMustard": false,
       "type": "bow"
     },
     {
@@ -72,6 +79,7 @@
       "range": 13,
       "speed": 10,
       "grade": "COMMON",
+      "isMustard": false,
       "type": "staff"
     },
     {
@@ -81,6 +89,7 @@
       "range": 6,
       "speed": 12,
       "grade": "RARE",
+      "isMustard": false,
       "type": "sword"
     },
     {
@@ -90,6 +99,7 @@
       "range": 5,
       "speed": 9,
       "grade": "RARE",
+      "isMustard": false,
       "type": "axe"
     },
     {
@@ -99,6 +109,7 @@
       "range": 20,
       "speed": 14,
       "grade": "RARE",
+      "isMustard": false,
       "type": "bow"
     },
     {
@@ -108,6 +119,7 @@
       "range": 15,
       "speed": 11,
       "grade": "RARE",
+      "isMustard": false,
       "type": "staff"
     },
     {
@@ -117,6 +129,7 @@
       "range": 6,
       "speed": 13,
       "grade": "RARE",
+      "isMustard": false,
       "type": "sword"
     },
     {
@@ -126,6 +139,7 @@
       "range": 21,
       "speed": 15,
       "grade": "RARE",
+      "isMustard": false,
       "type": "bow"
     },
     {
@@ -135,6 +149,7 @@
       "range": 7,
       "speed": 13,
       "grade": "EPIC",
+      "isMustard": false,
       "type": "sword"
     },
     {
@@ -144,6 +159,7 @@
       "range": 6,
       "speed": 10,
       "grade": "EPIC",
+      "isMustard": false,
       "type": "axe"
     },
     {
@@ -153,6 +169,7 @@
       "range": 22,
       "speed": 15,
       "grade": "EPIC",
+      "isMustard": false,
       "type": "bow"
     },
     {
@@ -162,6 +179,7 @@
       "range": 17,
       "speed": 12,
       "grade": "EPIC",
+      "isMustard": false,
       "type": "staff"
     },
     {
@@ -171,6 +189,7 @@
       "range": 8,
       "speed": 14,
       "grade": "LEGENDARY",
+      "isMustard": false,
       "type": "sword"
     },
     {
@@ -180,7 +199,208 @@
       "range": 20,
       "speed": 13,
       "grade": "LEGENDARY",
+      "isMustard": false,
       "type": "staff"
+    },
+    {
+      "code": 151,
+      "name": "머스타드가 발린 나무 검",
+      "attack": 5,
+      "range": 5,
+      "speed": 10,
+      "grade": "COMMON",
+      "type": "sword",
+      "isMustard": true
+    },
+    {
+      "code": 152,
+      "name": "머스타드가 발린 낡은 도끼",
+      "attack": 7,
+      "range": 4,
+      "speed": 8,
+      "grade": "COMMON",
+      "type": "axe",
+      "isMustard": true
+    },
+    {
+      "code": 153,
+      "name": "머스타드가 발린 초보자의 활",
+      "attack": 4,
+      "range": 15,
+      "speed": 12,
+      "grade": "COMMON",
+      "type": "bow",
+      "isMustard": true
+    },
+    {
+      "code": 154,
+      "name": "머스타드가 발린 견습 마법사의 지팡이",
+      "attack": 6,
+      "range": 12,
+      "speed": 9,
+      "grade": "COMMON",
+      "type": "staff",
+      "isMustard": true
+    },
+    {
+      "code": 155,
+      "name": "머스타드가 발린 단단한 철검",
+      "attack": 8,
+      "range": 5,
+      "speed": 11,
+      "grade": "COMMON",
+      "type": "sword",
+      "isMustard": true
+    },
+    {
+      "code": 156,
+      "name": "머스타드가 발린 사냥용 도끼",
+      "attack": 10,
+      "range": 4,
+      "speed": 9,
+      "grade": "COMMON",
+      "type": "axe",
+      "isMustard": true
+    },
+    {
+      "code": 157,
+      "name": "머스타드가 발린 수련자의 활",
+      "attack": 7,
+      "range": 16,
+      "speed": 13,
+      "grade": "COMMON",
+      "type": "bow",
+      "isMustard": true
+    },
+    {
+      "code": 158,
+      "name": "머스타드가 발린 마법 지팡이",
+      "attack": 9,
+      "range": 13,
+      "speed": 10,
+      "grade": "COMMON",
+      "type": "staff",
+      "isMustard": true
+    },
+    {
+      "code": 159,
+      "name": "머스타드가 발린 미스릴 검",
+      "attack": 25,
+      "range": 6,
+      "speed": 12,
+      "grade": "RARE",
+      "type": "sword",
+      "isMustard": true
+    },
+    {
+      "code": 160,
+      "name": "머스타드가 발린 버서커의 도끼",
+      "attack": 30,
+      "range": 5,
+      "speed": 9,
+      "grade": "RARE",
+      "type": "axe",
+      "isMustard": true
+    },
+    {
+      "code": 161,
+      "name": "머스타드가 발린 엘프의 활",
+      "attack": 22,
+      "range": 20,
+      "speed": 14,
+      "grade": "RARE",
+      "type": "bow",
+      "isMustard": true
+    },
+    {
+      "code": 162,
+      "name": "머스타드가 발린 얼음 지팡이",
+      "attack": 28,
+      "range": 15,
+      "speed": 11,
+      "grade": "RARE",
+      "type": "staff",
+      "isMustard": true
+    },
+    {
+      "code": 163,
+      "name": "머스타드가 발린 용기사의 검",
+      "attack": 35,
+      "range": 6,
+      "speed": 13,
+      "grade": "RARE",
+      "type": "sword",
+      "isMustard": true
+    },
+    {
+      "code": 164,
+      "name": "머스타드가 발린 번개의 활",
+      "attack": 32,
+      "range": 21,
+      "speed": 15,
+      "grade": "RARE",
+      "type": "bow",
+      "isMustard": true
+    },
+    {
+      "code": 165,
+      "name": "머스타드가 발린 드래곤 슬레이어",
+      "attack": 45,
+      "range": 7,
+      "speed": 13,
+      "grade": "EPIC",
+      "type": "sword",
+      "isMustard": true
+    },
+    {
+      "code": 166,
+      "name": "머스타드가 발린 천둥의 도끼",
+      "attack": 50,
+      "range": 6,
+      "speed": 10,
+      "grade": "EPIC",
+      "type": "axe",
+      "isMustard": true
+    },
+    {
+      "code": 167,
+      "name": "머스타드가 발린 사신의 활",
+      "attack": 40,
+      "range": 22,
+      "speed": 15,
+      "grade": "EPIC",
+      "type": "bow",
+      "isMustard": true
+    },
+    {
+      "code": 168,
+      "name": "머스타드가 발린 아크메이지의 지팡이",
+      "attack": 47,
+      "range": 17,
+      "speed": 12,
+      "grade": "EPIC",
+      "type": "staff",
+      "isMustard": true
+    },
+    {
+      "code": 169,
+      "name": "머스타드가 발린 창세신의 검",
+      "attack": 70,
+      "range": 8,
+      "speed": 14,
+      "grade": "LEGENDARY",
+      "type": "sword",
+      "isMustard": true
+    },
+    {
+      "code": 170,
+      "name": "머스타드가 발린 절대자의 지팡이",
+      "attack": 65,
+      "range": 20,
+      "speed": 13,
+      "grade": "LEGENDARY",
+      "type": "staff",
+      "isMustard": true
     }
   ]
 }
