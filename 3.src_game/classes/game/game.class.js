@@ -740,8 +740,8 @@ class Game {
           }
           let dx;
           let dy;
-          const revivalpart = Math.floor(Math.random() * 4 + 1);
-          switch (revivalpart) {
+          const revivalPart = Math.floor(Math.random() * 4 + 1);
+          switch (revivalPart) {
             case 1:
               dx = -4 - Math.random() * 2 + this.corePosition.x;
               dy = 3 + Math.random() + this.corePosition.y;

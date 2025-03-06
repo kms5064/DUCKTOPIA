@@ -61,7 +61,9 @@ class Player {
     }
 
     this.hp = Math.min(Math.max(this.hp - amount, 0), this.maxHp);
-    this.hp = Math.min(Math.max(this.hp - amount, 0), this.maxHp);
+    if (this.hp === 0) {
+      this.playerDead();
+    }
     return this.hp;
   }
 
@@ -207,7 +209,7 @@ class Player {
 
   playerDead() {
     this.isAlive = false;
-    this.inventory = [];
+    // this.inventory = [];
     return this.isAlive;
   }
 
