@@ -304,7 +304,7 @@ class Game {
   }
 
   monsterUpdate() {
-    // this.monsterDisCovered(); //몬스터가 플레이어를 등록, 해제 하는 걸 담당
+    this.monsterDisCovered(); //몬스터가 플레이어를 등록, 해제 하는 걸 담당
     this.monsterMove(); //몬스터 내부의 행동 패턴 등을 담당
     this.monsterTimeCheck(); //몬스터 내부의 시간 체크 담당
 
