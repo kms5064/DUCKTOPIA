@@ -4,7 +4,7 @@ import { config } from '../../config/config.js';
 
 const playerPutAnItemHandler = ({ socket, payload, userId }) => {
   const { itemBoxId, itemCode, count } = payload;
-  console.log(`putAnItemHandler itemBoxId: ${itemBoxId},itemCode: ${itemCode},count: ${count}`);
+  // console.log(`putAnItemHandler itemBoxId: ${itemBoxId},itemCode: ${itemCode},count: ${count}`);
 
   // 유저 객체 조회
   const user = userSession.getUser(userId);
@@ -50,7 +50,7 @@ const playerPutAnItemHandler = ({ socket, payload, userId }) => {
       core.createMustardItem([material1Count, material2Count, material3Count]);
     }
 
-    console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
+    // console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
     // console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
     // console.log(`${itemBoxId} 인벤토리 ${JSON.stringify(core.itemData)}`);
 
@@ -65,7 +65,7 @@ const playerPutAnItemHandler = ({ socket, payload, userId }) => {
 
     item = itemBox.putAnItem(player, itemCode, count);
 
-    console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
+    // console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
     //console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
     //console.log(`${itemBoxId} 인벤토리 ${JSON.stringify(itemBox.itemList)}`);
 

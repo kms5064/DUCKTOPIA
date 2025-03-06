@@ -26,6 +26,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
 
   // 무기 공격력 계산
   let weaponAttack = 0;
+  let isMustard = false;
   if (player.equippedWeapon !== null) {
     const equippedWeaponCode = player.equippedWeapon.itemCode;
     const equippedWeapon = game.itemManager.weaponData.find(
@@ -34,6 +35,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
 
     if (equippedWeapon) {
       weaponAttack = equippedWeapon.attack;
+      isMustard = equippedWeapon.isMustard ;
     }
   }
 
@@ -85,11 +87,12 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   // 몬스터 HP 차감 처리 - 무기 공격력과 방어구 공격력 합산
   const totalAttack = weaponAttack + armorAttack;
   const damage = player.getPlayerAtkDamage(totalAttack);
-  console.log('[Player Attack] 플레이어 공격력:', damage);
-  console.log('[무기 공격력]:', weaponAttack);
-  console.log('[방어구 공격력]:', armorAttack);
+  // console.log('[Player Attack] 플레이어 공격력:', damage);
+  // console.log('[무기 공격력]:', weaponAttack);
+  // console.log('[방어구 공격력]:', armorAttack);
 
-  const currHp = monster.setDamaged(damage, game);
+  // 보스 피격 시 머스타드 무기인지 확인후 처리
+  const currHp = monster.setDamaged(damage, isMustard);
 
   // 패킷 생성 - 몬스터 HP 업데이트
   const MonsterHpUpdateNotification = [
@@ -132,7 +135,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   const droppedItems = game.itemManager.createDropItems(monster.grade, monsterPosition);
 
   if (droppedItems.length <= 0) {
-    console.log('[아이템 미생성] 드롭 확률에 실패하여 아이템이 생성되지 않음');
+    // console.log('[아이템 미생성] 드롭 확률에 실패하여 아이템이 생성되지 않음');
     return;
   }
 
