@@ -14,7 +14,6 @@ import Core from '../core/core.class.js';
 
 class Game {
   constructor(gameId, ownerId) {
-
     this.id = gameId;
     this.ownerId = ownerId;
 
@@ -59,7 +58,9 @@ class Game {
 
     // 아이템 관리 : 2025.02.21 추가
     this.itemManager = new ItemManager();
-    
+
+    this.moveQueue = [];
+    this.loopCheck = 0;
   }
 
   /**************
@@ -71,10 +72,16 @@ class Game {
       return;
     }
     this.gameLoop = setInterval(() => {
+      this.playerMoveUpdate();
+      this.loopCheck ++
+      if(this.loopCheck < 5){
+        return
+      }
       this.phaseCheck();
       this.monsterUpdate();
       this.playersHungerCheck();
-    }, 1000);
+      this.loopCheck = 0;
+    }, 200);
     this.lastUpdate = Date.now();
     this.initPlayersHunger();
   }
@@ -168,6 +175,25 @@ class Game {
     return positions;
   }
 
+  playerMoveUpdate() {
+    const playerPositions = [];
+    while (this.moveQueue.length > 0) {
+      const playerPosition = this.moveQueue.pop();
+      playerPositions.push(playerPosition);
+    }
+
+    // payload 인코딩
+    const packet = [
+      config.packetType.S_PLAYER_POSITION_UPDATE_NOTIFICATION,
+      {
+        playerPositions,
+      },
+    ];
+
+    // 룸 내 인원에게 브로드캐스트
+    this.broadcast(packet);
+  }
+
   /**************
    * MONSTER
    */
@@ -187,8 +213,8 @@ class Game {
       const monsterList = [0, 1, 2, 3, 4, 5, 6];
       // 몬스터 데이터 뽑기
       const codeIdx = Math.floor(Math.random() * monsterList.length);
-      
-      const {monster: monsterAsset} = getGameAssets()
+
+      const { monster: monsterAsset } = getGameAssets();
       const data = monsterAsset.data[monsterList[codeIdx]];
 
       if (i < maxAmount) {
@@ -226,7 +252,7 @@ class Game {
       return;
     }
 
-    const { monster: monsterAsset } = getGameAssets()
+    const { monster: monsterAsset } = getGameAssets();
     const data = monsterAsset.data[7];
 
     const monsterId = this.monsterIndex++;
@@ -460,10 +486,10 @@ class Game {
         const itemBox = this.createItemBox(grade);
         objectData.push(itemBox);
       }
-    })
+    });
 
     for (let i = 0; i < MAX_NUMBER_OF_GRASS; i++) {
-      const grass = this.createObject("grass");
+      const grass = this.createObject('grass');
       objectData.push(grass);
     }
 
@@ -519,7 +545,7 @@ class Game {
     // this.waveCount += 2;
     const waveMonsterSize = Math.min(
       config.game.monster.waveMaxMonsterCount,
-      this.waveCount * 2 + 3
+      this.waveCount * 2 + 3,
     );
 
     for (let i = 1; i <= waveMonsterSize; i++) {
@@ -534,7 +560,7 @@ class Game {
           monsterId,
           monsterCode: data.code,
         });
-      } 
+      }
       // else {
       //   // this.bossMonsterWaveCount--;
 
@@ -563,7 +589,7 @@ class Game {
             monsterId,
             monsterCode: data.code,
           });
-        } else if(this.waveCount === 3 || this.waveCount === 4) {
+        } else if (this.waveCount === 3 || this.waveCount === 4) {
           const monsterList = [0, 1, 2, 3];
           // 몬스터 데이터 뽑기
           const codeIdx = Math.floor(Math.random() * monsterList.length);
@@ -612,7 +638,7 @@ class Game {
     for (const monster of monsters) {
       // Monster Asset 조회
       // console.log(monster.monsterCode);
-      const { monster: monsterAsset } = getGameAssets()
+      const { monster: monsterAsset } = getGameAssets();
       const data = monsterAsset.data.find((asset) => asset.code === monster.monsterCode);
       // console.log(data);
 
@@ -678,14 +704,12 @@ class Game {
 
   // 아이템 박스 생성
   createItemBox(itemBoxGrade) {
-    const { objectDropTable } = getGameAssets()
-    const { name, objectCode } = objectDropTable.data.find((e) => e?.grade === itemBoxGrade)
-
+    const { objectDropTable } = getGameAssets();
+    const { name, objectCode } = objectDropTable.data.find((e) => e?.grade === itemBoxGrade);
 
     const boxId = this.itemManager.createObjectId();
     const itemBox = new ItemBox(boxId, objectCode, name, itemBoxGrade);
     // console.log(`created item box boxId${boxId}, name:${name}, objectCode${objectCode}`);
-
 
     // 랜덤 아이템 생성 및 박스에 추가
     const items = this.itemManager.generateRandomItems();
@@ -721,7 +745,7 @@ class Game {
   // 초기 아이템 생성 - 테스트
   createObject(name, objectCode = null, x = null, y = null) {
     switch (name) {
-      case "grass": {
+      case 'grass': {
         const id = this.itemManager.createObjectId();
         const grass = new Grass(id);
         const data = {
@@ -730,17 +754,17 @@ class Game {
           x: grass.x,
           y: grass.y,
         };
-        this.objects.set(id, grass)
+        this.objects.set(id, grass);
         return data;
       }
-      case "wall": {
+      case 'wall': {
         const id = this.itemManager.createObjectId();
         const wall = new Wall(id, objectCode, x, y);
         const data = {
           ObjectData: { objectId: id, objectCode },
-          position: { x, y }
+          position: { x, y },
         };
-        this.objects.set(id, wall)
+        this.objects.set(id, wall);
         return data;
       }
       default:
@@ -762,7 +786,7 @@ class Game {
       {
         itemCode: 901,
         count: 1,
-      }
+      },
     ];
   }
 }

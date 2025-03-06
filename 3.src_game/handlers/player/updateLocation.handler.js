@@ -11,18 +11,19 @@ const updateLocationHandler = ({ socket, payload, userId }) => {
   const game = gameSession.getGame(user.getGameId());
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
 
-  const updatePositionNotification = { playerId: userId, ...user.player.changePlayerPos(x, y) };
+  user.player.changePlayerPos(x, y);
+  game.moveQueue.push({playerId: userId, x, y});
 
   // payload 인코딩
-  const packet = [
-    config.packetType.S_PLAYER_POSITION_UPDATE_NOTIFICATION,
-    {
-      playerPositions: [updatePositionNotification],
-    },
-  ];
+  // const packet = [
+  //   config.packetType.S_PLAYER_POSITION_UPDATE_NOTIFICATION,
+  //   {
+  //     playerPositions: [updatePositionNotification],
+  //   },
+  // ];
 
   // 룸 내 인원에게 브로드캐스트
-  game.broadcast(packet);
+  // game.broadcast(packet);
 };
 
 export default updateLocationHandler;
