@@ -6,6 +6,7 @@ import { formatDate } from '../utils/dateFormatter.js';
 
 const onData = (socket) => async (data) => {
   // console.log(`${formatDate(new Date())} [게이트웨이 -> 게임] 데이터 수신`);
+  
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
@@ -49,7 +50,9 @@ const onData = (socket) => async (data) => {
       const handler = handlers[packetType];
       const gamePacket = proto.decode(payloadBuffer);
       const payload = gamePacket[gamePacket.payload];
+      console.time(packetType)
       await handler({ socket, payload, userId });
+      console.timeEnd(packetType)
     } catch (error) {
       errorHandler(socket, error);
     }

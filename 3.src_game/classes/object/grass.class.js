@@ -15,7 +15,7 @@ class Grass extends DestructibleObjectBase {
       setTimeout(() => {
         this.hp = this.maxHp;
         this.isDestroyed = false;
-        console.log(`Grass: ${this.id} 재생성됨`);
+        // console.log(`Grass: ${this.id} 재생성됨`);
       }, GRASS_RESPAWN_TIME); // 60초 후 다시 생성
     }
   }

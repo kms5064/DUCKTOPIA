@@ -5,15 +5,15 @@ import { getGameAssets } from '../../init/assets.js';
 
 const useItemHandler = ({ socket, payload, userId }) => {
   const { itemData } = payload;
-  console.log('[아이템 사용 요청]', itemData);
+  // console.log('[아이템 사용 요청]', itemData);
 
   // 유저 객체 조회
   const user = userSession.getUser(userId);
   if (!user) throw new CustomError(`User ID (${userId}): 유저 정보가 없습니다.`);
 
   const player = user.player;
-  console.log('[플레이어 정보 조회]', player);
-  console.log('[플레이어 인벤토리 조회]', player.inventory);
+  // console.log('[플레이어 정보 조회]', player);
+  // console.log('[플레이어 인벤토리 조회]', player.inventory);
 
   // 게임 객체(세션) 조회
   const game = gameSession.getGame(user.getGameId());
@@ -21,7 +21,7 @@ const useItemHandler = ({ socket, payload, userId }) => {
 
   // 아이템 정보 조회
   const itemIndex = player.findItemIndex(itemData.itemCode);
-  console.log('[아이템 정보 조회]', itemIndex);
+  // console.log('[아이템 정보 조회]', itemIndex);
   if (itemIndex === -1) throw new CustomError('아이템을 찾을 수 없습니다.');
 
   const item = player.inventory[itemIndex];
@@ -75,16 +75,16 @@ const useItemHandler = ({ socket, payload, userId }) => {
       // 아이템 개수 감소 (1개만 사용)
       player.removeItem(item.itemCode, 1);
 
-      console.log(
-        `[기존 허기]: ${currentHunger} / [허기 증가량]: ${addHunger} / [현재 허기]: ${newHunger}`,
-      );
-      console.log('[식량 사용 후 인벤토리]', player.inventory);
+      // console.log(
+      //   `[기존 허기]: ${currentHunger} / [허기 증가량]: ${addHunger} / [현재 허기]: ${newHunger}`,
+      // );
+      // console.log('[식량 사용 후 인벤토리]', player.inventory);
 
       // 플레이어 체력 회복 처리
       const currentHp = player.hp;
       const addHp = Math.min(foodData.hp, player.maxHp - currentHp); // 체력 증가량 계산
       const newHp = player.changePlayerHp(-addHp, game); // 음수로 변경하여 체력 회복
-      console.log('[식량 사용 후 체력]', newHp);
+      // console.log('[식량 사용 후 체력]', newHp);
 
       packet = [
         config.packetType.S_PLAYER_EAT_FOOD_RESPONSE,
@@ -122,11 +122,11 @@ const useItemHandler = ({ socket, payload, userId }) => {
       const equippedArmor = player.equipArmor('top', item.itemCode);
 
       // 디버깅 로그 추가
-      console.log('[방어구 장착 - 상의]', {
-        itemCode: item.itemCode,
-        equippedArmor,
-        allArmors: player.equippedArmors,
-      });
+      // console.log('[방어구 장착 - 상의]', {
+      //   itemCode: item.itemCode,
+      //   equippedArmor,
+      //   allArmors: player.equippedArmors,
+      // });
 
       packet = [
         config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE,
@@ -144,11 +144,11 @@ const useItemHandler = ({ socket, payload, userId }) => {
       const equippedArmor = player.equipArmor('bottom', item.itemCode);
 
       // 디버깅 로그 추가
-      console.log('[방어구 장착 - 하의]', {
-        itemCode: item.itemCode,
-        equippedArmor,
-        allArmors: player.equippedArmors,
-      });
+      // console.log('[방어구 장착 - 하의]', {
+      //   itemCode: item.itemCode,
+      //   equippedArmor,
+      //   allArmors: player.equippedArmors,
+      // });
 
       packet = [
         config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE,
@@ -166,11 +166,11 @@ const useItemHandler = ({ socket, payload, userId }) => {
       const equippedArmor = player.equipArmor('shoes', item.itemCode);
 
       // 디버깅 로그 추가
-      console.log('[방어구 장착 - 신발]', {
-        itemCode: item.itemCode,
-        equippedArmor,
-        allArmors: player.equippedArmors,
-      });
+      // console.log('[방어구 장착 - 신발]', {
+      //   itemCode: item.itemCode,
+      //   equippedArmor,
+      //   allArmors: player.equippedArmors,
+      // });
 
       packet = [
         config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE,
@@ -188,11 +188,11 @@ const useItemHandler = ({ socket, payload, userId }) => {
       const equippedArmor = player.equipArmor('helmet', item.itemCode);
 
       // 디버깅 로그 추가
-      console.log('[방어구 장착 - 헬멧]', {
-        itemCode: item.itemCode,
-        equippedArmor,
-        allArmors: player.equippedArmors,
-      });
+      // console.log('[방어구 장착 - 헬멧]', {
+      //   itemCode: item.itemCode,
+      //   equippedArmor,
+      //   allArmors: player.equippedArmors,
+      // });
 
       packet = [
         config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE,
@@ -210,11 +210,11 @@ const useItemHandler = ({ socket, payload, userId }) => {
       const equippedArmor = player.equipArmor('accessory', item.itemCode);
 
       // 디버깅 로그 추가
-      console.log('[방어구 장착 - 액세서리]', {
-        itemCode: item.itemCode,
-        equippedArmor,
-        allArmors: player.equippedArmors,
-      });
+      // console.log('[방어구 장착 - 액세서리]', {
+      //   itemCode: item.itemCode,
+      //   equippedArmor,
+      //   allArmors: player.equippedArmors,
+      // });
 
       packet = [
         config.packetType.S_PLAYER_EQUIP_WEAPON_RESPONSE,

@@ -95,7 +95,7 @@ class ItemManager {
 
     // 드롭 확률 체크
     if (!this.rollDropItems(monsterGrade)) {
-      console.log('[아이템 드롭 실패] 드롭 확률 체크 실패');
+      // console.log('[아이템 드롭 실패] 드롭 확률 체크 실패');
       return [];
     }
 
@@ -104,7 +104,7 @@ class ItemManager {
     // console.log(`[아이템 개수 결정] ${count}개`);
 
     if (count === 0) {
-      console.log('[아이템 드롭 실패] 드롭 개수 0');
+      // console.log('[아이템 드롭 실패] 드롭 개수 0');
       return [];
     }
 
@@ -117,11 +117,11 @@ class ItemManager {
       const item = this.createItem(itemGrade, position);
       if (item) {
         items.push(item);
-        console.log(
-          // `- 아이템 생성 성공: 코드=${item.itemData.itemCode}, 위치=(${item.position.x}, ${item.position.y})`,
-        );
+        // console.log(
+        //    `- 아이템 생성 성공: 코드=${item.itemData.itemCode}, 위치=(${item.position.x}, ${item.position.y})`,
+        // );
       } else {
-        console.log(`- 아이템 생성 실패: ${itemGrade} 등급의 아이템을 찾을 수 없음`);
+        // console.log(`- 아이템 생성 실패: ${itemGrade} 등급의 아이템을 찾을 수 없음`);
       }
     }
 
@@ -143,7 +143,7 @@ class ItemManager {
     // console.log(`해당 등급 드롭율: ${dropRate}`);
 
     if (!dropRate) {
-      console.log(`[경고] ${monsterGrade} 등급의 드롭 테이블이 없습니다.`);
+      // console.log(`[경고] ${monsterGrade} 등급의 드롭 테이블이 없습니다.`);
       return false;
     }
 

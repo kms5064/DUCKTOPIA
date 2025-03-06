@@ -4,7 +4,7 @@ import { gameSession, userSession } from '../../sessions/session.js';
 
 const playerCloseBoxHandler = ({ socket, payload, userId }) => {
   const { itemBoxId } = payload;
-  console.log(`playerCloseBoxHandler itemBoxId: ${itemBoxId}`);
+  // console.log(`playerCloseBoxHandler itemBoxId: ${itemBoxId}`);
 
   // 유저 객체 조회
   const user = userSession.getUser(userId);
@@ -29,7 +29,7 @@ const playerCloseBoxHandler = ({ socket, payload, userId }) => {
     itemBoxId: itemBoxId,
   };
 
-  console.log('상자를 닫았다!');
+  // console.log('상자를 닫았다!');
 
   const packet = [config.packetType.S_PLAYER_CLOSE_BOX_NOTIFICATION, notificationPayload];
   game.broadcast(packet);

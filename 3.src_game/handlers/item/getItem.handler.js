@@ -51,15 +51,15 @@ const getItemHandler = ({ socket, payload, userId }) => {
   };
 
   if (!nearestItem) {
-    console.log(
-      `[아이템 습득 실패] 해당 위치(${position.x}, ${position.y})에서 아이템을 찾을 수 없음`,
-    );
+    // console.log(
+    //   `[아이템 습득 실패] 해당 위치(${position.x}, ${position.y})에서 아이템을 찾을 수 없음`,
+    // );
     sendFailMessage('해당 위치에서 아이템을 찾을 수 없습니다.');
     return;
   }
 
   if (nearestItem.isPickedUp) {
-    console.log(`[아이템 습득 실패] 아이템이 이미 습득됨`);
+    // console.log(`[아이템 습득 실패] 아이템이 이미 습득됨`);
     sendFailMessage('이미 습득된 아이템입니다.');
     return;
   }
@@ -72,7 +72,7 @@ const getItemHandler = ({ socket, payload, userId }) => {
   );
 
   if (distance > config.game.item.pickupRange) {
-    console.log(`[아이템 습득 실패] 아이템과의 거리(${distance})가 너무 멈`);
+    // console.log(`[아이템 습득 실패] 아이템과의 거리(${distance})가 너무 멈`);
     sendFailMessage('아이템과의 거리가 너무 멉니다.');
     return;
   }
@@ -88,7 +88,7 @@ const getItemHandler = ({ socket, payload, userId }) => {
     const emptyIndex = player.inventory.findIndex(checkRoom);
 
     if (emptyIndex === -1) {
-      console.log(`[아이템 습득 실패] 인벤토리 공간이 부족함`);
+      // console.log(`[아이템 습득 실패] 인벤토리 공간이 부족함`);
       sendFailMessage('인벤토리 공간이 부족합니다.');
       return;
     }
@@ -98,7 +98,7 @@ const getItemHandler = ({ socket, payload, userId }) => {
   try {
     // 플레이어 인벤토리에 추가
     player.addItem(nearestItem.itemData.itemCode, nearestItem.itemData.count, -1);
-    console.log(`[아이템 습득 성공] 플레이어(${playerId})가 아이템(${nearestItem.itemId}) 습득`);
+    // console.log(`[아이템 습득 성공] 플레이어(${playerId})가 아이템(${nearestItem.itemId}) 습득`);
 
     // 인벤토리 상태 로깅
     // console.log(`[인벤토리 상태]`);
@@ -110,11 +110,11 @@ const getItemHandler = ({ socket, payload, userId }) => {
       (item) => item && item.itemCode === nearestItem.itemData.itemCode,
     );
     if (inventoryItem) {
-      console.log(
-        // `- 인벤토리 아이템 현황: 코드=${inventoryItem.itemCode}, 현재 개수=${inventoryItem.count}`,
-      );
+      // console.log(
+      //   // `- 인벤토리 아이템 현황: 코드=${inventoryItem.itemCode}, 현재 개수=${inventoryItem.count}`,
+      // );
     } else {
-      console.log(`- 인벤토리에서 아이템을 찾을 수 없음`);
+      // console.log(`- 인벤토리에서 아이템을 찾을 수 없음`);
     }
     // console.log('[전체 인벤토리]', player.inventory);
 
