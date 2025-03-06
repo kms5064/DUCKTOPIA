@@ -28,6 +28,7 @@ const playerDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
   if (remainPlayerHp <= 0) {
     //유저 사망 처리
     // console.log('플레이어 사망');
+    player.playerDead();
     packet = [config.packetType.S_PLAYER_DEATH_NOTIFICATION, { playerId: userId }];
   } else {
     packet = [

@@ -381,15 +381,18 @@ class Player {
   }
 
   revival(pos_x, pos_y) {
-    if (this.isAlive) {
-      return;
-    }
-    else {
-      this.isAlive = true;
-      this.hp = this.maxHp;
-      this.x = pos_x;
-      this.y = pos_y;
-    }
+    // if (this.isAlive) {
+    //   return;
+    // }
+    // else {
+    //   this.isAlive = true;
+    //   this.hp = this.maxHp;
+    //   this.x = pos_x;
+    //   this.y = pos_y;
+    // }
+    this.hp = this.maxHp;
+    this.x = pos_x;
+    this.y = pos_y;
   }
 }
 
