@@ -74,9 +74,9 @@ class Game {
     this.gameLoop = setInterval(() => {
       this.playerMoveUpdate();
       this.monsterMoveUpdate();
-      this.loopCheck ++
-      if(this.loopCheck < 5){
-        return
+      this.loopCheck++;
+      if (this.loopCheck < 5) {
+        return;
       }
       this.phaseCheck();
       this.monsterUpdate();
@@ -178,13 +178,13 @@ class Game {
 
   playerMoveUpdate() {
     const playerPositions = [];
-    for(const user of this.users) {
+    for (const [userId, user] of this.users) {
       const playerPosition = {
-        playerId: user.id,
+        playerId: userId,
         x: user.player.x,
-        y: user.player.y
+        y: user.player.y,
       };
-      playerPositions.push(playerPosition)
+      playerPositions.push(playerPosition);
     }
 
     // payload 인코딩
@@ -468,16 +468,16 @@ class Game {
 
   monsterMoveUpdate() {
     const monsterPositionData = [];
-    while(this.monsterMoveQueue.length > 0) {
-      const monsterPosition = this.monsterMoveQueue.pop()
+    while (this.monsterMoveQueue.length > 0) {
+      const monsterPosition = this.monsterMoveQueue.pop();
       monsterPositionData.push(...monsterPosition.monsterPositionData);
     }
-    
+
     // payload 인코딩
     const packet = [
       config.packetType.S_MONSTER_MOVE_NOTIFICATION,
       {
-        monsterPositions: monsterPositionData,
+        monsterPositionData
       },
     ];
 
