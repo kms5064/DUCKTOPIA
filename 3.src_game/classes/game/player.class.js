@@ -216,7 +216,7 @@ class Player {
     // this.inventory = [];
     const user = userSession.getUser(this.id);
     const game = gameSession.getGame(user.getGameId());
-    const packet = [config.packetType.S_PLAYER_DEATH_NOTIFICATION, { playerId: userId }];
+    const packet = [config.packetType.S_PLAYER_DEATH_NOTIFICATION, { playerId: this.id }];
     game.broadcast(packet);
     return this.isAlive;
   }
