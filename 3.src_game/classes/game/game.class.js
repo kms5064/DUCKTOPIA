@@ -477,7 +477,7 @@ class Game {
     const packet = [
       config.packetType.S_MONSTER_MOVE_NOTIFICATION,
       {
-        monsterPositions: monsterPositionData,
+        monsterPositionData
       },
     ];
 
