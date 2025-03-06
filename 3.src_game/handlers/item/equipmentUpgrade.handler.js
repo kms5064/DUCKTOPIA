@@ -48,7 +48,7 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
     isSuccess = true;
 
     // TODO : 허니머스타드 무기
-    // itemResultCode = 이부분에 넣어주면 됩니다
+    // createEquipmentList = 이부분에 넣어주면 됩니다
   } else {
     // 장비 조합
 
