@@ -1,5 +1,5 @@
 import { config } from '../../config/config.js';
-import { userSession } from '../../sessions/session.js';
+import { userSession, gameSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
 
 const chattingHandler = ({ socket, payload, userId }) => {

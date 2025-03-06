@@ -87,10 +87,6 @@ export const PACKET_TYPE = {
   S_OBJECT_HP_UPDATE_NOTIFICATION: [6001, 'objectHpUpdateNotification'],
   C_OBJECT_DAMAGED_BY_MONSTER_REQUEST: [6002, 'objectDamagedByMonsterRequest'],
   S_GAME_OVER_NOTIFICATION: [6003, 'gameOverNotification'],
-  S_GAME_CLEAR_NOTIFICATION: [9999, 'gameClearNotification'],
-  //03추가
-  C_OBJECT_DAMAGED_BY_PLAYER_REQUEST: [6004, 'objectDamagedByPlayerRequest'],
-  S_OBJECT_DESTROY_NOTIFICATION: [6005, 'objectDestroyNotification'],
 
   // 에러
   S_ERROR_NOTIFICATION: [7001, 'errorNotification'],
