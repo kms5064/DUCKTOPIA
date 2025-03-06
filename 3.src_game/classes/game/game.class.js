@@ -61,6 +61,12 @@ class Game {
 
     this.loopCheck = 0;
     this.monsterMoveQueue = [];
+
+    this.revivalList = [];
+
+    // 
+    this.bossMonsterWaveCount = 20;
+    this.waveCount = 3;
   }
 
   /**************
@@ -351,6 +357,9 @@ class Game {
   monsterDisCovered() {
     const monsterDiscoverPayload = [];
     for (const [monsterId, monster] of this.monsters) {
+      if (monster.AwakeCoolTimeCheck()) {
+        continue;
+      }
       // 대상이 없는 몬스터만
       let distance = Infinity;
       let inputId = 0;
@@ -722,6 +731,53 @@ class Game {
         this.addWaveMonster();
       }
 
+      if (this.dayPhase === DayPhase.DAY) {
+        //const respawndistance = 10;
+        //플레이어가 죽는 거 구현
+        for (const [userId, user] of this.users) {
+          if (user.player.getPlayerHp() > 0) {
+            continue;
+          }
+          let dx;
+          let dy;
+          const revivalpart = Math.floor(Math.random() * 4 + 1);
+          switch (revivalpart) {
+            case 1:
+              dx = -4 - Math.random() * 2 + this.corePosition.x;
+              dy = 3 + Math.random() + this.corePosition.y;
+              break;
+            case 2:
+              dx = -4 - Math.random() * 2 + this.corePosition.x;
+              dy = -3 - Math.random() + this.corePosition.y;
+              break;
+            case 3:
+              dx = 4 + Math.random() * 2 + this.corePosition.x;
+              dy = -3 - Math.random() + this.corePosition.y;
+              break;
+            case 4:
+              dx = 4 + Math.random() * 2 + this.corePosition.x;
+              dy = 3 + Math.random() + this.corePosition.y;
+              break;
+          }
+
+          user.player.revival(dx, dy);
+
+          const revivalPayloadInfos = [config.packetType.S_PLAYER_REVIVAL_NOTIFICATION, {
+            playerId: userId,
+            position: {
+              x: dx,
+              y: dy
+            }
+          }];
+
+          this.broadcast(revivalPayloadInfos);
+        }
+      }
+
+
+
+
+
       this.dayCounter = 0;
     }
   }
@@ -812,6 +868,10 @@ class Game {
         count: 1,
       },
     ];
+  }
+
+  setRevivalList(playerId) {
+    this.revivalList.push(playerId);
   }
 }
 

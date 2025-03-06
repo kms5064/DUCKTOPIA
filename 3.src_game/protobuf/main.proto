@@ -339,17 +339,6 @@ message S2CObjectSetNotification { //2025-03-03 추가 // 건물 설치
   Position position = 2;
 }
 
-message C2SPlayerSetObjectRequest { //2025-03-03 추가// 설치 아이템 일때.
-  int32 itemCode = 1; // 
-  Position position =2;
-}
-
-message S2CPlayerSetObjectResponse { //2025-03-03 추가// 설치 아이템 일때.
-  bool success = 1;
-  int32 itemCode = 2; 
-  int32 playerId = 3;
-}
-
 // 아이템 박스 시스템
 message C2SPlayerOpenBoxRequest { int32 itemBoxId = 1; }
 
@@ -425,11 +414,26 @@ message S2CPlayerGetItemNotification {
   int32 playerId = 4; // 플레이어 ID
 }
 
+
+
 // 아이템 사용
 message C2SPlayerUseItemRequest {
   ItemData itemData = 1; // 무기, 식량 모두 아이템으로 표기(무기는 장착, 식량은
                          // 소모) //itemid ->itemdata
 }
+
+message C2SPlayerSetObjectRequest { //2025-03-03 추가// 설치 아이템 일때.
+  int32 itemCode = 1; // 
+  Position position =2;
+}
+
+message S2CPlayerSetObjectResponse { //2025-03-03 추가// 설치 아이템 일때.
+  bool success = 1;
+  int32 itemCode = 2; 
+  int32 playerId = 3;
+}
+
+
 
 message S2CPlayerEatFoodResponse { // 사용한 아이템이 식량일 때
   bool success = 1;

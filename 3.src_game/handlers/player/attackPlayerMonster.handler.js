@@ -108,6 +108,17 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
 
   if (currHp > 0) return;
 
+  if (monster.isBossMonster()) {
+    const gameClearNotification = [
+      config.packetType.S_GAME_CLEAR_NOTIFICATION,
+      {
+      }
+    ]
+
+    game.broadcast(gameClearNotification);
+    console.log("이 위치에 보스가 사망하고 클리어 했다는 패킷 전송하기");
+  }
+
   // 몬스터 사망 처리
   game.removeMonster(monsterId);
 
