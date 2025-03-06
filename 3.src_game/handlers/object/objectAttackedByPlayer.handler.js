@@ -56,9 +56,9 @@ const objectAttackedByPlayerHandler = async ({ socket, payload, userId }) => {
           items.push(item);
         }
       });
-      console.log(`오브젝트가 파괴됨(풀)`);
+      // console.log(`오브젝트가 파괴됨(풀)`);
 
-      console.log(`오브젝트 파괴로 생성된 아이템들 ${JSON.stringify(items)}`);
+      // console.log(`오브젝트 파괴로 생성된 아이템들 ${JSON.stringify(items)}`);
       //itemManager에 fieldDropItems에 아이템들 추가하고
       //만들어진 아이템들 브로드캐스트
       const itemSpawnNotification = [

@@ -101,7 +101,7 @@ class Core {
 
     // 머스타드 생성
     this.putAnItem(null, config.game.item.mustardItemCode, createCount);
-    console.log('허니 머스타드 생성 성공!!');
+    // console.log('허니 머스타드 생성 성공!!');
   }
 
   removeItem(itemCode, count) {

@@ -165,10 +165,10 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
 
   const createRandom = Math.floor(Math.random() * createEquipmentList.length);
   const createEquipment = createEquipmentList[createRandom];
-  console.log(
-    `조합에 ${isSuccess ? '성공' : '실패'} 하여 ${createGrade} 등급의 새로운 아이템이 생성되었습니다.`,
-    createEquipment,
-  );
+  // console.log(
+  //   `조합에 ${isSuccess ? '성공' : '실패'} 하여 ${createGrade} 등급의 새로운 아이템이 생성되었습니다.`,
+  //   createEquipment,
+  // );
 
   // 유저 인벤토리에 아이템 생성
   user.player.addItem(createEquipment.code, 1, emptyIndex);

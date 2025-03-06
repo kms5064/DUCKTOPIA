@@ -49,12 +49,12 @@ class Player {
       const damageReductionFactor = 100 / (100 + defense);
 
       // 원래 데미지와 감소된 데미지 로그 출력 (디버깅용)
-      console.log('[방어력 계산]', {
-        원래데미지: amount,
-        방어력: defense,
-        감소율: (1 - damageReductionFactor) * 100 + '%',
-        최종데미지: Math.max(1, Math.floor(amount * damageReductionFactor)),
-      });
+      // console.log('[방어력 계산]', {
+      //   원래데미지: amount,
+      //   방어력: defense,
+      //   감소율: (1 - damageReductionFactor) * 100 + '%',
+      //   최종데미지: Math.max(1, Math.floor(amount * damageReductionFactor)),
+      // });
 
       // 최종 데미지 계산 (최소 1의 데미지는 입도록 함)
       amount = Math.max(1, Math.floor(amount * damageReductionFactor));
@@ -350,10 +350,10 @@ class Player {
     });
 
     // 디버깅 로그 출력
-    console.log('[방어구 방어력 계산 상세]', {
-      armorDefenseDetails,
-      totalDefense,
-    });
+    // console.log('[방어구 방어력 계산 상세]', {
+    //   armorDefenseDetails,
+    //   totalDefense,
+    // });
 
     return totalDefense;
   }

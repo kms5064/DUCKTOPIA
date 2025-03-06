@@ -142,7 +142,7 @@ class BossMonster extends Monster {
   death() {}
 
   setTargetPlayer(player) {
-    console.log('보스 몬스터 쪽의 이동');
+    // console.log('보스 몬스터 쪽의 이동');
     super.setTargetPlayer(player);
     this.setPattern();
   }

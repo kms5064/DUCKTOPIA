@@ -480,7 +480,7 @@ class Game {
   coreDamaged(damage) {
     const coreHp = this.core.coreDamaged(damage);
     if (coreHp <= 0) {
-      console.log('#################### 코어 터짐');
+      // console.log('#################### 코어 터짐');
       gameSession.removeGame(this);
     }
     return coreHp;
@@ -611,10 +611,10 @@ class Game {
   spawnWaveMonster(monsters) {
     for (const monster of monsters) {
       // Monster Asset 조회
-      console.log(monster.monsterCode);
+      // console.log(monster.monsterCode);
       const { monster: monsterAsset } = getGameAssets()
       const data = monsterAsset.data.find((asset) => asset.code === monster.monsterCode);
-      console.log(data);
+      // console.log(data);
 
       if (monster.monsterCode === 208) {
         const bossMonster = new BossMonster(
@@ -684,7 +684,7 @@ class Game {
 
     const boxId = this.itemManager.createObjectId();
     const itemBox = new ItemBox(boxId, objectCode, name, itemBoxGrade);
-    console.log(`created item box boxId${boxId}, name:${name}, objectCode${objectCode}`);
+    // console.log(`created item box boxId${boxId}, name:${name}, objectCode${objectCode}`);
 
 
     // 랜덤 아이템 생성 및 박스에 추가
