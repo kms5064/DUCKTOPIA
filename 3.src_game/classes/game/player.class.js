@@ -169,6 +169,10 @@ class Player {
         // 체력 감소
 
         this.hp -= config.game.player.playerHpDecreaseAmountByHunger;
+        if(this.hp <= 0) {
+          this.hp = 0;
+          this.playerDead();
+        }
 
         // 캐릭터 hp 동기화 패킷 전송
         const decreaseHpPacket = [
@@ -210,6 +214,10 @@ class Player {
   playerDead() {
     this.isAlive = false;
     // this.inventory = [];
+    const user = userSession.getUser(this.id);
+    const game = gameSession.getGame(user.getGameId());
+    const packet = [config.packetType.S_PLAYER_DEATH_NOTIFICATION, { playerId: userId }];
+    game.broadcast(packet);
     return this.isAlive;
   }
 
@@ -385,8 +393,7 @@ class Player {
   revival(pos_x, pos_y) {
     if (this.isAlive) {
       return;
-    }
-    else {
+    } else {
       this.isAlive = true;
       this.hp = this.maxHp;
       this.x = pos_x;
