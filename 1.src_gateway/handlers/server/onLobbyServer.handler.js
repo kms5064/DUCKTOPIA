@@ -10,7 +10,7 @@ const onLobbyServerHandler = ({ socket, payloadBuffer, packetType }) => {
     throw new CustomError('유저 정보가 없습니다.');
   }
 
-  if (user.getGameState()) {
+  if (user.getGameState() === true) {
     throw new CustomError(`올바르지 못한 요청입니다. (USER ID: ${user.id})`);
   }
 

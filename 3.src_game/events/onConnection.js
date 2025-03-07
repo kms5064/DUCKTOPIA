@@ -9,6 +9,7 @@ const onConnection = async (socket) => {
   console.log('[게이트웨이] 서버와 연결되었습니다:', socket.remoteAddress, socket.remotePort);
 
   socket.buffer = Buffer.alloc(0);
+  console.log(socket.remoteAddress);
   serverSession.addServer(socket.remoteAddress, socket);
 
   socket.on('data', onData(socket));

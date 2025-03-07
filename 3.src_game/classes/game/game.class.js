@@ -93,13 +93,13 @@ class Game {
     this.initPlayersHunger();
   }
 
-  gameEnd() {
+  gameEnd(userId = null) {
     clearInterval(this.gameLoop);
     const userIds = [];
     this.gameLoop = null;
 
     const gameOverNotification = [config.packetType.S_GAME_OVER_NOTIFICATION, {}];
-    this.broadcast(gameOverNotification);
+    this.notification(userId, gameOverNotification);
 
     this.users.forEach((user) => {
       userSession.deleteUser(user.id);
