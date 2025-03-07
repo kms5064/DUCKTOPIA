@@ -11,6 +11,7 @@ import { MAX_NUMBER_OF_ITEM_BOX, MAX_NUMBER_OF_GRASS } from '../../config/consta
 import Grass from '../object/grass.class.js';
 import Wall from '../object/wall.class.js';
 import Core from '../core/core.class.js';
+import Item from '../item/item.class.js';
 
 class Game {
   constructor(gameId, ownerId) {
@@ -64,7 +65,6 @@ class Game {
 
     this.revivalList = [];
 
-    // 
     this.bossMonsterWaveCount = 20;
     this.waveCount = 3;
   }
@@ -486,7 +486,7 @@ class Game {
     const packet = [
       config.packetType.S_MONSTER_MOVE_NOTIFICATION,
       {
-        monsterPositionData
+        monsterPositionData,
       },
     ];
 
@@ -762,21 +762,20 @@ class Game {
 
           user.player.revival(dx, dy);
 
-          const revivalPayloadInfos = [config.packetType.S_PLAYER_REVIVAL_NOTIFICATION, {
-            playerId: userId,
-            position: {
-              x: dx,
-              y: dy
-            }
-          }];
+          const revivalPayloadInfos = [
+            config.packetType.S_PLAYER_REVIVAL_NOTIFICATION,
+            {
+              playerId: userId,
+              position: {
+                x: dx,
+                y: dy,
+              },
+            },
+          ];
 
           this.broadcast(revivalPayloadInfos);
         }
       }
-
-
-
-
 
       this.dayCounter = 0;
     }
@@ -793,6 +792,26 @@ class Game {
 
     // 랜덤 아이템 생성 및 박스에 추가
     const items = this.itemManager.generateRandomItems();
+    const isRnwhanf = Math.random() <= 0.3;
+
+    if (isRnwhanf) {
+      items.push(
+        new Item({
+          itemData: {
+            itemCode: 901,
+            count: 1
+          },
+          position: null,
+        }),
+      );
+
+      // const Rnwhanf =
+      // {itemCode: 901,
+      //   count: 1,
+      // }
+      // items.push(Rnwhanf);
+    }
+
     items.forEach((item, index) => {
       itemBox.itemList.splice(index, 1, {
         itemCode: item.itemData.itemCode,
@@ -861,10 +880,6 @@ class Game {
       },
       {
         itemCode: 101,
-        count: 1,
-      },
-      {
-        itemCode: 901,
         count: 1,
       },
     ];

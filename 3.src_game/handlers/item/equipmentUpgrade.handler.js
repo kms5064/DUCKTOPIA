@@ -45,8 +45,9 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
     if (!weaponCode) throw new CustomError('허니 머스타드는 무기가 아닌 부위에는 조합할 수 없습니다.');
 
     // 이미 바른 무기에 못바르게 예외처리
-    const combination = weapon.data.find((data) => data.code === weaponCode);
-    if (combination.isMustard) return
+    if(!(weaponCode > 100 && weaponCode <= 120)){
+      return
+    }
 
     // 머스타드 무기는 코드에 50을 추가
     mustardWeaponCode = +weaponCode + 50
@@ -141,7 +142,7 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
 
     switch (itemType) {
       case '1':
-        createEquipmentList = weapon.data.filter((data) => data.grade === createGrade);
+        createEquipmentList = weapon.data.filter((data) => data.grade === createGrade && data.isMustard === false);
         break;
       case '3':
         createEquipmentList = armorTop.data.filter((data) => data.grade === createGrade);

@@ -55,7 +55,7 @@ class ItemManager {
 
       if (isWeapon) {
         // 무기 아이템 생성
-        const randomWeapon = this.weaponData[Math.floor(Math.random() * this.weaponData.length)];
+        const randomWeapon = this.weaponData[Math.floor(Math.random() * 20)];
         items.push(
           new Item({
             itemData: {
@@ -185,7 +185,7 @@ class ItemManager {
     const itemId = this.lastItemId++;
 
     if (isWeapon) {
-      const availableWeapons = this.weaponData.filter((weapon) => weapon.grade === itemGrade);
+      const availableWeapons = this.weaponData.filter((weapon) => weapon.grade === itemGrade && weapon.isMustard === false);
       if (availableWeapons.length === 0) return null;
 
       const randomWeapon = availableWeapons[Math.floor(Math.random() * availableWeapons.length)];
