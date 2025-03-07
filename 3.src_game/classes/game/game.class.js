@@ -221,12 +221,27 @@ class Game {
       const monsterId = this.monsterIndex++;
       // Monster Asset 조회
 
-      const monsterList = [0, 1, 2, 3, 4, 5, 6];
+      // const monsterList = [0, 1, 2, 3, 4, 5, 6];
       // 몬스터 데이터 뽑기
-      const codeIdx = Math.floor(Math.random() * monsterList.length);
+      let codeIdx = 0;
+      if(i<20) {
+        codeIdx = 0;
+      } else if(i<40) {
+        codeIdx = 1;
+      } else if(i<80) {
+        codeIdx = 2;
+      } else if(i<120) {
+        codeIdx = 3;
+      } else if(i<200) {
+        codeIdx = 4;
+      } else if(i<280) {
+        codeIdx = 5;
+      } else {
+        codeIdx = 6;
+      }
 
       const { monster: monsterAsset } = getGameAssets();
-      const data = monsterAsset.data[monsterList[codeIdx]];
+      const data = monsterAsset.data[codeIdx];
 
       if (i < maxAmount) {
         const monster = new Monster(
