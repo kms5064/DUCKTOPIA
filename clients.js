@@ -71,21 +71,23 @@ class Client {
         );
 
         console.log(
-          `[패킷 수신] ${this.name}의 왕복시간 ${latency} ms / 평균 ${avg} ms / ${payload ? true : false}`,
+          `[패킷 수신] ${this.name}의 왕복시간 ${latency} ms / 평균 ${avg} ms / ${packetType}`,
         );
+
         switch (packetType) {
+          case config.packetType.REGISTER_RESPONSE[0]:
+            await this.loginRequest();
+            break;
           case config.packetType.LOGIN_RESPONSE[0]:
             await this.createRoomRequest();
             break;
           case config.packetType.CREATE_ROOM_RESPONSE[0]:
             await this.prepareRequest();
-            console.log('완료');
             break;
           case config.packetType.PREPARE_GAME_NOTIFICATION[0]:
-            await this.moveUpdate();
+            this.interval = setInterval(this.moveUpdate, 200)
             break;
           case config.packetType.S_PLAYER_POSITION_UPDATE_NOTIFICATION[0]:
-            await this.moveUpdate();
             break;
         }
       } catch (e) {
@@ -179,6 +181,7 @@ class Client {
   }
 
   moveUpdate = async () => {
+    console.log("보냄")
     const payload = {
       x: 5,
       y: 5,
@@ -222,23 +225,15 @@ const loginTest = async (client_count = 1) => {
 const customTest = async (client_count = 1) => {
   await Promise.all(
     Array.from({ length: client_count }, async (__, idx) => {
-      const id = `dummy${idx}@email.com`;
+      const id = `dummy${1000 + idx}@email.com`;
       const password = '123456';
-      const name = `dummy${idx}`;
+      const name = `dummy${1000 + idx}`;
 
       // Lobby 서버 연결
-      const client = new Client(id, password, name, '127.0.0.1', 5555);
+      const client = new Client(id, password, name, '13.125.207.234', 5555);
       // const client = new Client(id, password, name, '43.201.23.100', 5555);
-
       // 로그인 이후 사용할 메서드 적용
-
       await client.loginRequest();
-
-      // await client.createRoomRequest();
-      // await client.prepareRequest();
-      // await client.gameStart();
-      // await client.end();
-      // await gameClient.joinRequest();
     }),
   );
 };
@@ -246,5 +241,5 @@ const customTest = async (client_count = 1) => {
 // 테스트 실행문
 await loadProtos().then(async () => {
   // await registerTest(300);
-  customTest(100);
+  await customTest(200);
 });
