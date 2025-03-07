@@ -17,9 +17,9 @@ const MonsterAttackHandler = async ({ socket, payload, userId }) => {
   const monster = game.getMonsterById(monsterId);
 
   if (!monster) return;
-  if(monster) {
-  const packet = [config.packetType.S_MONSTER_ATTACK_NOTIFICATION, payload];
-  game.notification(userId, packet);
+  if (monster) {
+    const packet = [config.packetType.S_MONSTER_ATTACK_NOTIFICATION, payload];
+    game.notification(userId, packet);
   }
 };
 
