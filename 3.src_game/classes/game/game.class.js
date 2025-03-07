@@ -223,17 +223,17 @@ class Game {
       // const monsterList = [0, 1, 2, 3, 4, 5, 6];
       // 몬스터 데이터 뽑기
       let codeIdx = 0;
-      if(i<20) {
+      if(i<30) {
         codeIdx = 0;
-      } else if(i<40) {
+      } else if(i<60) {
         codeIdx = 1;
-      } else if(i<80) {
+      } else if(i<90) {
         codeIdx = 2;
       } else if(i<120) {
         codeIdx = 3;
-      } else if(i<200) {
+      } else if(i<170) {
         codeIdx = 4;
-      } else if(i<280) {
+      } else if(i<220) {
         codeIdx = 5;
       } else {
         codeIdx = 6;

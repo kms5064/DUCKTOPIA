@@ -18,13 +18,13 @@ const monsterMoveNotificationHandler = async ({ socket, payload, userId }) => {
   for (let i = 0; i < monsterPositionData.length; i++) {
     const monster = game.getMonsterById(monsterPositionData[i].monsterId);
     if (!monster) continue;
-
-    monster.setPosition(monsterPositionData[i].x, monsterPositionData[i].y);
+    if (monster) {
+      monster.setPosition(monsterPositionData[i].x, monsterPositionData[i].y);
+      game.monsterMoveQueue.push(payload);
+    }
   }
 
   // const packet = [config.packetType.S_MONSTER_MOVE_NOTIFICATION, payload];
-
-  game.monsterMoveQueue.push(payload);
 
   //이런 식으로 게임에서 notification을 보내보도록 하자.
   //game.notification(userId, packet);

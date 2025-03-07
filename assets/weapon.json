@@ -5,7 +5,7 @@
     {
       "code": 101,
       "name": "나무 검",
-      "attack": 5,
+      "attack": 10,
       "range": 5,
       "speed": 10,
       "grade": "COMMON",
@@ -15,7 +15,7 @@
     {
       "code": 102,
       "name": "낡은 도끼",
-      "attack": 7,
+      "attack": 12,
       "range": 4,
       "speed": 8,
       "grade": "COMMON",
@@ -25,7 +25,7 @@
     {
       "code": 103,
       "name": "초보자의 활",
-      "attack": 4,
+      "attack": 6,
       "range": 15,
       "speed": 12,
       "grade": "COMMON",
@@ -35,7 +35,7 @@
     {
       "code": 104,
       "name": "견습 마법사의 지팡이",
-      "attack": 6,
+      "attack": 8,
       "range": 12,
       "speed": 9,
       "grade": "COMMON",
@@ -45,7 +45,7 @@
     {
       "code": 105,
       "name": "단단한 철검",
-      "attack": 8,
+      "attack": 12,
       "range": 5,
       "speed": 11,
       "grade": "COMMON",
@@ -55,7 +55,7 @@
     {
       "code": 106,
       "name": "사냥용 도끼",
-      "attack": 10,
+      "attack": 15,
       "range": 4,
       "speed": 9,
       "grade": "COMMON",
@@ -65,7 +65,7 @@
     {
       "code": 107,
       "name": "수련자의 활",
-      "attack": 7,
+      "attack": 8,
       "range": 16,
       "speed": 13,
       "grade": "COMMON",
@@ -75,7 +75,7 @@
     {
       "code": 108,
       "name": "마법 지팡이",
-      "attack": 9,
+      "attack": 10,
       "range": 13,
       "speed": 10,
       "grade": "COMMON",

@@ -8,7 +8,7 @@
       "hp": 50,
       "attack": 5,
       "defence": 0,
-      "range": 5,
+      "range": 7,
       "speed": 10,
       "grade": "D"
     },
@@ -18,7 +18,7 @@
       "hp": 100,
       "attack": 15,
       "defence": 0,
-      "range": 6,
+      "range": 7,
       "speed": 10,
       "grade": "D"
     },
@@ -28,7 +28,7 @@
       "hp": 200,
       "attack": 20,
       "defence": 5,
-      "range": 5,
+      "range": 7,
       "speed": 10,
       "grade": "C"
     },
@@ -78,7 +78,7 @@
       "hp": 1000,
       "attack": 120,
       "defence": 50,
-      "range": 8,
+      "range": 10,
       "speed": 13,
       "grade": "S"
     }
