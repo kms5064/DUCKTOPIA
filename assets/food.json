@@ -6,56 +6,56 @@
       "code": 1,
       "name": "사과",
       "description": "신선한 사과. 아삭한 식감이 좋다.",
-      "hp": 5,
-      "hunger": 8,
+      "hp": 10,
+      "hunger": 15,
       "grade": "COMMON"
     },
     {
       "code": 2,
       "name": "벌레 먹은 사과",
       "description": "벌레가 조금 먹은 사과. 그래도 먹을 만하다.",
-      "hp": 5,
-      "hunger": 5,
+      "hp": 10,
+      "hunger": 15,
       "grade": "COMMON"
     },
     {
       "code": 3,
       "name": "생선",
       "description": "신선한 생선. 요리하면 맛있을 것 같다.",
-      "hp": 10,
-      "hunger": 10,
+      "hp": 15,
+      "hunger": 20,
       "grade": "COMMON"
     },
     {
       "code": 4,
       "name": "토마토",
       "description": "싱싱한 토마토. 상큼한 맛이 좋다.",
-      "hp": 6,
-      "hunger": 8,
+      "hp": 11,
+      "hunger": 16,
       "grade": "COMMON"
     },
     {
       "code": 5,
       "name": "감자",
       "description": "구수한 감자. 다양한 요리에 활용할 수 있다.",
-      "hp": 7,
-      "hunger": 8,
+      "hp": 13,
+      "hunger": 18,
       "grade": "COMMON"
     },
     {
       "code": 6,
       "name": "바게트",
       "description": "갓 구운 바게트. 부드럽고 향긋하다.",
-      "hp": 8,
-      "hunger": 12,
+      "hp": 13,
+      "hunger": 18,
       "grade": "COMMON"
     },
     {
       "code": 7,
       "name": "꿀",
       "description": "달콤한 천연 꿀. 영양이 풍부하다.",
-      "hp": 10,
-      "hunger": 10,
+      "hp": 15,
+      "hunger": 20,
       "grade": "COMMON"
     },
     {
@@ -63,31 +63,31 @@
       "name": "계란 프라이",
       "description": "노른자가 톡톡 터지는 계란 프라이. 든든한 한 끼가 된다.",
       "hp": 20,
-      "hunger": 15,
+      "hunger": 25,
       "grade": "RARE"
     },
     {
       "code": 9,
       "name": "쿠키",
       "description": "바삭하고 달콤한 쿠키. 간단한 간식으로 좋다.",
-      "hp": 15,
-      "hunger": 15,
+      "hp": 22,
+      "hunger": 27,
       "grade": "RARE"
     },
     {
       "code": 10,
       "name": "브라우니",
       "description": "진한 초콜릿 맛의 브라우니. 달콤한 디저트다.",
-      "hp": 18,
-      "hunger": 18,
+      "hp": 23,
+      "hunger": 28,
       "grade": "RARE"
     },
     {
       "code": 11,
       "name": "와플",
       "description": "따뜻하고 달콤한 와플. 부드러운 식감이 일품이다.",
-      "hp": 20,
-      "hunger": 20,
+      "hp": 24,
+      "hunger": 29,
       "grade": "RARE"
     },
     {
@@ -95,23 +95,23 @@
       "name": "치즈",
       "description": "잘 숙성된 치즈. 고소한 맛이 일품이다.",
       "hp": 25,
-      "hunger": 20,
+      "hunger": 30,
       "grade": "RARE"
     },
     {
       "code": 13,
       "name": "맥주",
       "description": "시원한 생맥주. 갈증해소에 좋다.",
-      "hp": 10,
-      "hunger": 15,
+      "hp": 20,
+      "hunger": 25,
       "grade": "RARE"
     },
     {
       "code": 14,
       "name": "달빛술",
       "description": "달빛 아래서 숙성된 술. 은은한 향이 매력적이다.",
-      "hp": 12,
-      "hunger": 18,
+      "hp": 22,
+      "hunger": 27,
       "grade": "RARE"
     },
     {
@@ -119,23 +119,23 @@
       "name": "스테이크",
       "description": "완벽하게 구운 스테이크. 육즙이 풍부하다.",
       "hp": 35,
-      "hunger": 35,
+      "hunger": 40,
       "grade": "EPIC"
     },
     {
       "code": 16,
       "name": "위스키",
       "description": "오크통에서 숙성된 위스키. 깊은 풍미가 있다.",
-      "hp": 15,
-      "hunger": 25,
+      "hp": 30,
+      "hunger": 35,
       "grade": "EPIC"
     },
     {
       "code": 17,
       "name": "와인",
       "description": "오래 숙성된 레드와인. 깊은 풍미가 있다.",
-      "hp": 18,
-      "hunger": 25,
+      "hp": 31,
+      "hunger": 36,
       "grade": "EPIC"
     },
     {
@@ -143,7 +143,7 @@
       "name": "꿀벌집",
       "description": "신선한 꿀이 가득한 벌집. 최상급 영양식이다.",
       "hp": 40,
-      "hunger": 40,
+      "hunger": 45,
       "grade": "EPIC"
     },
     {

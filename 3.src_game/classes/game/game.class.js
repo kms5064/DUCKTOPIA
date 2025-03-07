@@ -66,7 +66,6 @@ class Game {
     this.revivalList = [];
 
     this.bossMonsterWaveCount = 20;
-    this.waveCount = 3;
   }
 
   /**************
@@ -608,10 +607,8 @@ class Game {
     const { monster: monsterAsset } = getGameAssets();
     // const waveMonsterSize = Math.min(config.game.monster.waveMaxMonsterCount, this.waveCount);
     // this.waveCount += 2;
-    const waveMonsterSize = Math.min(
-      config.game.monster.waveMaxMonsterCount,
-      this.waveCount * 2 + 3,
-    );
+    const waveMonsterSize = this.waveCount * 2 + 3
+    
 
     for (let i = 1; i <= waveMonsterSize; i++) {
       const monsterId = this.monsterIndex++;
@@ -642,7 +639,7 @@ class Game {
       //   });
       // }
       else {
-        if (this.waveCount === 1 || this.waveCount === 2) {
+        if (this.waveCount === 1) {
           const monsterList = [0, 1];
           // 몬스터 데이터 뽑기
           const codeIdx = Math.floor(Math.random() * monsterList.length);
@@ -654,7 +651,7 @@ class Game {
             monsterId,
             monsterCode: data.code,
           });
-        } else if (this.waveCount === 3 || this.waveCount === 4) {
+        } else if (this.waveCount === 2) {
           const monsterList = [0, 1, 2, 3];
           // 몬스터 데이터 뽑기
           const codeIdx = Math.floor(Math.random() * monsterList.length);
