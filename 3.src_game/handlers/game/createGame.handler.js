@@ -1,6 +1,7 @@
-import { gameSession, userSession } from '../../sessions/session.js';
+import { gameSession, userSession, serverSession } from '../../sessions/session.js';
 import { config } from '../../config/config.js';
 import CustomError from '../../utils/error/customError.js';
+import { redisClient } from '../../db/redis/redis.js';
 
 // 방 생성 핸들러
 const createGameHandler = async ({ socket, payload, userId }) => {
@@ -14,7 +15,11 @@ const createGameHandler = async ({ socket, payload, userId }) => {
   // 서버, 게임 에 유저 추가하기
   for (const user of users) {
     // **만약 게이트 웨이가 증설되면 socket이 유저마다 달라질 수 있음을 주의..**
-    const serverUser = userSession.addUser(user.userId, user.name, roomId, socket);
+    const host = await redisClient.hGet(config.redis.custom + 'Server:User:' + user.userId, 'gate');
+    const gateSocket = serverSession.servers.get(host);
+    if (!gateSocket) continue;
+
+    const serverUser = userSession.addUser(user.userId, user.name, roomId, gateSocket);
     game.addUser(serverUser);
   }
 

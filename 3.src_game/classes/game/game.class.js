@@ -64,7 +64,7 @@ class Game {
 
     this.revivalList = [];
 
-    // 
+    //
     this.bossMonsterWaveCount = 20;
     this.waveCount = 3;
   }
@@ -106,9 +106,9 @@ class Game {
       userIds.push(user.id);
     });
     // Gateway의 user 정보 업데이트용
-    redisClient.publish(config.redis.custom + '/UserGameEnd', userIds.join(','));
+    redisClient.publish(config.redis.custom + 'UserGameEnd', userIds.join(','));
     // Lobby의 roomId 삭제용
-    redisClient.publish(config.redis.custom + '/RemoveRoom', String(this.id));
+    redisClient.publish(config.redis.custom + 'RemoveRoom', String(this.id));
   }
 
   // 전체 공지(본인 제외)
@@ -486,7 +486,7 @@ class Game {
     const packet = [
       config.packetType.S_MONSTER_MOVE_NOTIFICATION,
       {
-        monsterPositionData
+        monsterPositionData,
       },
     ];
 
@@ -762,21 +762,20 @@ class Game {
 
           user.player.revival(dx, dy);
 
-          const revivalPayloadInfos = [config.packetType.S_PLAYER_REVIVAL_NOTIFICATION, {
-            playerId: userId,
-            position: {
-              x: dx,
-              y: dy
-            }
-          }];
+          const revivalPayloadInfos = [
+            config.packetType.S_PLAYER_REVIVAL_NOTIFICATION,
+            {
+              playerId: userId,
+              position: {
+                x: dx,
+                y: dy,
+              },
+            },
+          ];
 
           this.broadcast(revivalPayloadInfos);
         }
       }
-
-
-
-
 
       this.dayCounter = 0;
     }

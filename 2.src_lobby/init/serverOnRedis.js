@@ -39,13 +39,13 @@ const serverOnRedis = async () => {
       .multi()
       .hSet(name, hashData)
       .rPush(mainName, host)
-      .publish(config.redis.custom + '/ServerOn', name)
+      .publish(config.redis.custom + 'ServerOn', name)
       .exec();
   } else
     await redisClient
       .multi()
       .hSet(name, hashData)
-      .publish(config.redis.custom + '/ServerOn', name)
+      .publish(config.redis.custom + 'ServerOn', name)
       .exec();
 
   roomSession.name = name;

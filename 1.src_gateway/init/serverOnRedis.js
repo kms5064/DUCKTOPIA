@@ -2,6 +2,7 @@ import os from 'os';
 import { redisClient } from '../db/redis/redis.js';
 import connectServer from '../db/redis/subscribe/connectServer.js';
 import { config } from '../config/config.js';
+import { userSession } from '../sessions/session.js';
 
 // 프라이빗 IPv4 주소
 function getLocalIP() {
@@ -53,6 +54,8 @@ const serverOnRedis = async () => {
       await connectServer(game + ':' + +idx);
     }),
   ]);
+
+  userSession.host = host;
 
   console.log('Redis List 모든 서버 연결 성공');
 };
