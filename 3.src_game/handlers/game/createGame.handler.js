@@ -15,7 +15,10 @@ const createGameHandler = async ({ socket, payload, userId }) => {
   // 서버, 게임 에 유저 추가하기
   for (const user of users) {
     // **만약 게이트 웨이가 증설되면 socket이 유저마다 달라질 수 있음을 주의..**
-    const host = await redisClient.hGet(config.redis.custom + 'Server:User:' + user.userId, 'gate');
+    const [host] = await redisClient.hGet(
+      config.redis.custom + 'Server:User:' + user.userId,
+      'gate',
+    );
     const gateSocket = serverSession.servers.get(host);
     if (!gateSocket) continue;
 

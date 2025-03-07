@@ -1,4 +1,6 @@
 import { config } from '../../config/config.js';
+import { redisClient } from '../../db/redis/redis.js';
+import { serverSession } from '../../sessions/session.js';
 
 class User {
   constructor(socket) {
@@ -36,7 +38,18 @@ class User {
     this.gameServer = gameServer;
   }
 
-  getGameState() {
+  async getGameState() {
+    if (this.gameServer) return this.inGame;
+
+    const [serverId] = await redisClient.hGet(
+      config.redis.custom + 'Server:User:' + this.id,
+      'game',
+    );
+    if (serverId) {
+      this.inGame = true;
+      this.gameServer = serverId;
+    }
+
     return this.inGame;
   }
 
@@ -44,5 +57,8 @@ class User {
     return this.socket;
   }
 }
+import { redisClient } from '../../db/redis/redis.js';
+import { serverSession } from '../../sessions/session.js';
+import ServerSession from '../server/serverSession.class.js';
 
 export default User;

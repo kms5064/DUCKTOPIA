@@ -36,7 +36,7 @@ const gameStartHandler = async ({ socket, payloadBuffer, userId }) => {
   // 게임 상태 동기화
   for (const { name, userId: tempId } of payload.room.users) {
     const tempUser = userSession.getUserByID(tempId);
-    const hashData = { game: minGameServer.socket.remoteAddress };
+    const hashData = { game: minGameServer.socket.id };
     await redisClient.hSet(config.redis.custom + 'Server:User:' + tempId, hashData);
     if (!tempUser) continue;
     tempUser.setGameState(payload.success, gameServerId);
