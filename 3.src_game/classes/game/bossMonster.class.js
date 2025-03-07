@@ -42,12 +42,12 @@ class BossMonster extends Monster {
   setDamaged(damage, isMustard) {
     // const newAggro = Math.max(0, this.hatePointList.get(player) + damage);
     // this.hatePointList.set(player, newAggro);
-    if(!isMustard) return this.hp;
+    if (!isMustard) return this.hp;
     return super.setDamaged(damage);
   }
 
   //어그로 수치를 풀 때 쓰임
-  resetHatePoint() {}
+  resetHatePoint() { }
 
   //1인을 쫒아갈 때
   setTargetPlayer(player) {
@@ -70,30 +70,29 @@ class BossMonster extends Monster {
   //2. hatePointList 내에 해당 플레이어의 정보가 있는지 살핀다.
   //3. 보스 몬스터의 조건은 뭐가 있을까. 일단 어그로를 어떻게 관리할 것인가도 봐야겠다.
   lostPlayer() {
-    if (this.bossPatternTimeOut !== null) {
-      return false;
+    if (this.targetPlayer === null) {
+      return true;
     }
+
+    const playerPos = this.targetPlayer.getPlayerPos();
+    const distance = Math.sqrt(
+      Math.pow(playerPos.x - this.x, 2) + Math.pow(playerPos.y - this.y, 2),
+    );
 
     const distanceFromStartPoint = Math.sqrt(
       Math.pow(this.x - this.startPoint_x, 2) + Math.pow(this.y - this.startPoint_y, 2),
     );
 
-    if (distanceFromStartPoint < this.awakeRange + 20) {
+    const targetHp = this.targetPlayer.getPlayerHp();
+
+    if (distanceFromStartPoint > this.awakeRange + 20 || distance > this.awakeRange + 5 || targetHp < 0) {
+      this.monsterAwakeCoolTime = 3000;
+      this.distanceBetweenPlayer = Infinity;
+      this.targetPlayer = null;
       return true;
     }
-
-    if (this.targetPlayer !== null) {
-      if (this.hatePointList.has(this.targetPlayer)) {
-        if (this.hatePointList.get(this.targetPlayer) < 200) {
-          this.targetPlayer = null;
-          return true;
-        }
-      } else {
-        return false;
-      }
-      this.targetPlayer = null;
-    } else {
-      return false;
+    else {
+      this.distanceBetweenPlayer = distance;
     }
   }
 
@@ -140,19 +139,18 @@ class BossMonster extends Monster {
     }
   }
 
-  death() {}
+  death() { }
 
   setTargetPlayer(player) {
     // console.log('보스 몬스터 쪽의 이동');
     super.setTargetPlayer(player);
+    if (this.hatePointList.has(player)) {
+      this.hatePointList.set(player, 100);
+    }
     this.setPattern();
   }
 
-  lostPlayer() {
-    if (this.targetPlayer === null) {
-      return;
-    }
-  }
+
 }
 
 export default BossMonster;
