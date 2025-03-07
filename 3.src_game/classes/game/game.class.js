@@ -919,6 +919,18 @@ class Game {
         itemCode: 101,
         count: 1,
       },
+      {
+        itemCode: 7,
+        count: 20,
+      },
+      {
+        itemCode: 8,
+        count: 20,
+      },
+      {
+        itemCode: 801,
+        count: 20,
+      },
     ];
   }
 
