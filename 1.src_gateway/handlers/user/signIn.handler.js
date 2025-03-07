@@ -38,8 +38,8 @@ const signInHandler = async ({ socket, payloadBuffer }) => {
   }
 
   // 5. 찾은 유저에 로그인 정보 추가
-  user.login(userData.id, email, userData.name);
   await userSession.addId(userData.id, socket);
+  user.login(userData.id, email, userData.name);
 
   const loginCast = makeServerPacket(
     config.packetType.LOGIN_CAST,

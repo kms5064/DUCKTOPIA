@@ -16,7 +16,6 @@ class UserSession {
     this.host = null;
   }
 
-  // 로그인 시 이메일 추가
   async addId(id, socket) {
     this.ids.set(id, this.getUser(socket.id));
     const hashData = { gate: this.host };

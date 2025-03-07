@@ -7,30 +7,11 @@ class ServerSession {
   }
 
   addServer(host, socket) {
-    servers.set(host, server);
+    servers.set(host, socket);
   }
 
-  getServerById(serverId) {
-    const type = serverId.split(':')[1];
-    const servers = this.types[type];
-
-    return servers.get(serverId);
-  }
-
-  deleteServer(serverId) {
-    const type = serverId.split(':')[1];
-    const servers = this.types[type];
-    const server = servers.get(serverId);
-    server.clearChecker();
+  deleteServer(host) {
     servers.delete(serverId);
-  }
-
-  getGameServers() {
-    return this.gameServers;
-  }
-
-  getLobbyServers() {
-    return this.lobbyServers;
   }
 }
 

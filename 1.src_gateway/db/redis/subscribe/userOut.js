@@ -3,7 +3,7 @@ import { onEnd } from '../../../events/onEnd.js';
 
 const userOut = (userId) => {
   const user = userSession.getUserByID(+userId);
-  if (!user) return;
+  if (!user || !user.id) return;
 
   onEnd(user.socket)();
 };
