@@ -24,7 +24,8 @@ const joinRoomHandler = ({ socket, payload, userId }) => {
     throw new CustomError('방 정원이 다 찼습니다.');
   }
 
-  // 5. response 전송
+  if(room.state === 0) {
+    // 5. response 전송
   const joinRoomResponse = [
     config.packetType.JOIN_ROOM_RESPONSE,
     {
@@ -45,6 +46,9 @@ const joinRoomHandler = ({ socket, payload, userId }) => {
   ];
 
   room.notification(user.id, joinRoomNotification); // 브로드캐스트
+  }
+
+  
 };
 
 export default joinRoomHandler;

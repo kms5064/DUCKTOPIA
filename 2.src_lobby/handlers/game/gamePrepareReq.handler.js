@@ -12,6 +12,8 @@ const gamePrepareReqHandler = ({ socket, payload, userId }) => {
     throw new CustomError('올바른 요청이 아닙니다!');
   }
 
+  room.changeState(1);
+
   const GamePrepareResponse = [
     config.packetType.PREPARE_GAME_SERVER,
     {

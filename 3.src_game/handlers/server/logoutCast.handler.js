@@ -8,7 +8,9 @@ const logoutCastHandler = ({ socket, payload, userId }) => {
   const game = gameSession.getGame(user.gameId);
 
   userSession.deleteUser(userId);
-  if(game){
+  game.removePlayer(userId);
+
+  if(game && userId === game.ownerId){
     gameSession.removeGame(game);
   }
   
