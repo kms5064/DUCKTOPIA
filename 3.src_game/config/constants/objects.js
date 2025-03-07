@@ -4,7 +4,9 @@ export const OBJECT_HIT_COUNT = 3;
 //itemBox
 export const VALID_DISTANCE_OF_BOX = 2;
 export const ITEM_BOX_MAX_HP = 100;
-export const MAX_NUMBER_OF_ITEM_BOX = 10;
+export const MAX_NUMBER_OF_ITEM_BOX_B = 30;
+export const MAX_NUMBER_OF_ITEM_BOX_C = 20;
+export const MAX_NUMBER_OF_ITEM_BOX_D = 10;
 
 export const BOX_MAX_SLOTS = 8; // 박스 최대 슬롯 수
 export const ITEM_MIN_COUNT = 1; // 아이템 최소 개수

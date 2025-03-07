@@ -10,6 +10,6 @@ export const WaveState = {
 };
 Object.freeze(WaveState);
 
-export const DAY_TIME = 300000; // 5분
-export const NIGHT_TIME = 12000; // 2분
+export const DAY_TIME = 90000; // 1분 30초
+export const NIGHT_TIME = 30000; // 30초
 export const FRAME_PER_40 = 1000 / 40; // 40프레임

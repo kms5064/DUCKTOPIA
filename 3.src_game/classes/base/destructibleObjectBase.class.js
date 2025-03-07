@@ -35,7 +35,7 @@ class DestructibleObjectBase {
     const dropData = objectDropTable.data.find((item) => item.objectCode === objectCode);
 
     dropData.dropList.forEach((itemCode) => {
-      const count = Math.floor(Math.random() * dropData.max);
+      const count = dropData.max
       dropItems.push({ itemCode: itemCode, count: count });
     });
 

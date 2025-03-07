@@ -7,7 +7,7 @@ import ItemManager from '../item/itemManager.class.js';
 import { gameSession, userSession } from '../../sessions/session.js';
 import { redisClient } from '../../db/redis/redis.js';
 import BossMonster from './bossMonster.class.js';
-import { MAX_NUMBER_OF_ITEM_BOX, MAX_NUMBER_OF_GRASS } from '../../config/constants/objects.js';
+import { MAX_NUMBER_OF_GRASS } from '../../config/constants/objects.js';
 import Grass from '../object/grass.class.js';
 import Wall from '../object/wall.class.js';
 import Core from '../core/core.class.js';
@@ -223,7 +223,7 @@ class Game {
 
       const monsterList = [0, 1, 2, 3, 4, 5, 6];
       // 몬스터 데이터 뽑기
-      const codeIdx = Math.floor(Math.random() * monsterList.length);
+      // const codeIdx = Math.floor(Math.random() * monsterList.length);
 
       const { monster: monsterAsset } = getGameAssets();
       const data = monsterAsset.data[monsterList[codeIdx]];
@@ -515,7 +515,25 @@ class Game {
     const itemBoxGrades = ['B', 'C', 'D'];
 
     itemBoxGrades.forEach((grade) => {
-      for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
+      let count = 0;
+      switch (grade) {
+        case 'B':
+          count = config.itemBox.maxNumberOfItemBoxB;
+
+          break;
+        case 'C':
+          count = config.itemBox.maxNumberOfItemBoxC;
+
+          break;
+        case 'D':
+          count = config.itemBox.maxNumberOfItemBoxD;
+
+          break;
+
+        default:
+          break;
+      }
+      for (let i = 0; i < count; i++) {
         const itemBox = this.createItemBox(grade);
         objectData.push(itemBox);
       }
@@ -799,7 +817,7 @@ class Game {
         new Item({
           itemData: {
             itemCode: 901,
-            count: 1
+            count: 1,
           },
           position: null,
         }),

@@ -57,6 +57,10 @@ import {
   ITEM_MIN_COUNT,
   ITEM_MAX_STACK,
   OBJECT_CORE_CODE,
+  ITEM_MAX_SPAWN,
+  MAX_NUMBER_OF_ITEM_BOX_B,
+  MAX_NUMBER_OF_ITEM_BOX_C,
+  MAX_NUMBER_OF_ITEM_BOX_D,
 } from './constants/objects.js';
 import {
   EQUIPMENT_GRADES,
@@ -146,9 +150,13 @@ export const config = {
       centerX: CENTER_X,
       centerY: CENTER_Y,
       boxMaxSlots: BOX_MAX_SLOTS,
+      itemMaxSpawn: ITEM_MAX_SPAWN,
       itemMinCount: ITEM_MIN_COUNT,
       itemMaxStack: ITEM_MAX_STACK,
       objectCoreCode: OBJECT_CORE_CODE,
+      maxNumberOfItemBoxB: MAX_NUMBER_OF_ITEM_BOX_B,
+      maxNumberOfItemBoxC: MAX_NUMBER_OF_ITEM_BOX_C,
+      maxNumberOfItemBoxD: MAX_NUMBER_OF_ITEM_BOX_D,
     },
     item: {
       pickupRange: ITEM_PICKUP_RANGE,
