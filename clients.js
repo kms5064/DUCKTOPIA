@@ -75,6 +75,7 @@ class Client {
         );
         switch (packetType) {
           case config.packetType.LOGIN_RESPONSE[0]:
+            console;
             await this.createRoomRequest();
             break;
           case config.packetType.CREATE_ROOM_RESPONSE[0]:
@@ -227,18 +228,18 @@ const customTest = async (client_count = 1) => {
       const name = `dummy${idx}`;
 
       // Lobby 서버 연결
-      const client = new Client(id, password, name, '127.0.0.1', 5555);
+      const client = new Client(id, password, name, '13.125.207.234', 5555);
       // const client = new Client(id, password, name, '43.201.23.100', 5555);
 
       // 로그인 이후 사용할 메서드 적용
 
       await client.loginRequest();
 
-      // await client.createRoomRequest();
-      // await client.prepareRequest();
-      // await client.gameStart();
+      await client.createRoomRequest();
+      await client.prepareRequest();
+      await client.gameStart();
       // await client.end();
-      // await gameClient.joinRequest();
+      await gameClient.joinRequest();
     }),
   );
 };
@@ -246,5 +247,5 @@ const customTest = async (client_count = 1) => {
 // 테스트 실행문
 await loadProtos().then(async () => {
   // await registerTest(300);
-  customTest(100);
+  customTest(500);
 });
