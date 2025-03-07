@@ -223,7 +223,7 @@ class Game {
 
       const monsterList = [0, 1, 2, 3, 4, 5, 6];
       // 몬스터 데이터 뽑기
-      // const codeIdx = Math.floor(Math.random() * monsterList.length);
+      const codeIdx = Math.floor(Math.random() * monsterList.length);
 
       const { monster: monsterAsset } = getGameAssets();
       const data = monsterAsset.data[monsterList[codeIdx]];
@@ -518,18 +518,17 @@ class Game {
       let count = 0;
       switch (grade) {
         case 'B':
-          count = config.itemBox.maxNumberOfItemBoxB;
-
+          //count = config.itemBox.maxNumberOfItemBoxB;
+          count = 30;
           break;
         case 'C':
-          count = config.itemBox.maxNumberOfItemBoxC;
-
+          // count = config.itemBox.maxNumberOfItemBoxC;
+          count = 20;
           break;
         case 'D':
-          count = config.itemBox.maxNumberOfItemBoxD;
-
+          // count = config.itemBox.maxNumberOfItemBoxD;
+          count = 10;
           break;
-
         default:
           break;
       }
