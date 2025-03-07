@@ -820,7 +820,7 @@ class Game {
     // console.log(`created item box boxId${boxId}, name:${name}, objectCode${objectCode}`);
 
     // 랜덤 아이템 생성 및 박스에 추가
-    const items = this.itemManager.generateRandomItems();
+    const items = this.itemManager.generateRandomItems(itemBoxGrade);
     const isRnwhanf = Math.random() <= 0.3;
 
     if (isRnwhanf) {
