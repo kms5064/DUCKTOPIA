@@ -21,9 +21,9 @@ const dropItemHandler = ({ socket, payload, userId }) => {
 
 
   if (item) {
-    const droppedItems = game.itemManager.playerDropItem(item.itemCode, playerPosition);
+    const droppedItems = game.itemManager.playerDropItem(item.itemCode, itemData.count, playerPosition);
 
-    player.removeItem(item.itemCode, 1);
+    player.removeItem(item.itemCode, itemData.count);
 
     
     const dropItemPacket = [
@@ -31,7 +31,7 @@ const dropItemHandler = ({ socket, payload, userId }) => {
       {
         itemData: {
           itemCode: item.itemCode,
-          count: 1,
+          count: itemData.count,
         },
         playerId: userId,
       },

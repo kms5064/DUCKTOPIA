@@ -977,7 +977,7 @@ class Game {
       },
       {
         itemCode: 17,
-        count: 1,
+        count: 2,
       },
       {
         itemCode: 101,

@@ -297,13 +297,13 @@ generateRandomItems(itemBoxGrade) {
     return Array.from(this.fieldDropItems.values());
   }
 
-  playerDropItem(itemCode, position) {
+  playerDropItem(itemCode, itemCount, position) {
     const itemId = this.lastItemId++;
 
-    const item = newItem({
+    const item = new Item({
       itemData: {
         itemCode: itemCode,
-        count: 1,
+        count: itemCount,
       },
       position: this.addOffsetByCore(position),
     })
