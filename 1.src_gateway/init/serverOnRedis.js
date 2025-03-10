@@ -10,7 +10,7 @@ function getLocalIP() {
   for (let interfaceName in interfaces) {
     for (let iface of interfaces[interfaceName]) {
       // IPv4, 비공개 IP 제외
-      if (iface.family === 'IPv4' && !iface.internal) return iface.address;
+      if (iface.family === 'IPv4' && !iface.internal && !iface.address.startsWith('169.254.')) return iface.address;
     }
   }
 }
