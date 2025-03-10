@@ -1,4 +1,5 @@
 import net from 'net';
+import dns from 'dns';
 import { loadProtos, getProtoMessages } from './0.src/init/loadProtos.js';
 import { config } from './0.src/config/config.js';
 
@@ -15,9 +16,18 @@ class Client {
     this.interval = null;
     this.lastUpdated = 0;
     this.latency = [];
+    this.address = null;
+
+    dns.lookup(host, (err, address, family) => {
+      if (err) {
+        console.error(`DNS lookup failed: ${err.message}`);
+        return;
+      }
+      this.address = address;
+    });  
 
     // this.socket.connect(config.server.port, config.server.host, this.onConnection);
-    this.socket.connect(port, host, this.onConnection);
+    this.socket.connect(this.address || port, host, this.onConnection);
     this.socket.on('error', this.onError);
     this.socket.on('data', this.onData);
   }
@@ -231,8 +241,7 @@ const customTest = async (client_count = 1) => {
       const name = `dummy${1000 + idx}`;
 
       // Lobby 서버 연결
-      const client = new Client(id, password, name, '13.125.207.234', 5555);
-      // const client = new Client(id, password, name, '43.201.23.100', 5555);
+      const client = new Client(id, password, name, 'ducktopia-loadbalancer-1900b439129f13b9.elb.ap-northeast-2.amazonaws.com', 5555);
       // 로그인 이후 사용할 메서드 적용
       await client.loginRequest();
     }),
@@ -242,5 +251,5 @@ const customTest = async (client_count = 1) => {
 // 테스트 실행문
 await loadProtos().then(async () => {
   // await registerTest(300);
-  await customTest(500);
+  await customTest(10);
 });

@@ -33,6 +33,7 @@ class Server {
           onLobbyEnd(this.socket)();
           break;
       }
+      await redisClient.hSet(this.socket.id, 'status', 0);
     }
 
     // 테스팅 시작
