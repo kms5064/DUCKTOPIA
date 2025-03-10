@@ -15,31 +15,32 @@ const detachmentItemHandler = ({ socket, payload, userId }) => {
   const game = gameSession.getGame(user.getGameId());
   if (!game) throw new CustomError(`Game ID: (${user.getGameId()}) Game 정보가 없습니다.`);
   let item;
+  let itemType;
   switch (true) {
     case itemCode >= 101 && itemCode <= 200: //weapon
       item = player.detachWeapon(itemCode);
       break;
     case itemCode >= 301 && itemCode <= 400: //top
-      itemType = 'TOP';
+      itemType = 'top';
       item = player.detachArmor(itemType, itemCode);
       break;
     case itemCode >= 401 && itemCode <= 500: //bottom
-      itemType = 'BOTTOM';
+      itemType = 'bottom';
       item = player.detachArmor(itemType, itemCode);
 
       break;
     case itemCode >= 501 && itemCode <= 600: //shoes
-      itemType = 'SHOES';
+      itemType = 'shoes';
       item = player.detachArmor(itemType, itemCode);
 
       break;
     case itemCode >= 601 && itemCode <= 700: //helmet
-      itemType = 'HELMET';
+      itemType = 'helmet';
       item = player.detachArmor(itemType, itemCode);
 
       break;
     case itemCode >= 701 && itemCode <= 800: //accessory
-      itemType = 'ACCESSORY';
+      itemType = 'accessory';
       item = player.detachArmor(itemType, itemCode);
 
       break;

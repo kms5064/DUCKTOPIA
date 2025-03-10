@@ -335,7 +335,7 @@ class Player {
   detachArmor(armorType, itemCode){
     if (this.equippedArmors[armorType] === null) {
       throw new CustomError(`탈착할 아이템이 없습니다.`);
-    } else if(itemCode === this.equippedWeapon.itemCode){
+    } else if(itemCode === this.equippedArmors[armorType].itemCode){
       const temp = this.equippedArmors[armorType];
       this.equippedArmors[armorType] = null;
       this.addItem(temp.itemCode, 1, -1);
