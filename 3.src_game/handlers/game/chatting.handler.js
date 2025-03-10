@@ -18,6 +18,15 @@ const chattingHandler = ({ socket, payload, userId }) => {
 
   let badWordCount = 0;
 
+  function escapeHTML(text) {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
   profanity.data.forEach(word => {
     const regex = new RegExp(word, "gi");
     if (replacedMessage.match(regex)) {
@@ -32,6 +41,8 @@ const chattingHandler = ({ socket, payload, userId }) => {
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
   //console.log(replacedMessage);
   //console.log("채팅이 변환됨");
+
+  replacedMessage = escapeHTML(replacedMessage);
 
   if (badWordCount > 3) {
     replacedMessage = "대충 뭔가 험한 말";
