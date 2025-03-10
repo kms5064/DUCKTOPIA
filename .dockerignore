@@ -1,0 +1,14 @@
+node_modules
+
+# 게이트웨이 미사용 폴더
+0.src
+2.src_lobby
+3.src_game
+legacy src
+assets
+
+# 미사용 파일
+.prettierrc
+.gitignore
+.clients.js
+README.md

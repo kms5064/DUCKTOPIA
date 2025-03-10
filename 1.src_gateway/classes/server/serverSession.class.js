@@ -6,6 +6,7 @@ class ServerSession {
     this.gameServers = new Map();
     this.lobbyServers = new Map();
     this.types = { Game: this.gameServers, Lobby: this.lobbyServers };
+    this.host = null;
   }
 
   addServer(serverId, socket) {

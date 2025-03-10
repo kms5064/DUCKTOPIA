@@ -13,7 +13,8 @@ const gameStartHandler = async ({ socket, payloadBuffer, userId }) => {
   // 방장의 상태 확인
   const user = userSession.getUserByID(userId);
   if (!user || !user.id) throw new CustomError('유저 정보가 없습니다.');
-  if (user.getGameState()) throw new CustomError(`올바르지 못한 요청입니다. (USER ID: ${user.id})`);
+  if (user.getGameState() === true)
+    throw new CustomError(`올바르지 못한 요청입니다. (USER ID: ${user.id})`);
   if (!payload.success) throw new CustomError('게임 시작 요청이 실패했습니다.');
 
   // 로드 밸런싱 후 게임 서버 이름 저장
@@ -36,6 +37,9 @@ const gameStartHandler = async ({ socket, payloadBuffer, userId }) => {
   // 게임 상태 동기화
   for (const { name, userId: tempId } of payload.room.users) {
     const tempUser = userSession.getUserByID(tempId);
+    const hashData = { game: minGameServer.socket.id };
+    await redisClient.hSet(config.redis.custom + 'Server:User:' + tempId, hashData);
+    if (!tempUser) continue;
     tempUser.setGameState(payload.success, gameServerId);
   }
 

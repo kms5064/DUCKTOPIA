@@ -13,7 +13,6 @@ import Wall from '../object/wall.class.js';
 
 class Game {
   constructor(gameId, ownerId) {
-
     this.id = gameId;
     this.ownerId = ownerId;
 
@@ -88,9 +87,9 @@ class Game {
       userIds.push(user.id);
     });
     // Gateway의 user 정보 업데이트용
-    redisClient.publish(config.redis.custom + '/UserGameEnd', userIds.join(','));
+    redisClient.publish(config.redis.custom + 'UserGameEnd', userIds.join(','));
     // Lobby의 roomId 삭제용
-    redisClient.publish(config.redis.custom + '/RemoveRoom', String(this.id));
+    redisClient.publish(config.redis.custom + 'RemoveRoom', String(this.id));
   }
 
   // 전체 공지(본인 제외)
@@ -184,8 +183,8 @@ class Game {
       const monsterList = [0, 1, 2, 3, 4, 5, 6];
       // 몬스터 데이터 뽑기
       const codeIdx = Math.floor(Math.random() * monsterList.length);
-      
-      const {monster: monsterAsset} = getGameAssets()
+
+      const { monster: monsterAsset } = getGameAssets();
       const data = monsterAsset.data[monsterList[codeIdx]];
 
       if (i < maxAmount) {
@@ -223,7 +222,7 @@ class Game {
       return;
     }
 
-    const { monster: monsterAsset } = getGameAssets()
+    const { monster: monsterAsset } = getGameAssets();
     const data = monsterAsset.data[7];
 
     const monsterId = this.monsterIndex++;
@@ -449,7 +448,7 @@ class Game {
       x: 0,
       y: 0,
     };
-    this.objects.set(1, coreData)
+    this.objects.set(1, coreData);
     objectData.push(coreData);
 
     const itemBoxGrades = ['B', 'C', 'D'];
@@ -459,10 +458,10 @@ class Game {
         const itemBox = this.createItemBox(grade);
         objectData.push(itemBox);
       }
-    })
+    });
 
     for (let i = 0; i < MAX_NUMBER_OF_GRASS; i++) {
-      const grass = this.createObject("grass");
+      const grass = this.createObject('grass');
       objectData.push(grass);
     }
 
@@ -506,7 +505,7 @@ class Game {
   // 여기서는 데이터를 생성하지 않고 spawn을 통해 생성한다.
   addWaveMonster() {
     const monstersData = [];
-    const { monster: monsterAsset } = getGameAssets()
+    const { monster: monsterAsset } = getGameAssets();
 
     const waveMonsterSize = Math.min(config.game.monster.waveMaxMonsterCount, this.waveCount);
     this.waveCount += 2;
@@ -560,7 +559,7 @@ class Game {
     for (const monster of monsters) {
       // Monster Asset 조회
       console.log(monster.monsterCode);
-      const { monster: monsterAsset } = getGameAssets()
+      const { monster: monsterAsset } = getGameAssets();
       const data = monsterAsset.data.find((asset) => asset.code === monster.monsterCode);
       console.log(data);
 
@@ -626,8 +625,8 @@ class Game {
 
   // 아이템 박스 생성
   createItemBox(itemBoxGrade) {
-    const { objectDropTable } = getGameAssets()
-    const { name, objectCode } = objectDropTable.data.find((e) => e?.grade === itemBoxGrade)
+    const { objectDropTable } = getGameAssets();
+    const { name, objectCode } = objectDropTable.data.find((e) => e?.grade === itemBoxGrade);
 
     const boxId = this.itemManager.createObjectId();
     const itemBox = new ItemBox(boxId, objectCode, name, itemBoxGrade);
@@ -666,7 +665,7 @@ class Game {
   // 초기 아이템 생성 - 테스트
   createObject(name, objectCode = null, x = null, y = null) {
     switch (name) {
-      case "grass": {
+      case 'grass': {
         const id = this.itemManager.createObjectId();
         const grass = new Grass(id);
         data = {
@@ -675,17 +674,17 @@ class Game {
           x: grass.x,
           y: grass.y,
         };
-        this.objects.set(id, grass)
+        this.objects.set(id, grass);
         return data;
       }
-      case "wall": {
+      case 'wall': {
         const id = this.itemManager.createObjectId();
         const wall = new Wall(id, objectCode, x, y);
         const data = {
           ObjectData: { objectId: id, objectCode },
-          position: { x, y }
+          position: { x, y },
         };
-        this.objects.set(id, wall)
+        this.objects.set(id, wall);
         return data;
       }
       default:
@@ -707,7 +706,7 @@ class Game {
       {
         itemCode: 15125,
         count: 1,
-      }
+      },
     ];
   }
 }

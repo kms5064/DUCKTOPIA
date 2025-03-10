@@ -79,6 +79,7 @@ class Client {
             await this.loginRequest();
             break;
           case config.packetType.LOGIN_RESPONSE[0]:
+            console;
             await this.createRoomRequest();
             break;
           case config.packetType.CREATE_ROOM_RESPONSE[0]:
@@ -241,5 +242,5 @@ const customTest = async (client_count = 1) => {
 // 테스트 실행문
 await loadProtos().then(async () => {
   // await registerTest(300);
-  await customTest(200);
+  await customTest(500);
 });

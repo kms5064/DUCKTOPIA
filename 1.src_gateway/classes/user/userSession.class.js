@@ -2,25 +2,35 @@ import { serverSession } from '../../sessions/session.js';
 import { config } from '../../config/config.js';
 import makeServerPacket from '../../utils/packet/makeServerPacket.js';
 import User from './user.class.js';
+import { redisClient } from '../../db/redis/redis.js';
 
 /* UserSession 클래스 */
 class UserSession {
   constructor() {
-    // key = email, value = socket
-    this.logins = new Map();
+    // 중복 로그인 확인용 -> Redis로 이전
+    // this.logins = new Map();
+    // 현재 서버의 유저 index
     this.ids = new Map();
     this.users = new Map();
     this.id = 1; // 소켓에 socket.id값으로 1을 부여, addUser실행될 때마다 1 증가
+    this.host = null;
   }
 
-  // 로그인 시 이메일 추가
-  addId(email, id, socket) {
+  async addId(id, socket) {
     this.ids.set(id, this.getUser(socket.id));
-    this.logins.set(email, socket);
+    const hashData = { gate: this.host };
+    await redisClient.hSet(config.redis.custom + 'Server:User:' + id, hashData);
   }
 
-  checkId(email) {
-    return this.logins.has(email);
+  async checkId(id) {
+    // 중복 로그인 확인
+    const req = await redisClient.del(config.redis.custom + 'Server:User:' + id);
+
+    // 삭제 성공 시
+    if (req === 1) {
+      await redisClient.publish(config.redis.custom + 'UserOut', String(id));
+    }
+    return true;
   }
 
   /* 세션에 유저 추가시키는 메서드 */
@@ -28,13 +38,13 @@ class UserSession {
     const newUser = new User(socket);
     socket.id = this.id;
     this.users.set(socket.id, newUser);
-    console.log(`신규 유저 접속 : ${socket.remoteAddress}:${socket.remotePort}`);
+    // console.log(`신규 유저 접속 : ${socket.remoteAddress}:${socket.remotePort}`);
     this.id += 1;
     return newUser;
   }
 
   /* 나간 유저 세션에서 제거하는 메서드 */
-  deleteUser(socketId) {
+  async deleteUser(socketId) {
     const user = this.users.get(socketId);
     const packet = makeServerPacket(config.packetType.LOGOUT_CAST, {}, null, user.id);
 
@@ -51,7 +61,9 @@ class UserSession {
       if (gameServer) gameServer.socket.write(packet);
     }
 
-    this.logins.delete(user.email);
+    // 레디스 기록 삭제
+    await redisClient.del(config.redis.custom + 'Server:User:' + user.id);
+
     this.users.delete(socketId);
   }
 

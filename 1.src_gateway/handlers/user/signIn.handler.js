@@ -31,15 +31,15 @@ const signInHandler = async ({ socket, payloadBuffer }) => {
     throw new CustomError('소켓을 찾을 수 없습니다.');
   }
 
-  // 4. 중복 로그인 유저 세션에서 체크
-  const existingUser = userSession.checkId(email);
-  if (existingUser) {
+  // 4. 중복 로그인 유저 세션에서 체크 << User.id (key) 를 이용한 Redis sortedSet 사용
+  const existingUser = await userSession.checkId(userData.id);
+  if (!existingUser) {
     throw new CustomError('이미 접속 중인 유저입니다.');
   }
 
   // 5. 찾은 유저에 로그인 정보 추가
-  user.login(userData.id, userData.email, userData.name);
-  userSession.addId(email, userData.id, socket);
+  await userSession.addId(userData.id, socket);
+  user.login(userData.id, email, userData.name);
 
   const loginCast = makeServerPacket(
     config.packetType.LOGIN_CAST,

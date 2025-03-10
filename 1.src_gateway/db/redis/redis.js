@@ -2,6 +2,7 @@ import redis from 'redis';
 import { config } from '../../config/config.js';
 import connectServer from './subscribe/connectServer.js';
 import updateInGame from './subscribe/updateInGame.js';
+import userOut from './subscribe/userOut.js';
 
 // Redis 클라우드 인스턴스에 연결
 const redisClient = redis.createClient({
@@ -37,7 +38,8 @@ subscriber.on('error', (err) => {
 });
 
 // Sub 함수 매핑
-await subscriber.subscribe(config.redis.custom + '/ServerOn', connectServer);
-await subscriber.subscribe(config.redis.custom + '/UserGameEnd', updateInGame);
+await subscriber.subscribe(config.redis.custom + 'ServerOn', connectServer);
+await subscriber.subscribe(config.redis.custom + 'UserGameEnd', updateInGame);
+await subscriber.subscribe(config.redis.custom + 'UserOut', userOut);
 
 export { redisClient, subscriber };
