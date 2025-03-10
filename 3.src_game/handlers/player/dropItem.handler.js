@@ -11,6 +11,7 @@ const dropItemHandler = ({ socket, payload, userId }) => {
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
 
   const player = user.player;
+  const playerPosition = player.getPlayerPos();
 
   const itemIndex = player.findItemIndex(itemData.itemCode);
   if (itemIndex === -1) throw new CustomError('아이템을 찾을 수 없습니다.');
@@ -18,12 +19,14 @@ const dropItemHandler = ({ socket, payload, userId }) => {
   const item = player.inventory[itemIndex];
   if (!item) throw new CustomError(`아이템 정보가 없습니다.`);
 
-  let packet;
 
   if (item) {
+    const droppedItems = game.itemManager.playerDropItem(item.itemCode, playerPosition);
+
     player.removeItem(item.itemCode, 1);
 
-    packet = [
+    
+    const dropItemPacket = [
       config.packetType.S_DROP_ITEM_NOTIFICATION,
       {
         itemData: {
@@ -33,6 +36,15 @@ const dropItemHandler = ({ socket, payload, userId }) => {
         playerId: userId,
       },
     ];
+
+    const spawnItemPacket = [config.packetType.S_ITEM_SPAWN_NOTIFICATION,
+      {
+        items: droppedItems,
+      }
+    ];
+
+    game.broadcast(dropItemPacket);
+    game.broadcast(spawnItemPacket);
   }
 };
 

@@ -257,6 +257,31 @@ generateRandomItems(itemBoxGrade) {
     };
   }
 
+  addOffsetByCore(position) {
+    const Offset = 2; 
+    if(position.x >= 0 && position.y >= 0) {
+      return {
+        x: position.x + Offset,
+        y: position.y + Offset,
+      }
+    } else if(position.x < 0 && position.y >= 0) {
+      return {
+        x: position.x - Offset,
+        y: position.y + Offset,
+      }
+    } else if(position.x >= 0 && position.y < 0) {
+      return {
+        x: position.x + Offset,
+        y: position.y - Offset,
+      }
+    } else if(position.x < 0 && position.y < 0) {
+      return {
+        x: position.x - Offset,
+        y: position.y - Offset,
+      }
+    }
+  }
+
   // 필드 드롭 아이템 제거
   removeFieldDropItem(itemId) {
     return this.fieldDropItems.delete(itemId);
@@ -270,6 +295,23 @@ generateRandomItems(itemBoxGrade) {
   // 모든 필드 드롭 아이템 조회
   getAllFieldDropItems() {
     return Array.from(this.fieldDropItems.values());
+  }
+
+  playerDropItem(itemCode, position) {
+    const itemId = this.lastItemId++;
+
+    const item = newItem({
+      itemData: {
+        itemCode: itemCode,
+        count: 1,
+      },
+      position: this.addOffsetByCore(position),
+    })
+
+    this.fieldDropItems.set(itemId, {itemId, ...item});
+    
+    const items = [item];
+    return items;
   }
 }
 
