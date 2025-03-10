@@ -22,6 +22,7 @@ import chattingHandler from './game/chatting.handler.js';
 import equipmentUpgradeHandler from './item/equipmentUpgrade.handler.js';
 import objectAttackedByPlayerHandler from './object/objectAttackedByPlayer.handler.js';
 import detachmentItemHandler from './player/detachmentItem.handler.js';
+import dropItemHandler from './player/dropItem.handler.js';
 
 const handlers = {
   // Server
@@ -55,7 +56,8 @@ const handlers = {
 
   [config.packetType.C_ITEM_COMBINATION_REQUEST[0]]: equipmentUpgradeHandler,
 
-  [config.packetType.C_ITEM_DETACHMENT_REQUEST[0]]:detachmentItemHandler,
+  [config.packetType.C_ITEM_DETACHMENT_REQUEST[0]]: detachmentItemHandler,
+  [config.packetType.C_DROP_ITEM_REQUEST[0]]: dropItemHandler,
 };
 
 export default handlers;
