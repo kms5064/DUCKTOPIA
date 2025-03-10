@@ -7,10 +7,11 @@ import ItemManager from '../item/itemManager.class.js';
 import { gameSession, userSession } from '../../sessions/session.js';
 import { redisClient } from '../../db/redis/redis.js';
 import BossMonster from './bossMonster.class.js';
-import { MAX_NUMBER_OF_ITEM_BOX, MAX_NUMBER_OF_GRASS } from '../../config/constants/objects.js';
+import { MAX_NUMBER_OF_GRASS } from '../../config/constants/objects.js';
 import Grass from '../object/grass.class.js';
 import Wall from '../object/wall.class.js';
 import Core from '../core/core.class.js';
+import Item from '../item/item.class.js';
 
 class Game {
   constructor(gameId, ownerId) {
@@ -64,9 +65,7 @@ class Game {
 
     this.revivalList = [];
 
-    //
     this.bossMonsterWaveCount = 20;
-    this.waveCount = 3;
   }
 
   /**************
@@ -93,14 +92,22 @@ class Game {
     this.initPlayersHunger();
   }
 
-  gameEnd() {
+  gameEnd(isClear = false) {
     clearInterval(this.gameLoop);
     const userIds = [];
     this.gameLoop = null;
+    let gameEndNotification;
+    if(isClear){
+      gameEndNotification = [
+        config.packetType.S_GAME_CLEAR_NOTIFICATION,
+        {
+        }
+      ]
+    } else {
+      gameEndNotification = [config.packetType.S_GAME_OVER_NOTIFICATION, {}];
+    }
 
-    const gameOverNotification = [config.packetType.S_GAME_OVER_NOTIFICATION, {}];
-    this.broadcast(gameOverNotification);
-
+    this.broadcast(gameEndNotification);
     this.users.forEach((user) => {
       userSession.deleteUser(user.id);
       userIds.push(user.id);
@@ -221,12 +228,27 @@ class Game {
       const monsterId = this.monsterIndex++;
       // Monster Asset 조회
 
-      const monsterList = [0, 1, 2, 3, 4, 5, 6];
+      // const monsterList = [0, 1, 2, 3, 4, 5, 6];
       // 몬스터 데이터 뽑기
-      const codeIdx = Math.floor(Math.random() * monsterList.length);
+      let codeIdx = 0;
+      if(i<30) {
+        codeIdx = 0;
+      } else if(i<60) {
+        codeIdx = 1;
+      } else if(i<90) {
+        codeIdx = 2;
+      } else if(i<120) {
+        codeIdx = 3;
+      } else if(i<170) {
+        codeIdx = 4;
+      } else if(i<220) {
+        codeIdx = 5;
+      } else {
+        codeIdx = 6;
+      }
 
       const { monster: monsterAsset } = getGameAssets();
-      const data = monsterAsset.data[monsterList[codeIdx]];
+      const data = monsterAsset.data[codeIdx];
 
       if (i < maxAmount) {
         const monster = new Monster(
@@ -515,7 +537,24 @@ class Game {
     const itemBoxGrades = ['B', 'C', 'D'];
 
     itemBoxGrades.forEach((grade) => {
-      for (let i = 0; i < MAX_NUMBER_OF_ITEM_BOX; i++) {
+      let count = 0;
+      switch (grade) {
+        case 'B':
+          //count = config.itemBox.maxNumberOfItemBoxB;
+          count = 30;
+          break;
+        case 'C':
+          // count = config.itemBox.maxNumberOfItemBoxC;
+          count = 20;
+          break;
+        case 'D':
+          // count = config.itemBox.maxNumberOfItemBoxD;
+          count = 10;
+          break;
+        default:
+          break;
+      }
+      for (let i = 0; i < count; i++) {
         const itemBox = this.createItemBox(grade);
         objectData.push(itemBox);
       }
@@ -576,10 +615,8 @@ class Game {
     const { monster: monsterAsset } = getGameAssets();
     // const waveMonsterSize = Math.min(config.game.monster.waveMaxMonsterCount, this.waveCount);
     // this.waveCount += 2;
-    const waveMonsterSize = Math.min(
-      config.game.monster.waveMaxMonsterCount,
-      this.waveCount * 2 + 3,
-    );
+    const waveMonsterSize = this.waveCount * 2 + 3
+    
 
     for (let i = 1; i <= waveMonsterSize; i++) {
       const monsterId = this.monsterIndex++;
@@ -610,7 +647,7 @@ class Game {
       //   });
       // }
       else {
-        if (this.waveCount === 1 || this.waveCount === 2) {
+        if (this.waveCount === 1) {
           const monsterList = [0, 1];
           // 몬스터 데이터 뽑기
           const codeIdx = Math.floor(Math.random() * monsterList.length);
@@ -622,7 +659,7 @@ class Game {
             monsterId,
             monsterCode: data.code,
           });
-        } else if (this.waveCount === 3 || this.waveCount === 4) {
+        } else if (this.waveCount === 2) {
           const monsterList = [0, 1, 2, 3];
           // 몬스터 데이터 뽑기
           const codeIdx = Math.floor(Math.random() * monsterList.length);
@@ -791,7 +828,27 @@ class Game {
     // console.log(`created item box boxId${boxId}, name:${name}, objectCode${objectCode}`);
 
     // 랜덤 아이템 생성 및 박스에 추가
-    const items = this.itemManager.generateRandomItems();
+    const items = this.itemManager.generateRandomItems(itemBoxGrade);
+    const isRnwhanf = Math.random() <= 0.3;
+
+    if (isRnwhanf) {
+      items.push(
+        new Item({
+          itemData: {
+            itemCode: 901,
+            count: 1,
+          },
+          position: null,
+        }),
+      );
+
+      // const Rnwhanf =
+      // {itemCode: 901,
+      //   count: 1,
+      // }
+      // items.push(Rnwhanf);
+    }
+
     items.forEach((item, index) => {
       itemBox.itemList.splice(index, 1, {
         itemCode: item.itemData.itemCode,
@@ -860,10 +917,6 @@ class Game {
       },
       {
         itemCode: 101,
-        count: 1,
-      },
-      {
-        itemCode: 901,
         count: 1,
       },
     ];

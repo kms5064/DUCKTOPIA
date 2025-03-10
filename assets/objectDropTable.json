@@ -6,7 +6,7 @@
     { "objectCode": 3, "name": "itemBox2", "dropList": [302], "max": 1, "grade": "C" },
     { "objectCode": 4, "name": "itemBox3", "dropList": [303], "max": 1, "grade": "B" },
 
-    { "objectCode": 5, "name": "grass", "maxHp": 3, "dropList": [1, 801], "max": 2 },
+    { "objectCode": 5, "name": "grass", "maxHp": 3, "dropList": [801], "max": 1 },
     { "objectCode": 6, "name": "tree", "maxHp": 3, "dropList": [3, 4], "max": 2 },
     { "objectCode": 7, "name": "tree2", "maxHp": 3, "dropList": [5, 6], "max": 2 },
 

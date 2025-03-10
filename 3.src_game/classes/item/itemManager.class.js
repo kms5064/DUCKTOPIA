@@ -44,47 +44,59 @@ class ItemManager {
     return this.lastItemId++;
   }
 
-  // 랜덤 아이템  - 박스
-  generateRandomItems() {
-    const items = [];
-    const slotCount = Math.floor(Math.random() * config.game.itemBox.boxMaxSlots) + 1; // 최소 1개
+  // 랜덤 아이템 생성
+generateRandomItems(itemBoxGrade) {
+  const itemGrade = this.rollItemGrade(itemBoxGrade)
+  const items = [];
+  const slotCount = Math.floor(Math.random() * config.game.itemBox.itemMaxSpawn) + 1; // 최소 1개
 
-    for (let i = 0; i < slotCount; i++) {
-      // 아이템 타입 결정 (무기 또는 음식)
-      const isWeapon = Math.random() < 0.3; // 30% 확률로 무기 생성
+  for (let i = 0; i < slotCount; i++) {
+    // 아이템 타입 결정 (무기 또는 음식)
+    const isWeapon = Math.random() < 0.2; // 20% 확률로 무기 생성
 
-      if (isWeapon) {
-        // 무기 아이템 생성
-        const randomWeapon = this.weaponData[Math.floor(Math.random() * this.weaponData.length)];
-        items.push(
-          new Item({
-            itemData: {
-              itemCode: randomWeapon.code,
-              count: 1, // 무기는 항상 1개만
-            },
-            position: null,
-          }),
-        );
-      } else {
-        // 음식 아이템 생성
-        const randomFood = this.foodData[Math.floor(Math.random() * this.foodData.length)];
-        const count =
-          Math.floor(Math.random() * config.game.itemBox.itemMaxStack) +
-          config.game.itemBox.itemMinCount;
-        items.push(
-          new Item({
-            itemData: {
-              itemCode: randomFood.code,
-              count: count,
-            },
-            position: null,
-          }),
-        );
-      }
+    if (isWeapon) {
+      // 무기 아이템 생성
+      const availableWeapons = this.weaponData.filter((weapon) => weapon.grade === itemGrade && weapon.isMustard === false);
+
+      if (availableWeapons.length === 0) return null;
+
+      const randomWeapon = availableWeapons[Math.floor(Math.random() * availableWeapons.length)];
+      console.log(`randomWeapon code: ${randomWeapon.code}`);
+
+      items.push(
+        new Item({
+          itemData: {
+            itemCode: randomWeapon.code,
+            count: 1, // 무기는 항상 1개만
+          },
+          position: null,
+        }),
+      );
+    } else {
+      // 음식 아이템 생성
+      const availableFoods = this.foodData.filter((food) => food.grade === itemGrade);
+
+      if (availableFoods.length === 0) return null;
+
+      const randomFood = availableFoods[Math.floor(Math.random() * availableFoods.length)];
+      console.log(`randomFood code: ${randomFood.code}`);
+      const count =
+        Math.floor(Math.random() * config.game.itemBox.itemMaxStack) +
+        config.game.itemBox.itemMinCount;
+      items.push(
+        new Item({
+          itemData: {
+            itemCode: randomFood.code,
+            count: count,
+          },
+          position: null,
+        }),
+      );
     }
-
-    return items;
   }
+  console.log(`아이템 박스에서 아이템이 잘 만들어지고 있나? ${JSON.stringify(items)}`);
+  return items;
+}
 
   // 몬스터 사망 시 아이템 생성
   createDropItems(monsterGrade, position) {
@@ -185,7 +197,7 @@ class ItemManager {
     const itemId = this.lastItemId++;
 
     if (isWeapon) {
-      const availableWeapons = this.weaponData.filter((weapon) => weapon.grade === itemGrade);
+      const availableWeapons = this.weaponData.filter((weapon) => weapon.grade === itemGrade && weapon.isMustard === false);
       if (availableWeapons.length === 0) return null;
 
       const randomWeapon = availableWeapons[Math.floor(Math.random() * availableWeapons.length)];

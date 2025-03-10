@@ -43,7 +43,7 @@ const playerOpenBoxHandler = ({ socket, payload, userId }) => {
       itemBox.occupied === null
     ) {
       itemBox.occupied = userId;
-      itemBox.getItemList();
+      itemList = itemBox.getItemList();
       const payload = {
         playerId: userId,
         itemBoxId: itemBoxId,

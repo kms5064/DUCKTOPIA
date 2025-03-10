@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "data": {
     "D": {
-      "dropRate": 20,
+      "dropRate": 80,
       "itemCount": {
         "min": 0,
         "max": 1
@@ -16,7 +16,7 @@
       }
     },
     "C": {
-      "dropRate": 35,
+      "dropRate": 80,
       "itemCount": {
         "min": 0,
         "max": 2
@@ -29,7 +29,7 @@
       }
     },
     "B": {
-      "dropRate": 50,
+      "dropRate": 80,
       "itemCount": {
         "min": 0,
         "max": 3
@@ -42,7 +42,7 @@
       }
     },
     "A": {
-      "dropRate": 70,
+      "dropRate": 80,
       "itemCount": {
         "min": 0,
         "max": 4

@@ -5,7 +5,7 @@
     "D": {
       "dropRate": 100,
       "itemCount": {
-        "min": 2,
+        "min": 1,
         "max": 2
       },
       "itemGradeRates": {
@@ -18,7 +18,7 @@
     "C": {
       "dropRate": 100,
       "itemCount": {
-        "min": 2,
+        "min": 1,
         "max": 2
       },
       "itemGradeRates": {
@@ -31,7 +31,7 @@
     "B": {
       "dropRate": 100,
       "itemCount": {
-        "min": 2,
+        "min": 1,
         "max": 2
       },
       "itemGradeRates": {
@@ -44,7 +44,7 @@
     "A": {
       "dropRate": 100,
       "itemCount": {
-        "min": 2,
+        "min": 1,
         "max": 2
       },
       "itemGradeRates": {
@@ -57,7 +57,7 @@
     "S": {
       "dropRate": 100,
       "itemCount": {
-        "min": 2,
+        "min": 1,
         "max": 2
       },
       "itemGradeRates": {
