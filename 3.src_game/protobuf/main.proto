@@ -450,12 +450,32 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
 }
 //---- 추가 완료
 
+//2025-03-10- 장착해제 헨들러 +버리기.
+
+message C2SItemDetachmentRequest { //2025-03-04 추가// 설치 아이템 일때.
+  int32 itemCode = 1; // 
+}
+
+message S2CItemDetachmentNotification { //2025-03-04 추가// 설치 아이템 일때.
+  int32 itemCode = 1; //
+  int32 playerId = 2;
+}
+
+message C2SDropItemRequest { //2025-03-04 추가// 설치 아이템 일때.
+  ItemData itemData = 1; // 
+}
+
+message S2CDropItemNotification { //2025-03-04 추가// 설치 아이템 일때.
+  ItemData itemData = 1; // 
+  int32 playerId = 2;
+}
+
+
+
 //아이템 조합 04 추가.
 
-message C2SItemCombinationRequest { //2025-03-04 추가// 설치 아이템 일때.
-  int32 itemCode1 = 1; // 
-  int32 itemCode2 = 2;
-}
+
+
 
 message S2CItemCombinationNotification { //2025-03-04 추가
   bool success = 1;
@@ -539,7 +559,11 @@ message GamePacket {
     C2SPlayerChattingRequest playerChattingRequest = 202;
     S2CPlayerChattingNotification playerChattingNotification = 203;
     S2CPlayerRevivalNotification playerRevivalNotification = 204;
-
+    //03-10추가
+    C2SItemDetachmentRequest itemDetachmentRequest =205;
+    S2CItemDetachmentNotification itemDetachmentNotification =206;
+    C2SDropItemRequest dropItemRequest = 207;
+    C2SDropItemNotification dropItemNotification = 208;
 
     // 몬스터
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;

@@ -70,6 +70,16 @@ export const PACKET_TYPE = {
   C_PLAYER_SET_OBJECT_REQUEST: [4027, 'playerSetObjectRequest'],
   S_PLAYER_SET_OBJECT_RESPONSE: [4028, 'playerSetObjectResponse'],
   S_OBJECT_SET_NOTIFICATION: [4029, 'objectSetNotification'],
+  //오브젝트
+  C_OBJECT_ATTACKED_BY_PLAYER: [4030, 'objectAttackedByPlayer'],
+  S_OBJECT_DESTROY_NOTIFICATION: [4031, 'objectDestroyNotification'],
+
+  //03-10 추가
+  C_ITEM_DETACHMENT_REQUEST: [4032, 'itemDetachmentRequest'],
+  S_ITEM_DETACHMENT_NOTIFICATION: [4033, 'itemDetachmentNotification'],
+  C_DROP_ITEM_REQUEST: [4034, 'dropItemRequest'],
+  C_DROP_ITEM_NOTIFICATION: [4035, 'dropItemNotification'],
+
 
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
@@ -82,10 +92,6 @@ export const PACKET_TYPE = {
   C_MONSTER_ATTACK_REQUEST: [5008, 'monsterAttackRequest'],
   S_MONSTER_ATTACK_NOTIFICATION: [5009, 'monsterAttackNotification'],
   S_MONSTER_HP_UPDATE_NOTIFICATION: [5010, 'monsterHpUpdateNotification'],
-
-  //오브젝트
-  C_OBJECT_ATTACKED_BY_PLAYER: [4030, 'objectAttackedByPlayer'],
-  S_OBJECT_DESTROY_NOTIFICATION: [4031, 'objectDestroyNotification'],
 
   // 코어
   S_OBJECT_HP_UPDATE_NOTIFICATION: [6001, 'objectHpUpdateNotification'],
