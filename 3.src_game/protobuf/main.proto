@@ -474,6 +474,10 @@ message S2CDropItemNotification { //2025-03-04 추가// 설치 아이템 일때.
 
 //아이템 조합 04 추가.
 
+message C2SItemCombinationRequest { //2025-03-04 추가
+  int32 itemCode1 = 1; // 
+  int32 itemCode2 = 2;
+}
 
 
 
@@ -563,7 +567,7 @@ message GamePacket {
     C2SItemDetachmentRequest itemDetachmentRequest =205;
     S2CItemDetachmentNotification itemDetachmentNotification =206;
     C2SDropItemRequest dropItemRequest = 207;
-    C2SDropItemNotification dropItemNotification = 208;
+    S2CDropItemNotification dropItemNotification = 208;
 
     // 몬스터
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;
