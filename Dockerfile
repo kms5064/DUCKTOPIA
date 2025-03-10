@@ -21,5 +21,4 @@ EXPOSE 5555
 
 # pm2로 서버 실행
 # CMD ["pm2", "start","1.src_gateway/server.js"]
-CMD ["node", "1.src_gateway/server.js"]
-
+CMD npm run start
