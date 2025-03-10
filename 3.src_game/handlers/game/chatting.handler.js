@@ -32,7 +32,7 @@ const chattingHandler = ({ socket, payload, userId }) => {
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
 
 
-  if (badWordCount > 3) {
+  if (badWordCount > 5) {
     replacedMessage = "대충 뭔가 험한 말";
   }
 

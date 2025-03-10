@@ -141,13 +141,17 @@ class BossMonster extends Monster {
 
   death() { }
 
+  CoolTimeCheck() {
+    super.CoolTimeCheck();
+  }
+
   setTargetPlayer(player) {
     // console.log('보스 몬스터 쪽의 이동');
     super.setTargetPlayer(player);
     if (this.hatePointList.has(player)) {
       this.hatePointList.set(player, 100);
     }
-    this.setPattern();
+    //this.setPattern();
   }
 
 
