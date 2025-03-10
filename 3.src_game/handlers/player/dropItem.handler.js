@@ -1,4 +1,4 @@
-import { userSession, gameSession } from '../../sessions/session';
+import { userSession, gameSession } from '../../sessions/session.js';
 import { config } from '../../config/config.js';
 
 const dropItemHandler = ({ socket, payload, userId }) => {
