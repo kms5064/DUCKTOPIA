@@ -1,5 +1,3 @@
-import Server from './server.class.js';
-
 /* ServerSession 클래스 */
 class ServerSession {
   constructor() {
@@ -7,11 +5,11 @@ class ServerSession {
   }
 
   addServer(host, socket) {
-    servers.set(host, socket);
+    this.servers.set(host, socket);
   }
 
   deleteServer(host) {
-    servers.delete(serverId);
+    this.servers.delete(host);
   }
 }
 

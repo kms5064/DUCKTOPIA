@@ -23,13 +23,12 @@ class UserSession {
   }
 
   async checkId(id) {
-    console.log('id : ', id);
     // 중복 로그인 확인
     const req = await redisClient.del(config.redis.custom + 'Server:User:' + id);
 
     // 삭제 성공 시
     if (req === 1) {
-      await redisClient.publish(config.redis.custom + 'UserOut', id);
+      await redisClient.publish(config.redis.custom + 'UserOut', String(id));
     }
     return true;
   }
@@ -39,7 +38,7 @@ class UserSession {
     const newUser = new User(socket);
     socket.id = this.id;
     this.users.set(socket.id, newUser);
-    console.log(`신규 유저 접속 : ${socket.remoteAddress}:${socket.remotePort}`);
+    // console.log(`신규 유저 접속 : ${socket.remoteAddress}:${socket.remotePort}`);
     this.id += 1;
     return newUser;
   }
@@ -63,7 +62,7 @@ class UserSession {
     }
 
     // 레디스 기록 삭제
-    await redisClient.del(config.redis.custom + 'Server:User:' + id);
+    await redisClient.del(config.redis.custom + 'Server:User:' + user.id);
 
     this.users.delete(socketId);
   }

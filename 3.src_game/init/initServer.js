@@ -6,7 +6,6 @@ const InitServer = async () => {
   try {
     await loadGameAssets();
     await loadProtos();
-    await serverOnRedis();
   } catch (err) {
     console.error(err);
   }
