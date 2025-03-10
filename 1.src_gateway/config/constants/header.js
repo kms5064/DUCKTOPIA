@@ -35,6 +35,7 @@ export const PACKET_TYPE = {
   START_GAME_REQUEST: [3004, 'gameStartRequest'],
   START_GAME_RESPONSE: [3005, 'gameStartResponse'],
   START_GAME_NOTIFICATION: [3006, 'gameStartNotification'],
+  CLEAR_GAME_NOTIFICATION: [3007, 'gameClearNotification'],
 
   // 플레이어 기본 동작
   C_PLAYER_POSITION_UPDATE_REQUEST: [4001, 'playerPositionUpdateRequest'],
@@ -69,6 +70,16 @@ export const PACKET_TYPE = {
   C_PLAYER_SET_OBJECT_REQUEST: [4027, 'playerSetObjectRequest'],
   S_PLAYER_SET_OBJECT_RESPONSE: [4028, 'playerSetObjectResponse'],
   S_OBJECT_SET_NOTIFICATION: [4029, 'objectSetNotification'],
+  //오브젝트
+  C_OBJECT_ATTACKED_BY_PLAYER: [4030, 'objectAttackedByPlayer'],
+  S_OBJECT_DESTROY_NOTIFICATION: [4031, 'objectDestroyNotification'],
+
+  //03-10 추가
+  C_ITEM_DETACHMENT_REQUEST: [4032, 'itemDetachmentRequest'],
+  S_ITEM_DETACHMENT_NOTIFICATION: [4033, 'itemDetachmentNotification'],
+  C_DROP_ITEM_REQUEST: [4034, 'dropItemRequest'],
+  S_DROP_ITEM_NOTIFICATION: [4035, 'dropItemNotification'],
+
 
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
@@ -90,7 +101,6 @@ export const PACKET_TYPE = {
   //03추가
   C_OBJECT_DAMAGED_BY_PLAYER_REQUEST: [6004, 'objectDamagedByPlayerRequest'],
   S_OBJECT_DESTROY_NOTIFICATION: [6005, 'objectDestroyNotification'],
-
   C_ITEM_COMBINATION_REQUEST: [9001, 'itemCombinationRequest'],
   S_ITEM_COMBINATION_NOTIFICATION: [9002, 'itemCombinationNotification'],
 

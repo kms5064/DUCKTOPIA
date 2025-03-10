@@ -1,5 +1,6 @@
 import { config } from '../../config/config.js';
 import { gameSession, userSession } from '../../sessions/session.js';
+import CustomError from '../../utils/error/customError.js';
 
 class Player {
   constructor(id, atk, x, y) {
@@ -16,7 +17,7 @@ class Player {
 
     this.lv = 1;
     this.atk = atk; //10
-    this.inventory = Array.from({ length: 16 }, () => 0);
+    this.inventory = Array.from({ length: 18 }, () => 0);
     this.equippedWeapon = null;
     this.equippedArmors = {
       top: null,
@@ -139,14 +140,14 @@ class Player {
 
   // 허기 감소 카운팅 함수
   hungerCheck() {
-    if (!this.isAlive) return
+    if (!this.isAlive) return;
 
     const now = Date.now();
     const deltaTime = now - this.lastHungerUpdate;
     this.hungerCounter += deltaTime;
     this.lastHungerUpdate = now;
 
-    if (this.hungerCounter < config.game.player.playerHungerPeriod) return
+    if (this.hungerCounter < config.game.player.playerHungerPeriod) return;
 
     // game 접근
     const user = userSession.getUser(this.id);
@@ -228,7 +229,6 @@ class Player {
 
   addItem(itemCode, count, index) {
     if (index === -1) {
-      //0이면 안되지;
       //아이템을 이미 갖고 있는지
       const item = this.inventory.find((item) => item && item.itemCode === itemCode);
       //있다면 카운트만 증가
@@ -239,7 +239,7 @@ class Player {
 
         const checkRoom = (ele) => ele === 0;
         const emptyIndex = this.inventory.findIndex(checkRoom);
-        this.inventory.splice(emptyIndex, 0, item);
+        this.inventory.splice(emptyIndex, 1, item);
       }
       return item;
     } else {
@@ -248,7 +248,7 @@ class Player {
       else {
         //없으면 새로 만들어서 push
         const item = { itemCode: itemCode, count: count };
-        this.inventory.splice(index, 0, item);
+        this.inventory.splice(index, 1, item);
       }
       return item;
     }
@@ -290,6 +290,30 @@ class Player {
     return this.equippedWeapon;
   }
 
+  //무기 탈착
+  detachWeapon(itemCode) {
+    const checkRoom = (ele) => ele === 0;
+    const emptyIndex = this.inventory.findIndex(checkRoom);
+
+    if (this.equippedWeapon === null) {
+      throw new CustomError(`탈착할 아이템이 없습니다.`);
+    }
+
+    if(emptyIndex === -1){
+      throw new CustomError(`인벤토리에 빈공간이 없습니다`);
+    }
+    
+    if(itemCode === this.equippedWeapon.itemCode) {
+      const temp = this.equippedWeapon;
+      this.equippedWeapon = null;
+      this.addItem(temp.itemCode,1,-1);
+    }else{
+      throw new CustomError(`잘못된 요청입니다.`);
+    }
+
+    return {itemCode:itemCode , count:1};
+  }
+
   // 방어구 장착
   equipArmor(armorType, itemCode) {
     if (this.equippedArmors[armorType] === null) {
@@ -305,6 +329,22 @@ class Player {
     }
 
     return this.equippedArmors[armorType];
+  }
+
+  //방어구 탈착
+  detachArmor(armorType, itemCode){
+    if (this.equippedArmors[armorType] === null) {
+      throw new CustomError(`탈착할 아이템이 없습니다.`);
+    } else if(itemCode === this.equippedWeapon.itemCode){
+      const temp = this.equippedArmors[armorType];
+      this.equippedArmors[armorType] = null;
+      this.addItem(temp.itemCode, 1, -1);
+    }else{
+      throw new CustomError(`잘못된 요청입니다.`);
+    }
+
+    return {itemCode:itemCode , count:1};
+
   }
 
   // 방어구 효과 계산 (방어력 등)

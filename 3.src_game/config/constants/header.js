@@ -78,7 +78,7 @@ export const PACKET_TYPE = {
   C_ITEM_DETACHMENT_REQUEST: [4032, 'itemDetachmentRequest'],
   S_ITEM_DETACHMENT_NOTIFICATION: [4033, 'itemDetachmentNotification'],
   C_DROP_ITEM_REQUEST: [4034, 'dropItemRequest'],
-  C_DROP_ITEM_NOTIFICATION: [4035, 'dropItemNotification'],
+  S_DROP_ITEM_NOTIFICATION: [4035, 'dropItemNotification'],
 
 
   // 몬스터

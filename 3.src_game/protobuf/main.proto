@@ -453,21 +453,21 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
 
 //2025-03-10- 장착해제 헨들러 +버리기.
 
-message C2SItemDetachmentRequest { //2025-03-04 추가// 설치 아이템 일때.
-  int32 itemCode = 1; // 
+message C2SItemDetachmentRequest { 
+  int32 itemCode = 1; 
 }
 
-message S2CItemDetachmentNotification { //2025-03-04 추가// 설치 아이템 일때.
-  int32 itemCode = 1; //
+message S2CItemDetachmentNotification { 
+  int32 itemCode = 1; 
   int32 playerId = 2;
 }
 
-message C2SDropItemRequest { //2025-03-04 추가// 설치 아이템 일때.
-  ItemData itemData = 1; // 
+message C2SDropItemRequest {
+  ItemData itemData = 1; 
 }
 
-message S2CDropItemNotification { //2025-03-04 추가// 설치 아이템 일때.
-  ItemData itemData = 1; // 
+message S2CDropItemNotification { 
+  ItemData itemData = 1; 
   int32 playerId = 2;
 }
 

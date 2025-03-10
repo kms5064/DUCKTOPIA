@@ -4,6 +4,7 @@ import signUpHandler from './user/signUp.handler.js';
 import onLobbyServerHandler from './server/onLobbyServer.handler.js';
 import onGameServerHandler from './server/onGameServer.handler.js';
 import latencyCheckHandler from './server/latencyCheck.handler.js';
+import detachmentItemHandler from '../../3.src_game/handlers/player/detachmentItem.handler.js';
 
 const handlers = {
   // Gateway
@@ -39,6 +40,8 @@ const handlers = {
   [config.packetType.C_OBJECT_DAMAGED_BY_PLAYER_REQUEST[0]]: onGameServerHandler,
   [config.packetType.C_ITEM_COMBINATION_REQUEST[0]]: onGameServerHandler,
   [config.packetType.S_PLAYER_CHATTING_REQUEST[0]]: onGameServerHandler,
+  [config.packetType.C_ITEM_DETACHMENT_REQUEST[0]]:detachmentItemHandler,
+
 };
 
 export default handlers;
