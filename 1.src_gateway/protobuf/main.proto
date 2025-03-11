@@ -491,11 +491,10 @@ message S2CItemCombinationNotification { //2025-03-04 추가
 }
 
 // 유저 종료 패킷
+message S2CGetOut
+{
 
-message S2CLogout {
 }
-
-
 // 분산 서버 패킷
 // 로비 -> Gateway
 message S2SGameServerPrepare { // 게임준비 응답 to 호스트클라이언트
@@ -514,10 +513,9 @@ message S2SLoginCast // 로그인 응답
   User user = 2;
 }
 // Gateway -> other
-message S2SGetOut
-{
-
+message S2SLogout {
 }
+
 
 message GamePacket {
   oneof payload {
@@ -628,6 +626,6 @@ message GamePacket {
     S2SLogout logout = 2004;
 
     // 로그아웃 
-    S2SGetOut getOut = 2005;
+    S2CGetOut getOut = 2005;
   }
 }
