@@ -11,6 +11,7 @@ export const PACKET_TYPE = {
   LOGIN_RESPONSE: [1004, 'loginResponse'],
   LOGIN_CAST: [1005, 'loginCast'],
   LOGOUT_CAST: [1006, 'logout'],
+  S_GET_OUT: [1007,'getOut'],
 
   // 분산 서버 이동
   PREPARE_GAME_SERVER: [1501, 'gameServerPrepare'],

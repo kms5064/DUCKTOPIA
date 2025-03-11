@@ -490,6 +490,11 @@ message S2CItemCombinationNotification { //2025-03-04 추가
   int32 playerId = 5;
 }
 
+// 유저 종료 패킷
+
+message S2CLogout {
+}
+
 
 // 분산 서버 패킷
 // 로비 -> Gateway
@@ -509,7 +514,7 @@ message S2SLoginCast // 로그인 응답
   User user = 2;
 }
 // Gateway -> other
-message S2SLogout
+message S2SGetOut
 {
 
 }
@@ -621,5 +626,8 @@ message GamePacket {
     S2SGameServerJoinRequest gameServerJoinRequest = 2002;
     S2SLoginCast loginCast = 2003;
     S2SLogout logout = 2004;
+
+    // 로그아웃 
+    S2SS2SGetOut getOut = 2005;
   }
 }
