@@ -628,6 +628,6 @@ message GamePacket {
     S2SLogout logout = 2004;
 
     // 로그아웃 
-    S2SS2SGetOut getOut = 2005;
+    S2SGetOut getOut = 2005;
   }
 }
