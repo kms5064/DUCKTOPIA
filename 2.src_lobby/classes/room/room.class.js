@@ -17,8 +17,8 @@ class Room {
     this.state = RoomStateType.WAIT;
     // this.game = new Game(ownerId);
     this.ownerId = ownerId;
-    // 1분 내에 게임 시작 안할 시 자동 삭제
-    this.timeout = setTimeout(this.timeCheck, 60000)
+    // 10분 이내에 게임 시작 안할 시 자동 삭제
+    this.timeout = setTimeout(this.timeCheck, 600000)
   }
 
   timeCheck = () => {
