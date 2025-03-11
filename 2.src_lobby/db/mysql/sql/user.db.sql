@@ -1,9 +1,0 @@
-CREATE TABLE IF NOT EXISTS users
-(
-    id              INT AUTO_INCREMENT PRIMARY KEY,
-    name            VARCHAR(255) UNIQUE,
-    email           VARCHAR(255) UNIQUE,
-    password        VARCHAR(255),
-    create_dt       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    update_dt       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
