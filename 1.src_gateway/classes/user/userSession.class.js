@@ -55,9 +55,8 @@ class UserSession {
       lobbyServer.socket.write(packet);
     }
 
-    let gameServer = null;
     if (user.gameServer) {
-      gameServer = serverSession.getServerById(user.gameServer);
+      const gameServer = serverSession.getServerById(user.gameServer);
       if (gameServer) gameServer.socket.write(packet);
     }
 
