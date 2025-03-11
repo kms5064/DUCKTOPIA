@@ -210,7 +210,7 @@ const registerTest = async (client_count = 1) => {
       const password = '123456';
       const name = `dummy${idx}`;
       // const client = new Client(id, password, name, config.server.host, 5555);
-      const client = new Client(id, password, name, '127.0.0.1', 5555);
+      const client = new Client(id, password, name, 'ducktopia-loadbalancer-1900b439129f13b9.elb.ap-northeast-2.amazonaws.com', 5555);
       await client.registerRequest();
       // await client.end();
     }),
@@ -224,7 +224,7 @@ const loginTest = async (client_count = 1) => {
       const id = `dummy${idx}@email.com`;
       const password = '123456';
       const name = `dummy${idx}`;
-      const client = new Client(id, password, name, config.server.host, 5555);
+      const client = new Client(id, password, name, 'ducktopia-loadbalancer-1900b439129f13b9.elb.ap-northeast-2.amazonaws.com', 5555);
 
       await client.loginRequest();
       // await client.end();
@@ -236,9 +236,9 @@ const loginTest = async (client_count = 1) => {
 const customTest = async (client_count = 1) => {
   await Promise.all(
     Array.from({ length: client_count }, async (__, idx) => {
-      const id = `dummy${1000 + idx}@email.com`;
+      const id = `dummy${idx}@email.com`;
       const password = '123456';
-      const name = `dummy${1000 + idx}`;
+      const name = `dummy${idx}`;
 
       // Lobby 서버 연결
       const client = new Client(id, password, name, 'ducktopia-loadbalancer-1900b439129f13b9.elb.ap-northeast-2.amazonaws.com', 5555);
@@ -250,6 +250,6 @@ const customTest = async (client_count = 1) => {
 
 // 테스트 실행문
 await loadProtos().then(async () => {
-  // await registerTest(300);
-  await customTest(10);
+  await registerTest(2000);
+  // await customTest(2000);
 });
