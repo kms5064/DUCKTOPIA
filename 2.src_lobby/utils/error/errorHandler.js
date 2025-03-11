@@ -1,5 +1,5 @@
+import { config } from '../../config/config.js';
 import makePacket from '../packet/makePacket.js';
-import { PACKET_TYPE } from '../../config/constants/header.js';
 import CustomError from './customError.js';
 
 /**
