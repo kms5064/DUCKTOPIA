@@ -88,7 +88,7 @@ const getItemHandler = ({ socket, payload, userId }) => {
     const emptyIndex = player.inventory.findIndex(checkRoom);
 
     if (emptyIndex === -1) {
-      // console.log(`[아이템 습득 실패] 인벤토리 공간이 부족함`);
+      console.log(`[아이템 습득 실패] 인벤토리 공간이 부족함`);
       sendFailMessage('인벤토리 공간이 부족합니다.');
       return;
     }
@@ -98,25 +98,13 @@ const getItemHandler = ({ socket, payload, userId }) => {
   try {
     // 플레이어 인벤토리에 추가
     player.addItem(nearestItem.itemData.itemCode, nearestItem.itemData.count, -1);
-    // console.log(`[아이템 습득 성공] 플레이어(${playerId})가 아이템(${nearestItem.itemId}) 습득`);
-
-    // 인벤토리 상태 로깅
-    // console.log(`[인벤토리 상태]`);
-    // console.log(
-    //   `- 습득한 아이템: 코드=${nearestItem.itemData.itemCode}, 개수=${nearestItem.itemData.count}`,
-    // );
+    console.log(`[아이템 습득 성공] 플레이어(${playerId})가 아이템(${nearestItem.itemId}) 습득`);
+    console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
 
     const inventoryItem = player.inventory.find(
       (item) => item && item.itemCode === nearestItem.itemData.itemCode,
     );
-    if (inventoryItem) {
-      // console.log(
-      //   // `- 인벤토리 아이템 현황: 코드=${inventoryItem.itemCode}, 현재 개수=${inventoryItem.count}`,
-      // );
-    } else {
-      // console.log(`- 인벤토리에서 아이템을 찾을 수 없음`);
-    }
-    // console.log('[전체 인벤토리]', player.inventory);
+  
 
     // 필드에서 아이템 제거
     game.itemManager.removeFieldDropItem(nearestItem.itemId);

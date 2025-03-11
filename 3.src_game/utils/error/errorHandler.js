@@ -10,6 +10,7 @@ import CustomError from './customError.js';
 
 export const errorHandler = (socket, error) => {
   let message;
+  let clienterr =false;
 
   // 에러 정보 로깅
   console.error(error);
@@ -25,14 +26,17 @@ export const errorHandler = (socket, error) => {
     case error.code === 'ER_DUP_ENTRY':
       if (error.sqlMessage.includes('users.name')) {
         message = '이미 존재하는 닉네임입니다';
+        clienterr =true;
       } else if (error.sqlMessage.includes('users.email')) {
         message = '이미 존재하는 이메일입니다';
+        clienterr =true;
       }
       break;
 
     // 유효성 검사 에러
     case error.name === 'ValidationError':
       message = error.message;
+      clienterr =true;
       break;
 
     // 기타 일반 에러
@@ -46,6 +50,7 @@ export const errorHandler = (socket, error) => {
   const errorResponse = makePacket(config.packetType.S_ERROR_NOTIFICATION, {
     errorMessage: message,
     timestamp: Date.now(),
+    clienterr: clienterr,
   });
 
   socket.write(errorResponse);
