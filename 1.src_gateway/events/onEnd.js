@@ -2,7 +2,7 @@ import { userSession } from '../sessions/session.js';
 import CustomError from '../utils/error/customError.js';
 
 const onEnd = (socket) => () => {
-  console.log('클라이언트 연결이 종료되었습니다.');
+  // console.log('클라이언트 연결이 종료되었습니다.');
 
   // 1. 게임 내에 있으면 제거
   const user = userSession.getUser(socket.id);

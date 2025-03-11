@@ -19,7 +19,6 @@ const gameStartHandler = async ({ socket, payloadBuffer, userId }) => {
 
   // 로드 밸런싱 후 게임 서버 이름 저장
   const gameServers = serverSession.getGameServers();
-  console.log('size : ', gameServers.size);
   let minGameCount = Infinity;
   let gameServerId = null;
   let minGameServer;
@@ -50,7 +49,7 @@ const gameStartHandler = async ({ socket, payloadBuffer, userId }) => {
     user.id,
   );
 
-  console.log(`${gameServerId} 서버로 ${payload.room.users.length}수의 유저가 분배되었습니다!`);
+  // console.log(`${gameServerId} 서버로 ${payload.room.users.length}수의 유저가 분배되었습니다!`);
   minGameServer.socket.write(reqPacket);
 };
 
