@@ -6,7 +6,7 @@ class User {
     this.socket = socket;
     this.id = userId; //여기에 유니크 아이디
     this.name = userName;
-    this.state = null; // 'lobby', 'room', 'playing' 등 현재 상태 체크용
+    this.state = 'lobby'; // 'lobby', 'room', 'playing' 등 현재 상태 체크용
     this.roomId = null; // game이 room 안에 있으므로 여기서 찾을 수 있습니다!
   }
 
