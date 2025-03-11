@@ -23,9 +23,7 @@ const objectDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
       const coreHp = game.core.coreDamaged(monster.getAttack());
       // console.log(`코어가 ${monster.getAttack()}의 데미지를 받았습니다! HP: ${coreHp}`);
       sendPayload = { objectId: objectId, hp: coreHp };
-      if(coreHp <= 0) {
-        game.gameEnd();
-      }
+      if(coreHp <= 0) gameSession.removeGame(game, game.ownerId);
       break;
     default:
       const object = game.objects.get(objectId);

@@ -109,7 +109,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   if (currHp > 0) return;
 
   if (monster.isBossMonster()) {
-    game.gameEnd(true);
+    gameSession.removeGame(game, game.ownerId ,true);
     // const gameClearNotification = [
     //   config.packetType.S_GAME_CLEAR_NOTIFICATION,
     //   {

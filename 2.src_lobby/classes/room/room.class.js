@@ -86,13 +86,15 @@ class Room {
   }
 
   deleteRoom() {
-    const leaveRoomResponse = [
-      config.packetType.LEAVE_ROOM_RESPONSE,
-      {
-        success: true,
-      },
-    ];
-    this.broadcast(leaveRoomResponse);
+    if (this.state !== RoomStateType.PLAY) {
+      const leaveRoomResponse = [
+        config.packetType.LEAVE_ROOM_RESPONSE,
+        {
+          success: true,
+        },
+      ];
+      this.broadcast(leaveRoomResponse);
+    }
 
     // 유저 상태 변경
     for (const [id, user] of this.users) {
