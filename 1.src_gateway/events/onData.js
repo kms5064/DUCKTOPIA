@@ -22,7 +22,6 @@ const onData = (socket) => async (data) => {
         versionByte = socket.buffer.readUInt8(packetTypeByte);
         payloadByte = socket.buffer.readUInt32BE(defaultLength + versionByte);
       } catch (err) {
-        console.log('길이 오류 패킷 발생');
         onEnd(socket)();
         break;
       }
