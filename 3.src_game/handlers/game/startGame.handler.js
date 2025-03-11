@@ -35,22 +35,6 @@ const startGameHandler = ({ socket, payload, userId }) => {
   game.users.forEach((user) => {
     // 1번 아이템은 0번 인덱스에
     user.player.addItem(1, 1, 0);
-    user.player.addItem(2, 1, 1);
-    user.player.addItem(3, 1, 2);
-    user.player.addItem(4, 1, 3);
-    user.player.addItem(5, 1, 4);
-    user.player.addItem(6, 1, 5);
-    user.player.addItem(7, 1, 6);
-    user.player.addItem(8, 1, 7);
-    user.player.addItem(9, 1, 8);
-    user.player.addItem(10, 1, 9);
-    user.player.addItem(11, 1, 10);
-    user.player.addItem(12, 1, 11);
-    user.player.addItem(13, 1, 12);
-    user.player.addItem(14, 1, 13);
-    user.player.addItem(15, 1, 14);
-    user.player.addItem(16, 1, 15);
-    user.player.addItem(17, 2, 16);
 
     // 101번 아이템은 1번 인덱스에
     user.player.addItem(101, 1, 17);
