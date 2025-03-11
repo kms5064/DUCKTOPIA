@@ -18,7 +18,7 @@ const createRoomHandler = async ({ socket, payload, userId }) => {
 
   // 2. 유저 찾기
   const user = userSession.getUser(userId);
-  if (!user) {
+  if (!user || user.state !== 'lobby') {
     throw new CustomError('유저가 존재하지 않습니다!');
   }
 
