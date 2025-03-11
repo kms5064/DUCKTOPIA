@@ -394,6 +394,7 @@ message S2CGameClearNotification{}
 message S2CErrorNotification {
   string errorMessage = 1;
   int64 timestamp = 2;
+  bool clienterr = 3;
 }
 
 //---- 2025.02.21 추가 : 오누리
@@ -450,12 +451,36 @@ message S2CPlayerEquipWeaponResponse { // 사용한 아이템이 무기일 때
 }
 //---- 추가 완료
 
+//2025-03-10- 장착해제 헨들러 +버리기.
+
+message C2SItemDetachmentRequest { 
+  int32 itemCode = 1; 
+}
+
+message S2CItemDetachmentNotification { 
+  int32 itemCode = 1; 
+  int32 playerId = 2;
+}
+
+message C2SDropItemRequest {
+  ItemData itemData = 1; 
+}
+
+message S2CDropItemNotification { 
+  ItemData itemData = 1; 
+  int32 playerId = 2;
+}
+
+
+
 //아이템 조합 04 추가.
 
-message C2SItemCombinationRequest { //2025-03-04 추가// 설치 아이템 일때.
+message C2SItemCombinationRequest { //2025-03-04 추가
   int32 itemCode1 = 1; // 
   int32 itemCode2 = 2;
 }
+
+
 
 message S2CItemCombinationNotification { //2025-03-04 추가
   bool success = 1;
@@ -539,7 +564,11 @@ message GamePacket {
     C2SPlayerChattingRequest playerChattingRequest = 202;
     S2CPlayerChattingNotification playerChattingNotification = 203;
     S2CPlayerRevivalNotification playerRevivalNotification = 204;
-
+    //03-10추가
+    C2SItemDetachmentRequest itemDetachmentRequest =205;
+    S2CItemDetachmentNotification itemDetachmentNotification =206;
+    C2SDropItemRequest dropItemRequest = 207;
+    S2CDropItemNotification dropItemNotification = 208;
 
     // 몬스터
     S2CMonsterSpawnRequest monsterSpawnRequest = 32;

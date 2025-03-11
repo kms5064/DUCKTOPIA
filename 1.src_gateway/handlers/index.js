@@ -39,6 +39,10 @@ const handlers = {
   [config.packetType.C_OBJECT_DAMAGED_BY_PLAYER_REQUEST[0]]: onGameServerHandler,
   [config.packetType.C_ITEM_COMBINATION_REQUEST[0]]: onGameServerHandler,
   [config.packetType.S_PLAYER_CHATTING_REQUEST[0]]: onGameServerHandler,
+  [config.packetType.C_ITEM_DETACHMENT_REQUEST[0]]: onGameServerHandler,
+  [config.packetType.C_DROP_ITEM_REQUEST[0]]: onGameServerHandler,
+
+
 };
 
 export default handlers;

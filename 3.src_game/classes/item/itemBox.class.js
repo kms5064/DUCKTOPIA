@@ -27,6 +27,7 @@ class ItemBox extends DestructibleObjectBase{
     if (removedItem.count > count) {
       removedItem.count -= count;
       const item = player.addItem(itemCode, count, emptyIndex);
+      return item;
     } else {
       //아이템을 제거하고 stack만큼만 아이템을 반환하도록
       count = removedItem.count;

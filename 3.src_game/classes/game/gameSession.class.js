@@ -17,7 +17,7 @@ class GameSession {
 
   // 게임 지우기
   async removeGame(game, userId = null) {
-    game.gameEnd(userId);
+    game.gameEnd();
     this.games.delete(game.id);
     await redisClient.hSet(this.name, 'games', this.games.size);
   }

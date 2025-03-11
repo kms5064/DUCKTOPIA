@@ -1,5 +1,5 @@
 import { config } from '../../config/config.js';
-import makePacket from '../../utils/packet/makePacket.js';
+import { roomSession } from '../../sessions/session.js';
 
 const RoomStateType = {
   WAIT: 0,
@@ -17,6 +17,14 @@ class Room {
     this.state = RoomStateType.WAIT;
     // this.game = new Game(ownerId);
     this.ownerId = ownerId;
+    // 1분 내에 게임 시작 안할 시 자동 삭제
+    this.timeout = setTimeout(this.timeCheck, 60000)
+  }
+
+  timeCheck = () => {
+    if (this.state === RoomStateType.PLAY) return
+    
+    roomSession.removeRoom(this);
   }
 
   // 유저 추가
@@ -101,7 +109,7 @@ class Room {
 
   // 게임 시작
   startGame() {
-    this.changeState(RoomStateType.INGAME);
+    this.changeState(RoomStateType.PLAY);
   }
 
   // 전체 공지(본인 제외)
