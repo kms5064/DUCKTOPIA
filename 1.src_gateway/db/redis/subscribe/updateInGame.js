@@ -5,7 +5,7 @@ const updateInGame = (userIds) => {
 
   for (const userId of users) {
     const user = userSession.getUserByID(+userId);
-    if (!user) return;
+    if (!user) continue;
     user.setGameState(false);
   }
 };

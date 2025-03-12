@@ -41,6 +41,7 @@ class User {
 
   async getGameState() {
     if (this.gameServer) return this.inGame;
+    
     const serverId = await redisClient.hGet(config.redis.custom + 'Server:User:' + this.id, 'game');
     if (serverId) {
       this.inGame = true;
