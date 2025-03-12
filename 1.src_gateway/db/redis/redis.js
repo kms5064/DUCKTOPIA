@@ -3,6 +3,7 @@ import { config } from '../../config/config.js';
 import connectServer from './subscribe/connectServer.js';
 import updateInGame from './subscribe/updateInGame.js';
 import userOut from './subscribe/userOut.js';
+import serverOff from './subscribe/serverOff.js';
 
 // Redis 클라우드 인스턴스에 연결
 const redisClient = redis.createClient({
@@ -41,5 +42,6 @@ subscriber.on('error', (err) => {
 await subscriber.subscribe(config.redis.custom + 'ServerOn', connectServer);
 await subscriber.subscribe(config.redis.custom + 'UserGameEnd', updateInGame);
 await subscriber.subscribe(config.redis.custom + 'UserOut', userOut);
+await subscriber.subscribe(config.redis.custom + "ServerOff", serverOff)
 
 export { redisClient, subscriber };

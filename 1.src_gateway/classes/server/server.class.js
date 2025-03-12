@@ -2,15 +2,17 @@ import { config } from '../../config/config.js';
 import { redisClient } from '../../db/redis/redis.js';
 import onGameEnd from '../../events/game/onGameEnd.js';
 import onLobbyEnd from '../../events/lobby/onLobbyEnd.js';
+import { userSession } from '../../sessions/session.js';
 import makeServerPacket from '../../utils/packet/makeServerPacket.js';
+
 
 class Server {
   constructor(serverId, socket) {
     this.socket = socket;
     this.socket.id = serverId; //여기에 유니크 아이디
     this.type = serverId.split(':')[1];
-    this.stack = 0;
     this.intervals = [];
+    this.stack = 0;
     // 헬스체킹
     this.intervals.push(setInterval(this.healthCheck, 5000));
     // 레이턴시 확인
@@ -19,12 +21,12 @@ class Server {
 
   healthCheck = async () => {
     // stack 증감
-    const test = await redisClient.hGet(this.socket.id, 'check', 'testing');
-    if (test === 'testing') this.stack++;
+    const test = await redisClient.hGet(userSession.host, this.socket.id);
+    if (test === 'testing') this.stack++
     else this.stack = 0;
 
     // stack 검증
-    if (this.stack >= 2) {
+    if (this.stack >= 5) {
       switch (this.type) {
         case 'Game':
           onGameEnd(this.socket)();
@@ -37,10 +39,10 @@ class Server {
     }
 
     // 테스팅 시작
-    redisClient.hSet(this.socket.id, 'check', 'testing');
-    redisClient.publish(this.socket.id, 'testing');
+    await redisClient.hSet(userSession.host, this.socket.id, 'testing');
+    await redisClient.publish(this.socket.id, userSession.host);
 
-    // console.log(`//HealthCheck// [Server] ${this.socket.id} / [Stack] : ${this.stack} `);
+    console.log(`//HealthCheck// [Server] ${this.socket.id} / [Stack] : ${this.stack} `);
   };
 
   // 레이턴시 확인
