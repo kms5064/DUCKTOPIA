@@ -109,8 +109,8 @@ class Game {
 
     this.broadcast(gameEndNotification);
     this.users.forEach((user) => {
-      userSession.deleteUser(user.id);
       userIds.push(user.id);
+      userSession.deleteUser(user.id);
     });
     // Gateway의 user 정보 업데이트용
     redisClient.publish(config.redis.custom + 'UserGameEnd', userIds.join(','));
