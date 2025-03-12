@@ -2,7 +2,7 @@ import { getProtoMessages } from '../../init/loadProtos.js';
 import { userSession } from '../../sessions/session.js';
 
 const latencyCheckHandler = ({ socket, payloadBuffer, userId }) => {
-  const user = userSession.getUser(userId)
+  const user = userSession.getUserByID(userId)
   if (user) return
   
   const proto = getProtoMessages().GamePacket;
