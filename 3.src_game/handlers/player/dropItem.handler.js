@@ -19,11 +19,12 @@ const dropItemHandler = ({ socket, payload, userId }) => {
   const item = player.inventory[itemIndex];
   if (!item) throw new CustomError(`아이템 정보가 없습니다.`);
 
+  const count = Math.min(itemData.count,item.count);
 
   if (item) {
-    const droppedItems = game.itemManager.playerDropItem(item.itemCode, itemData.count, playerPosition);
+    const droppedItems = game.itemManager.playerDropItem(item.itemCode,count, playerPosition);
 
-    player.removeItem(item.itemCode, itemData.count);
+    player.removeItem(item.itemCode,count);
 
     
     const dropItemPacket = [
@@ -31,7 +32,7 @@ const dropItemHandler = ({ socket, payload, userId }) => {
       {
         itemData: {
           itemCode: item.itemCode,
-          count: itemData.count,
+          count: count,
         },
         playerId: userId,
       },

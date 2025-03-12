@@ -25,7 +25,7 @@
     {
       "code": 103,
       "name": "초보자의 활",
-      "attack": 6,
+      "attack": 4,
       "range": 15,
       "speed": 12,
       "grade": "COMMON",
@@ -35,7 +35,7 @@
     {
       "code": 104,
       "name": "견습 마법사의 지팡이",
-      "attack": 8,
+      "attack": 5,
       "range": 12,
       "speed": 9,
       "grade": "COMMON",
@@ -55,17 +55,17 @@
     {
       "code": 106,
       "name": "사냥용 도끼",
-      "attack": 15,
+      "attack": 30,
       "range": 4,
       "speed": 9,
-      "grade": "COMMON",
+      "grade": "RARE",
       "isMustard": false,
       "type": "axe"
     },
     {
       "code": 107,
       "name": "수련자의 활",
-      "attack": 8,
+      "attack": 6,
       "range": 16,
       "speed": 13,
       "grade": "COMMON",
@@ -75,7 +75,7 @@
     {
       "code": 108,
       "name": "마법 지팡이",
-      "attack": 10,
+      "attack": 7,
       "range": 13,
       "speed": 10,
       "grade": "COMMON",
@@ -95,17 +95,17 @@
     {
       "code": 110,
       "name": "버서커의 도끼",
-      "attack": 30,
+      "attack": 50,
       "range": 5,
       "speed": 9,
-      "grade": "RARE",
+      "grade": "EPIC",
       "isMustard": false,
       "type": "axe"
     },
     {
       "code": 111,
       "name": "엘프의 활",
-      "attack": 22,
+      "attack": 10,
       "range": 20,
       "speed": 14,
       "grade": "RARE",
@@ -115,7 +115,7 @@
     {
       "code": 112,
       "name": "얼음 지팡이",
-      "attack": 28,
+      "attack": 12,
       "range": 15,
       "speed": 11,
       "grade": "RARE",
@@ -135,10 +135,10 @@
     {
       "code": 114,
       "name": "번개의 활",
-      "attack": 32,
+      "attack": 25,
       "range": 21,
       "speed": 15,
-      "grade": "RARE",
+      "grade": "EPIC",
       "isMustard": false,
       "type": "bow"
     },
@@ -155,27 +155,27 @@
     {
       "code": 116,
       "name": "천둥의 도끼",
-      "attack": 50,
+      "attack": 75,
       "range": 6,
       "speed": 10,
-      "grade": "EPIC",
+      "grade": "LEGENDARY",
       "isMustard": false,
       "type": "axe"
     },
     {
       "code": 117,
       "name": "사신의 활",
-      "attack": 40,
+      "attack": 35,
       "range": 22,
       "speed": 15,
-      "grade": "EPIC",
+      "grade": "LEGENDARY",
       "isMustard": false,
       "type": "bow"
     },
     {
       "code": 118,
       "name": "아크메이지의 지팡이",
-      "attack": 47,
+      "attack": 27,
       "range": 17,
       "speed": 12,
       "grade": "EPIC",
@@ -195,7 +195,7 @@
     {
       "code": 120,
       "name": "절대자의 지팡이",
-      "attack": 65,
+      "attack": 40,
       "range": 20,
       "speed": 13,
       "grade": "LEGENDARY",
@@ -205,7 +205,7 @@
     {
       "code": 151,
       "name": "머스타드가 발린 나무 검",
-      "attack": 5,
+      "attack": 12,
       "range": 5,
       "speed": 10,
       "grade": "COMMON",
@@ -215,7 +215,7 @@
     {
       "code": 152,
       "name": "머스타드가 발린 낡은 도끼",
-      "attack": 7,
+      "attack": 14,
       "range": 4,
       "speed": 8,
       "grade": "COMMON",
@@ -225,7 +225,7 @@
     {
       "code": 153,
       "name": "머스타드가 발린 초보자의 활",
-      "attack": 4,
+      "attack": 5,
       "range": 15,
       "speed": 12,
       "grade": "COMMON",
@@ -245,7 +245,7 @@
     {
       "code": 155,
       "name": "머스타드가 발린 단단한 철검",
-      "attack": 8,
+      "attack": 14,
       "range": 5,
       "speed": 11,
       "grade": "COMMON",
@@ -255,10 +255,10 @@
     {
       "code": 156,
       "name": "머스타드가 발린 사냥용 도끼",
-      "attack": 10,
+      "attack": 32,
       "range": 4,
       "speed": 9,
-      "grade": "COMMON",
+      "grade": "RARE",
       "type": "axe",
       "isMustard": true
     },
@@ -275,7 +275,7 @@
     {
       "code": 158,
       "name": "머스타드가 발린 마법 지팡이",
-      "attack": 9,
+      "attack": 8,
       "range": 13,
       "speed": 10,
       "grade": "COMMON",
@@ -285,7 +285,7 @@
     {
       "code": 159,
       "name": "머스타드가 발린 미스릴 검",
-      "attack": 25,
+      "attack": 27,
       "range": 6,
       "speed": 12,
       "grade": "RARE",
@@ -295,17 +295,17 @@
     {
       "code": 160,
       "name": "머스타드가 발린 버서커의 도끼",
-      "attack": 30,
+      "attack": 52,
       "range": 5,
       "speed": 9,
-      "grade": "RARE",
+      "grade": "EPIC",
       "type": "axe",
       "isMustard": true
     },
     {
       "code": 161,
       "name": "머스타드가 발린 엘프의 활",
-      "attack": 22,
+      "attack": 11,
       "range": 20,
       "speed": 14,
       "grade": "RARE",
@@ -315,7 +315,7 @@
     {
       "code": 162,
       "name": "머스타드가 발린 얼음 지팡이",
-      "attack": 28,
+      "attack": 13,
       "range": 15,
       "speed": 11,
       "grade": "RARE",
@@ -325,7 +325,7 @@
     {
       "code": 163,
       "name": "머스타드가 발린 용기사의 검",
-      "attack": 35,
+      "attack": 37,
       "range": 6,
       "speed": 13,
       "grade": "RARE",
@@ -335,17 +335,17 @@
     {
       "code": 164,
       "name": "머스타드가 발린 번개의 활",
-      "attack": 32,
+      "attack": 26,
       "range": 21,
       "speed": 15,
-      "grade": "RARE",
+      "grade": "EPIC",
       "type": "bow",
       "isMustard": true
     },
     {
       "code": 165,
       "name": "머스타드가 발린 드래곤 슬레이어",
-      "attack": 45,
+      "attack": 47,
       "range": 7,
       "speed": 13,
       "grade": "EPIC",
@@ -355,10 +355,10 @@
     {
       "code": 166,
       "name": "머스타드가 발린 천둥의 도끼",
-      "attack": 50,
+      "attack": 80,
       "range": 6,
       "speed": 10,
-      "grade": "EPIC",
+      "grade": "LEGENDARY",
       "type": "axe",
       "isMustard": true
     },
@@ -368,14 +368,14 @@
       "attack": 40,
       "range": 22,
       "speed": 15,
-      "grade": "EPIC",
+      "grade": "LEGENDARY",
       "type": "bow",
       "isMustard": true
     },
     {
       "code": 168,
       "name": "머스타드가 발린 아크메이지의 지팡이",
-      "attack": 47,
+      "attack": 28,
       "range": 17,
       "speed": 12,
       "grade": "EPIC",
@@ -385,7 +385,7 @@
     {
       "code": 169,
       "name": "머스타드가 발린 창세신의 검",
-      "attack": 70,
+      "attack": 75,
       "range": 8,
       "speed": 14,
       "grade": "LEGENDARY",
@@ -395,7 +395,7 @@
     {
       "code": 170,
       "name": "머스타드가 발린 절대자의 지팡이",
-      "attack": 65,
+      "attack": 45,
       "range": 20,
       "speed": 13,
       "grade": "LEGENDARY",
