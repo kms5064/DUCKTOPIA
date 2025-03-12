@@ -21,6 +21,7 @@ class Server {
 
   healthCheck = async () => {
     // stack 증감
+    // userSession.name 은 Gateway 서버의 구분자로 Redis key로 사용된다
     const test = await redisClient.hGet(userSession.name, this.socket.id);
     if (test === 'testing') this.stack++
     else this.stack = 0;
