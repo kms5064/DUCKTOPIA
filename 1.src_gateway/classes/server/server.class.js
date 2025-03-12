@@ -39,8 +39,8 @@ class Server {
     }
 
     // 테스팅 시작
-    await redisClient.hSet(userSession.host, this.socket.id, 'testing');
-    await redisClient.publish(this.socket.id, userSession.host);
+    await redisClient.hSet(userSession.name, this.socket.id, 'testing');
+    await redisClient.publish(this.socket.id, userSession.name);
 
     //console.log(`//HealthCheck// [Server] ${this.socket.id} / [Stack] : ${this.stack} `);
   };

@@ -55,6 +55,7 @@ const serverOnRedis = async () => {
     }),
   ]);
 
+  userSession.name = name;
   userSession.host = host;
 
   console.log('Redis List 모든 서버 연결 성공');

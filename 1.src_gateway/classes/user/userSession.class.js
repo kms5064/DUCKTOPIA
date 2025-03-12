@@ -13,6 +13,7 @@ class UserSession {
     this.ids = new Map();
     this.users = new Map();
     this.id = 1; // 소켓에 socket.id값으로 1을 부여, addUser실행될 때마다 1 증가
+    this.name = null;
     this.host = null;
   }
 
