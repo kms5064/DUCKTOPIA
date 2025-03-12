@@ -67,10 +67,7 @@ const onLobbyData = (socket) => async (data) => {
         continue;
       }
 
-      if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) {
-        latencyCheckHandler({ socket, payloadBuffer, userId });
-        continue;
-      }
+      if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) latencyCheckHandler({ socket, payloadBuffer, userId });
 
       const user = userSession.getUserByID(userId);
       if (!user) continue;

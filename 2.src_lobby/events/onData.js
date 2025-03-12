@@ -52,7 +52,7 @@ const onData = (socket) => async (data) => {
 
       await handler({ socket, payload, userId });
     } catch (error) {
-      errorHandler(socket, error);
+      errorHandler(socket, error, userId);
     }
   }
 };
