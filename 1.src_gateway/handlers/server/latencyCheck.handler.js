@@ -14,8 +14,6 @@ const latencyCheckHandler = ({ socket, payloadBuffer, userId }) => {
   // console.log(
   //   `###Latency### ${errorMessage} 와의 총 왕복 시간${latency}ms / 평균 Latency ${latency / 2}ms`,
   // );
-  user.socket()
-
 };
 
 export default latencyCheckHandler;
