@@ -21,7 +21,7 @@ class Server {
 
   healthCheck = async () => {
     // stack 증감
-    const test = await redisClient.hGet(userSession.host, this.socket.id);
+    const test = await redisClient.hGet(userSession.name, this.socket.id);
     if (test === 'testing') this.stack++
     else this.stack = 0;
 
