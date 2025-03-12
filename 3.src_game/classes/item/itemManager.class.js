@@ -258,26 +258,27 @@ generateRandomItems(itemBoxGrade) {
   }
 
   addOffsetByCore(position) {
-    const Offset = 2; 
+    const offset = 1; 
+    const randomNumber = Math.random();
     if(position.x >= 0 && position.y >= 0) {
       return {
-        x: position.x + Offset,
-        y: position.y + Offset,
+        x: position.x + offset + randomNumber,
+        y: position.y + offset + randomNumber,
       }
     } else if(position.x < 0 && position.y >= 0) {
       return {
-        x: position.x - Offset,
-        y: position.y + Offset,
+        x: position.x - offset + randomNumber,
+        y: position.y + offset + randomNumber,
       }
     } else if(position.x >= 0 && position.y < 0) {
       return {
-        x: position.x + Offset,
-        y: position.y - Offset,
+        x: position.x + offset + randomNumber,
+        y: position.y - offset + randomNumber,
       }
     } else if(position.x < 0 && position.y < 0) {
       return {
-        x: position.x - Offset,
-        y: position.y - Offset,
+        x: position.x - offset + randomNumber,
+        y: position.y - offset + randomNumber,
       }
     }
   }
