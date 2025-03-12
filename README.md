@@ -107,7 +107,7 @@
 
 ## Service Architecture
 
-![Image](https://github.com/user-attachments/assets/d7cc0fd5-d120-468a-a1c7-522987ca93e5)
+![Image](https://github.com/user-attachments/assets/01b6169e-661f-4838-9587-8cda3de3fc5a)
 
 ## Gateway Server
 
