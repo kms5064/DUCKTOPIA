@@ -194,13 +194,16 @@
 ### Handlers
 
 - **gameStart.handler**
-  - 설명
+  - Lobby 서버에서 게임시작 요청 패킷을 받으면, Game 서버들의 부하(진행중인 게임 수)를 확인하여  
+  부하가 가장 적은 서버로 게임 정보를 전달해주는 역할
 - **latencyCheck.handler**
-  - 설명
+  - 디버깅용 핸들러로 Gateway에서 다른 서버간 지연시간을 측정하는 용도로 사용
 - **onGameServer.handler**
-  - 설명
+  - 클라이언트의 패킷 중 Game 서버와 관련된 경우, User의 상태를 확인(게임 진행중) 후  
+  패킷을 지정된 Game 서버로 보내주는 역할
 - **onLobbyServer.handler**
-  - 설명
+  - 클라이언트의 패킷 중 Lobby 서버와 관련된 경우, User의 상태를 확인(게임 진행X) 후  
+  패킷을 Lobby 서버로 보내주는 역할
 - **signIn.handler**
   - 로그인 핸들러
   - 사용자가 입력한 정보를 토대로 DB에서 회원 존재 여부를 확인하고 비밀번호를 확인하고 로그인. 로그인한 유저 세션에 추가
@@ -285,7 +288,7 @@
 ### Handlers
 
 - **gamePrepareReq.handler**
-  - 설명
+  - 방의 호스트(방장)가 게임 시작을 클릭하였을 때, 게임 시작에 필요한 정보를 게임서버에 전달해주는 역할
 - **createRoom.handler**
   - 방만드는 핸들러
   - 방이름 유효성을 검사하고 로그인된 유저가 맞는지 검증. roomSession에 room클래스 추가하고 그 room안에 유저(방장)추가
@@ -299,11 +302,11 @@
   - 방을 떠나는 핸들러
   - 방과 유저가 유효한지 검사하고 유저가 방장인지 확인. 방장이라면 room도 같이 삭제하고 아니라면 떠났다는 사실 notifi
 - **latencyCheck.handler**
-  - 설명
+  - 디버깅에 사용되는 핸들러로, Gateway 서버에서 지연시간확인을 위한 패킷을 보내면 이를 다시 돌려주는 역할
 - **loginCast.handler**
-  - 설명
+  - Gateway 서버에서 로그인된 유저를 Lobby 서버에 접속시켜주기 위함
 - **logoutCast.handler**
-  - 설명
+  - Gateway 서버에서 로그아웃 및 접속종료한 유저를 Lobby 서버에 동기화 시켜주는 역할
 
 ## Game Server
 
