@@ -1,4 +1,9 @@
 # DUCKTOPIA: The Mustard Wars
+## Game Intro
+![Image](https://github.com/user-attachments/assets/dd67c8f2-b8ff-4fd3-8680-1ce17bc6a9fa)
+## Game introduction
+(임시)
+2~8인 협동 생존 멀티게임으로 오리에게 점령당한 세상속에서 마지막 희망인 머스타드 공장을 지키며 필드에 흩어진 오리들을 잡아 계란과 꿀을 얻고 겨자를 찾아 겨자씨앗을 얻고 머스타드를 만들어 보스를 잡는 게임입니다.
 
 ## Gateway Server
 ```
@@ -76,10 +81,15 @@
       └─ makeServerPacket.js
  ```
 
-### 역할
-- ~~~를 담당하는 서버입니다.
+### Description
+- 로그인/회원가입 기능
+   - 설명
+- 게임 서버가 여러개일 경우 로드 벨런싱 후 연결
+   - 설명
+- 클라이언트와 다른 서버들(Lobby Server, Game Server)간의 연결을 총괄
+   - 설명
 
-### 핸들러
+### Handlers
 - gameStart.handler
     - 설명
 - latencyCheck.handler
@@ -156,10 +166,11 @@
       └─ makePacket.js
 ```
 
-### 역할
-- ~~~를 담당하는 서버입니다.
+### Description
+- 방 생성/삭제 및 참여를 총괄
+   - 설명
 
-### 핸들러
+### Handlers
 - deleteRoom.handler
     - 설명
 - gamePrepareReq.handler
@@ -301,10 +312,13 @@ assets
 └─ weapon.json
 ```
 
-### 역할
-- ~~~를 담당하는 서버입니다.
+### Description
+- 인게임 로직을 실질적으로 실행하는 서버
+   - 설명
+- CPU 부하가 많을 것으로 예상되어 2개로 운영
+   - 설명
 
-### 핸들러
+### Handlers
 - chatting.handler
     - 설명
 - createGame.handler
@@ -313,14 +327,21 @@ assets
     - 설명
 - waveStart.handler
     - 설명
-- closeBox.handler
-    - 설명
 - openBox.handler
-    - 설명
+   - 아이템 상자를 여는 핸들러
+   - 클라이언트로부터 Box의 Id를 받아서 찾고 보유한 아이템을 조회 후 서버가 notifi전송
+   - itemBox클래스에 occupied속성을 추가해 한명만 열 수 있게 설정
+- closeBox.handler
+   - 아이템 상자를 닫는 핸들러
+   - 클라이언트로부터 Box의 Id를 받아서 찾고 어떤 상자를 닫은건지 동기화를 위한 boxId를 Notifi
+   - occupied null로 초기화해서 점유중이지 않음을 표시
 - putAnItem.handler
-    - 설명
+    - 코어(머스타드 공장)과 아이템박스에 아이템 넣는 핸들러
+    - 클라이언트로부터 어떤오브젝트를 열었는지 boxId,어떤 아이템인지 itemCode, 몇개인지 count를 받고 유저 인벤토리에서 해당 아이템을 count만큼 차감하고(보유한 갯수보다 count가 크다면 count를 보유한갯수로 변경하고 아이템 삭제) 아이템 상자에 추가
+    - 코어라면 특정아이템만 넣을 수 있고 조합식이 완성되면 새 아이템 생성
 - takeOutAnItem.handler
-    - 설명
+    - 코어(머스타드 공장)과 아이템박스에서 아이템 꺼내는 핸들러
+    - 클라이언트로부터 어떤오브젝트를 열었는지 boxId,어떤 아이템인지 itemCode, 몇개인지 count를 받고 박스 인벤토리에서 해당 아이템을 count만큼 추가하고(보유한 갯수보다 count가 크다면 count를 보유한갯수로 변경하고 아이템 삭제) 유저 인벤토리에 추가
 - equipmentUpgrade.handler
     - 설명
 - getItem.handler
@@ -340,7 +361,8 @@ assets
 - attackPlayerMonster.handler
     - 설명
 - detachmentItem.handler
-    - 설명
+    - 장착된 장비를 탈착하는 핸들러
+    - itemCode를 받고 코드의 번호의 맨 앞자리로 부위를 판별해서 그 부위에 장착된 itemCode와 받은 itemCode가 일치하는지 검증하고 일치하면 유저의 장착장비속성을 null로 바꾸고 인벤토리에 아이템 추가
 - dropItem.handler
     - 설명
 - playerDamagedByMonster.handler
