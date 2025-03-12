@@ -1,4 +1,4 @@
-import { serverSession } from "../../../sessions/session";
+import { serverSession } from "../../../sessions/session.js";
 
 const serverOff = (socketId) => {
     const server = serverSession.getServerById(socketId)

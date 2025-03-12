@@ -42,7 +42,7 @@ class Server {
     await redisClient.hSet(userSession.host, this.socket.id, 'testing');
     await redisClient.publish(this.socket.id, userSession.host);
 
-    console.log(`//HealthCheck// [Server] ${this.socket.id} / [Stack] : ${this.stack} `);
+    //console.log(`//HealthCheck// [Server] ${this.socket.id} / [Stack] : ${this.stack} `);
   };
 
   // 레이턴시 확인
