@@ -206,9 +206,12 @@
 - **onLobbyServer.handler**
   - 설명
 - **signIn.handler**
-  - 설명
+  - 로그인 핸들러
+  - 사용자가 입력한 정보를 토대로 DB에서 회원 존재 여부를 확인하고 비밀번호를 확인하고 로그인. 로그인한 유저 세션에 추가
+  - 중복 로그인은 userSession에서 체크 만약 중복이면 로그인 불가
 - **signUp.handler**
-  - 설명
+  - 회원가입 핸들러
+  - 유저가 입력한 닉네임,이메일,패스워드가 유효한 양식인지 검사하고 유효하다면 비밀번호는 암호화해서 유저정보 저장
 
 ## Lobby Server
 
@@ -285,18 +288,20 @@
 
 ### Handlers
 
-- **deleteRoom.handler**
-  - 설명
 - **gamePrepareReq.handler**
   - 설명
 - **createRoom.handler**
-  - 설명
+  - 방만드는 핸들러
+  - 방이름 유효성을 검사하고 로그인된 유저가 맞는지 검증. roomSession에 room클래스 추가하고 그 room안에 유저(방장)추가
 - **getRoomList.handler**
-  - 설명
+  - 방목록 조회 핸들러
+  - 존재하는 방목록 조회해서 response
 - **joinRoom.handler**
-  - 설명
+  - 방에 참가하는 핸들러
+  - 방과 유저가 유효한지 검사하고 방 정원이 가득찼는지 검사. 참가가 가능하다면 해당 유저의 참가를 참가중인 인원에게 notifi
 - **leaveRoom.handler**
-  - 설명
+  - 방을 떠나는 핸들러
+  - 방과 유저가 유효한지 검사하고 유저가 방장인지 확인. 방장이라면 room도 같이 삭제하고 아니라면 떠났다는 사실 notifi
 - **latencyCheck.handler**
   - 설명
 - **loginCast.handler**
