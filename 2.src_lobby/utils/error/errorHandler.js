@@ -1,5 +1,5 @@
 import { config } from '../../config/config.js';
-import makePacket from '../packet/makePacket.js';
+import { userSession } from '../../sessions/session.js';
 import CustomError from './customError.js';
 
 /**

@@ -1,6 +1,6 @@
-import makePacket from '../packet/makePacket.js';
 import { config } from '../../config/config.js';
 import CustomError from './customError.js';
+import { userSession } from '../../sessions/session.js';
 
 /**
  * 클라이언트와 연결되어 어떠한 동작을 하던 중 에러가 발생할 경우 호출되는 함수
