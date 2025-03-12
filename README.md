@@ -1,6 +1,12 @@
 # DUCKTOPIA: The Mustard Wars
 ## Game Intro
 ![Image](https://github.com/user-attachments/assets/dd67c8f2-b8ff-4fd3-8680-1ce17bc6a9fa)
+
+## Game introduction
+(임시)
+2~8인 협동 생존 멀티게임으로 오리에게 점령당한 세상속에서 마지막 희망인 머스타드 공장을 지키며 필드에 흩어진 오리들을 잡아 계란과 꿀을 얻고 겨자를 찾아 겨자씨앗을 얻고 머스타드를 만들어 보스를 잡는 게임입니다.
+
+
 ## Teammates
 | 이름 | MBTI | 블로그 주소 | Github 주소 |
 | --- | --- | --- | --- |
@@ -36,9 +42,9 @@
 ### Game Engine
 - Unity  
 
-## Game introduction
-(임시)
-2~8인 협동 생존 멀티게임으로 오리에게 점령당한 세상속에서 마지막 희망인 머스타드 공장을 지키며 필드에 흩어진 오리들을 잡아 계란과 꿀을 얻고 겨자를 찾아 겨자씨앗을 얻고 머스타드를 만들어 보스를 잡는 게임입니다.
+
+## Service Architecture
+![Image](https://github.com/user-attachments/assets/d7cc0fd5-d120-468a-a1c7-522987ca93e5)
 
 ## Gateway Server
 ```
