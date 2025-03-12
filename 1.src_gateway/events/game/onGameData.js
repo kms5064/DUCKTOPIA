@@ -61,10 +61,7 @@ const onGameData = (socket) => async (data) => {
       // const gamePacket = proto.decode(payloadBuffer);
       // const payload = gamePacket[gamePacket.payload];
 
-      if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) {
-        latencyCheckHandler({ socket, payloadBuffer, userId });
-        continue;
-      }
+      if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) latencyCheckHandler({ socket, payloadBuffer, userId });
 
       const user = userSession.getUserByID(userId);
       if (!user) continue;
