@@ -6,8 +6,7 @@ import { formatDate } from '../utils/dateFormatter.js';
 
 const onData = (socket) => async (data) => {
   // console.log(`${formatDate(new Date())} [게이트웨이 -> 게임] 데이터 수신`);
-  
-
+  let userId = null;
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
   const versionLengthByte = config.header.versionLengthByte;
@@ -38,7 +37,7 @@ const onData = (socket) => async (data) => {
       // 값 추출 및 버전 검증
       const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
       if (version !== config.client.version) break;
-      const userId = +packet.toString(
+      userId = +packet.toString(
         'utf8',
         defaultLength + versionByte + userIdLengthByte,
         defaultLength + versionByte + userIdLengthByte + userIdByte,
