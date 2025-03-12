@@ -4,7 +4,8 @@ import { getProtoMessages } from '../init/loadProtos.js';
 import { errorHandler } from '../utils/error/errorHandler.js';
 
 const onData = (socket) => async (data) => {
-  console.log('[게이트웨이 -> 로비] 데이터 수신');
+  // console.log('[게이트웨이 -> 로비] 데이터 수신');
+  let userId = null;
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
@@ -36,7 +37,7 @@ const onData = (socket) => async (data) => {
       // 값 추출 및 버전 검증
       const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
       if (version !== config.client.version) break;
-      const userId = +packet.toString(
+      userId = +packet.toString(
         'utf8',
         defaultLength + versionByte + userIdLengthByte,
         defaultLength + versionByte + userIdLengthByte + userIdByte,
