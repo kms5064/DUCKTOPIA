@@ -16,8 +16,8 @@
 ## Technology Stack
 
 ### Language
--Javascript
--C#
+- Javascript
+- C#
 
 ### Backend
 - Node.js  
