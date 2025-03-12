@@ -30,7 +30,7 @@ class Room {
   // 유저 추가
   addUser(user) {
     // 방 인원 검사
-    if (this.users.size >= this.maxUserAmount) return false;
+    if (this.users.size >= this.maxUserAmount || this.state !== 0 ) return false;
     // 유저 추가
     this.users.set(user.id, user);
     // 플레이어 추가

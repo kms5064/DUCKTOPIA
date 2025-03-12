@@ -21,11 +21,8 @@ const joinRoomHandler = ({ socket, payload, userId }) => {
   // 3. 방 인원 추가
   const result = room.addUser(user);
   if (!result) {
-    throw new CustomError('방 정원이 다 찼습니다.');
+    throw new CustomError('참여가능한 방이 아닙니다!(게임 진행중/인원 초과)');
   }
-
-  // 준비중인 방이 아닐 경우 불가
-  if(room.state !== 0) throw new CustomError('게임이 이미 시작된 방입니다!')
 
     // 5. response 전송
   const joinRoomResponse = [
