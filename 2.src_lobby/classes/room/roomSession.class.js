@@ -38,7 +38,6 @@ class RoomSession {
   getRoomsData() {
     const roomsData = [];
     for (const room of this.getRooms()) {
-      if(room.state === 0 )
       roomsData.push(room.getRoomData());
     }
 
