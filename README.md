@@ -84,25 +84,21 @@
 - C#
 
 ### Backend
-
 - Node.js
 
 ### Database
-
+- MySQL
+- Redis
+  
 ### DevOps & Cloud
-
 - AWS
 - Docker
-- GitHub Actions
-
+  
 ### Tools
-
 - Git
 - Notion
--
 
 ### Game Engine
-
 - Unity
 
 ## Service Architecture
