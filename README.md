@@ -205,6 +205,10 @@
   - 설명
 - **onLobbyServer.handler**
   - 설명
+- **signIn.handler**
+  - 설명
+- **signUp.handler**
+  - 설명
 
 ## Lobby Server
 
@@ -433,13 +437,17 @@ assets
 ### Handlers
 
 - **chatting.handler**
-  - 설명
+  - 채팅 핸들러
+  - 유저가 작성한 채팅을 검열하여 Notifi
 - **createGame.handler**
-  - 설명
+  - 게임 생성 핸들러
+    게임 시작 전 게임클래스를 생성하고 room에 있던 유저들을 추가해주고 몬스터와 오브젝트들을 생성하고 정보를 Notifi
 - **startGame.handler**
-  - 설명
+  - 게임 시작 핸들러
+  - 게임을 시작하며 몬스터,오브젝트,유저인벤토리를 초기화해주고 게임정보를 Notifi하며 게임 시작
 - **waveStart.handler**
-  - 설명
+  - 웨이브 시작 핸들러
+  - 호스트 클라이언트에서 몬스터들이 생성될 좌표 생성하고 서버로 전달. 받은 좌표들을 기반으로 웨이브 몬스터 생성하고 Notifi
 - **openBox.handler**
   - 아이템 상자를 여는 핸들러
   - 클라이언트로부터 Box의 Id를 받아서 찾고 보유한 아이템을 조회 후 서버가 notifi전송
@@ -468,17 +476,20 @@ assets
   - 아이템과 플레이어 간의 거리, 인벤토리 공간 여부 등을 검증한 후 습득 처리
   - 아이템 습득 성공 시 필드에서 아이템을 제거하고 모든 플레이어에게 알림 전송
 - **monsterAttack.handler**
-  - 설명
+  - 몬스터가 공격하는 핸들러(모션 동기화)
+  - monsterId를 받고 그 몬스터가 공격했다는걸 Notifi
 - **monsterMoveNotification.handler**
-  - 설명
+  - 몬스터들의 위치정보를 받아서 game클래스의 monsterMoveQueue라는 대기열에 넣어서 한덩어리를 순차적으로 처리
 - **objectAttackedByPlayer.handler**
-  - 설명
+  - 파밍용 오브젝트(풀) 피격 핸들러
+  - objectId를 받아서 어떤 오브젝트가 피격됐는지 확인하고 근접무기에만 데미지를 받도록 검증
+  - 피격시마다 HP 업데이트 notifi 해주고 만약 부서졌을경우 아이템을 필드에 생성하고 아이템 생성notifi
 - **objectDamagedByMonster.handler**
-  - 설명
+  - 몬스터에게 적대적인 오브젝트(코어,방어벽) 피격 핸들러
+  - objectId와 monsterId를 받아서 몬스터의 공격력만큼 오브젝트의 hp를 차감하고 nootifi
 - **objectMount.handler**
-  - 설명
-- **attackPlayer.handler**
-  - 설명
+  - 오브젝트 설치하는 핸들러
+  - itemCode와 position을 받아서 인벤토리에서 해당 아이템 차감하고 오브젝트 생성하고 notifi
 - **attackPlayerMonster.handler**
   - 플레이어가 몬스터를 공격하는 핸들러
   - 플레이어의 무기와 방어구 공격력을 계산하여 몬스터에게 데미지를 입힘
@@ -490,11 +501,14 @@ assets
   - 장착된 장비를 탈착하는 핸들러
   - itemCode를 받고 코드의 번호의 맨 앞자리로 부위를 판별해서 그 부위에 장착된 itemCode와 받은 itemCode가 일치하는지 검증하고 일치하면 유저의 장착장비속성을 null로 바꾸고 인벤토리에 아이템 추가
 - **dropItem.handler**
-  - 설명
+  - 플레이어가 인벤토리 아이템을 떨어뜨리는 핸들러
+  - itemCode와 count를 받고 유저 인벤토리에 존재하는지 갯수는 충분한지 검증해서 인벤토리에서 아이템 갯수차감 or 삭제 후 필드에 아이템 생성
 - **playerDamagedByMonster.handler**
-  - 설명
+  - 플레이어 피격 핸들러
+  - monsterId를 받고 그 몬스터의 공격력만큼 피해 입히고 Notifi
 - **updateLocation.handler**
-  - 설명
+  - 위치동기화 핸들러
+  - 클라이언트에서 이동한 좌표를 전송하면 해당 플레이어 위치 같이 게임중인 모든 클라이언트에 Notifi
 - **useItem.handler**
   - 인벤토리의 아이템을 사용하는 핸들러
   - 아이템 코드를 기반으로 아이템 타입(음식, 무기, 방어구 등)을 판별
