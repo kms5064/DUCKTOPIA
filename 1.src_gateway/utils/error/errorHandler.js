@@ -9,8 +9,9 @@ import { userSession } from '../../sessions/session.js';
  * @param {Error} error - 에러 객체
  */
 
-export const errorHandler = (socket, error, userId) => {
+export const errorHandler = (socket, error) => {
   let message;
+  let clienterr = false;
 
   // 에러 정보 로깅
   console.error(error);
@@ -21,6 +22,24 @@ export const errorHandler = (socket, error, userId) => {
     case error instanceof CustomError:
       message = error.message;
       break;
+
+    // MySQL 에러
+    case error.code === 'ER_DUP_ENTRY':
+      if (error.sqlMessage.includes('users.name')) {
+        message = '이미 존재하는 닉네임입니다';
+        clienterr = true;
+      } else if (error.sqlMessage.includes('users.email')) {
+        message = '이미 존재하는 이메일입니다';
+        clienterr = true;
+      }
+      break;
+
+    // 유효성 검사 에러
+    case error.name === 'ValidationError':
+      message = error.message;
+      clienterr = true;
+      break;
+
     // 기타 일반 에러
     default:
       message = error.message || '알 수 없는 오류가 발생했습니다';
@@ -28,12 +47,12 @@ export const errorHandler = (socket, error, userId) => {
 
   console.log(`에러 메시지: ${message}`);
 
-  const user = userSession.getUserByID(userId);
-  if (!user) return
+  // 에러 응답 패킷 생성 및 전송
+  const errorResponse = makePacket(config.packetType.S_ERROR_NOTIFICATION, {
+    errorMessage: message,
+    timestamp: Date.now(),
+    clienterr: clienterr,
+  });
 
-  user.sendPacket([config.packetType.S_ERROR_NOTIFICATION, {
-      errorMessage: message,
-      timestamp: Date.now(),
-      clienterr: true,
-    }])
+  socket.write(errorResponse);
 };
