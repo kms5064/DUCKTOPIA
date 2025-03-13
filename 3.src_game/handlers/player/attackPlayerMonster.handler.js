@@ -22,7 +22,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
 
   // 몬스터 조회
   const monster = game.getMonsterById(monsterId);
-  if (!monster) throw new CustomError(`Monster ID : ${monsterId}는 존재하지 않습니다.`);
+  if (!monster) return
 
   // 무기 공격력 계산
   let weaponAttack = 0;

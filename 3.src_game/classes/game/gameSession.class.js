@@ -21,7 +21,7 @@ class GameSession {
       game.removePlayer(userId)
       return
     } 
-    game.gameEnd(isClear);
+    await game.gameEnd(isClear);
     this.games.delete(game.id);
     await redisClient.hSet(this.name, 'games', this.games.size);
   }
