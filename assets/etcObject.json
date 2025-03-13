@@ -1,0 +1,18 @@
+{
+  "name": "etcObject",
+  "version": "1.0.0",
+  "data": [
+    {
+      "code": 801,
+      "name": "머스타드 씨앗",
+      "description": "허니 머스타드 재료?",
+      "grade": "SPECIAL"
+    },
+    {
+      "code": 802,
+      "name": "허니 머스타드",
+      "description": "??????",
+      "grade": "SPECIAL"
+    }
+  ]
+}

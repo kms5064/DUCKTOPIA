@@ -1,0 +1,71 @@
+{
+  "name": "dropTable",
+  "version": "1.0.0",
+  "data": {
+    "D": {
+      "dropRate": 80,
+      "itemCount": {
+        "min": 0,
+        "max": 1
+      },
+      "itemGradeRates": {
+        "COMMON": 90,
+        "RARE": 10,
+        "EPIC": 0,
+        "LEGENDARY": 0
+      }
+    },
+    "C": {
+      "dropRate": 80,
+      "itemCount": {
+        "min": 0,
+        "max": 2
+      },
+      "itemGradeRates": {
+        "COMMON": 70,
+        "RARE": 25,
+        "EPIC": 5,
+        "LEGENDARY": 0
+      }
+    },
+    "B": {
+      "dropRate": 80,
+      "itemCount": {
+        "min": 0,
+        "max": 3
+      },
+      "itemGradeRates": {
+        "COMMON": 50,
+        "RARE": 35,
+        "EPIC": 15,
+        "LEGENDARY": 0
+      }
+    },
+    "A": {
+      "dropRate": 80,
+      "itemCount": {
+        "min": 0,
+        "max": 4
+      },
+      "itemGradeRates": {
+        "COMMON": 30,
+        "RARE": 40,
+        "EPIC": 25,
+        "LEGENDARY": 5
+      }
+    },
+    "S": {
+      "dropRate": 90,
+      "itemCount": {
+        "min": 0,
+        "max": 5
+      },
+      "itemGradeRates": {
+        "COMMON": 20,
+        "RARE": 35,
+        "EPIC": 35,
+        "LEGENDARY": 10
+      }
+    }
+  }
+}

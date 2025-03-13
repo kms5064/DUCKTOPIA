@@ -1,0 +1,46 @@
+{
+  "name": "armor_bottom",
+  "version": "1.0.0",
+  "data": [
+    {
+      "code": 401,
+      "name": "가죽 바지",
+      "defense": 4,
+      "attack": 1,
+      "grade": "COMMON",
+      "type": "bottom"
+    },
+    {
+      "code": 402,
+      "name": "철 바지",
+      "defense": 7,
+      "attack": 2,
+      "grade": "COMMON",
+      "type": "bottom"
+    },
+    {
+      "code": 403,
+      "name": "황금 바지",
+      "defense": 12,
+      "attack": 5,
+      "grade": "RARE",
+      "type": "bottom"
+    },
+    {
+      "code": 404,
+      "name": "성기사 바지",
+      "defense": 22,
+      "attack": 9,
+      "grade": "EPIC",
+      "type": "bottom"
+    },
+    {
+      "code": 405,
+      "name": "용기사 바지",
+      "defense": 35,
+      "attack": 13,
+      "grade": "LEGENDARY",
+      "type": "bottom"
+    }
+  ]
+}

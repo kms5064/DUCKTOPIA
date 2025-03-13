@@ -1,0 +1,18 @@
+{
+  "name": "objectDropTable",
+  "version": "1.0.0",
+  "data": [
+    { "objectCode": 2, "name": "itemBox1", "dropList": [301], "max": 1, "grade": "D" },
+    { "objectCode": 3, "name": "itemBox2", "dropList": [302], "max": 1, "grade": "C" },
+    { "objectCode": 4, "name": "itemBox3", "dropList": [303], "max": 1, "grade": "B" },
+
+    { "objectCode": 5, "name": "grass", "maxHp": 3, "dropList": [801], "max": 1 },
+    { "objectCode": 6, "name": "tree", "maxHp": 3, "dropList": [3, 4], "max": 2 },
+    { "objectCode": 7, "name": "tree2", "maxHp": 3, "dropList": [5, 6], "max": 2 },
+
+    { "objectCode": 30, "name": "testWall1", "maxHp": 100, "dropList": [], "max": 0 },
+    { "objectCode": 31, "name": "testWall1", "maxHp": 100, "dropList": [], "max": 0 },
+    { "objectCode": 32, "name": "testWall2", "maxHp": 100, "dropList": [], "max": 0 },
+    { "objectCode": 33, "name": "testWall3", "maxHp": 100, "dropList": [], "max": 0 }
+  ]
+}
