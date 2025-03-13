@@ -20,6 +20,7 @@ const dropItemHandler = ({ socket, payload, userId }) => {
   if (!item) throw new CustomError(`아이템 정보가 없습니다.`);
 
   const count = Math.min(itemData.count,item.count);
+  if(count <= 0) throw new CustomError('아이템이 부족합니다')
 
   if (item) {
     const droppedItems = game.itemManager.playerDropItem(item.itemCode,count, playerPosition);
