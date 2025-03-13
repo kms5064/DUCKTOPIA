@@ -13,7 +13,7 @@ const objectDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
   if (!game) throw new CustomError(`Game ID : (${user.getGameId()}): Game 정보가 없습니다.`);
 
   const monster = game.getMonsterById(monsterId);
-  if (!monster) throw new CustomError(`Monster ID : ${monsterId}는 존재하지 않습니다.`);
+  if (!monster) return
 
   // 오브젝트에 따라 다르게 적용
   let sendPayload = null;

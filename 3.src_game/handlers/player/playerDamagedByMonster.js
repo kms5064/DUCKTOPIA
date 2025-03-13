@@ -18,7 +18,7 @@ const playerDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
 
   // 몬스터 조회
   const monster = game.getMonsterById(monsterId);
-  if (!monster) throw new CustomError(`Monster ID : ${monsterId}는 존재하지 않습니다.`);
+  if (!monster) return
 
   const remainPlayerHp = player.changePlayerHp(monster.getAttack(), game);
   if(remainPlayerHp <= 0) return

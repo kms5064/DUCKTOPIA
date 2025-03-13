@@ -6,7 +6,7 @@ const updateLocationHandler = ({ socket, payload, userId }) => {
   const { x, y } = payload;
 
   const user = userSession.getUser(userId);
-  if (!user) throw new CustomError('유저 정보가 없습니다.');
+  if (!user) return
 
   const game = gameSession.getGame(user.getGameId());
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
