@@ -9,7 +9,7 @@ class User {
     this.name = null;
     this.gameServer = null;
     this.inGame = false; // 게임 진행 여부 확인
-    this.loginTime = 0;
+    this.loginTime = Date.now();
   }
 
   getUserData() {

@@ -3,6 +3,7 @@ import { config } from '../../config/config.js';
 import makeServerPacket from '../../utils/packet/makeServerPacket.js';
 import User from './user.class.js';
 import { redisClient } from '../../db/redis/redis.js';
+import onEnd from '../../events/onEnd.js';
 
 /* UserSession 클래스 */
 class UserSession {
@@ -29,6 +30,8 @@ class UserSession {
 
     // 삭제 성공 시
     if (req === 1) {
+      const user = this.getUserByID(id)
+      if(user) onEnd(user.socket)()
       await redisClient.publish(config.redis.custom + 'UserOut', String(id));
     }
     return true;
