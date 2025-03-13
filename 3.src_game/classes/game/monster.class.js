@@ -194,11 +194,9 @@ class Monster extends MovableObjectBase {
 
   //강제로 플레이어를 지정해줄 때
   setTargetPlayer(player) {
-    if (player.getPlayerHp() >= 0) {
+    if (player.getPlayerHp() > 0) {
       this.targetPlayer = player;
     }
-
-
   }
 
   getMonsterPos() {
