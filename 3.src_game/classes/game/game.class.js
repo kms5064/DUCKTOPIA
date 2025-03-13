@@ -112,7 +112,6 @@ class Game {
       userIds.push(user.id);
       userSession.deleteUser(user.id);
     });
-    console.log(userIds);
     // Gateway의 user 정보 업데이트용
     await redisClient.publish(config.redis.custom + 'UserGameEnd', userIds.join(','));
     // Lobby의 roomId 삭제용
