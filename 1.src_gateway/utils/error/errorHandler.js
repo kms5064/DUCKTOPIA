@@ -21,6 +21,7 @@ export const errorHandler = (socket, error) => {
     case error instanceof CustomError:
       message = error.message;
       if (message.includes('일치하지')) clienterr = true;
+      if (message.includes('요청')) clienterr = true;
       break;
 
     // MySQL 에러
