@@ -20,6 +20,7 @@ export const errorHandler = (socket, error) => {
     // CustomError 처리
     case error instanceof CustomError:
       message = error.message;
+      if (message.includes('일치하지')) clienterr = true;
       break;
 
     // MySQL 에러
@@ -38,7 +39,6 @@ export const errorHandler = (socket, error) => {
       message = error.message;
       clienterr = true;
       break;
-
     // 기타 일반 에러
     default:
       message = error.message || '알 수 없는 오류가 발생했습니다';

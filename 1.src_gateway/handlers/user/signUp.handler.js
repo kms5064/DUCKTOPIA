@@ -37,11 +37,11 @@ const signUpHandler = async ({ socket, payloadBuffer }) => {
   const obj = { nickname, email, password };
 
   // 1. payload 유효성 검사
-  // try {
-  //   await signUpSchema.validateAsync(obj);
-  // } catch (validationError) {
-  //   throw new CustomError(validationError.message);
-  // }
+  try {
+    await signUpSchema.validateAsync(obj);
+  } catch (validationError) {
+    throw new CustomError(validationError.message);
+  }
 
   // 2. 비밀번호 bcrypt로 암호화
   const hashedPw = await bcrypt.hash(password, SALT_OR_ROUNDS);
