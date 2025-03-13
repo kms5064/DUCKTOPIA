@@ -92,7 +92,7 @@ class Game {
     this.initPlayersHunger();
   }
 
-  gameEnd(isClear = false) {
+  async gameEnd(isClear = false) {
     clearInterval(this.gameLoop);
     const userIds = [];
     this.gameLoop = null;
@@ -112,10 +112,11 @@ class Game {
       userIds.push(user.id);
       userSession.deleteUser(user.id);
     });
+    console.log(userIds);
     // Gateway의 user 정보 업데이트용
-    redisClient.publish(config.redis.custom + 'UserGameEnd', userIds.join(','));
+    await redisClient.publish(config.redis.custom + 'UserGameEnd', userIds.join(','));
     // Lobby의 roomId 삭제용
-    redisClient.publish(config.redis.custom + 'RemoveRoom', String(this.id));
+    await redisClient.publish(config.redis.custom + 'RemoveRoom', String(this.id));
   }
 
   // 전체 공지(본인 제외)
