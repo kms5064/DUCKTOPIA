@@ -9,11 +9,11 @@ const waveStartHandler = ({ socket, payload, userId }) => {
 
   // 1. 유저 찾기
   const user = userSession.getUser(userId);
-  if (!user) throw new CustomError('유저가 존재하지 않습니다.');
+  if (!user) return
 
   // 2. 게임 찾기
   const game = gameSession.getGame(user.getGameId());
-  if (!game) throw new CustomError('게임이 존재하지 않습니다.');
+  if (!game) return
 
   // 3. 게임에 반영하기
   game.spawnWaveMonster(monsters);
