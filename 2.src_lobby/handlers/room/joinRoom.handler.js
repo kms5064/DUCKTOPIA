@@ -1,6 +1,5 @@
 import { config } from '../../config/config.js';
 import { roomSession, userSession } from '../../sessions/session.js';
-import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
 
 const joinRoomHandler = ({ socket, payload, userId }) => {
@@ -24,7 +23,7 @@ const joinRoomHandler = ({ socket, payload, userId }) => {
     throw new CustomError('참여가능한 방이 아닙니다!(게임 진행중/인원 초과)');
   }
 
-    // 5. response 전송
+  // 5. response 전송
   const joinRoomResponse = [
     config.packetType.JOIN_ROOM_RESPONSE,
     {

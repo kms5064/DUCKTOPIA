@@ -15,8 +15,6 @@ const connectServer = async (name) => {
     if (status !== '1') return;
     const type = name.split(':')[1];
     const port = portType[type][0];
-    // 로컬에서 게임서버 2 열때 포트를 다르게 하기
-    // if (port === 5557 && name.split(':')[2] === '1') port = 5558;
     if (!port) {
       console.error('잘못된 서버 타입입니다');
       return;

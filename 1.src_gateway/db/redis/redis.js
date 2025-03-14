@@ -42,6 +42,5 @@ subscriber.on('error', (err) => {
 await subscriber.subscribe(config.redis.custom + 'ServerOn', connectServer);
 await subscriber.subscribe(config.redis.custom + 'UserGameEnd', updateInGame);
 await subscriber.subscribe(config.redis.custom + 'UserOut', userOut);
-// await subscriber.subscribe(config.redis.custom + "ServerOff", serverOff)
 
 export { redisClient, subscriber };

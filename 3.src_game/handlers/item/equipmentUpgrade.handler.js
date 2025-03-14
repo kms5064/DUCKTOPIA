@@ -1,7 +1,7 @@
-import CustomError from '../../utils/error/customError.js';
-import { gameSession, userSession } from '../../sessions/session.js';
-import { getGameAssets } from '../../init/assets.js';
 import { config } from '../../config/config.js';
+import { getGameAssets } from '../../init/assets.js';
+import { gameSession, userSession } from '../../sessions/session.js';
+import CustomError from '../../utils/error/customError.js';
 
 const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
   const { itemCode1, itemCode2 } = payload;
@@ -41,30 +41,30 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
     config.game.item.mustardItemCode === itemCode2
   ) {
     // '1xx' 무기
-    const weaponCode = [item1Str, item2Str].find((code) => code !== config.game.item.mustardItemCode && code[0] === '1');
-    if (!weaponCode) throw new CustomError('허니 머스타드는 무기가 아닌 부위에는 조합할 수 없습니다.');
+    const weaponCode = [item1Str, item2Str].find(
+      (code) => code !== config.game.item.mustardItemCode && code[0] === '1',
+    );
+    if (!weaponCode)
+      throw new CustomError('허니 머스타드는 무기가 아닌 부위에는 조합할 수 없습니다.');
 
     // 이미 바른 무기에 못바르게 예외처리
-    if(!(weaponCode > 100 && weaponCode <= 120)){
-      return
+    if (!(weaponCode > 100 && weaponCode <= 120)) {
+      return;
     }
 
     // 머스타드 무기는 코드에 50을 추가
-    mustardWeaponCode = +weaponCode + 50
+    mustardWeaponCode = +weaponCode + 50;
     isSuccess = true;
-    // TODO : 허니머스타드 무기
-    // createEquipmentList = 이부분에 넣어주면 됩니다
   } else {
     // 장비 조합
 
-    if (item1Str.length !== item2Str.length || item1Str[0] !== item2Str[0]) 
+    if (item1Str.length !== item2Str.length || item1Str[0] !== item2Str[0])
       throw new CustomError('조합이 불가능합니다.');
 
     const itemType = item1Str[0];
     const items = [itemCode1, itemCode2];
     const itemDatas = [];
     const itemGrades = [];
-  
 
     // 에셋 데이터 검증
     items.forEach((item) => {
@@ -142,7 +142,9 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
 
     switch (itemType) {
       case '1':
-        createEquipmentList = weapon.data.filter((data) => data.grade === createGrade && data.isMustard === false);
+        createEquipmentList = weapon.data.filter(
+          (data) => data.grade === createGrade && data.isMustard === false,
+        );
         break;
       case '3':
         createEquipmentList = armorTop.data.filter((data) => data.grade === createGrade);
@@ -165,11 +167,27 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
     createRandom = Math.floor(Math.random() * createEquipmentList.length);
   }
 
+  const removedItem1 = user.player.inventory.find((item) => item && item.itemCode === itemCode1);
+  const removedItem2 = user.player.inventory.find((item) => item && item.itemCode === itemCode2);
+
   // 유저 인벤토리에서 재료 삭제
-  user.player.removeItem(itemCode1, 1);
-  user.player.removeItem(itemCode2, 1);
-  
-  const createEquipment = mustardWeaponCode ? {code: mustardWeaponCode} : createEquipmentList[createRandom];
+  if (itemCode1 === itemCode2) {
+    if (removedItem1.count < 2) {
+      throw new CustomError(`아이템의 갯수가 부족합니다.`);
+    }
+
+    user.player.removeItem(itemCode1, 2);
+  } else {
+    if (!removedItem1 || !removedItem2) {
+      throw new CustomError(`아이템이 없습니다.`);
+    }
+    user.player.removeItem(itemCode1, 1);
+    user.player.removeItem(itemCode2, 1);
+  }
+
+  const createEquipment = mustardWeaponCode
+    ? { code: mustardWeaponCode }
+    : createEquipmentList[createRandom];
   console.log(
     `조합에 ${isSuccess ? '성공' : '실패'} 하여 ${createGrade} 등급의 새로운 아이템이 생성되었습니다.`,
     createEquipment,

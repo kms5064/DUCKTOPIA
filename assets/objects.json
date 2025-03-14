@@ -1,43 +1,42 @@
 {
-    "name": "objects",
-    "version": "1.0.0",
-    "data": [
-      {
-        "code": 301,
-        "name": "하급 아이템박스"
-      },
-      {
-        "code": 302,
-        "name": "중급 아이템박스"
-      },
-      {
-        "code": 303,
-        "name": "고급 아이템박스"
-      },
-      {
-        "code": 901,
-        "name": "testWall1",
-        "object": 30,
-        "defaultCode": 901
-      },
-      {
-        "code": 902,
-        "name": "testWall2",
-        "object": 31,
-        "defaultCode": 901
-      },
-      {
-        "code": 903,
-        "name": "testWall3",
-        "object": 32,
-        "defaultCode": 901
-      },
-      {
-        "code": 904,
-        "name": "testWall4",
-        "object": 33,
-        "defaultCode": 901
-      }
-    ]
-  }
-  
+  "name": "objects",
+  "version": "1.0.0",
+  "data": [
+    {
+      "code": 301,
+      "name": "하급 아이템박스"
+    },
+    {
+      "code": 302,
+      "name": "중급 아이템박스"
+    },
+    {
+      "code": 303,
+      "name": "고급 아이템박스"
+    },
+    {
+      "code": 901,
+      "name": "testWall1",
+      "object": 30,
+      "defaultCode": 901
+    },
+    {
+      "code": 902,
+      "name": "testWall2",
+      "object": 31,
+      "defaultCode": 901
+    },
+    {
+      "code": 903,
+      "name": "testWall3",
+      "object": 32,
+      "defaultCode": 901
+    },
+    {
+      "code": 904,
+      "name": "testWall4",
+      "object": 33,
+      "defaultCode": 901
+    }
+  ]
+}

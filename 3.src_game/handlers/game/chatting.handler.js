@@ -11,15 +11,34 @@ const chattingHandler = ({ socket, payload, userId }) => {
   const user = userSession.getUser(userId);
   if (!user) throw new CustomError('유저 정보가 없습니다.');
 
-  const replaceList = ['♥', '★', '※', '♣', '♠',
-    '♥♥', '★★', '※※', '♣♣', '♠♠',
-    '♥♥♥♥', '★★★★', '※※※※', '♣♣♣♣', '♠♠♠♠',
-    '!#@$', '%#@!', '^!!^', '^#^', '^)^', '^0^'];
+  const replaceList = [
+    '♥',
+    '★',
+    '※',
+    '♣',
+    '♠',
+    '♥♥',
+    '★★',
+    '※※',
+    '♣♣',
+    '♠♠',
+    '♥♥♥♥',
+    '★★★★',
+    '※※※※',
+    '♣♣♣♣',
+    '♠♠♠♠',
+    '!#@$',
+    '%#@!',
+    '^!!^',
+    '^#^',
+    '^)^',
+    '^0^',
+  ];
 
   let badWordCount = 0;
 
-  profanity.data.forEach(word => {
-    const regex = new RegExp(word, "gi");
+  profanity.data.forEach((word) => {
+    const regex = new RegExp(word, 'gi');
     if (replacedMessage.match(regex)) {
       const num = Math.floor(Math.random() * replaceList.length);
       replacedMessage = replacedMessage.replace(regex, replaceList[num]);
@@ -31,9 +50,8 @@ const chattingHandler = ({ socket, payload, userId }) => {
   const game = gameSession.getGame(user.getGameId());
   if (!game) throw new CustomError(`Game ID(${user.getGameId()}): Game 정보가 없습니다.`);
 
-
   if (badWordCount > 5) {
-    replacedMessage = "대충 뭔가 험한 말";
+    replacedMessage = '대충 뭔가 험한 말';
   }
 
   const chattingPayloadInfos = [

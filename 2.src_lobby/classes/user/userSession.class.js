@@ -23,10 +23,6 @@ class UserSession {
     return this.users.get(userId);
   }
 
-  getUsers() {
-    return this.users;
-  }
-
   getUserIds() {
     const ids = [];
     this.users.forEach((user) => ids.push(user.id));

@@ -10,7 +10,7 @@ const onLobbyServerHandler = async ({ socket, payloadBuffer, packetType }) => {
     throw new CustomError('유저 정보가 없습니다.');
   }
 
-  const game = await user.getGameState(true)
+  const game = await user.getGameState(true);
   if (game) {
     throw new CustomError(`올바르지 못한 요청입니다. (USER ID: ${user.id})`);
   }

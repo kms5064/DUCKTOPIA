@@ -40,18 +40,8 @@ class BossMonster extends Monster {
   }
 
   setDamaged(damage, isMustard) {
-    // const newAggro = Math.max(0, this.hatePointList.get(player) + damage);
-    // this.hatePointList.set(player, newAggro);
     if (!isMustard) return this.hp;
     return super.setDamaged(damage);
-  }
-
-  //어그로 수치를 풀 때 쓰임
-  resetHatePoint() { }
-
-  //1인을 쫒아갈 때
-  setTargetPlayer(player) {
-    super.setTargetPlayer(player);
   }
 
   setPlayerList(players) {
@@ -85,13 +75,16 @@ class BossMonster extends Monster {
 
     const targetHp = this.targetPlayer.getPlayerHp();
 
-    if (distanceFromStartPoint > this.awakeRange + 20 || distance > this.awakeRange + 5 || targetHp < 0) {
+    if (
+      distanceFromStartPoint > this.awakeRange + 20 ||
+      distance > this.awakeRange + 5 ||
+      targetHp < 0
+    ) {
       this.monsterAwakeCoolTime = 3000;
       this.distanceBetweenPlayer = Infinity;
       this.targetPlayer = null;
       return true;
-    }
-    else {
+    } else {
       this.distanceBetweenPlayer = distance;
       return false;
     }
@@ -139,8 +132,6 @@ class BossMonster extends Monster {
         break;
     }
   }
-
-  death() { }
 
   CoolTimeCheck() {
     super.CoolTimeCheck();

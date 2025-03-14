@@ -16,7 +16,7 @@ export const ITEM_MAX_SPAWN = 4; //박스에 만들 아이템 갯수
 //grass
 export const MAX_NUMBER_OF_GRASS = 50;
 export const GRASS_MAX_HP = 3;
-export const GRASS_RESPAWN_TIME=60000
+export const GRASS_RESPAWN_TIME = 60000;
 
 //core
 export const OBJECT_CORE_CODE = 1;

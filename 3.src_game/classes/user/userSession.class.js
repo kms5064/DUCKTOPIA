@@ -27,14 +27,6 @@ class UserSession {
   getUsers() {
     return this.users;
   }
-
-  // 테스트 조회용
-  getUserIds() {
-    const ids = [];
-    this.users.forEach((user) => ids.push(user.id));
-
-    return ids;
-  }
 }
 
 export default UserSession;

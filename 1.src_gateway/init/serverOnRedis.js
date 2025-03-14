@@ -1,8 +1,8 @@
-import os from 'os';
-import { redisClient } from '../db/redis/redis.js';
-import connectServer from '../db/redis/subscribe/connectServer.js';
 import { config } from '../config/config.js';
 import { userSession } from '../sessions/session.js';
+import { redisClient } from '../db/redis/redis.js';
+import os from 'os';
+import connectServer from '../db/redis/subscribe/connectServer.js';
 
 // 프라이빗 IPv4 주소
 function getLocalIP() {
@@ -10,7 +10,8 @@ function getLocalIP() {
   for (let interfaceName in interfaces) {
     for (let iface of interfaces[interfaceName]) {
       // IPv4, 비공개 IP 제외
-      if (iface.family === 'IPv4' && !iface.internal && !iface.address.startsWith('169.254.')) return iface.address;
+      if (iface.family === 'IPv4' && !iface.internal && !iface.address.startsWith('169.254.'))
+        return iface.address;
     }
   }
 }

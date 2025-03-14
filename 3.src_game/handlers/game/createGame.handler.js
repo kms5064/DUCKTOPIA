@@ -1,7 +1,7 @@
-import { gameSession, userSession, serverSession } from '../../sessions/session.js';
 import { config } from '../../config/config.js';
-import CustomError from '../../utils/error/customError.js';
 import { redisClient } from '../../db/redis/redis.js';
+import { gameSession, userSession, serverSession } from '../../sessions/session.js';
+import CustomError from '../../utils/error/customError.js';
 
 // 방 생성 핸들러
 const createGameHandler = async ({ socket, payload, userId }) => {
@@ -51,7 +51,6 @@ const createGameHandler = async ({ socket, payload, userId }) => {
     },
   ];
   game.broadcast(GamePrepareNotification);
-  // user.sendPacket(GamePrepareResponse);
 };
 
 export default createGameHandler;

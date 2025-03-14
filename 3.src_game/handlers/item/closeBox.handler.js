@@ -1,10 +1,9 @@
-import CustomError from '../../utils/error/customError.js';
 import { config } from '../../config/config.js';
 import { gameSession, userSession } from '../../sessions/session.js';
+import CustomError from '../../utils/error/customError.js';
 
 const playerCloseBoxHandler = ({ socket, payload, userId }) => {
   const { itemBoxId } = payload;
-  // console.log(`playerCloseBoxHandler itemBoxId: ${itemBoxId}`);
 
   // 유저 객체 조회
   const user = userSession.getUser(userId);

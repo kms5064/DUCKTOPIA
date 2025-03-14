@@ -1,10 +1,9 @@
-import CustomError from '../../utils/error/customError.js';
-import { gameSession, userSession } from '../../sessions/session.js';
 import { config } from '../../config/config.js';
+import { gameSession, userSession } from '../../sessions/session.js';
+import CustomError from '../../utils/error/customError.js';
 
 const playerPutAnItemHandler = ({ socket, payload, userId }) => {
   const { itemBoxId, itemCode, count } = payload;
-  // console.log(`putAnItemHandler itemBoxId: ${itemBoxId},itemCode: ${itemCode},count: ${count}`);
 
   // 유저 객체 조회
   const user = userSession.getUser(userId);
@@ -23,7 +22,6 @@ const playerPutAnItemHandler = ({ socket, payload, userId }) => {
     const core = game.getCore();
     if (!core) throw CustomError('코어 정보가 없습니다.');
 
-    // 꿀(itemCode:7), 계란후라이(itemCode:8), 머스타드 씨앗(itemCode:801)이 아니면 넣을 수 없음
     if (
       config.game.item.mustardMaterialCode1 !== itemCode &&
       config.game.item.mustardMaterialCode2 !== itemCode &&
@@ -49,10 +47,6 @@ const playerPutAnItemHandler = ({ socket, payload, userId }) => {
     if (material1Count > 0 && material2Count > 0 && material3Count > 0) {
       core.createMustardItem([material1Count, material2Count, material3Count]);
     }
-
-    // console.log(`플레이어가 아이템을 넣었습니다 ${JSON.stringify(item)}`);
-    // console.log(`플레이어 인벤토리 ${JSON.stringify(player.inventory)}`);
-    // console.log(`${itemBoxId} 인벤토리 ${JSON.stringify(core.itemData)}`);
 
     objectDatas = core.itemData;
   } else {

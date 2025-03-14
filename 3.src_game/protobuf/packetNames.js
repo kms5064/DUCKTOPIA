@@ -1,3 +1,1 @@
-export const packetNames = [
-  'GamePacket',
-];
+export const packetNames = ['GamePacket'];

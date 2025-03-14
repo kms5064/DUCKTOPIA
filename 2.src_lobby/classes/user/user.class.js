@@ -1,4 +1,3 @@
-import { config } from '../../config/config.js';
 import makePacket from '../../utils/packet/makePacket.js';
 
 class User {
@@ -37,15 +36,6 @@ class User {
   exitRoom() {
     this.roomId = null;
     this.state = 'lobby';
-  }
-
-  //게임 종료
-  gameEnd() {
-    this.state = 'lobby';
-  }
-
-  getRoomId() {
-    return this.roomId;
   }
 }
 

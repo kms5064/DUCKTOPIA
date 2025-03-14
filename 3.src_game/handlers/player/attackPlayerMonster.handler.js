@@ -22,7 +22,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
 
   // 몬스터 조회
   const monster = game.getMonsterById(monsterId);
-  if (!monster) return
+  if (!monster) return;
 
   // 무기 공격력 계산
   let weaponAttack = 0;
@@ -35,7 +35,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
 
     if (equippedWeapon) {
       weaponAttack = equippedWeapon.attack;
-      isMustard = equippedWeapon.isMustard ;
+      isMustard = equippedWeapon.isMustard;
     }
   }
 
@@ -87,9 +87,6 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   // 몬스터 HP 차감 처리 - 무기 공격력과 방어구 공격력 합산
   const totalAttack = weaponAttack + armorAttack;
   const damage = player.getPlayerAtkDamage(totalAttack);
-  // console.log('[Player Attack] 플레이어 공격력:', damage);
-  // console.log('[무기 공격력]:', weaponAttack);
-  // console.log('[방어구 공격력]:', armorAttack);
 
   // 보스 피격 시 머스타드 무기인지 확인후 처리
   const currHp = monster.setDamaged(damage, isMustard);
@@ -108,17 +105,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
 
   if (currHp > 0) return;
 
-  if (monster.isBossMonster()) {
-    gameSession.removeGame(game, game.ownerId ,true);
-    // const gameClearNotification = [
-    //   config.packetType.S_GAME_CLEAR_NOTIFICATION,
-    //   {
-    //   }
-    // ]
-
-    // game.broadcast(gameClearNotification);
-    // console.log("이 위치에 보스가 사망하고 클리어 했다는 패킷 전송하기");
-  }
+  if (monster.isBossMonster()) gameSession.removeGame(game, game.ownerId, true);
 
   // 몬스터 사망 처리
   game.removeMonster(monsterId);
@@ -135,10 +122,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
   const monsterPosition = monster.getMonsterPos();
   const droppedItems = game.itemManager.createDropItems(monster.grade, monsterPosition);
 
-  if (droppedItems.length <= 0) {
-    // console.log('[아이템 미생성] 드롭 확률에 실패하여 아이템이 생성되지 않음');
-    return;
-  }
+  if (droppedItems.length <= 0) return;
 
   // 아이템 생성 알림
   const itemSpawnNotification = [
@@ -147,7 +131,7 @@ const attackPlayerMonsterHandler = ({ socket, payload, userId }) => {
       items: droppedItems,
     },
   ];
-  // console.log('[패킷 전송] S_ITEM_SPAWN_NOTIFICATION 전송');
+
   game.broadcast(itemSpawnNotification);
 };
 

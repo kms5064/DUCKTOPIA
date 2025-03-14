@@ -6,7 +6,7 @@ const logoutCastHandler = ({ socket, payload, userId }) => {
   const user = userSession.getUser(userId);
   if (!user) throw new CustomError('유저를 찾지 못했습니다.');
 
-  const room = roomSession.getRoom(user.roomId)
+  const room = roomSession.getRoom(user.roomId);
   if (user.roomId && room.state !== 2) leaveRoomHandler({ socket, payload, userId });
   userSession.deleteUser(userId);
 };

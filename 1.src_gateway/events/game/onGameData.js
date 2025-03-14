@@ -1,9 +1,6 @@
 import { config } from '../../config/config.js';
-import latencyCheckHandler from '../../handlers/server/latencyCheck.handler.js';
-import { getProtoMessages } from '../../init/loadProtos.js';
 import { userSession } from '../../sessions/session.js';
-import { errorHandler } from '../../utils/error/errorHandler.js';
-import makePacket from '../../utils/packet/makePacket.js';
+import latencyCheckHandler from '../../handlers/server/latencyCheck.handler.js';
 
 const onGameData = (socket) => async (data) => {
   // console.log('게임서버 데이터 수신');
@@ -19,10 +16,9 @@ const onGameData = (socket) => async (data) => {
   let userIdByte = 0;
   const defaultLength = packetTypeByte + versionLengthByte;
 
-
   try {
     while (socket.buffer.length >= defaultLength) {
-      try{
+      try {
         // 가변 길이 확인
         // versionLength를 읽음
         versionByte = socket.buffer.readUInt8(packetTypeByte);
@@ -57,11 +53,8 @@ const onGameData = (socket) => async (data) => {
       const packetType = packet.readUInt16BE(0);
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
-      // const proto = getProtoMessages().GamePacket;
-      // const gamePacket = proto.decode(payloadBuffer);
-      // const payload = gamePacket[gamePacket.payload];
-
-      if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) latencyCheckHandler({ socket, payloadBuffer, userId });
+      if (packetType === config.packetType.S_ERROR_NOTIFICATION[0])
+        latencyCheckHandler({ socket, payloadBuffer, userId });
 
       const user = userSession.getUserByID(userId);
       if (!user) continue;
@@ -78,7 +71,7 @@ const onGameData = (socket) => async (data) => {
       // console.timeEnd('check');
     }
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 };
 

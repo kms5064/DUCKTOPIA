@@ -1,10 +1,10 @@
 {
   "name": "upgrade",
   "version": "1.0.0",
-  "data":{
-    "COMMON" : 10,
-    "RARE" : 15,
-    "EPIC" : 20,
-    "LEGENDARY" : 25}
-
+  "data": {
+    "COMMON": 10,
+    "RARE": 15,
+    "EPIC": 20,
+    "LEGENDARY": 25
+  }
 }
