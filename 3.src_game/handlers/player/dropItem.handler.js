@@ -1,5 +1,6 @@
 import { userSession, gameSession } from '../../sessions/session.js';
 import { config } from '../../config/config.js';
+import CustomError from '../../utils/error/customError.js';
 
 const dropItemHandler = ({ socket, payload, userId }) => {
   const { itemData } = payload;

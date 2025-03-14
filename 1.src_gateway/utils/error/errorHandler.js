@@ -20,8 +20,8 @@ export const errorHandler = (socket, error) => {
     // CustomError 처리
     case error instanceof CustomError:
       message = error.message;
-      if (message.includes('일치하지')) clienterr = true;
-      if (message.includes('요청')) clienterr = true;
+      const regx = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+      if (regx.test(message)) clienterr = true;
       break;
 
     // MySQL 에러
@@ -33,12 +33,6 @@ export const errorHandler = (socket, error) => {
         message = '이미 존재하는 이메일입니다';
         clienterr = true;
       }
-      break;
-
-    // 유효성 검사 에러
-    case error.name === 'ValidationError':
-      message = error.message;
-      clienterr = true;
       break;
     // 기타 일반 에러
     default:

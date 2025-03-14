@@ -1,4 +1,3 @@
-import makePacket from '../../utils/packet/makePacket.js';
 import { gameSession, userSession } from '../../sessions/session.js';
 import { config } from '../../config/config.js';
 import CustomError from '../../utils/error/customError.js';

@@ -10,6 +10,7 @@ import CustomError from './customError.js';
 
 export const errorHandler = (socket, error, userId) => {
   let message;
+  let clienterr = false;
 
   // 에러 정보 로깅
   console.error(error);
@@ -19,6 +20,8 @@ export const errorHandler = (socket, error, userId) => {
     // CustomError 처리
     case error instanceof CustomError:
       message = error.message;
+      const regx = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+      if (regx.test(message)) clienterr = true;
       break;
     // 기타 일반 에러
     default:
@@ -33,6 +36,6 @@ export const errorHandler = (socket, error, userId) => {
   user.sendPacket([config.packetType.S_ERROR_NOTIFICATION, {
     errorMessage: message,
     timestamp: Date.now(),
-    clienterr: true,
+    clienterr,
   }])
 };
