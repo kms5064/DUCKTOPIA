@@ -11,9 +11,7 @@ const onGameServerHandler = async ({ socket, payloadBuffer, packetType }) => {
   }
 
   const game = await user.getGameState()
-  if (!game) {
-    throw new CustomError(`올바르지 못한 요청입니다. (USER ID: ${user.id})`);
-  }
+  if (!game) return
 
   const packetInfo = Object.values(config.packetType).find(([type, name]) => type === packetType);
   const packet = makeServerPacket(packetInfo, null, payloadBuffer, user.id);
