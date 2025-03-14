@@ -9,7 +9,7 @@ const useItemHandler = ({ socket, payload, userId }) => {
 
   // 유저 객체 조회
   const user = userSession.getUser(userId);
-  if (!user) throw new CustomError(`User ID (${userId}): 유저 정보가 없습니다.`);
+  if (!user) return
 
   const player = user.player;
   // console.log('[플레이어 정보 조회]', player);
