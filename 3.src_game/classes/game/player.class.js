@@ -91,8 +91,19 @@ class Player {
   }
 
   changePlayerPos(x, y) {
-    this.x = x;
-    this.y = y;
+    const nextTime = Date.now()
+    const timeDiff = nextTime - this.lastPosUpdateTime / 1000
+    const distance = Math.sqrt((this.x - x)**2 + (this.y - y)**2)
+    if ( distance / timeDiff <= this.speed * 1.1 ) {
+      this.x = x;
+      this.y = y;
+    } else {
+      const seta = Math.atan2(this.y - y,this.x - x)
+      this.x += + timeDiff * Math.cos(seta)
+      this.y += + timeDiff * Math.sin(seta)
+    }
+
+    this.lastPosUpdateTime = nextTime
     return { x: this.x, y: this.y };
   }
 
