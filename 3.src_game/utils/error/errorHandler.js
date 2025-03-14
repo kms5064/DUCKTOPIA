@@ -31,11 +31,14 @@ export const errorHandler = (socket, error, userId) => {
   console.log(`에러 메시지: ${message}`);
 
   const user = userSession.getUser(userId);
-  if (!user) return
+  if (!user) return;
 
-  user.sendPacket([config.packetType.S_ERROR_NOTIFICATION, {
+  user.sendPacket([
+    config.packetType.S_ERROR_NOTIFICATION,
+    {
       errorMessage: message,
       timestamp: Date.now(),
       clienterr,
-    }])
+    },
+  ]);
 };

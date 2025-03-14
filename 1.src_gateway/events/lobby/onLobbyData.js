@@ -1,10 +1,7 @@
 import { config } from '../../config/config.js';
+import { userSession } from '../../sessions/session.js';
 import gameStartHandler from '../../handlers/server/gameStart.handler.js';
 import latencyCheckHandler from '../../handlers/server/latencyCheck.handler.js';
-import { getProtoMessages } from '../../init/loadProtos.js';
-import { userSession } from '../../sessions/session.js';
-import { errorHandler } from '../../utils/error/errorHandler.js';
-import makePacket from '../../utils/packet/makePacket.js';
 
 const onLobbyData = (socket) => async (data) => {
   // console.log('로비서버 데이터 수신');
@@ -57,17 +54,14 @@ const onLobbyData = (socket) => async (data) => {
       const packetType = packet.readUInt16BE(0);
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
-      // const proto = getProtoMessages().GamePacket;
-      // const gamePacket = proto.decode(payloadBuffer);
-      // const payload = gamePacket[gamePacket.payload];
-
       if (packetType === config.packetType.PREPARE_GAME_SERVER[0]) {
         gameStartHandler({ socket, payloadBuffer, userId });
         // 서버 -> 서버 이므로 클라이언트에게 전송 X
         continue;
       }
 
-      if (packetType === config.packetType.S_ERROR_NOTIFICATION[0]) latencyCheckHandler({ socket, payloadBuffer, userId });
+      if (packetType === config.packetType.S_ERROR_NOTIFICATION[0])
+        latencyCheckHandler({ socket, payloadBuffer, userId });
 
       const user = userSession.getUserByID(userId);
       if (!user) continue;
@@ -84,7 +78,7 @@ const onLobbyData = (socket) => async (data) => {
       // console.timeEnd('check');
     }
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 };
 

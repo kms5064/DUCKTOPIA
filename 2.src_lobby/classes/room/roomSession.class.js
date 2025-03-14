@@ -9,7 +9,6 @@ class RoomSession {
 
   // 방 추가하기
   addRoom(ownerId, name, maxUserNum) {
-    //const roomId = uuidv4();
     const roomId = this.newId; // TODO(나중에 복구?)
     const room = new Room(roomId, name, ownerId, maxUserNum);
     this.rooms.set(roomId, room);
@@ -22,6 +21,7 @@ class RoomSession {
   removeRoom(room) {
     room.deleteRoom();
     this.rooms.delete(room.id);
+    if (this.rooms.size <= 0) this.clearRooms();
   }
 
   // 방 조회

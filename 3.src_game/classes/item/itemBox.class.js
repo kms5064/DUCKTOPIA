@@ -2,9 +2,9 @@ import CustomError from '../../utils/error/customError.js';
 import DestructibleObjectBase from '../base/destructibleObjectBase.class.js';
 import { ITEM_BOX_MAX_HP } from '../../config/constants/objects.js';
 
-class ItemBox extends DestructibleObjectBase{
-  constructor(id,objectCode,name, grade) {
-    super(id,objectCode, name, ITEM_BOX_MAX_HP);
+class ItemBox extends DestructibleObjectBase {
+  constructor(id, objectCode, name, grade) {
+    super(id, objectCode, name, ITEM_BOX_MAX_HP);
     this.grade = grade;
     this.itemList = Array.from({ length: 8 }, () => 0);
     this.occupied = null; //점유중 플레이어아이디
@@ -28,15 +28,13 @@ class ItemBox extends DestructibleObjectBase{
       removedItem.count -= count;
       const item = player.addItem(itemCode, count, emptyIndex);
       return item;
-    } else {
-      //아이템을 제거하고 stack만큼만 아이템을 반환하도록
-      count = removedItem.count;
-      this.itemList.splice(removedItemIndex, 1, 0);
-      const item = player.addItem(itemCode, count, emptyIndex);
-      return item;
     }
-    //player 인벤토리에 추가된 item반환
-    return removedItem;
+
+    //아이템을 제거하고 stack만큼만 아이템을 반환하도록
+    count = removedItem.count;
+    this.itemList.splice(removedItemIndex, 1, 0);
+    const item = player.addItem(itemCode, count, emptyIndex);
+    return item;
   }
   //플레이어가 박스에 넣기
   putAnItem(player, itemCode, count) {
@@ -48,7 +46,7 @@ class ItemBox extends DestructibleObjectBase{
       existItem.count += count;
       player.removeItem(itemCode, count);
       return existItem;
-    } else if(emptyIndex !==-1){
+    } else if (emptyIndex !== -1) {
       const item = { itemCode: itemCode, count: count };
       this.itemList.splice(emptyIndex, 1, item);
       player.removeItem(itemCode, count);
@@ -79,7 +77,6 @@ class ItemBox extends DestructibleObjectBase{
   changeItemPos(index1, index2) {
     [this.itemList[index1], this.itemList[index2]] = [this.itemList[index2], this.itemList[index1]];
   }
-
 }
 
 export default ItemBox;

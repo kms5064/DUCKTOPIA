@@ -1,8 +1,8 @@
-import os from 'os';
-import { redisClient, subscriber } from '../db/redis/redis.js';
-import { roomSession } from '../sessions/session.js';
-import healthCheck from '../db/redis/subscribe/healthCheck.js';
 import { config } from '../config/config.js';
+import { roomSession } from '../sessions/session.js';
+import { redisClient, subscriber } from '../db/redis/redis.js';
+import os from 'os';
+import healthCheck from '../db/redis/subscribe/healthCheck.js';
 
 // 프라이빗 IPv4 주소
 function getLocalIP() {

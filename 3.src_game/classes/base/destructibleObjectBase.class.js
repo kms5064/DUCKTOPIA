@@ -4,7 +4,7 @@ class DestructibleObjectBase {
   constructor(id, objectCode, name, maxHp, x = null, y = null) {
     this.id = id;
     this.objectCode = objectCode;
-    //objectCode 1= core, 2~4 = ItemBox, 5 = grass 
+    //objectCode 1= core, 2~4 = ItemBox, 5 = grass
     this.name = name;
     this.hp = maxHp;
     this.maxHp = maxHp;
@@ -19,12 +19,12 @@ class DestructibleObjectBase {
     this.y = y;
   }
 
-  getPosition(){
-    return {x:this.x,y:this.y};
+  getPosition() {
+    return { x: this.x, y: this.y };
   }
 
   changeObjectHp(damage) {
-    this.hp -= Math.max(Math.min(this.hp,damage),1);
+    this.hp -= Math.max(Math.min(this.hp, damage), 1);
     return this.hp;
   }
 
@@ -35,7 +35,7 @@ class DestructibleObjectBase {
     const dropData = objectDropTable.data.find((item) => item.objectCode === objectCode);
 
     dropData.dropList.forEach((itemCode) => {
-      const count = dropData.max
+      const count = dropData.max;
       dropItems.push({ itemCode: itemCode, count: count });
     });
 

@@ -27,21 +27,14 @@ class User {
     this.loginTime = Date.now();
   }
 
-  // 로그 아웃
-  logout() {
-    this.id = null;
-    this.email = null;
-    this.name = null;
-  }
-
   setGameState(bool, gameServer = null) {
     this.inGame = bool;
     this.gameServer = gameServer;
   }
 
   async getGameState(isLobby = null) {
-    if (this.gameServer || isLobby ) return this.inGame;
-    
+    if (this.gameServer || isLobby) return this.inGame;
+
     const serverId = await redisClient.hGet(config.redis.custom + 'Server:User:' + this.id, 'game');
     if (serverId) {
       this.inGame = true;
@@ -49,10 +42,6 @@ class User {
     }
 
     return this.inGame;
-  }
-
-  getSocket() {
-    return this.socket;
   }
 }
 

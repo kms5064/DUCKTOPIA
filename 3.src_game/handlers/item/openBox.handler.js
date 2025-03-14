@@ -1,11 +1,9 @@
-import CustomError from '../../utils/error/customError.js';
 import { config } from '../../config/config.js';
 import { gameSession, userSession } from '../../sessions/session.js';
+import CustomError from '../../utils/error/customError.js';
 
 const playerOpenBoxHandler = ({ socket, payload, userId }) => {
   const { itemBoxId } = payload;
-  // console.log(`openBoxHandler itemBoxId: ${itemBoxId}`);
-
   // 유저 객체 조회
   const user = userSession.getUser(userId);
   if (!user) throw new CustomError(`User ID : (${userId}): 유저 정보가 없습니다.`);
@@ -29,7 +27,6 @@ const playerOpenBoxHandler = ({ socket, payload, userId }) => {
 
       const notification = [config.packetType.S_PLAYER_OPEN_BOX_NOTIFICATION, payload];
       game.broadcast(notification);
-      // console.log(`itemBoxId : ${itemBoxId}를 열었다!`);
     }
   } else {
     const itemBox = game.getObjectById(itemBoxId);
@@ -38,10 +35,7 @@ const playerOpenBoxHandler = ({ socket, payload, userId }) => {
     //유효한 거리인지 검증
     //이 박스가 점유중이라면 컷
     //박스 오픈한채로 돌아다니면 박스 닫히게?
-    if (
-      //itemBox.calculateDistance <= config.game.VALID_DISTANCE_OF_BOX &&
-      itemBox.occupied === null
-    ) {
+    if (itemBox.occupied === null) {
       itemBox.occupied = userId;
       itemList = itemBox.getItemList();
       const payload = {
@@ -54,7 +48,6 @@ const playerOpenBoxHandler = ({ socket, payload, userId }) => {
       //이 유저가 열고 있다는거 브로드캐스트
 
       game.broadcast(notification);
-      // console.log(`상자를 열었다! ${JSON.stringify(itemList)}`);
     }
   }
 };

@@ -80,7 +80,6 @@ export const PACKET_TYPE = {
   C_DROP_ITEM_REQUEST: [4034, 'dropItemRequest'],
   S_DROP_ITEM_NOTIFICATION: [4035, 'dropItemNotification'],
 
-
   // 몬스터
   S_MONSTER_SPAWN_REQUEST: [5001, 'monsterSpawnRequest'],
   C_MONSTER_SPAWN_RESPONSE: [5002, 'monsterSpawnResponse'],

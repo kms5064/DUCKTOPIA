@@ -1,6 +1,5 @@
 import { config } from '../../config/config.js';
 import { roomSession, userSession } from '../../sessions/session.js';
-import makePacket from '../../utils/packet/makePacket.js';
 import CustomError from '../../utils/error/customError.js';
 
 const leaveRoomHandler = ({ socket, payload, userId }) => {

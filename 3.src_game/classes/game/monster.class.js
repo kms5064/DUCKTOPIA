@@ -76,14 +76,6 @@ class Monster extends MovableObjectBase {
     return { x: this.x, y: this.y };
   }
 
-  getId() {
-    return this.id;
-  }
-
-  getTargetPlayer() {
-    return this.targetPlayer;
-  }
-
   /**타겟이 지정되어 있을 때 거리를 구하는 함수 */
   calculateBetweenDistance() {
     if (this.targetPlayer !== null) {
@@ -161,16 +153,16 @@ class Monster extends MovableObjectBase {
         case 201:
         case 202:
         case 203:
-          this.monsterAwakeCoolTime = 2000;//2초에서 3초 정도 인식을 하지 않도록 만든다.
+          this.monsterAwakeCoolTime = 2000; //2초에서 3초 정도 인식을 하지 않도록 만든다.
           break;
         case 204:
         case 205:
-          this.monsterAwakeCoolTime = 4000;//원거리 계통 캐릭터들은 좀 길게 텀을 주자.
+          this.monsterAwakeCoolTime = 4000; //원거리 계통 캐릭터들은 좀 길게 텀을 주자.
           break;
         case 206:
         case 207:
         case 208:
-          this.monsterAwakeCoolTime = 3000;//보스 몬스터와 암살자 타입은 인식 쿨타임이 없는 걸로
+          this.monsterAwakeCoolTime = 3000; //보스 몬스터와 암살자 타입은 인식 쿨타임이 없는 걸로
           break;
       }
       this.distanceBetweenPlayer = Infinity;
@@ -188,9 +180,6 @@ class Monster extends MovableObjectBase {
       this.monsterAwakeCoolTime -= deltaTime;
     }
   }
-  monsterDeath() {
-    return this.hp <= 0 ? true : false;
-  }
 
   //강제로 플레이어를 지정해줄 때
   setTargetPlayer(player) {
@@ -201,14 +190,6 @@ class Monster extends MovableObjectBase {
 
   getMonsterPos() {
     return { x: this.x, y: this.y };
-  }
-
-  getMonsterId() {
-    return this.id;
-  }
-
-  waveMonsterCheck() {
-    return this.isWaveMonster;
   }
 
   isBossMonster() {

@@ -1,4 +1,3 @@
-import { config } from '../../config/config.js';
 import { gameSession, userSession } from '../../sessions/session.js';
 import CustomError from '../../utils/error/customError.js';
 
@@ -23,11 +22,6 @@ const monsterMoveNotificationHandler = async ({ socket, payload, userId }) => {
       game.monsterMoveQueue.push(payload);
     }
   }
-
-  // const packet = [config.packetType.S_MONSTER_MOVE_NOTIFICATION, payload];
-
-  //이런 식으로 게임에서 notification을 보내보도록 하자.
-  //game.notification(userId, packet);
 };
 
 export default monsterMoveNotificationHandler;

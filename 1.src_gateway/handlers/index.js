@@ -41,8 +41,6 @@ const handlers = {
   [config.packetType.S_PLAYER_CHATTING_REQUEST[0]]: onGameServerHandler,
   [config.packetType.C_ITEM_DETACHMENT_REQUEST[0]]: onGameServerHandler,
   [config.packetType.C_DROP_ITEM_REQUEST[0]]: onGameServerHandler,
-
-
 };
 
 export default handlers;

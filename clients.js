@@ -24,7 +24,7 @@ class Client {
         return;
       }
       this.address = address;
-    });  
+    });
 
     // this.socket.connect(config.server.port, config.server.host, this.onConnection);
     this.socket.connect(this.address || port, host, this.onConnection);
@@ -96,7 +96,7 @@ class Client {
             await this.prepareRequest();
             break;
           case config.packetType.PREPARE_GAME_NOTIFICATION[0]:
-            this.interval = setInterval(this.moveUpdate, 200)
+            this.interval = setInterval(this.moveUpdate, 200);
             break;
           case config.packetType.S_PLAYER_POSITION_UPDATE_NOTIFICATION[0]:
             break;
@@ -192,7 +192,7 @@ class Client {
   }
 
   moveUpdate = async () => {
-    console.log("보냄")
+    console.log('보냄');
     const payload = {
       x: 5,
       y: 5,
@@ -210,7 +210,13 @@ const registerTest = async (client_count = 1) => {
       const password = '123456';
       const name = `dummy${idx}`;
       // const client = new Client(id, password, name, config.server.host, 5555);
-      const client = new Client(id, password, name, 'ducktopia-loadbalancer-1900b439129f13b9.elb.ap-northeast-2.amazonaws.com', 5555);
+      const client = new Client(
+        id,
+        password,
+        name,
+        'ducktopia-loadbalancer-1900b439129f13b9.elb.ap-northeast-2.amazonaws.com',
+        5555,
+      );
       await client.registerRequest();
       // await client.end();
     }),
@@ -224,7 +230,13 @@ const loginTest = async (client_count = 1) => {
       const id = `dummy${idx}@email.com`;
       const password = '123456';
       const name = `dummy${idx}`;
-      const client = new Client(id, password, name, 'ducktopia-loadbalancer-1900b439129f13b9.elb.ap-northeast-2.amazonaws.com', 5555);
+      const client = new Client(
+        id,
+        password,
+        name,
+        'ducktopia-loadbalancer-1900b439129f13b9.elb.ap-northeast-2.amazonaws.com',
+        5555,
+      );
 
       await client.loginRequest();
       // await client.end();
@@ -241,7 +253,13 @@ const customTest = async (client_count = 1) => {
       const name = `dummy${idx}`;
 
       // Lobby 서버 연결
-      const client = new Client(id, password, name, 'ducktopia-loadbalancer-1900b439129f13b9.elb.ap-northeast-2.amazonaws.com', 5555);
+      const client = new Client(
+        id,
+        password,
+        name,
+        'ducktopia-loadbalancer-1900b439129f13b9.elb.ap-northeast-2.amazonaws.com',
+        5555,
+      );
       // 로그인 이후 사용할 메서드 적용
       await client.loginRequest();
     }),

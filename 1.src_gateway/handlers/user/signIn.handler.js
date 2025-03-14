@@ -1,10 +1,10 @@
-import { findUserByEmail } from '../../db/user/user.db.js';
-import { serverSession, userSession } from '../../sessions/session.js';
-import makePacket from '../../utils/packet/makePacket.js';
-import CustomError from '../../utils/error/customError.js';
-import bcrypt from 'bcrypt';
 import { config } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
+import { findUserByEmail } from '../../db/user/user.db.js';
+import { serverSession, userSession } from '../../sessions/session.js';
+import bcrypt from 'bcrypt';
+import makePacket from '../../utils/packet/makePacket.js';
+import CustomError from '../../utils/error/customError.js';
 import makeServerPacket from '../../utils/packet/makeServerPacket.js';
 
 const signInHandler = async ({ socket, payloadBuffer }) => {

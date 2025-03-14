@@ -7,7 +7,7 @@ const detachmentItemHandler = ({ socket, payload, userId }) => {
 
   // 유저 객체 조회
   const user = userSession.getUser(userId);
-  if (!user) return
+  if (!user) return;
 
   const player = user.player;
 
@@ -56,7 +56,6 @@ const detachmentItemHandler = ({ socket, payload, userId }) => {
     },
   ];
   game.broadcast(packet);
-
 };
 
 export default detachmentItemHandler;

@@ -1,9 +1,9 @@
-import makeServerPacket from '../../utils/packet/makeServerPacket.js';
-import { serverSession, userSession } from '../../sessions/session.js';
-import CustomError from '../../utils/error/customError.js';
 import { config } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
+import { serverSession, userSession } from '../../sessions/session.js';
 import { redisClient } from '../../db/redis/redis.js';
+import CustomError from '../../utils/error/customError.js';
+import makeServerPacket from '../../utils/packet/makeServerPacket.js';
 
 const gameStartHandler = async ({ socket, payloadBuffer, userId }) => {
   const proto = getProtoMessages().GamePacket;

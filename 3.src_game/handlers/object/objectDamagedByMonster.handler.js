@@ -13,7 +13,7 @@ const objectDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
   if (!game) throw new CustomError(`Game ID : (${user.getGameId()}): Game 정보가 없습니다.`);
 
   const monster = game.getMonsterById(monsterId);
-  if (!monster) return
+  if (!monster) return;
 
   // 오브젝트에 따라 다르게 적용
   let sendPayload = null;
@@ -21,9 +21,8 @@ const objectDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
   switch (objectId) {
     case 1:
       const coreHp = game.core.coreDamaged(monster.getAttack());
-      // console.log(`코어가 ${monster.getAttack()}의 데미지를 받았습니다! HP: ${coreHp}`);
       sendPayload = { objectId: objectId, hp: coreHp };
-      if(coreHp <= 0) gameSession.removeGame(game, game.ownerId);
+      if (coreHp <= 0) gameSession.removeGame(game, game.ownerId);
       break;
     default:
       const object = game.objects.get(objectId);

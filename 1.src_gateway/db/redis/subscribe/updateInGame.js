@@ -10,7 +10,7 @@ const updateInGame = async (userIds) => {
     if (!user) continue;
     user.setGameState(false);
     // Redis 정보 동기화
-    await redisClient.hDel(config.redis.custom + 'Server:User:' + user.id, 'game')
+    await redisClient.hDel(config.redis.custom + 'Server:User:' + user.id, 'game');
   }
 };
 

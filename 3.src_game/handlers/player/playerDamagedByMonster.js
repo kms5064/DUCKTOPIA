@@ -18,12 +18,15 @@ const playerDamagedByMonsterHandler = async ({ socket, payload, userId }) => {
 
   // 몬스터 조회
   const monster = game.getMonsterById(monsterId);
-  if (!monster) return
+  if (!monster) return;
 
   const remainPlayerHp = player.changePlayerHp(monster.getAttack(), game);
-  if(remainPlayerHp <= 0) return
+  if (remainPlayerHp <= 0) return;
 
-  const packet = [config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION, { playerId: userId, hp: remainPlayerHp }];
+  const packet = [
+    config.packetType.S_PLAYER_HP_UPDATE_NOTIFICATION,
+    { playerId: userId, hp: remainPlayerHp },
+  ];
 
   game.broadcast(packet);
 };

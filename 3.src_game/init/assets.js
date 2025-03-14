@@ -54,7 +54,7 @@ export const loadGameAssets = async () => {
       readFileAsync('armor_shoes.json'),
       readFileAsync('armor_accessory.json'),
       readFileAsync('upgradeRate.json'),
-      readFileAsync('profanity.json')
+      readFileAsync('profanity.json'),
     ]);
 
     gameAssets = {
@@ -70,7 +70,7 @@ export const loadGameAssets = async () => {
       armorShoes,
       armorAccessory,
       upgradeRate,
-      profanity
+      profanity,
     };
     return gameAssets;
   } catch (error) {

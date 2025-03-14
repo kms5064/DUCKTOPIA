@@ -1,13 +1,9 @@
 import { config } from '../config/config.js';
-import handlers from '../handlers/index.js';
 import { errorHandler } from '../utils/error/errorHandler.js';
 import onEnd from './onEnd.js';
+import handlers from '../handlers/index.js';
 
 const onData = (socket) => async (data) => {
-  // console.log(`[클라이언트] 데이터 수신 ${socket.id} 패킷 ${data}, `);
-  // console.log(`${formatDate(new Date())} [클라이언트] 데이터 수신 ${socket.id} 패킷`);
-  // console.time('check');
-
   socket.buffer = Buffer.concat([socket.buffer, data]);
   const packetTypeByte = config.header.packetTypeByte;
   const versionLengthByte = config.header.versionLengthByte;
@@ -51,9 +47,6 @@ const onData = (socket) => async (data) => {
       const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
 
       const handler = handlers[packetType];
-      // const proto = getProtoMessages().GamePacket;
-      // const gamePacket = proto.decode(payloadBuffer);
-      // const payload = gamePacket[gamePacket.payload];
 
       await handler({ socket, payloadBuffer, packetType });
       // console.log('게임 서버 연결');

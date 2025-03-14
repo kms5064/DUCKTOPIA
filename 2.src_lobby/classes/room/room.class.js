@@ -15,33 +15,26 @@ class Room {
     this.maxUserAmount = maxUserNum;
     this.name = name; // room name
     this.state = RoomStateType.WAIT;
-    // this.game = new Game(ownerId);
     this.ownerId = ownerId;
     // 10분 이내에 게임 시작 안할 시 자동 삭제
-    this.timeout = setTimeout(this.timeCheck, 600000)
+    this.timeout = setTimeout(this.timeCheck, 600000);
   }
 
   timeCheck = () => {
-    if (this.state === RoomStateType.PLAY) return
-    
+    if (this.state === RoomStateType.PLAY) return;
+
     roomSession.removeRoom(this);
-  }
+  };
 
   // 유저 추가
   addUser(user) {
     // 방 인원 검사
-    if (this.users.size >= this.maxUserAmount || this.state !== 0 ) return false;
+    if (this.users.size >= this.maxUserAmount || this.state !== 0) return false;
     // 유저 추가
     this.users.set(user.id, user);
-    // 플레이어 추가
-    // this.game.addPlayer(user);
     user.enterRoom(this.id);
 
     return true;
-  }
-
-  getUser() {
-    return this.users;
   }
 
   getUserIds() {
@@ -58,8 +51,6 @@ class Room {
   removeUser(user) {
     // 유저 삭제
     this.users.delete(user.id);
-    // 플레이어 삭제
-    // this.game.removePlayer(user.id);
     user.exitRoom();
   }
 
@@ -104,14 +95,9 @@ class Room {
     this.users = null;
   }
 
-  // 방 상태 변경
-  changeState(state) {
-    this.state = state;
-  }
-
   // 게임 시작
   startGame() {
-    this.changeState(RoomStateType.PLAY);
+    this.state = RoomStateType.PLAY;
   }
 
   // 전체 공지(본인 제외)

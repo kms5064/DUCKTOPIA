@@ -11,8 +11,6 @@ class Player {
     this.maxHunger = config.game.player.playerMaxHunger;
     this.hunger = config.game.player.playerMaxHunger;
     this.speed = config.game.player.playerSpeed;
-    this.range = config.game.player.playerDefaultRange;
-    this.angle = config.game.player.playerDefaultAngle;
     this.characterType = config.game.characterType.RED;
 
     this.lv = 1;
@@ -49,14 +47,6 @@ class Player {
       // 비율 감산 방식 적용 (감쇠 곡선)
       const damageReductionFactor = 100 / (100 + defense);
 
-      // 원래 데미지와 감소된 데미지 로그 출력 (디버깅용)
-      // console.log('[방어력 계산]', {
-      //   원래데미지: amount,
-      //   방어력: defense,
-      //   감소율: (1 - damageReductionFactor) * 100 + '%',
-      //   최종데미지: Math.max(1, Math.floor(amount * damageReductionFactor)),
-      // });
-
       // 최종 데미지 계산 (최소 1의 데미지는 입도록 함)
       amount = Math.max(1, Math.floor(amount * damageReductionFactor));
     }
@@ -91,19 +81,19 @@ class Player {
   }
 
   changePlayerPos(x, y) {
-    const nextTime = Date.now()
-    const timeDiff = nextTime - this.lastPosUpdateTime / 1000
-    const distance = Math.sqrt((this.x - x)**2 + (this.y - y)**2)
-    if ( distance / timeDiff <= this.speed * 1.1 ) {
+    const nextTime = Date.now();
+    const timeDiff = nextTime - this.lastPosUpdateTime / 1000;
+    const distance = Math.sqrt((this.x - x) ** 2 + (this.y - y) ** 2);
+    if (distance / timeDiff <= this.speed * 1.1) {
       this.x = x;
       this.y = y;
     } else {
-      const seta = Math.atan2(this.y - y,this.x - x)
-      this.x += + timeDiff * Math.cos(seta)
-      this.y += + timeDiff * Math.sin(seta)
+      const seta = Math.atan2(this.y - y, this.x - x);
+      this.x += +timeDiff * Math.cos(seta);
+      this.y += +timeDiff * Math.sin(seta);
     }
 
-    this.lastPosUpdateTime = nextTime
+    this.lastPosUpdateTime = nextTime;
     return { x: this.x, y: this.y };
   }
 
@@ -111,36 +101,6 @@ class Player {
   playerPositionUpdate = (dx, dy) => {
     this.x = dx;
     this.y = dy;
-  };
-
-  calculatePosition = (x, y) => {
-    const now = Date.now();
-    this.packetTerm = now - this.lastPosUpdateTime;
-    // 현재 위치와 요청받은 위치로 방향을 구하고 speed와 레이턴시를 곱해 이동거리를 구하고 좌표 예측 검증
-    const seta = (Math.atan2(y - this.y, x - this.x) * 180) / Math.PI;
-    const distance = this.speed * this.packetTerm;
-    const realDistance = Math.sqrt((this.x - x) ** 2 + (this.y - y) ** 2);
-
-    let newX = x;
-    let newY = y;
-
-    // 만약 거속시로 구한 거리보다 멀면 서버가 알고있는 좌표로 강제 이동
-    //if (Math.abs(distance - realDistance) > config.game.player.validDistance) {
-    //  newX = this.x + Math.cos(seta) * distance;
-    //  newY = this.y + Math.sin(seta) * distance;
-    //  console.error(`유효하지 않은 이동입니다.`);
-    //}
-
-    // 위치 적용
-    this.playerPositionUpdate(newX, newY);
-    this.lastPosUpdateTime = now;
-
-    return { playerId: this.id, x: this.x, y: this.y };
-  };
-  calculateLatency = () => {
-    //레이턴시 구하기 => 수정할 것)각 클라마다 다른 레이턴시를 가지고 계산
-    //레이턴시 속성명도 생각해볼 필요가 있다
-    //player값 직접 바꾸는건 메서드로 만들어서 사용
   };
 
   /** Hunger System */
@@ -166,9 +126,6 @@ class Player {
 
     if (this.hunger > 0) {
       this.changePlayerHunger(-config.game.player.playerHungerDecreaseAmount);
-
-      // console.log('플레이어 아이디' + this.id);
-      // console.log('플레이어 배고품' + this.hunger);
 
       // 캐릭터 hunger 동기화 패킷 전송
       const decreaseHungerPacket = [
@@ -219,13 +176,11 @@ class Player {
 
   //플레이어 어택은 데미지만 리턴하기
   getPlayerAtkDamage(totalAtk) {
-    // return this.atk + this.lv * config.game.player.atkPerLv + weaponAtk;
     return totalAtk + Math.floor(Math.random() * this.atk);
   }
 
   playerDead() {
     this.isAlive = false;
-    // this.inventory = [];
     const user = userSession.getUser(this.id);
     const game = gameSession.getGame(user.getGameId());
     const packet = [config.packetType.S_PLAYER_DEATH_NOTIFICATION, { playerId: this.id }];
@@ -310,19 +265,19 @@ class Player {
       throw new CustomError(`탈착할 아이템이 없습니다.`);
     }
 
-    if(emptyIndex === -1){
+    if (emptyIndex === -1) {
       throw new CustomError(`인벤토리에 빈공간이 없습니다`);
     }
-    
-    if(itemCode === this.equippedWeapon.itemCode) {
+
+    if (itemCode === this.equippedWeapon.itemCode) {
       const temp = this.equippedWeapon;
       this.equippedWeapon = null;
-      this.addItem(temp.itemCode,1,-1);
-    }else{
+      this.addItem(temp.itemCode, 1, -1);
+    } else {
       throw new CustomError(`잘못된 요청입니다.`);
     }
 
-    return {itemCode:itemCode , count:1};
+    return { itemCode: itemCode, count: 1 };
   }
 
   // 방어구 장착
@@ -343,19 +298,18 @@ class Player {
   }
 
   //방어구 탈착
-  detachArmor(armorType, itemCode){
+  detachArmor(armorType, itemCode) {
     if (this.equippedArmors[armorType] === null) {
       throw new CustomError(`탈착할 아이템이 없습니다.`);
-    } else if(itemCode === this.equippedArmors[armorType].itemCode){
+    } else if (itemCode === this.equippedArmors[armorType].itemCode) {
       const temp = this.equippedArmors[armorType];
       this.equippedArmors[armorType] = null;
       this.addItem(temp.itemCode, 1, -1);
-    }else{
+    } else {
       throw new CustomError(`잘못된 요청입니다.`);
     }
 
-    return {itemCode:itemCode , count:1};
-
+    return { itemCode: itemCode, count: 1 };
   }
 
   // 방어구 효과 계산 (방어력 등)
@@ -410,31 +364,7 @@ class Player {
       }
     });
 
-    // 디버깅 로그 출력
-    // console.log('[방어구 방어력 계산 상세]', {
-    //   armorDefenseDetails,
-    //   totalDefense,
-    // });
-
     return totalDefense;
-  }
-
-  //공격 사거리 변경
-  changeRange(range) {
-    this.range = range;
-  }
-
-  //공격 각도 변경
-  changeAngle(angle) {
-    this.angle = angle;
-  }
-
-  getRange() {
-    return this.range;
-  }
-
-  getAngle() {
-    return this.angle;
   }
 
   getPlayerHp() {

@@ -1,6 +1,6 @@
-import Joi from 'joi';
-import { roomSession, userSession } from '../../sessions/session.js';
 import { config } from '../../config/config.js';
+import { roomSession, userSession } from '../../sessions/session.js';
+import Joi from 'joi';
 import CustomError from '../../utils/error/customError.js';
 
 const roomNameSchema = Joi.string().max(25).required().messages({

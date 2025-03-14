@@ -1,8 +1,8 @@
+import { fileURLToPath } from 'url';
+import { packetNames } from '../protobuf/packetNames.js';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import protobuf from 'protobufjs';
-import { packetNames } from '../protobuf/packetNames.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

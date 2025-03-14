@@ -1,7 +1,7 @@
 import { config } from '../config/config.js';
-import handlers from '../handlers/index.js';
 import { getProtoMessages } from '../init/loadProtos.js';
 import { errorHandler } from '../utils/error/errorHandler.js';
+import handlers from '../handlers/index.js';
 
 const onData = (socket) => async (data) => {
   // console.log('[게이트웨이 -> 로비] 데이터 수신');

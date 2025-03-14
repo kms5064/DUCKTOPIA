@@ -35,10 +35,6 @@ class ServerSession {
   getGameServers() {
     return this.gameServers;
   }
-
-  getLobbyServers() {
-    return this.lobbyServers;
-  }
 }
 
 export default ServerSession;

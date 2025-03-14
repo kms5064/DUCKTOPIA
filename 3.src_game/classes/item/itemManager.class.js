@@ -45,34 +45,38 @@ class ItemManager {
   }
 
   // 랜덤 아이템 생성
-generateRandomItems(itemBoxGrade) {
-  const itemGrade = this.rollItemGrade(itemBoxGrade)
-  const items = [];
-  const slotCount = Math.floor(Math.random() * config.game.itemBox.itemMaxSpawn) + 1; // 최소 1개
+  generateRandomItems(itemBoxGrade) {
+    const itemGrade = this.rollItemGrade(itemBoxGrade);
+    const items = [];
+    const slotCount = Math.floor(Math.random() * config.game.itemBox.itemMaxSpawn) + 1; // 최소 1개
 
-  for (let i = 0; i < slotCount; i++) {
-    // 아이템 타입 결정 (무기 또는 음식)
-    const isWeapon = Math.random() < 0.2; // 20% 확률로 무기 생성
+    for (let i = 0; i < slotCount; i++) {
+      // 아이템 타입 결정 (무기 또는 음식)
+      const isWeapon = Math.random() < 0.2; // 20% 확률로 무기 생성
 
-    if (isWeapon) {
-      // 무기 아이템 생성
-      const availableWeapons = this.weaponData.filter((weapon) => weapon.grade === itemGrade && weapon.isMustard === false);
+      if (isWeapon) {
+        // 무기 아이템 생성
+        const availableWeapons = this.weaponData.filter(
+          (weapon) => weapon.grade === itemGrade && weapon.isMustard === false,
+        );
 
-      if (availableWeapons.length === 0) return null;
+        if (availableWeapons.length === 0) return null;
 
-      const randomWeapon = availableWeapons[Math.floor(Math.random() * availableWeapons.length)];
-      console.log(`randomWeapon code: ${randomWeapon.code}`);
+        const randomWeapon = availableWeapons[Math.floor(Math.random() * availableWeapons.length)];
+        console.log(`randomWeapon code: ${randomWeapon.code}`);
 
-      items.push(
-        new Item({
-          itemData: {
-            itemCode: randomWeapon.code,
-            count: 1, // 무기는 항상 1개만
-          },
-          position: null,
-        }),
-      );
-    } else {
+        items.push(
+          new Item({
+            itemData: {
+              itemCode: randomWeapon.code,
+              count: 1, // 무기는 항상 1개만
+            },
+            position: null,
+          }),
+        );
+        continue;
+      }
+
       // 음식 아이템 생성
       const availableFoods = this.foodData.filter((food) => food.grade === itemGrade);
 
@@ -93,32 +97,19 @@ generateRandomItems(itemBoxGrade) {
         }),
       );
     }
+    console.log(`아이템 박스에서 아이템이 잘 만들어지고 있나? ${JSON.stringify(items)}`);
+    return items;
   }
-  console.log(`아이템 박스에서 아이템이 잘 만들어지고 있나? ${JSON.stringify(items)}`);
-  return items;
-}
 
   // 몬스터 사망 시 아이템 생성
   createDropItems(monsterGrade, position) {
-    // console.log(`\n[아이템 드롭 시작]`);
-    // console.log(`몬스터 등급: ${monsterGrade}`);
-    // console.log(`몬스터 위치: x=${position.x}, y=${position.y}`);
-    // console.log(`현재 필드 아이템 수: ${this.fieldDropItems.size}`);
-
     // 드롭 확률 체크
-    if (!this.rollDropItems(monsterGrade)) {
-      // console.log('[아이템 드롭 실패] 드롭 확률 체크 실패');
-      return [];
-    }
+    if (!this.rollDropItems(monsterGrade)) return [];
 
     // 드롭할 아이템 개수 결정
     const count = this.rollItemCount(monsterGrade);
-    // console.log(`[아이템 개수 결정] ${count}개`);
 
-    if (count === 0) {
-      // console.log('[아이템 드롭 실패] 드롭 개수 0');
-      return [];
-    }
+    if (count === 0) return [];
 
     // 아이템 생성
     const items = [];
@@ -127,41 +118,18 @@ generateRandomItems(itemBoxGrade) {
       // console.log(`[${i + 1}번째 아이템] 등급: ${itemGrade}`);
 
       const item = this.createItem(itemGrade, position);
-      if (item) {
-        items.push(item);
-        // console.log(
-        //    `- 아이템 생성 성공: 코드=${item.itemData.itemCode}, 위치=(${item.position.x}, ${item.position.y})`,
-        // );
-      } else {
-        // console.log(`- 아이템 생성 실패: ${itemGrade} 등급의 아이템을 찾을 수 없음`);
-      }
+      if (item) items.push(item);
     }
-
-    // console.log(`\n[아이템 드롭 완료]`);
-    // console.log(`- 생성 시도: ${count}개`);
-    // console.log(`- 실제 생성: ${items.length}개`);
-    // console.log(`- 현재 필드 아이템 수: ${this.fieldDropItems.size}`);
 
     return items;
   }
 
   // 아이템 드롭 여부 결정
   rollDropItems(monsterGrade) {
-    // console.log(`\n[드롭 확률 체크]`);
-    // console.log(`몬스터 등급: ${monsterGrade}`);
-    // console.log(`드롭 테이블:`, this.dropTable);
-
     const dropRate = this.dropTable[monsterGrade]?.dropRate;
-    // console.log(`해당 등급 드롭율: ${dropRate}`);
-
-    if (!dropRate) {
-      // console.log(`[경고] ${monsterGrade} 등급의 드롭 테이블이 없습니다.`);
-      return false;
-    }
-
+    if (!dropRate) return false;
     const roll = Math.random() * 100;
     const result = roll <= dropRate;
-    // console.log(`주사위: ${roll.toFixed(2)} vs 드롭율: ${dropRate} => ${result ? '성공' : '실패'}`);
 
     return result;
   }
@@ -180,9 +148,7 @@ generateRandomItems(itemBoxGrade) {
 
     for (const [grade, rates] of Object.entries(itemGradeRates)) {
       sum += rates;
-      if (random <= sum) {
-        return grade;
-      }
+      if (random <= sum) return grade;
     }
     return 'COMMON';
   }
@@ -197,7 +163,9 @@ generateRandomItems(itemBoxGrade) {
     const itemId = this.lastItemId++;
 
     if (isWeapon) {
-      const availableWeapons = this.weaponData.filter((weapon) => weapon.grade === itemGrade && weapon.isMustard === false);
+      const availableWeapons = this.weaponData.filter(
+        (weapon) => weapon.grade === itemGrade && weapon.isMustard === false,
+      );
       if (availableWeapons.length === 0) return null;
 
       const randomWeapon = availableWeapons[Math.floor(Math.random() * availableWeapons.length)];
@@ -245,6 +213,7 @@ generateRandomItems(itemBoxGrade) {
       this.fieldDropItems.set(itemId, { itemId, ...item });
       return item;
     }
+
     return null;
   }
 
@@ -258,39 +227,34 @@ generateRandomItems(itemBoxGrade) {
   }
 
   addOffsetByCore(position) {
-    const offset = 1; 
+    const offset = 1;
     const randomNumber = Math.random();
-    if(position.x >= 0 && position.y >= 0) {
+    if (position.x >= 0 && position.y >= 0) {
       return {
         x: position.x + offset + randomNumber,
         y: position.y + offset + randomNumber,
-      }
-    } else if(position.x < 0 && position.y >= 0) {
+      };
+    } else if (position.x < 0 && position.y >= 0) {
       return {
         x: position.x - offset + randomNumber,
         y: position.y + offset + randomNumber,
-      }
-    } else if(position.x >= 0 && position.y < 0) {
+      };
+    } else if (position.x >= 0 && position.y < 0) {
       return {
         x: position.x + offset + randomNumber,
         y: position.y - offset + randomNumber,
-      }
-    } else if(position.x < 0 && position.y < 0) {
+      };
+    } else if (position.x < 0 && position.y < 0) {
       return {
         x: position.x - offset + randomNumber,
         y: position.y - offset + randomNumber,
-      }
+      };
     }
   }
 
   // 필드 드롭 아이템 제거
   removeFieldDropItem(itemId) {
     return this.fieldDropItems.delete(itemId);
-  }
-
-  // 필드 드롭 아이템 조회
-  getFieldDropItem(itemId) {
-    return this.fieldDropItems.get(itemId);
   }
 
   // 모든 필드 드롭 아이템 조회
@@ -307,10 +271,10 @@ generateRandomItems(itemBoxGrade) {
         count: itemCount,
       },
       position: this.addOffsetByCore(position),
-    })
+    });
 
-    this.fieldDropItems.set(itemId, {itemId, ...item});
-    
+    this.fieldDropItems.set(itemId, { itemId, ...item });
+
     const items = [item];
     return items;
   }

@@ -1,7 +1,7 @@
-import CustomError from '../../utils/error/customError.js';
-import { gameSession, userSession } from '../../sessions/session.js';
-import { getGameAssets } from '../../init/assets.js';
 import { config } from '../../config/config.js';
+import { getGameAssets } from '../../init/assets.js';
+import { gameSession, userSession } from '../../sessions/session.js';
+import CustomError from '../../utils/error/customError.js';
 
 const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
   const { itemCode1, itemCode2 } = payload;
@@ -55,8 +55,6 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
     // 머스타드 무기는 코드에 50을 추가
     mustardWeaponCode = +weaponCode + 50;
     isSuccess = true;
-    // TODO : 허니머스타드 무기
-    // createEquipmentList = 이부분에 넣어주면 됩니다
   } else {
     // 장비 조합
 
@@ -174,14 +172,13 @@ const equipmentUpgradeHandler = ({ socket, payload, userId }) => {
 
   // 유저 인벤토리에서 재료 삭제
   if (itemCode1 === itemCode2) {
-
-    if(removedItem1.count<2){
+    if (removedItem1.count < 2) {
       throw new CustomError(`아이템의 갯수가 부족합니다.`);
     }
 
     user.player.removeItem(itemCode1, 2);
-  } else{
-    if(!removedItem1 || !removedItem2){
+  } else {
+    if (!removedItem1 || !removedItem2) {
       throw new CustomError(`아이템이 없습니다.`);
     }
     user.player.removeItem(itemCode1, 1);
