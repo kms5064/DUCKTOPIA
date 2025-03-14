@@ -432,7 +432,7 @@ class Game {
           monster.setTargetPlayer(inputPlayer);
           monsterDiscoverPayload.push({
             monsterId: monsterId,
-            targetId: inputId,
+            targetId: monster.targetPlayer,
           });
         }
       }
