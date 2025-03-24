@@ -26,8 +26,8 @@ const gameStartHandler = async ({ socket, payloadBuffer, userId }) => {
   // game 수가 최소인 게임 서버 ID 확인
   for (const [id, gameServer] of gameServers) {
     const count = await redisClient.hGet(id, 'games');
-    if (count < minGameCount) {
-      minGameCount = count;
+    if (+count < minGameCount) {
+      minGameCount = +count;
       gameServerId = id;
       minGameServer = gameServer;
     }
