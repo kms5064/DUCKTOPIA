@@ -5,7 +5,7 @@ export const createUser = async (name, email, password) => {
   let connection;
   try {  
     connection = await pools.USER_DB.getConnection();  
-    await connection.USER_DB.query(SQL_USER_QUERIES.CREATE_USER, [name, email, password]);
+    await connection.query(SQL_USER_QUERIES.CREATE_USER, [name, email, password]);
   } finally {
     if (connection) connection.release();
   }
@@ -16,7 +16,7 @@ export const findUserByEmail = async (email) => {
   let rows;
   try {  
     connection = await pools.USER_DB.getConnection();  
-    [rows] = await pools.USER_DB.query(SQL_USER_QUERIES.FIND_USER_BY_EMAIL, [email]);
+    [rows] = await connection.query(SQL_USER_QUERIES.FIND_USER_BY_EMAIL, [email]);
   } finally {
     if (connection) connection.release();
   }
