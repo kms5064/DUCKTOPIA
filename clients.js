@@ -33,7 +33,6 @@ class Client {
   }
 
   onConnection = async () => {
-    console.log(`${this.id} 연결 성공`);
   };
 
   onError = (err) => {
@@ -50,39 +49,44 @@ class Client {
     let payloadByte = 0;
     const defaultLength = packetTypeByte + versionLengthByte;
 
-    while (this.buffer.length >= defaultLength) {
-      // 가변 길이 확인
-      versionByte = this.buffer.readUInt8(packetTypeByte);
-      payloadByte = this.buffer.readUInt32BE(defaultLength + versionByte);
-      const headerLength = defaultLength + versionByte + payloadLengthByte;
-      // buffer의 길이가 충분한 동안 실행
-      if (this.buffer.length < headerLength + payloadByte) break;
-      // 패킷 분리
-      const packet = this.buffer.subarray(0, headerLength + payloadByte);
-      // 남은 패킷 buffer 재할당
-      this.buffer = this.buffer.subarray(headerLength + payloadByte);
+    try {
+      while (this.buffer.length >= defaultLength) {
+        try {
+          // 가변 길이 확인
+          versionByte = this.buffer.readUInt8(packetTypeByte);
+          payloadByte = this.buffer.readUInt32BE(defaultLength + versionByte);
+        } catch (err) {
+          console.error(err);
+          break;
+        }
+        const headerLength = defaultLength + versionByte + payloadLengthByte;
 
-      // 값 추출 및 버전 검증
-      const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
-      if (version !== config.client.version) continue;
-      const packetType = packet.readUInt16BE(0);
-      const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
+        // buffer의 길이가 충분한 동안 실행
+        if (this.buffer.length < headerLength + payloadByte) break;
+        // 패킷 분리
+        const packet = this.buffer.subarray(0, headerLength + payloadByte);
+        // 남은 패킷 buffer 재할당
+        this.buffer = this.buffer.subarray(headerLength + payloadByte);
 
-      try {
+        // 값 추출 및 버전 검증
+        const version = packet.toString('utf8', defaultLength, defaultLength + versionByte);
+        if (version !== config.client.version) break;
+        const packetType = packet.readUInt16BE(0);
+        const payloadBuffer = packet.subarray(headerLength, headerLength + payloadByte);
         const proto = getProtoMessages().GamePacket;
         const gamePacket = proto.decode(payloadBuffer);
         const payload = gamePacket[gamePacket.payload];
 
-        const now = Date.now();
-        const latency = now - this.lastUpdated;
-        this.latency.push(latency);
-        const avg = Math.round(
-          this.latency.reduce((acc, cur, idx, arr) => acc + cur / arr.length, 0),
-        );
+        // const now = Date.now();
+        // const latency = now - this.lastUpdated;
+        // this.latency.push(latency);
+        // const avg = Math.round(
+        //   this.latency.reduce((acc, cur, idx, arr) => acc + cur / arr.length, 0),
+        // );
 
-        console.log(
-          `[패킷 수신] ${this.name}의 왕복시간 ${latency} ms / 평균 ${avg} ms / ${packetType}`,
-        );
+        // console.log(
+        //   `[패킷 수신] ${this.name}의 왕복시간 ${latency} ms / 평균 ${avg} ms / ${packetType}`,
+        // );
 
         switch (packetType) {
           case config.packetType.REGISTER_RESPONSE[0]:
@@ -100,10 +104,14 @@ class Client {
             break;
           case config.packetType.S_PLAYER_POSITION_UPDATE_NOTIFICATION[0]:
             break;
+          case config.packetType.S_ERROR_NOTIFICATION[0]:
+            if(payload.errorMessage.includes("이미")) await this.loginRequest();
+            console.log(payload.errorMessage)
+            break
         }
-      } catch (e) {
-        console.error(e);
-      }
+      } 
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -181,18 +189,7 @@ class Client {
     this.sendPacket(config.packetType.START_GAME_REQUEST, payload);
   }
 
-  async joinRequest() {
-    // playerId 어떻게 가져올까요???
-    const payload = {
-      playerId: 100,
-      redisKey: gameServerPacket.redisKey,
-      token: gameServerPacket.token,
-    };
-    this.sendPacket(config.packetType.JOIN_SERVER_REQUEST, payload);
-  }
-
   moveUpdate = async () => {
-    console.log('보냄');
     const payload = {
       x: 5,
       y: 5,
@@ -248,9 +245,9 @@ const loginTest = async (client_count = 1) => {
 const customTest = async (client_count = 1) => {
   await Promise.all(
     Array.from({ length: client_count }, async (__, idx) => {
-      const id = `dummy${idx}@email.com`;
+      const id = `dummy${2000+idx}@email.com`;
       const password = '123456';
-      const name = `dummy${idx}`;
+      const name = `dummy${2000+idx}`;
 
       // Lobby 서버 연결
       const client = new Client(
@@ -268,6 +265,5 @@ const customTest = async (client_count = 1) => {
 
 // 테스트 실행문
 await loadProtos().then(async () => {
-  await registerTest(2000);
-  // await customTest(2000);
+  await loginTest(2000);
 });
