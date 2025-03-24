@@ -1,7 +1,7 @@
 import net from 'net';
 import dns from 'dns';
-import { loadProtos, getProtoMessages } from './0.src/init/loadProtos.js';
-import { config } from './0.src/config/config.js';
+import { loadProtos, getProtoMessages } from './1.src_gateway/init/loadProtos.js';
+import { config } from './1.src_gateway/config/config.js';
 
 // 더미 클라이언트
 
