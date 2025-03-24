@@ -200,12 +200,12 @@ class Client {
 
 // 테스트용 함수 모음
 // 회원가입
-const registerTest = async (client_count = 1) => {
+const registerTest = async (client_count = 1, next = 0) => {
   await Promise.all(
     Array.from({ length: client_count }, async (__, idx) => {
-      const id = `dummy${idx}@email.com`;
+      const id = `dummy${next * client_count + idx}@email.com`;
       const password = '123456';
-      const name = `dummy${idx}`;
+      const name = `dummy${next * client_count + idx}`;
       // const client = new Client(id, password, name, config.server.host, 5555);
       const client = new Client(
         id,
@@ -221,12 +221,12 @@ const registerTest = async (client_count = 1) => {
 };
 
 // 로그인
-const loginTest = async (client_count = 1) => {
+const loginTest = async (client_count = 1, next = 0) => {
   await Promise.all(
     Array.from({ length: client_count }, async (__, idx) => {
-      const id = `dummy${idx}@email.com`;
+      const id = `dummy${next * client_count + idx}@email.com`;
       const password = '123456';
-      const name = `dummy${idx}`;
+      const name = `dummy${next * client_count + idx}`;
       const client = new Client(
         id,
         password,
@@ -242,12 +242,12 @@ const loginTest = async (client_count = 1) => {
 };
 
 // 커스텀
-const customTest = async (client_count = 1) => {
+const customTest = async (client_count = 1, next = 0) => {
   await Promise.all(
     Array.from({ length: client_count }, async (__, idx) => {
-      const id = `dummy${2000+idx}@email.com`;
+      const id = `dummy${next * client_count + idx}@email.com`;
       const password = '123456';
-      const name = `dummy${2000+idx}`;
+      const name = `dummy${next * client_count + idx}`;
 
       // Lobby 서버 연결
       const client = new Client(
@@ -265,5 +265,8 @@ const customTest = async (client_count = 1) => {
 
 // 테스트 실행문
 await loadProtos().then(async () => {
-  await loginTest(2000);
+  for (let i = 0;i < 50;i++) {
+    await loginTest(100,i);
+    await new Promise((resolve) => setTimeout(() => resolve(), 10000));
+  }
 });
